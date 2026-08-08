@@ -1,0 +1,40 @@
+{
+  "schema": "sidscope.resot_walkthrough_sources.v1",
+  "route_id": "resot_instruments",
+  "archive": {
+    "route_id": "resot_instruments",
+    "dataset": "Instruments",
+    "artifact_name": "data/Instruments/Instruments.index_lemb.json",
+    "status": "PASS_ARCHIVE_ROUTE_VERIFIED",
+    "json_rows": 6250,
+    "sid_depth": 4,
+    "unique_full_sids": 6250,
+    "public_record": "docs/reproducibility/source_route_evidence_summary.json",
+    "historical_record_id": "R758_resot_archive_route_verification"
+  },
+  "intake": {
+    "route_id": "resot_instruments",
+    "dataset": "Instruments",
+    "method": "resot_text_index_official_code_derived",
+    "status": "PASS_INTAKE",
+    "sid_rows": 6250,
+    "metadata_rows": 6250,
+    "interaction_rows": 136226,
+    "full_collision_rate": 0.0,
+    "d3_depth1_weighted_collab_recall": 0.06290584415584416,
+    "sid_length": 4,
+    "unique_sid": 6250,
+    "prefix_counts": "83;3645;5729;6250",
+    "public_record": "docs/reproducibility/source_route_evidence_summary.json",
+    "historical_record_id": "R759_resot_text_index_intake"
+  },
+  "promotion": {
+    "route_id": "resot_instruments",
+    "row_label": "ReSOT text-index official-code-derived / Instruments",
+    "status": "PASS_MATRIX_PROMOTED",
+    "effective_artifact_n": 10,
+    "effective_artifact_depth_n": 30,
+    "public_record": "docs/reproducibility/source_route_evidence_summary.json",
+    "historical_record_id": "R760_resot_matrix_refresh"
+  }
+}

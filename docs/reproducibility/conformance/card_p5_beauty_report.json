@@ -1,0 +1,135 @@
+{
+  "artifact_id": "card_p5_beauty",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "card_p5_beauty",
+        "license_status": "no_license_detected",
+        "paper_label": "CARD RQ-VAE / P5 Beauty",
+        "source_revision": "b8ce0976af253a2056b11acc05617abcd9b1f0f9"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 4,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 198502
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 12101
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 12101
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "beauty",
+            "interaction_items": 12101,
+            "interaction_without_sid": 0,
+            "metadata_items": 12101,
+            "metadata_without_sid": 0,
+            "method": "card_rqvae_official_code_p5_text",
+            "sid_items": 12101
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "7.680789;7.713744;7.851889;7.910554",
+            "d1_level_count": 4,
+            "d1_unique_codes": "256;256;256;256",
+            "d3_depth1_mean_collab_recall": 0.02471054235222426,
+            "d3_depth1_weighted_collab_recall": 0.02289039767216295,
+            "d4_head_sid_unique_ratio": 0.9997514292816306,
+            "d4_mid_sid_unique_ratio": 0.9997514292816306,
+            "d4_tail_sid_unique_ratio": 1.0,
+            "dataset": "beauty",
+            "duplicate_sid_rate": 0.00024791339558716263,
+            "full_collision_rate": 0.0004958267911742831,
+            "method": "card_rqvae_official_code_p5_text",
+            "prefix_counts": "256;8870;11868;12098",
+            "sid_length": 4,
+            "unique_sid": 12098
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "python3",
+          "tools/run_v1_gate15_card_rqvae_intake.py",
+          "--output-root",
+          "<local-SIDScope-output-root>"
+        ],
+        "input_sha256": {
+          "interactions": "1f2d6df2ea3c2c37c99e610f80fba6dee716983150b5abaddc3b1e23318312ec",
+          "item_metadata": "4d1dfeae2974e2157122c60bc9f7d132f7152225339aa322d1fa1f24bdfeb24d",
+          "sid_assignments": "3c51c5ec17fb3b91f16ef827e2cb947a9f4489db65824ac66ba985dad39362a7"
+        },
+        "runtime_class": "gpu_required",
+        "source_evidence": [
+          "experiments/v1_evidence_chain/runs/R752_card_rqvae_intake.json"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "official_code_derived_route",
+        "inventory_match": true,
+        "paper_counted": true,
+        "route_id": "card_p5_beauty"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/card_p5_beauty_manifest.json",
+  "paper_label": "CARD RQ-VAE / P5 Beauty",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

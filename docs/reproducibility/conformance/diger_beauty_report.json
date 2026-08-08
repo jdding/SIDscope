@@ -1,0 +1,136 @@
+{
+  "artifact_id": "diger_beauty",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "diger_beauty",
+        "license_status": "no_license_detected",
+        "paper_label": "DIGER RQ-VAE / Beauty",
+        "source_revision": "fccf1229581440645a18563ece9c65bf72f1aa01"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 3,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 198502
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 12101
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 12101
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "beauty",
+            "interaction_items": 12101,
+            "interaction_without_sid": 0,
+            "metadata_items": 12101,
+            "metadata_without_sid": 0,
+            "method": "diger_rqvae_official_code_derived",
+            "sid_items": 12101
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "7.996603;7.986984;7.965445",
+            "d1_level_count": 3,
+            "d1_unique_codes": "256;256;256",
+            "d3_depth1_mean_collab_recall": 0.028730305838739572,
+            "d3_depth1_weighted_collab_recall": 0.028346161066266192,
+            "d4_head_sid_unique_ratio": 0.9722359940505702,
+            "d4_mid_sid_unique_ratio": 0.973475458601884,
+            "d4_tail_sid_unique_ratio": 0.981651376146789,
+            "dataset": "beauty",
+            "duplicate_sid_rate": 0.04297165523510449,
+            "full_collision_rate": 0.0704074043467482,
+            "method": "diger_rqvae_official_code_derived",
+            "prefix_counts": "256;9650;11581",
+            "sid_length": 3,
+            "unique_sid": 11581
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "python3",
+          "tools/run_v1_gate17_diger_intake.py",
+          "--output-root",
+          "<local-SIDScope-output-root>"
+        ],
+        "input_sha256": {
+          "interactions": "15c83e93f0491131e8c47effbf3a7ab562a73d045c556b08a383c53034ea263b",
+          "item_metadata": "d4f5f533f104d1475d70bc42fb66ec2b84a8dc24a9bc439356e722c983bcb27f",
+          "sid_assignments": "b631e267d3d42cd1b7e592f1223f509c3e31f0eda6264d32cf1183c6637e85b3"
+        },
+        "runtime_class": "gpu_required",
+        "source_evidence": [
+          "experiments/v1_evidence_chain/runs/R763_diger_rqvae_intake.json",
+          "experiments/v1_evidence_chain/runs/R764_diger_matrix_refresh.json"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "official_code_derived_route",
+        "inventory_match": true,
+        "paper_counted": true,
+        "route_id": "diger_beauty"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/diger_beauty_manifest.json",
+  "paper_label": "DIGER RQ-VAE / Beauty",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "card_p5_beauty",
+  "paper_label": "CARD RQ-VAE / P5 Beauty",
+  "method_family": "CARD",
+  "configuration": "epochs=20; batch_size=1024; num_emb_list=256/256/256/256; e_dim=32; layers=512/256/128; shim_sha256=caba9bc29e0baedbc9ac42bbb4d408a17b56f4432d60940dea6a5e52c29e31f6",
+  "source": {
+    "url": "https://github.com/HAI-UESTC/CARD",
+    "revision": "b8ce0976af253a2056b11acc05617abcd9b1f0f9",
+    "license_status": "no_license_detected",
+    "license_identifier": "NOASSERTION",
+    "derivation": "official_code_derived_with_compatibility_shim",
+    "artifact_name": "CARD rqvae4 tokenizer-stage export",
+    "redistribution_policy": "summary_only"
+  },
+  "dataset": {"name": "P5 Beauty", "normalized_name": "beauty", "expected_items": 12101, "sid_depth": 4},
+  "inputs": {
+    "sid_assignments": "experiments/v1_evidence_chain/gate15_card_rqvae_intake/normalized/sid_assignments.parquet",
+    "item_metadata": "experiments/v1_evidence_chain/gate15_card_rqvae_intake/context/item_metadata.parquet",
+    "interactions": "experiments/v1_evidence_chain/gate15_card_rqvae_intake/context/interactions.parquet"
+  },
+  "input_availability": "local normalized inputs are not redistributed; public report retains hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "3c51c5ec17fb3b91f16ef827e2cb947a9f4489db65824ac66ba985dad39362a7",
+    "item_metadata": "4d1dfeae2974e2157122c60bc9f7d132f7152225339aa322d1fa1f24bdfeb24d",
+    "interactions": "1f2d6df2ea3c2c37c99e610f80fba6dee716983150b5abaddc3b1e23318312ec"
+  },
+  "metric_smoke": {"max_metric_items": 50000, "top_k": 5, "max_pair_events": 10000, "max_user_items": 50},
+  "reproduction": {
+    "command": ["python3", "tools/run_v1_gate15_card_rqvae_intake.py", "--output-root", "<local-SIDScope-output-root>"],
+    "runtime_class": "gpu_required",
+    "source_evidence": ["experiments/v1_evidence_chain/runs/R752_card_rqvae_intake.json"]
+  },
+  "promotion": {
+    "route_id": "card_p5_beauty",
+    "evidence_role": "official_code_derived_route",
+    "paper_counted": true,
+    "conformance_status": "c0_c5_pass",
+    "conformance_evidence": "docs/reproducibility/conformance/card_p5_beauty_report.json"
+  }
+}

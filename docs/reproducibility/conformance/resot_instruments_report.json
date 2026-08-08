@@ -1,0 +1,144 @@
+{
+  "artifact_id": "resot_text_index_instruments",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "resot_text_index_instruments",
+        "license_status": "no_license_detected",
+        "paper_label": "ReSOT text-index / Instruments",
+        "source_revision": "4531f4d31ae4a9a954995593eb8912289139c063"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 4,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 136226
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 6250
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 6250
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "Instruments",
+            "interaction_items": 6250,
+            "interaction_without_sid": 0,
+            "metadata_items": 6250,
+            "metadata_without_sid": 0,
+            "method": "resot_text_index_official_code_derived",
+            "sid_items": 6250
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "5.920694;7.802096;7.747294;7.845303",
+            "d1_level_count": 4,
+            "d1_unique_codes": "83;255;252;256",
+            "d3_depth1_mean_collab_recall": 0.06336336336336337,
+            "d3_depth1_weighted_collab_recall": 0.06290584415584416,
+            "d4_head_sid_unique_ratio": 1.0,
+            "d4_mid_sid_unique_ratio": 1.0,
+            "d4_tail_sid_unique_ratio": 1.0,
+            "dataset": "Instruments",
+            "duplicate_sid_rate": 0.0,
+            "full_collision_rate": 0.0,
+            "method": "resot_text_index_official_code_derived",
+            "prefix_counts": "83;3645;5729;6250",
+            "sid_length": 4,
+            "unique_sid": 6250
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "python3",
+          "tools/run_v1_gate17_resot_intake.py",
+          "--index-json",
+          "<extracted-ReSOT-data/Instruments/Instruments.index_lemb.json>",
+          "--item2id",
+          "<extracted-ReSOT-data/Instruments/Instruments.item2id>",
+          "--item-json",
+          "<extracted-ReSOT-data/Instruments/Instruments.item.json>",
+          "--inter-json",
+          "<extracted-ReSOT-data/Instruments/Instruments.inter.json>",
+          "--output-root",
+          "<local-SIDScope-output-root>"
+        ],
+        "input_sha256": {
+          "interactions": "01d2c554f3ecefa4517baf78c856517203dd69808d4a86988f4c4a534919ab9f",
+          "item_metadata": "bf7b3faa58550a82e5c43d9b6567397517dcfd75764e00acefa14df9f9f3f8ff",
+          "sid_assignments": "4eefcfcf219fbbe90c8281847c62f9c0e25395b46256a279eceb64546ffd532c"
+        },
+        "runtime_class": "cpu_minutes",
+        "source_evidence": [
+          "docs/reproducibility/source_route_evidence_summary.json",
+          "docs/reproducibility/resot_walkthrough_sources.json"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "released_index_route",
+        "inventory_match": true,
+        "paper_counted": true,
+        "route_id": "resot_instruments"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/resot_instruments_manifest.json",
+  "paper_label": "ReSOT text-index / Instruments",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

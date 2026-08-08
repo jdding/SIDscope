@@ -1,0 +1,41 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "diger_beauty",
+  "paper_label": "DIGER RQ-VAE / Beauty",
+  "method_family": "DIGER",
+  "configuration": "HF dataset=42f26ba9d98338ae24aa8b552a952326e516b5fd; HF model=aeabd516a4078f7e849d79e5af0198365f88f9ba; num_emb_list=256/256/256; e_dim=256; layers=2048/1024/512; checkpoint_sha256=845d78dbff476754de239d6950b60b8b2c51f486f5f790785e5ccc16f839d297",
+  "source": {
+    "url": "https://github.com/junchen-fu/DIGER",
+    "revision": "fccf1229581440645a18563ece9c65bf72f1aa01",
+    "license_status": "no_license_detected",
+    "license_identifier": "NOASSERTION for GitHub code and audited Hugging Face dataset/model cards",
+    "derivation": "official_code_derived",
+    "artifact_name": "DIGER Beauty RQ-VAE checkpoint export",
+    "redistribution_policy": "summary_only"
+  },
+  "dataset": {"name": "Beauty", "normalized_name": "beauty", "expected_items": 12101, "sid_depth": 3},
+  "inputs": {
+    "sid_assignments": "experiments/v1_evidence_chain/gate17_diger_intake/normalized_rqvae_beauty/sid_assignments.parquet",
+    "item_metadata": "experiments/v1_evidence_chain/gate17_diger_intake/normalized_rqvae_beauty/item_metadata.parquet",
+    "interactions": "experiments/v1_evidence_chain/gate17_diger_intake/normalized_rqvae_beauty/interactions.parquet"
+  },
+  "input_availability": "local normalized inputs are not redistributed; public report retains hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "b631e267d3d42cd1b7e592f1223f509c3e31f0eda6264d32cf1183c6637e85b3",
+    "item_metadata": "d4f5f533f104d1475d70bc42fb66ec2b84a8dc24a9bc439356e722c983bcb27f",
+    "interactions": "15c83e93f0491131e8c47effbf3a7ab562a73d045c556b08a383c53034ea263b"
+  },
+  "metric_smoke": {"max_metric_items": 50000, "top_k": 5, "max_pair_events": 10000, "max_user_items": 50},
+  "reproduction": {
+    "command": ["python3", "tools/run_v1_gate17_diger_intake.py", "--output-root", "<local-SIDScope-output-root>"],
+    "runtime_class": "gpu_required",
+    "source_evidence": ["experiments/v1_evidence_chain/runs/R763_diger_rqvae_intake.json", "experiments/v1_evidence_chain/runs/R764_diger_matrix_refresh.json"]
+  },
+  "promotion": {
+    "route_id": "diger_beauty",
+    "evidence_role": "official_code_derived_route",
+    "paper_counted": true,
+    "conformance_status": "c0_c5_pass",
+    "conformance_evidence": "docs/reproducibility/conformance/diger_beauty_report.json"
+  }
+}

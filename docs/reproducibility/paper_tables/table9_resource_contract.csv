@@ -1,0 +1,8 @@
+surface,public_material,verification,boundary,source_evidence
+Entry point,"Repository URL, release tag, MIT license",Public URL smoke and manifest record,Recheck venue policy and release tag before submission,docs/reproducibility/sidscope_release_candidate_manifest.csv
+Runtime,Python >= 3.9; CPU-only quickstart,Sampled regeneration and verifier run,No GPU required for package verification,tools/run_sidscope_sampled_regeneration.py
+Runnable code,"Adapters, examples, package verifiers",Required-file and public-package checks,Code path only; no raw caches,tools/verify_sidscope_resource_package.py
+Conformance,"C0-C5 schema, seven route reports, invalid fixture","Inventory, conformance, and walkthrough verifiers",Upstream inputs obtained separately,docs/reproducibility/conformance/
+Evidence record,"Table/figure ledger, CSV/JSON snapshots, hashes, regeneration notes",Claim-ledger and paper-table verification,"Main, appendix, and future-work placement recorded",docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
+Release checks,"Archive builder, archive smoke, URL-smoke scripts",Archive hash and URL-smoke ledger,Refresh when a public tag changes,tools/build_sidscope_release_candidate_archive.py
+Upstream inputs,"Raw P5 data, checkpoints, cloud payloads",Provenance ledger and compact snapshots,Source-dependent artifacts not redistributed,docs/REPRODUCIBILITY_MATRIX.md

@@ -1,0 +1,7 @@
+level,question,required_evidence,source_evidence
+C0,Is the source and reuse boundary explicit?,"URL, revision, derivation, license, redistribution",docs/ADAPTER_CONFORMANCE.md
+C1,Are normalized tables coherent?,"Schema, SID reconstruction, dataset, depth, item count",docs/ADAPTER_CONFORMANCE.md
+C2,"Do mapping, metadata, and interactions join?",Nonempty joined items and coverage report,docs/ADAPTER_CONFORMANCE.md
+C3,Does the diagnostic interface execute?,Bounded D1--D5 outputs and limits,docs/ADAPTER_CONFORMANCE.md
+C4,Are inputs pinned and replayable?,"Command, runtime, evidence paths, three hashes",docs/ADAPTER_CONFORMANCE.md
+C5,May the route enter the paper matrix?,Exact inventory identity and eligible evidence role,docs/ADAPTER_CONFORMANCE.md

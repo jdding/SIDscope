@@ -1,0 +1,4 @@
+route,protocol,fold,effective_seed,target_traces,beam_rows,ambiguous_beam_rate,ambiguous_target_rate,target_path_survival,target_path_survival_ci,target_unique_item_hit,target_unique_item_hit_ci,source_evidence
+GRID/P5,explicit test,0,20261717,500,25000,0.340,1.000,0.064,"[0.044, 0.086]",0.034,"[0.020, 0.050]",docs/reproducibility/g20_trained_trace_summary.json
+GRID/P5,explicit test,1,20261718,500,25000,0.371,1.000,0.050,"[0.032, 0.070]",0.030,"[0.016, 0.044]",docs/reproducibility/g20_trained_trace_summary.json
+DIGER,last-event sensitivity,0,20262020,500,25000,0.101,0.990,0.066,"[0.046, 0.088]",0.054,"[0.036, 0.074]",docs/reproducibility/g20_trained_trace_summary.json

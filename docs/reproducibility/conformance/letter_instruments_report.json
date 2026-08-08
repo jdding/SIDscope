@@ -1,0 +1,147 @@
+{
+  "artifact_id": "letter_official_instruments",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "letter_official_instruments",
+        "license_status": "no_license_detected",
+        "paper_label": "LETTER / Instruments",
+        "source_revision": "8d0154e28de37dbb6e24871c508ad8ddb1921cda"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 4,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 206153
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 9922
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 9922
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "Instruments",
+            "interaction_items": 9922,
+            "interaction_without_sid": 0,
+            "metadata_items": 9922,
+            "metadata_without_sid": 0,
+            "method": "letter_official_rqvae",
+            "sid_items": 9922
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "6.162166;7.949873;7.942507;7.928418",
+            "d1_level_count": 4,
+            "d1_unique_codes": "150;256;256;256",
+            "d3_depth1_mean_collab_recall": 0.10689084895259096,
+            "d3_depth1_weighted_collab_recall": 0.10793296089385475,
+            "d4_head_sid_unique_ratio": 0.998186215235792,
+            "d4_mid_sid_unique_ratio": 0.9990928333837314,
+            "d4_tail_sid_unique_ratio": 0.9984880556395525,
+            "dataset": "Instruments",
+            "duplicate_sid_rate": 0.00251965329570647,
+            "full_collision_rate": 0.0048377343277565005,
+            "method": "letter_official_rqvae",
+            "prefix_counts": "150;6702;9608;9897",
+            "sid_length": 4,
+            "unique_sid": 9897
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "python3",
+          "-m",
+          "sidinspector.adapters.letter",
+          "--index-json",
+          "<LETTER/data/Instruments/Instruments.index.json>",
+          "--item-json",
+          "<LETTER/data/Instruments/Instruments.item.json>",
+          "--inter-json",
+          "<LETTER/data/Instruments/Instruments.inter.json>",
+          "--output-dir",
+          "<local-SIDScope-output-root>",
+          "--dataset-name",
+          "Instruments",
+          "--method",
+          "letter_official_rqvae"
+        ],
+        "input_sha256": {
+          "interactions": "2dfe87dc95fd9cd6efbbbb270e41cfcdaab3c52bf79f8311dd3e47791543da2b",
+          "item_metadata": "33ab9234dd59091439aadcafe591f5c1e56636f7ce0ef4f7f8286f4343738580",
+          "sid_assignments": "090afe5496bc2e0cb521715e4cc3c13e9ecbd517561c09eec25e0fe6815109bb"
+        },
+        "runtime_class": "cpu_minutes",
+        "source_evidence": [
+          "docs/reproducibility/source_route_evidence_summary.json",
+          "docs/reproducibility/sidscope_source_license_config_inventory.csv"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "released_index_route",
+        "inventory_match": true,
+        "paper_counted": true,
+        "route_id": "letter_instruments"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/letter_instruments_manifest.json",
+  "paper_label": "LETTER / Instruments",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

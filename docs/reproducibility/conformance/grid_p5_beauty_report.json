@@ -1,0 +1,134 @@
+{
+  "artifact_id": "grid_p5_beauty",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "grid_p5_beauty",
+        "license_status": "restricted_source_license",
+        "paper_label": "GRID / P5 Beauty",
+        "source_revision": "2fe3475b2d369580234093f35d52b1a2f54d0472"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 3,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 198502
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 12101
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 12101
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "beauty",
+            "interaction_items": 12101,
+            "interaction_without_sid": 0,
+            "metadata_items": 12101,
+            "metadata_without_sid": 0,
+            "method": "grid_rkmeans_official_code",
+            "sid_items": 12101
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "7.382077;7.366992;7.001953",
+            "d1_level_count": 3,
+            "d1_unique_codes": "256;256;256",
+            "d3_depth1_mean_collab_recall": 0.03947288238878733,
+            "d3_depth1_weighted_collab_recall": 0.038409311348205626,
+            "d4_head_sid_unique_ratio": 0.9144916728809346,
+            "d4_mid_sid_unique_ratio": 0.9405915983097192,
+            "d4_tail_sid_unique_ratio": 0.9570900123304562,
+            "dataset": "beauty",
+            "duplicate_sid_rate": 0.1224692174200479,
+            "full_collision_rate": 0.2051070159490951,
+            "method": "grid_rkmeans_official_code",
+            "prefix_counts": "256;6138;10619",
+            "sid_length": 3,
+            "unique_sid": 10619
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "bash",
+          "experiments/v1_evidence_chain/autodl/run_remote_gate1_grid_batch.sh"
+        ],
+        "input_sha256": {
+          "interactions": "5bb7e4b13d3b65417f33755d0f2cd32ac98fd0e88c85f5b6259232393b16b5b2",
+          "item_metadata": "7be5f158dec450982364ebd673b5a11182592c0bc35b5e3db2e71d2cbd41c8b1",
+          "sid_assignments": "29b6a89842b95291cc5713626133e62acb4c33a1eb33dd5fe5c39cf53e1a8d4e"
+        },
+        "runtime_class": "gpu_required",
+        "source_evidence": [
+          "experiments/v1_evidence_chain/runs/R150_grid_sidinspector_normalization_preflight.json",
+          "experiments/v1_evidence_chain/runs/R151_grid_true_row_g1_g2_g3_refresh.json"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "source_traced_named_route",
+        "inventory_match": true,
+        "paper_counted": true,
+        "route_id": "grid_p5_beauty"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/grid_p5_beauty_manifest.json",
+  "paper_label": "GRID / P5 Beauty",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

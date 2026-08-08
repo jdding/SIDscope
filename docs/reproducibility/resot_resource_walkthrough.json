@@ -1,0 +1,67 @@
+{
+  "decision": {
+    "claim_boundary": [
+      "This is a released text-index artifact intake and matrix row.",
+      "It is not trained-generator evidence or coverage of every ReSOT branch.",
+      "The upstream archive is not redistributed because no upstream license was detected."
+    ],
+    "paper_counted": true,
+    "reason": "The released archive route passes source, schema, join, diagnostic, provenance, and promotion checks."
+  },
+  "diagnostic_snapshot": {
+    "d3_depth1_weighted_collab_recall": 0.06290584415584416,
+    "full_collision_rate": 0.0,
+    "interactions": 136226,
+    "items": 6250,
+    "prefix_counts": "83;3645;5729;6250",
+    "sid_depth": 4,
+    "unique_full_sids": 6250
+  },
+  "paper_label": "ReSOT text-index / Instruments",
+  "route_id": "resot_instruments",
+  "schema": "sidscope.resot_resource_walkthrough.v1",
+  "source_boundary": {
+    "artifact_name": "data/Instruments/Instruments.index_lemb.json",
+    "license_status": "no_license_detected",
+    "redistribution_policy": "summary_only_no_archive_redistribution",
+    "retrieval_record": "Google Drive data.zip retrieved=2026-06-21; bytes=496862989; sid tokens=a/b/c/d; unique_full_sids=6250",
+    "source_revision": "4531f4d31ae4a9a954995593eb8912289139c063",
+    "source_url": "https://github.com/grw-zju/ReSOT"
+  },
+  "stages": [
+    {
+      "evidence": "docs/reproducibility/source_route_evidence_summary.json",
+      "historical_record_id": "R758_resot_archive_route_verification",
+      "outcome": "6250 four-level text-index rows found in the released archive.",
+      "question": "Does the upstream release expose an item-to-SID artifact?",
+      "stage": "discover"
+    },
+    {
+      "evidence": "docs/reproducibility/source_route_evidence_summary.json",
+      "historical_record_id": "R759_resot_text_index_intake",
+      "outcome": "6250 SID rows, 6250 metadata rows, and 136226 interaction rows normalized.",
+      "question": "Can the release be represented by the SIDScope table contract?",
+      "stage": "normalize"
+    },
+    {
+      "evidence": "docs/reproducibility/conformance/resot_instruments_report.json",
+      "outcome": "C0-C5 pass; collision rate 0.000, depth-1 weighted D3 0.0629.",
+      "question": "Do joins and bounded D1-D5 diagnostics execute?",
+      "stage": "inspect"
+    },
+    {
+      "evidence": "docs/reproducibility/source_route_evidence_summary.json",
+      "historical_record_id": "R760_resot_matrix_refresh",
+      "outcome": "Promoted after matrix refresh; effective artifact n=10 and artifact-depth n=30.",
+      "question": "May the route enter the paper-facing comparison matrix?",
+      "stage": "promote"
+    },
+    {
+      "evidence": "examples/conformance_failure_fixture/conformance_report.json",
+      "outcome": "The public fixture fails C1 only because sid disagrees with sid_level_* columns.",
+      "question": "Does the contract reject an internally inconsistent SID export?",
+      "stage": "reject-invalid"
+    }
+  ],
+  "status": "pass"
+}

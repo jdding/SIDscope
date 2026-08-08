@@ -1,0 +1,6 @@
+stage,question,evidence,decision,source_evidence
+Discover,Does the release contain item-level SIDs?,"6,250 four-level text-index rows in the upstream archive",Continue; do not redistribute archive,docs/reproducibility/resot_resource_walkthrough.json
+Normalize,Do artifact IDs join metadata and interactions?,"6,250/6,250/136,226 normalized rows; complete joins",Run conformance and diagnostics,docs/reproducibility/resot_resource_walkthrough.json
+Inspect,Is the route coherent and diagnostically executable?,C0--C5 pass; D2=0; D3@1=0.0629,Addressable row; prefix alignment remains modest,docs/reproducibility/conformance/resot_instruments_report.json
+Promote,May it count as named artifact evidence?,"Matrix refresh recomputes D1--D5, exposure, and uncertainty",Admit released-archive row,docs/reproducibility/resot_resource_walkthrough.json
+Reject invalid,Does a contradictory export slip through?,Public fixture has full SID inconsistent with its level columns,Stop at C1; do not promote,examples/conformance_failure_fixture/conformance_report.json

@@ -1,0 +1,9 @@
+artifact_route,derivation,configuration_identity,reuse_boundary,conformance_evidence,source_evidence
+ReSID / Musical,Tracked snapshot,depth 3; active prefixes 32/1280/23742,Code/data licensed; returned mapping boundary unresolved,Auditable snapshot,docs/reproducibility/sidscope_source_license_config_inventory.csv
+ReSID-GAOQ / Video,Official-code-derived,FAMAE+GAOQ; 32/64/64; 50 epochs,MIT; summaries and derived tables,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
+GRID / P5 Beauty,Tokenizer-stage rebuild,seed 42; 3 levels; width 256,Restricted research source; no upstream data redistribution,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
+CARD RQ-VAE / P5 Beauty,Code-derived with shim,4 levels; width 256; 20 epochs,No license detected; summary only,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
+DIGER RQ-VAE / Beauty,Official-code-derived,3 levels; width 256; checkpoint pinned,No license detected; summary only,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
+ReSOT text-index / Instruments,Released archive,"text index; 4 levels; 6,250 unique leaves",No license detected; archive not redistributed,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
+LETTER / Instruments,Released index,"4 levels; 9,922 items; official index pinned",No license detected; upstream artifact not redistributed,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
+LC-Rec / Instruments,Released index,"4 levels; 9,922 items; official archive pinned",No license detected; upstream artifact not redistributed,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv

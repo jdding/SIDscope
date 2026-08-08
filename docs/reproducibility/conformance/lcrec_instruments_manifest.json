@@ -1,0 +1,69 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "lcrec_official_instruments",
+  "paper_label": "LC-Rec / Instruments",
+  "method_family": "LC-Rec",
+  "configuration": "official linked Instruments.zip; 4 SID levels; archive sha256=96aad0cf1496a8ffef31bf1ca3a0d1033ca49473dff46b2c2dc27763224f9453; retrieved 2026-08-08",
+  "source": {
+    "url": "https://github.com/RUCAIBox/LC-Rec",
+    "revision": "e6f1b3b3f8b4fee55a49a7b3dfeba29dbfcf0669",
+    "license_status": "no_license_detected",
+    "license_identifier": "NOASSERTION",
+    "derivation": "released_index",
+    "artifact_name": "Instruments.index.json from official linked Instruments.zip",
+    "redistribution_policy": "summary_only_no_upstream_artifact_redistribution"
+  },
+  "dataset": {
+    "name": "Instruments",
+    "expected_items": 9922,
+    "sid_depth": 4
+  },
+  "inputs": {
+    "sid_assignments": "experiments/v1_evidence_chain/upstreams/LCRec/normalized_instruments/sid_assignments.parquet",
+    "item_metadata": "experiments/v1_evidence_chain/upstreams/LCRec/normalized_instruments/item_metadata.parquet",
+    "interactions": "experiments/v1_evidence_chain/upstreams/LCRec/normalized_instruments/interactions.parquet"
+  },
+  "input_availability": "official archive is public; normalized local inputs are not redistributed; public report retains hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "68c3aa2ba6c8d3527ffbfc17058c972b326e43d61994111f6b0e2d8d30b38ad1",
+    "item_metadata": "33ab9234dd59091439aadcafe591f5c1e56636f7ce0ef4f7f8286f4343738580",
+    "interactions": "2dfe87dc95fd9cd6efbbbb270e41cfcdaab3c52bf79f8311dd3e47791543da2b"
+  },
+  "metric_smoke": {
+    "max_metric_items": 50000,
+    "top_k": 5,
+    "max_pair_events": 10000,
+    "max_user_items": 50
+  },
+  "reproduction": {
+    "command": [
+      "python3",
+      "-m",
+      "sidinspector.adapters.lcrec",
+      "--index-json",
+      "<LC-Rec/Instruments/Instruments.index.json>",
+      "--item-json",
+      "<LC-Rec/Instruments/Instruments.item.json>",
+      "--inter-json",
+      "<LC-Rec/Instruments/Instruments.inter.json>",
+      "--output-dir",
+      "<local-SIDScope-output-root>",
+      "--dataset-name",
+      "Instruments",
+      "--method",
+      "lcrec_official_index"
+    ],
+    "runtime_class": "cpu_minutes",
+    "source_evidence": [
+      "docs/reproducibility/source_route_evidence_summary.json",
+      "docs/reproducibility/sidscope_source_license_config_inventory.csv"
+    ]
+  },
+  "promotion": {
+    "route_id": "lcrec_instruments",
+    "evidence_role": "released_index_route",
+    "paper_counted": true,
+    "conformance_status": "c0_c5_pass",
+    "conformance_evidence": "docs/reproducibility/conformance/lcrec_instruments_report.json"
+  }
+}

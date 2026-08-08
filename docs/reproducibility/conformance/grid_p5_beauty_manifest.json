@@ -1,0 +1,41 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "grid_p5_beauty",
+  "paper_label": "GRID / P5 Beauty",
+  "method_family": "GRID",
+  "configuration": "seed=42; embedding_dim=2048; num_hierarchies=3; codebook_width=256",
+  "source": {
+    "url": "https://github.com/snap-research/GRID",
+    "revision": "2fe3475b2d369580234093f35d52b1a2f54d0472",
+    "license_status": "restricted_source_license",
+    "license_identifier": "Snap non-commercial research sample-code license; P5 data terms require separate review",
+    "derivation": "tokenizer_stage_rebuild",
+    "artifact_name": "GRID rkmeans_train_flat and rkmeans_inference_flat semantic-ID export",
+    "redistribution_policy": "summary_and_derived_tables_no_upstream_data"
+  },
+  "dataset": {"name": "P5 Beauty", "normalized_name": "beauty", "expected_items": 12101, "sid_depth": 3},
+  "inputs": {
+    "sid_assignments": "experiments/v1_evidence_chain/gate1_named_grid_rkmeans/beauty/20260610T014829Z/R126_normalized/sid_assignments.parquet",
+    "item_metadata": "experiments/v1_evidence_chain/gate1_named_grid_rkmeans/beauty/20260610T014829Z/R151_context/item_metadata.parquet",
+    "interactions": "experiments/v1_evidence_chain/gate1_named_grid_rkmeans/beauty/20260610T014829Z/R151_context/interactions.parquet"
+  },
+  "input_availability": "local normalized inputs are not redistributed; public report retains hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "29b6a89842b95291cc5713626133e62acb4c33a1eb33dd5fe5c39cf53e1a8d4e",
+    "item_metadata": "7be5f158dec450982364ebd673b5a11182592c0bc35b5e3db2e71d2cbd41c8b1",
+    "interactions": "5bb7e4b13d3b65417f33755d0f2cd32ac98fd0e88c85f5b6259232393b16b5b2"
+  },
+  "metric_smoke": {"max_metric_items": 50000, "top_k": 5, "max_pair_events": 10000, "max_user_items": 50},
+  "reproduction": {
+    "command": ["bash", "experiments/v1_evidence_chain/autodl/run_remote_gate1_grid_batch.sh"],
+    "runtime_class": "gpu_required",
+    "source_evidence": ["experiments/v1_evidence_chain/runs/R150_grid_sidinspector_normalization_preflight.json", "experiments/v1_evidence_chain/runs/R151_grid_true_row_g1_g2_g3_refresh.json"]
+  },
+  "promotion": {
+    "route_id": "grid_p5_beauty",
+    "evidence_role": "source_traced_named_route",
+    "paper_counted": true,
+    "conformance_status": "c0_c5_pass",
+    "conformance_evidence": "docs/reproducibility/conformance/grid_p5_beauty_report.json"
+  }
+}

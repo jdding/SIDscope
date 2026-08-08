@@ -1,0 +1,66 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "resot_text_index_instruments",
+  "paper_label": "ReSOT text-index / Instruments",
+  "method_family": "ReSOT",
+  "configuration": "Google Drive data.zip retrieved=2026-06-21; bytes=496862989; sid tokens=a/b/c/d; unique_full_sids=6250",
+  "source": {
+    "url": "https://github.com/grw-zju/ReSOT",
+    "revision": "4531f4d31ae4a9a954995593eb8912289139c063",
+    "license_status": "no_license_detected",
+    "license_identifier": "NOASSERTION",
+    "derivation": "released_archive",
+    "artifact_name": "data/Instruments/Instruments.index_lemb.json",
+    "redistribution_policy": "summary_only_no_archive_redistribution"
+  },
+  "dataset": {
+    "name": "Instruments",
+    "expected_items": 6250,
+    "sid_depth": 4
+  },
+  "inputs": {
+    "sid_assignments": "experiments/v1_evidence_chain/gate17_resot_intake/normalized_text/sid_assignments.parquet",
+    "item_metadata": "experiments/v1_evidence_chain/gate17_resot_intake/normalized_text/item_metadata.parquet",
+    "interactions": "experiments/v1_evidence_chain/gate17_resot_intake/normalized_text/interactions.parquet"
+  },
+  "input_availability": "local_normalized_inputs_not_redistributed; public report retains hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "4eefcfcf219fbbe90c8281847c62f9c0e25395b46256a279eceb64546ffd532c",
+    "item_metadata": "bf7b3faa58550a82e5c43d9b6567397517dcfd75764e00acefa14df9f9f3f8ff",
+    "interactions": "01d2c554f3ecefa4517baf78c856517203dd69808d4a86988f4c4a534919ab9f"
+  },
+  "metric_smoke": {
+    "max_metric_items": 50000,
+    "top_k": 5,
+    "max_pair_events": 10000,
+    "max_user_items": 50
+  },
+  "reproduction": {
+    "command": [
+      "python3",
+      "tools/run_v1_gate17_resot_intake.py",
+      "--index-json",
+      "<extracted-ReSOT-data/Instruments/Instruments.index_lemb.json>",
+      "--item2id",
+      "<extracted-ReSOT-data/Instruments/Instruments.item2id>",
+      "--item-json",
+      "<extracted-ReSOT-data/Instruments/Instruments.item.json>",
+      "--inter-json",
+      "<extracted-ReSOT-data/Instruments/Instruments.inter.json>",
+      "--output-root",
+      "<local-SIDScope-output-root>"
+    ],
+    "runtime_class": "cpu_minutes",
+    "source_evidence": [
+      "docs/reproducibility/source_route_evidence_summary.json",
+      "docs/reproducibility/resot_walkthrough_sources.json"
+    ]
+  },
+  "promotion": {
+    "route_id": "resot_instruments",
+    "evidence_role": "released_index_route",
+    "paper_counted": true,
+    "conformance_status": "c0_c5_pass",
+    "conformance_evidence": "docs/reproducibility/conformance/resot_instruments_report.json"
+  }
+}

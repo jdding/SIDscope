@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jdding/sidscope/schemas/adapter_manifest.v1.json",
+  "title": "SIDScope adapter manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "paper_label",
+    "method_family",
+    "configuration",
+    "source",
+    "dataset",
+    "inputs",
+    "input_sha256",
+    "reproduction",
+    "promotion"
+  ],
+  "properties": {
+    "schema_version": {"const": "sidscope.adapter_manifest.v1"},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "paper_label": {"type": "string", "minLength": 1},
+    "method_family": {"type": "string", "minLength": 1},
+    "configuration": {"type": "string", "minLength": 1},
+    "source": {
+      "type": "object",
+      "required": ["url", "revision", "license_status", "license_identifier", "derivation", "artifact_name", "redistribution_policy"]
+    },
+    "dataset": {
+      "type": "object",
+      "required": ["name", "expected_items", "sid_depth"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "normalized_name": {"type": "string", "minLength": 1},
+        "expected_items": {"type": "integer", "minimum": 1},
+        "sid_depth": {"type": "integer", "minimum": 1}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["sid_assignments", "item_metadata", "interactions"]
+    },
+    "input_sha256": {
+      "type": "object",
+      "required": ["sid_assignments", "item_metadata", "interactions"]
+    },
+    "reproduction": {
+      "type": "object",
+      "required": ["command", "runtime_class", "source_evidence"]
+    },
+    "promotion": {
+      "type": "object",
+      "required": ["route_id", "evidence_role", "paper_counted", "conformance_status", "conformance_evidence"]
+    }
+  }
+}

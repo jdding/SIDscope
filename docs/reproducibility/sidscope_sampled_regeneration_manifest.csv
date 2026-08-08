@@ -1,0 +1,4 @@
+check,command,expected_output,evidence_level,notes
+reviewer_quickstart,python3 examples/run_reviewer_quickstart.py --output-dir <out>/reviewer_quickstart,<out>/reviewer_quickstart/preflight_summary.json; <out>/reviewer_quickstart/diagnostics/d1_utilization.csv,fully runnable,CPU-only usability example
+reproducibility_matrix,python3 tools/verify_reproducibility_matrix.py,stdout pass message,tracked snapshot,validates compact evidence snapshots and matrix schema
+package_contract,python3 tools/verify_sidscope_resource_package.py,stdout pass message,fully runnable,checks G5/G6 local package contract

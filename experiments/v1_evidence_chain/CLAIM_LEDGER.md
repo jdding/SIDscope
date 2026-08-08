@@ -1,0 +1,174 @@
+# SIDScope G9 Claim-To-Artifact Ledger
+
+Date: 2026-06-20
+Status: canonical G9 registry plus G10/G11 utility-anchor updates, the
+G12/G13 generator-boundary results, the G14 usage-demo/G15 coverage refresh,
+the G16 trained-generator exact-audit boundary, the G17 ReSOT/DIGER
+intake/G2-G4 refresh, and the G20 trained trie-constrained D7 case recorded for the current TOIS draft; final
+claim/citation audit remains required after manuscript freeze
+Scope: current evidence through G20, with the TOIS substantial-extension branch selected after CIKM V0 acceptance
+after R147-R151, R307-R310, R501-R604, R701, R703, R708-R711, R721-R724,
+R731-R733, R741-R743, R745-R752, R753, and R759-R764
+
+This ledger maps current paper-facing claims to concrete artifacts, commands,
+row counts, limitations, paper placement, and V0-overlap notes. It is the
+authoritative G9 boundary until the paper draft introduces new tables,
+figures, or claims.
+
+The machine-readable final table/figure registry is:
+
+- `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`
+
+Any final paper table or figure must cite rows from that registry or this
+ledger must be updated and re-verified before submission.
+
+## Claim Status Labels
+
+- `supported`: current artifacts support the claim under the stated limitation.
+- `partial`: current artifacts support a narrower version only.
+- `missing`: required resource/package evidence does not exist yet.
+- `avoid`: do not make this claim with current evidence.
+
+## Paper Placement Labels
+
+- `main`: allowed in the main paper if the stated limitation is preserved.
+- `appendix`: allowed only as appendix, provenance, or detailed support.
+- `future_work`: not an accomplished result; may appear only as limitation or
+  future work.
+
+## Claim Ledger
+
+| ID | Candidate paper claim | Status | Paper placement | Evidence artifacts | Command or regeneration note | Row counts / numeric support | Limitation | V0 overlap note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| C1 | SIDScope provides artifact-level diagnostics for Semantic-ID generative recommendation resources. | supported | main | `MANIFEST.md`; `GATE1_RESULT.md`; `ACCEPTANCE_GATES.md`; `src/sidinspector/d7_trace.py`; `src/sidinspector/adapters/grid.py`; `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`; active `tools/run_v1_gate*.py` and `tools/*grid*.py` scripts. | Reviewer package exposes quickstart, sampled regeneration, release archive checks, and public URL/tag smoke tooling. | G1-G7 evidence built; the current local package and clean archive pass R795-R801. Historical URL smoke passed for an earlier release, while the corrected `sidscope/main` URL and next tag still require a fresh smoke before publication. | Current artifacts prove resource construction and local package accessibility, not downstream recommendation improvement or the final public release state. | Extends V0 mapping-first resource toward faithful artifact intake, candidate exposure, D7 trace diagnostics, and package-level reproducibility. |
+| C2 | The resource includes multiple validated artifact families, including official upstream snapshots, ReSID-style artifacts, GRID stress/reference, faithful GRID tokenizer-stage intake, CARD RQ-VAE intake, ReSOT released-archive intake, and DIGER RQ-VAE intake. | supported | main | `GATE1_RESULT.md`; `runs/R124_resid_gaoq_autodl_collection.json`; `runs/R145_resid_gaoq_followup_collection.json`; `runs/R150_grid_sidinspector_normalization_preflight.json`; `runs/R151_grid_true_row_g1_g2_g3_refresh.json`; `runs/R752_card_rqvae_intake.json`; `gate15_card_rqvae_intake/GATE15_CARD_RESULT.md`; `runs/R759_resot_text_index_intake.json`; `gate17_resot_intake/G17_RESOT_INTAKE_RESULT.md`; `runs/R760_resot_matrix_refresh.json`; `gate17_resot_intake/G17_RESOT_MATRIX_REFRESH_RESULT.md`; `runs/R763_diger_rqvae_intake.json`; `gate17_diger_intake/G17_DIGER_INTAKE_RESULT.md`; `runs/R764_diger_matrix_refresh.json`; `gate17_diger_intake/G17_DIGER_MATRIX_REFRESH_RESULT.md`; `GRID_GATE1_BUILD_PLAN.md`; `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | ReSID route: `tools/run_v1_gate1_resid_gaoq_artifact.py`; GRID route: R147-R151 collection/preflight/refresh tools; CARD route: `tools/run_v1_gate15_card_rqvae_intake.py`; ReSOT route: `tools/run_v1_gate17_resot_intake.py`; DIGER route: `tools/run_v1_gate17_diger_intake.py`; final table rows T2/T5/AT1 in the canonical G9 table/figure ledger bind the paper-facing sources. | ReSID R116 `23,742` items, R118 `24,685` items; faithful GRID/P5 Beauty `12,101` rows and `10,619` unique full SIDs; CARD RQ-VAE/P5 Beauty `12,101` rows and `12,098` unique full SIDs; ReSOT text-index/Instruments `6,250` rows and `6,250` unique full SIDs; DIGER RQ-VAE/Beauty `12,101` rows and `11,581` unique full SIDs. | ReSID GAOQ uses official-code-derived unbalanced-KMeans route; faithful GRID currently P5 Beauty only; CARD is official-code-derived with a local compatibility shim, not an author-released CARD mapping; ReSOT uses the released `data.zip` text-index route; DIGER uses public HF embeddings/checkpoint through official code, not an author-released item-to-SID table. ReSOT and DIGER both keep the no-license-detected reuse caveat. | Strong V1 delta if V0 already published because it adds true returned artifacts, faithful GRID intake, CARD RQ-VAE intake, ReSOT released-archive intake, and DIGER official-code-derived intake. |
+| C3 | R138 demonstrates that artifact names can hide severe SID interface failures. | supported | appendix | `GATE1_RESULT.md`; `runs/R138_grid_existing_artifact_validation.json`; `gate1_grid_existing/Musical_Instruments/preflight_metric_smoke.json`; table rows T2/AT1 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | Built by `tools/build_v1_gate1_grid_existing_artifact.py`; paper table must label R138 as stress/reference. | `23,742` rows; `3,749` unique full SIDs; `duplicate_sid_rate=0.842094`; interaction-weighted `full_collision_rate=0.976876`. | R138 is a local GRID-shaped stress/reference artifact with GRID-route provenance warnings, not faithful GRID named coverage. | V1 uses this as a diagnostic stress case; it should not be confused with V0's reconstructed GRID-style row. |
+| C4 | D3 prefix/co-occurrence alignment acts as a fast train-only candidate-exposure proxy with disjoint-user and non-prefix hard-negative utility anchoring. | supported | main | `gate2_cross_dataset_utility/GATE2_RESULT.md`; `gate3_controlled_exposure/GATE3_RESULT.md`; `gate35_cluster_reanalysis/GATE35_RESULT.md`; `gate9_decoupled_utility/GATE9_RESULT.md`; `gate10_independent_utility/GATE10_PROTOCOL_SENSITIVITY_RESULT.md`; `gate10_independent_utility_popularity_sensitivity/GATE10_RESULT.md`; `gate105_layerc_controls/GATE10_5_RESULT.md`; `runs/R205_gate2_cross_dataset_utility.json`; `runs/R208_gate3_controlled_exposure.json`; `runs/R209_gate35_cluster_reanalysis.json`; `runs/R760_resot_matrix_refresh.json`; `runs/R764_diger_matrix_refresh.json`; `runs/R701_gate9_decoupled_utility.json`; `runs/R703_gate10_independent_utility.json`; `runs/R709_gate105_layerc_controls.json`; table row T6 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `tools/run_v1_gate2_cross_dataset_utility.py`; `tools/run_v1_gate3_controlled_exposure.py`; `tools/run_v1_gate35_cluster_reanalysis.py --bootstrap-samples 4999`; `tools/run_v1_gate9_decoupled_utility.py`; `tools/run_v1_gate10_independent_utility.py`; `tools/run_v1_gate105_layerc_controls.py`; final table sources are package-relative paths in the canonical G9 table/figure ledger. | G2 `330` evaluated rows; D3 to candidate recall Spearman `0.9705` as within-protocol calibration; G3 `990` controlled rows; coefficient `0.1186`; G4 effective artifact `n=11`, artifact-depth `n=33`, wild-cluster CI for the controlled coefficient `[0.0690, 0.1677]` from 4,999 resamples; G10/R701 disjoint-user rows: `51,991` user rows and `264` fold-summary rows, artifact-depth `n=22`, disjoint D3 to candidate recall Spearman `0.9853` CI `[0.9316, 0.9954]`, bounded Recall@20 Spearman `0.6446` CI `[0.3218, 0.8578]`, bounded NDCG@20 Spearman `0.5449` CI `[0.1466, 0.7969]`; G10/R703 hard-negative non-prefix candidate pool artifact-depth `n=24`, SID-prefix-affinity Recall@20 Spearman `0.8169` CI `[0.4841, 0.9335]`, NDCG@20 `0.6903` CI `[0.3951, 0.8981]`, MRR@20 `0.4702` CI `[0.1071, 0.7510]`; G11/R709 target-popularity residual NDCG Spearman `0.6345` CI `[0.1151, 0.9507]`; G11 non-prefix ranker controls are weaker and their NDCG CIs cross zero; G10 random-negative sensitivity is weak or negative for SID-prefix affinity. | Proxy/triage only. G10/R701 removes interaction-user overlap between D3 and exposure evaluation but D3 and candidate exposure still share SID prefix structure. G10/R703 removes prefix retrieval from candidate construction under sampled-ranking protocols, but it is still a fixed ranker and protocol-sensitive: hard popularity negatives pass, random negatives do not. G11 bounds the Layer-C claim: D3 supports SID-interface utility under a SID-affinity scoring primitive, not arbitrary non-prefix rankers. Fixed-reranker Recall/NDCG/MRR are utility anchors, not trained-generator or final recommender evidence. | Extends V0 diagnostics with a candidate-exposure utility chain, wild-cluster uncertainty, disjoint-user bounded downstream anchoring, and a protocol-sensitive non-prefix hard-negative utility anchor. |
+| C4c | A scorer that avoids SID-prefix equality gives only weak non-prefix ranking evidence. | partial | main | `gate11_nonprefix_scoring_anchor/GATE11_RESULT.md`; `gate11_nonprefix_scoring_anchor/g11_nonprefix_scoring_result.json`; `gate11_nonprefix_scoring_anchor/g11_nonprefix_associations.csv`; `runs/R711_gate11_nonprefix_scoring_anchor.json`. | `tools/run_v1_gate11_nonprefix_scoring_anchor.py`; the R711 plan-to-run gate is `G11_G12_PLAN_TO_RUN_GATE.json`. | Metadata-category scorer over the G10 hard-negative non-prefix candidate pool: artifact-depth `n=24`, Recall@20 Spearman `0.2065` CI `[-0.2215, 0.6216]`, NDCG@20 `0.2065` CI `[-0.2695, 0.5882]`, MRR@20 `0.0122` CI `[-0.3984, 0.4651]`; metadata coverage is `1.0` for all 8 primary rows. | This reduces the "no non-prefix scorer tested" gap but does not close Layer-C. The strongest current utility anchor remains SID-prefix-affinity under hard negatives; generic non-prefix ranking utility remains unsupported. | Adds a V1 boundary result that was absent from V0 and clarifies the resource's utility scope. |
+| C4b | SID interface health is a multi-signal trade-off surface, not a single collision or uniqueness scalar. | supported | main | `SCIENTIFIC_CLAIM_DEEP_DIVE_20260610.md`; `scientific_deep_dive/scope_sensitivity_spearman.csv`; `scientific_deep_dive/depth_sensitivity_spearman.csv`; `scientific_deep_dive/leave_one_artifact_out_spearman.csv`; `scientific_deep_dive/row_strata_spearman.csv`; figure row F2 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | Derived from current G2/G3/G4 outputs with `analyze-results` deep dive; figure sources and hashes are bound in row F2. | D3 leave-one-artifact-out Spearman remains `0.821` to `0.964`; D2 prefix-collision artifact Spearman `0.905`; D1 entropy artifact Spearman `-0.976`; D3 stable across depths while D2 is depth-sensitive. | Frozen eight-artifact deep-dive subset only; resource/evaluation insight, not the current eleven-cluster matrix; do not claim high collision is generally good or that this predicts downstream quality. | Stronger V1 scientific insight beyond V0 mapping audit: resource diagnostics expose an interface-health trade-off. |
+| C5 | Cluster-aware uncertainty addresses row-level pseudo-replication in the candidate-exposure analysis. | supported | main | `gate35_cluster_reanalysis/GATE35_RESULT.md`; `runs/R209_gate35_cluster_reanalysis.json`; `runs/R760_resot_matrix_refresh.json`; `runs/R764_diger_matrix_refresh.json`; table row T6 and figure row F2 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `tools/run_v1_gate35_cluster_reanalysis.py --bootstrap-samples 4999`. | Effective artifact `n=11`; effective artifact-depth `n=33`; G2 artifact-level Spearman `0.9455` CI `[0.6850, 1.0000]`; G2 artifact-depth Spearman `0.9822` CI `[0.9411, 0.9932]`; controlled coefficient `0.1186` with wild-cluster CI `[0.0690, 0.1677]`, all from 4,999 resamples. | Effective n is still modest; paper should report artifact-level/artifact-depth/wild-cluster uncertainty, not narrow row-bootstrap CIs. The 990 controlled rows are descriptive design rows, not independent samples. | Addresses external review concern about pseudo-replication beyond V0. |
+| C6 | D7 provides a constrained-aware generator-trace labeling schema. | supported | main | `gate4_d7_diagnostic/GATE4_RESULT.md`; `gate4_d7_diagnostic/d7_synthetic_label_summary.csv`; `experiments/d7_generator_traces/trace_schema.md`; `experiments/d7_generator_traces/failure_taxonomy.md`; `runs/R305_gate4_d7_diagnostic.json`; table row T7 and appendix figure row F3 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `tools/run_v1_gate4_d7_diagnostic.py`; main D7 claims use the combined T7 trace-accounting table; F3 is appendix/optional only. | Synthetic fixture has `9` trace-label rows and `6` label-summary rows; deterministic after row reorder; labels include constrained-survivable and unconstrained-only families. | Diagnostic fixture plus imported negative case; not trained-generator failure evidence. | Directly extends the post-V0 D7 TODO into a formal trace schema. |
+| C7 | Invalid/unresolved paths are unconstrained-only auxiliary evidence, not the D7 main claim. | supported | appendix | `gate4_d7_diagnostic/GATE4_RESULT.md`; `gate4_d7_diagnostic/prefix_capacity_gate0_negative_case.json`; appendix row AT2 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | Imported by `tools/run_v1_gate4_d7_diagnostic.py`; keep in appendix/limitation wording. | Zipf unconstrained unresolved rate `0.2`; Zipf constrained unresolved rate `0.0`; Uniform constrained unresolved rate `0.0`. | Do not claim invalid/unresolved paths are a standard constrained-decoding failure mode. | This is a boundary/negative insight, not a V0-style positive diagnostic headline. |
+| C8 | D7 labeling scales to real-format public beam rows. | supported | appendix | `gate45_real_beam_d7/GATE45_RESULT.md`; `runs/R306_gate45_real_beam_d7.json`; per-case `d7_case_metrics.json` files; appendix row AT2 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `tools/run_v1_gate45_real_beam_d7.py`. | `4` cases; `2,000,000` beam rows; `20,000` traces; mapping match `1.0000`; invalid path rate `0.0000`. | This historical public-beam case validates scale/schema/reverse lookup only; the separate G20 row carries trained failure-family evidence. | Adds generator-trace resource surface beyond V0 but not a trained-generator finding. |
+| C8b | D7 can connect SID artifact diagnostics to per-beam target survival or hit accounting. | supported | main | `D7_PER_BEAM_TRACE_JOIN_PLAN.md`; `runs/R307_d7_per_beam_trace_source_audit.json`; `gate46_d7_per_beam_trace_join/GATE46_RESULT.md`; `runs/R308_d7_per_beam_trace_adapter.json`; `runs/R309_d7_per_beam_trace_join.json`; `runs/R310_d7_per_beam_trace_join_synthesis.json`; `gate19_d7_real_trained_trace/g19_trace_export_schema_smoke_result.json`; `gate19_d7_real_trained_trace/g19_trace_label_smoke_result.json`; `runs/R791_d7_trace_exporter_schema_smoke.json`; `runs/R792_d7_trace_label_smoke.json`; table row T7 and appendix row AT2 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `tools/run_v1_gate46_d7_per_beam_trace_join.py`; `tools/run_v1_gate12b_sequence_generator_anchor.py --export-traces`; `tools/run_v1_gate19_d7_label_traces.py`. | `2,000,000` public beam rows joined to `240,000` target rows; survival agreement `1.0000` after respecting beam-width budget; pressure-survival signal observed; G19A trained candidate-pool smoke exports `800` trace rows over `40` trace IDs, with `candidate_resolution_match_rate=1.0`, `invalid_path_rate=0.0`, and `target_hit_rate=0.01`; no D7 failure-family variation. | Supports bounded public-beam trace accounting and trained candidate-pool trace observability only. Do not claim trained-generator failure prediction or failure-family discovery; the trained smoke is valid-only under candidate-pool scoring. | Strong V1 delta because it links mapping diagnostics, candidate exposure, public trace accounting, trained candidate-pool trace observability, and generator trace resource boundaries under reproducible cases. |
+| C8c | D7 repeatedly observes ambiguous paths and distinguishes target-code survival from unique target-item hits in trained trie-constrained beams. | supported | main | `G20_D7_FAILURE_RICH_TRACE_PLAN.md`; `gate20_d7_failure_rich_trace/G20_RESULT.md`; `docs/reproducibility/g20_trained_trace_summary.json`; `docs/reproducibility/paper_table_sources/table10_g20_trained_trace_source.csv`; `runs/R806b_g20_local_real_preflight_remediated.json`; table row T10 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `tools/run_v1_gate20_d7_trained_beam.py`; regenerate Table 10 with `tools/build_sidscope_paper_tables.py`; full checkpoints and beam logs remain local/source-dependent while compact rows bind their hashes. | Two GRID/P5 folds each contain `500` targets and `25,000` beam rows under beam width `50`; ambiguous beam-row fractions are `0.340` and `0.371`, ambiguous target rates are `1.000`, target-path survival is `0.064` and `0.050`, and unique-item hit is `0.034` and `0.030`. DIGER sensitivity has `500` targets, `25,000` rows, ambiguous beam fraction `0.101`, and ambiguous target rate `0.990`. | Supports repeated trained constrained-beam observability and path-versus-item accounting. It does not estimate universal failure prevalence or establish a generator failure mechanism, causal error effect, or D1-D5 trained-generator predictivity; DIGER uses a different last-event split and is not a direct method comparison. | Adds the trained failure-observability case absent from V0 and supersedes the earlier G19 valid-only smoke, strengthening the journal extension's D7 resource contribution. |
+| C9 | SIDScope predicts final downstream recommendation quality or trained-generator failure. | avoid | future_work | No supporting artifact. | Boundary artifacts are `gate12_tiny_generator_anchor/GATE12_RESULT.md`, `gate12b_sequence_generator_anchor/AUTODL_RUN_SUMMARY.md`, `gate12b_sequence_generator_anchor_followup/GATE12B_RESULT.md`, `gate13_valid_generator_anchor/AUTODL_RUN_SUMMARY.md`, and `gate16_trained_generator_anchor_audit/GATE16_RESULT.md`. G12/R724 ran the fixed-budget tiny learned SID generator on AutoDL over five artifacts x two folds and was negative. The historical G12b/R731-R733 branch then ran a stronger GRU-history/autoregressive-SID sequence generator with per-target timestamp-bounded evaluation histories, popularity/random baselines, and an extended-budget retry. G13/R741-R743 tested whether a non-prefix item-ID sequential generator makes the sampled-ranking protocol valid enough to interpret SID-generator utility; it failed the popularity-validity gate and skipped R743. G16/R753 then re-audited existing G12/G12b/G13 outputs at artifact level with exact permutation tests. | G12/R724: artifact-fold n=10, Recall@20 rho `-0.200` CI `[-0.669, 0.636]`, NDCG@20 rho `0.088` CI `[-0.577, 0.750]`, MRR@20 rho `0.338` CI `[-0.429, 0.775]`; artifact-level exact G16 NDCG rho `0.205`, p `0.733`. Historical G12b/R732: `model_validity_pass=false`, NDCG beats popularity rate `0.2`, mean NDCG lift vs popularity `-0.0057`, D3 to NDCG rho `-0.1688` CI `[-0.7258, 0.6491]`; G16 artifact-level exact NDCG rho `-0.564`, p `0.400`. Historical G12b/R733 extended-budget retry: `model_validity_pass=false`, NDCG beats popularity rate `0.2`, mean NDCG lift vs popularity `-0.0064`, D3 to NDCG rho `0.1000` CI `[-0.6345, 0.6974]`; G16 artifact-level exact NDCG rho `0.205`, p `0.733`, and NDCG-lift rho `0.410`, p `0.500`. G13/R742: `model_validity_pass=false`, NDCG beats popularity rate `0.125`, mean NDCG lift vs popularity `-0.0061`, NDCG beats random rate `1.0`, mean NDCG lift vs random `0.0063`; G16 artifact-level exact NDCG rho `0.144`, p `0.736`, and NDCG-lift rho `0.108`, p `0.806`. | Must not be claimed as final recommendation improvement, trained-generator quality prediction, or trained-generator failure prediction. G16 closes the "maybe it was only aggregated incorrectly" gap: the current resource can support interface-health/candidate-exposure triage, not trained-generator utility prediction. Any future rescue must first pass a pre-registered generator-validity gate before expanding artifact count. | Would overextend V1 beyond both V0 and current evidence if written as final downstream quality; the correct V1 wording is resource/diagnostic utility with explicit trained-generator boundary. |
+| C10 | The resource has a reviewer-accessible package contract with quickstart, sampled regeneration, realistic tutorial validation, claim-ledger verification, docs, release-candidate manifest, archive build, no-git archive smoke, public-package content hygiene, local clean-extract smoke, and public URL/tag smoke tooling. | supported | main | `G7_LITE_CLAIM_PACKAGE_BOUNDARY.md`; `docs/SIDSCOPE_RESOURCE_PACKAGE.md`; `docs/SIDSCOPE_DATASHEET.md`; `docs/SIDSCOPE_LIMITATIONS.md`; `docs/SIDSCOPE_MAINTENANCE.md`; `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`; `docs/reproducibility/sidscope_sampled_regeneration_manifest.csv`; `docs/reproducibility/sidscope_release_candidate_manifest.csv`; `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`; `tools/run_sidscope_public_url_smoke.py`; `runs/R501_R503_sidscope_resource_package_verification.json`; `runs/R504_sidscope_release_candidate_manifest_verification.json`; `runs/R505_sidscope_release_candidate_archive.json`; `runs/R506_sidscope_release_archive_smoke.json`; `runs/R509_sidscope_realistic_tutorial.json`; `runs/R510_sidscope_claim_ledger_verification.json`; `runs/R603_sidscope_g8_fresh_env_smoke.json`; `runs/R708_sidscope_public_url_smoke_rc2.json`; `runs/R746_sidscope_resource_package_verification_g14.json`; `runs/R747_sidscope_release_candidate_archive_g14.json`; `runs/R748_sidscope_release_archive_smoke_g14.json`; `runs/R766_sidscope_resource_package_after_diger.json`; `runs/R795_sidscope_resource_package_tois_extension.json`; `runs/R796_sidscope_release_archive_tois_extension.json`; `runs/R797_sidscope_release_archive_smoke_tois_extension.json`; `runs/R798_sidscope_source_inventory_verification.json`; `runs/R799_sidscope_adapter_conformance_verification.json`; `runs/R800_sidscope_resot_walkthrough_verification.json`; `runs/R801_sidscope_tois_content_gate_package_closure.json`; `runs/R802_sidscope_full_manuscript_table_regeneration.json`; `runs/R803_sidscope_multi_route_conformance.json`; `runs/R804_sidscope_seven_route_conformance_closure.json`; `runs/R811_g20_paper_package_closure.json`; `runs/R812_tois_transition_audit_and_cleanup.json`. | `python3 tools/verify_sidscope_resource_package.py`; `python3 tools/verify_sidscope_claim_ledger.py --result-json /tmp/sidscope_claim_ledger_verification.json`; `python3 tools/run_sidscope_realistic_tutorial.py --output-dir /tmp/sidscope_realistic_tutorial`; `python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1-release-candidate.zip`; `python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1-release-candidate.zip`; `python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1-release-candidate.zip`; `python3 tools/run_sidscope_sampled_regeneration.py --output-dir <out>`; `python3 tools/run_sidscope_public_url_smoke.py --repo-url https://github.com/jdding/sidscope.git --ref main --result-json /tmp/sidscope_public_url_smoke.json`. | All `10` manuscript tables and `76` rows rebuild through one command. Seven heterogeneous routes pass C0--C5; the current `134`-file archive passes clean extraction and sampled regeneration. | Public URL smoke, final release tag, and TOIS submission packaging remain separate gates. | Supports the TOIS resource-extension package with a single deterministic entry point for all manuscript tables and route-level conformance reports. |
+| C12 | SIDScope includes a reproducible usage walkthrough that turns compact artifact diagnostics into triage decisions for promotion, monitoring, manual review, or stress-only treatment. | supported | appendix | `docs/SIDSCOPE_USAGE_DEMO.md`; `docs/reproducibility/g14_usage_demo_decisions.csv`; `docs/reproducibility/g14_usage_demo_summary.json`; `tools/run_sidscope_usage_demo.py`; `G14_USAGE_DEMO_PLAN.md`. | `python3 tools/run_sidscope_usage_demo.py`; appendix table row AT4 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv` binds the source rows. | G13/R745 now inspects `11` artifact rows after ReSOT/DIGER snapshot refresh: `2` promote candidates (`LETTER`, `ReSID`), `2` diagnostic controls, `3` stress-only rows, `3` monitored rows, and `1` manual-review row. | The walkthrough uses deterministic illustrative thresholds and supports resource usability/decision tracing only; it does not claim downstream model-quality prediction. | This is a V1 resource contribution absent from V0: a concrete artifact-to-decision usage path rather than only diagnostic definitions. |
+| C11 | SIDScope is a substantial TOIS journal extension of the accepted CIKM 2026 SIDInspector resource paper. | supported | main | `V0_V1_DELTA_AND_VENUE_GATE.md`; `CIKM_ACCEPTANCE_AND_TOIS_EXTENSION_DECISION_20260808.md`; `SPEC.md`; `papers/tois-sidscope/V0_TO_SIDSCOPE_SUBSTANTIVE_DELTA_LEDGER.md`; `papers/tois-sidscope/V0_TO_SIDSCOPE_OVERLAP_AUDIT.json`; `papers/tois-sidscope/TOIS_PRIOR_PUBLICATION_DISCLOSURE.md`; future-work row FW1 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | Maintain the formal disclosure and claim/table/figure/resource/text delta ledger against the CIKM camera-ready baseline. | The current-draft audit passes the internal 60% substantive-new-material gate through faithful GRID/CARD/ReSOT/DIGER intake, controlled G2/G3/G4 exposure evidence, constrained-aware D7 schema and accounting, usage demonstration, trained-generator predictivity boundary, conformance, and a stronger reproducibility package. | The current draft passes; final CIKM DOI/proceedings metadata, resource tag, and any material TOIS changes require a final rerun before submission. | This is the central prior-publication boundary after CIKM acceptance. |
+| C13 | SIDScope makes artifact admission auditable through an eight-route source/license/configuration inventory, an executable C0--C5 conformance protocol, and a source-to-promotion ReSOT walkthrough. | supported | main | `docs/reproducibility/sidscope_source_license_config_inventory.csv`; `docs/reproducibility/source_route_evidence_summary.json`; `docs/reproducibility/conformance/`; `examples/conformance_failure_fixture/conformance_report.json`; `docs/reproducibility/resot_resource_walkthrough.json`; `docs/RESOT_RESOURCE_WALKTHROUGH.md`; table rows T3/T4/T8 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `python3 tools/verify_sidscope_source_inventory.py`; `python3 tools/verify_adapter_conformance_assets.py`; `python3 tools/verify_resot_resource_walkthrough.py`. | Inventory covers 8 paper-facing routes; ReSID-GAOQ, GRID, CARD, DIGER, ReSOT, LETTER, and LC-Rec pass C0--C5; the public invalid fixture fails exactly C1; the ReSOT walkthrough binds 5 stages and cross-checks C1/C3/C5 evidence. | ReSID/Musical remains the sole auditable snapshot and is not described as fully regenerable. | New TOIS-only resource-evaluation and conformance contribution beyond the CIKM V0 interface. |
+
+### Current C10 Package Status
+
+R804 closed the pre-G20 package counts. The current builder reconstructs all
+ten manuscript tables with 79 verified rows; seven routes pass C0--C5. G20
+adds compact hashed trained-trace evidence while leaving full checkpoints and
+beam logs outside the public package. Public URL/tag validation and the final
+TOIS submission package remain separate gates.
+
+## Final Table/Figure Registry
+
+`docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv` keeps its
+historical filename but is the current canonical G9 registry. It binds each
+planned paper table or figure to:
+
+- a `paper_artifact_id`;
+- `main`, `appendix`, or `future_work` placement;
+- source row filters;
+- package-relative source paths;
+- SHA256 hashes or regeneration notes;
+- evidence level and limitations.
+
+Current registry rows:
+
+- `T1`: main V0-to-SIDScope delta table.
+- `T2`: main artifact coverage and provenance matrix.
+- `T3`: main source/configuration/license/reuse inventory.
+- `T4`: main C0--C5 adapter conformance protocol.
+- `T5`: main SID diagnostic profile and interface-health examples.
+- `T6`: main candidate-exposure proxy and cluster-aware uncertainty table.
+- `T7`: main D7 trace-accounting checks table.
+- `T8`: main ReSOT intake-to-promotion walkthrough.
+- `T9`: main reviewer-visible resource package contract.
+- `F1`: main SIDScope evidence-chain workflow figure.
+- `F2`: main interface-health trade-off surface figure.
+- `F3`: appendix/optional D7 bounded public-beam trace-accounting diagnostic.
+- `AT1`: appendix full artifact coverage and extension snapshots.
+- `AT2`: appendix D7 per-case trace-accounting details.
+- `AT3`: appendix reviewer package verification and public URL smoke.
+- `AT4`: appendix G14 usage-demo artifact triage walkthrough.
+- `FW1`: future-work blocked-claim table.
+
+## Paper-Facing Claims Currently Allowed
+
+- Artifact-level SID diagnostics can be used as a resource inspection layer
+  before generator training.
+- D3 prefix/co-occurrence alignment is a fast candidate-exposure proxy under
+  the train-only prefix-candidate protocol, G10/R701 shows the direction remains
+  strong when D3 users and exposure users are disjoint, G10/R703 shows a
+  protocol-sensitive non-prefix hard-negative sampled-ranking anchor, and
+  G11 adds target-popularity residualization plus non-prefix ranker controls.
+- G11 shows that a metadata-category scorer that does not use SID-prefix
+  equality is only directionally positive and uncertain; use it as a boundary
+  on the Layer-C concern, not as a new headline utility result.
+- SID interface health is a multi-signal trade-off surface involving
+  co-occurrence alignment, prefix load/collision, and code dispersion.
+- Cluster-aware and wild-cluster uncertainty preserve the positive direction of
+  the D3 proxy signal under conservative artifact-level independence
+  (`n=11` artifacts, `n=33` artifact-depth units after the ReSOT/DIGER refresh);
+  bounded
+  fixed-reranker Recall@20/NDCG@20 anchors are positive under G10/R701; non-prefix
+  hard-negative SID-affinity Recall@20/NDCG@20/MRR@20 anchors are positive
+  under G10/R703; and G11 bounds the claim with popularity residualization and
+  non-prefix ranker controls.
+- SIDScope exposes severe duplicate/full-code collision stress cases when they
+  are labeled as stress/reference rows.
+- Faithful GRID/P5 Beauty demonstrates official tokenizer-stage intake.
+- D7 provides constrained-aware trace labeling and scales to existing
+  real-format public beam rows.
+- D7 additionally supports a bounded public-beam trace-accounting bridge from
+  artifact diagnostics to per-beam target survival or hit outcomes.
+- D7 repeatedly observes ambiguous paths across two trained trie-constrained
+  GRID/P5 folds and distinguishes target-code survival from unique target-item
+  hits; DIGER provides a cross-route portability sensitivity.
+- The reviewer-package contract includes a CPU-only quickstart, sampled
+  regeneration, realistic tutorial validation, claim-ledger verification, docs,
+  compact evidence snapshots, a release-candidate manifest, release-clean
+  archive builder, no-git archive smoke, public release packet, and
+  package-boundary verifier.
+
+## Paper-Facing Claims Currently Blocked
+
+- Downstream recommendation improvement from a final trained system.
+- Trained generator failure prediction.
+- Causal proof that D1-D5 causes exposure or final downstream quality.
+- Trained-generator utility prediction from SIDScope diagnostics; G12/R724,
+  the historical G12b/R732-R733 branch, G13/R742, and the G16/R753 exact
+  artifact-level audit ran and were negative/boundary rather than supportive.
+- General Semantic-ID method superiority.
+- TIGER/GRID generator failure discovery.
+- R138 as faithful GRID named coverage.
+- D7 generator failure-mechanism or D1-D5 predictivity claims; G20 supports
+  trained-beam observability and outcome accounting, not those stronger claims.
+- Historical resolved item: Final SIGIR-vs-TOIS venue decision before the CIKM V0 result. This branch is now closed by the 2026-08-07 CIKM acceptance and TOIS selection.
+- Final TOIS prior-publication metadata and post-freeze delta re-audit remain
+  open; the current-draft disclosure and substantive-delta ledger pass.
+
+## G9 Closure Rule
+
+G9 is closed for the current paper artifact registry because:
+
+1. all current claims have `main`, `appendix`, or `future_work` placement;
+2. final table/figure candidates are bound to source rows in
+   `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`;
+3. every paper-facing artifact path in the registry is package-relative;
+4. every registry row has either SHA256 hashes or a regeneration note;
+5. blocked/future-work claims are separated from supported paper claims.
+
+G10 and G11 add new paper-facing evidence after the original historical G7-full
+closure. The current local TOIS draft has incorporated these numbers into the
+candidate-exposure evidence table (ledger T6; rendered as Table 6),
+captions, and numerical claims, and the claim ledger plus paper-facing audit
+have been rerun. Rerun `tools/verify_sidscope_claim_ledger.py` and a fresh
+paper claim audit again only if the final table/figure set, release tag,
+package evidence, or numerical claims change before submission.

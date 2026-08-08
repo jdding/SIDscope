@@ -1,0 +1,57 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "intentional_sid_mismatch_fixture",
+  "paper_label": "Intentional SID mismatch fixture",
+  "method_family": "fixture",
+  "configuration": "three-row intentional SID reconstruction mismatch",
+  "source": {
+    "url": "https://github.com/jdding/sidscope",
+    "revision": "fixture-v1",
+    "license_status": "licensed",
+    "license_identifier": "MIT",
+    "derivation": "control",
+    "artifact_name": "examples/conformance_failure_fixture/sid_assignments.csv",
+    "redistribution_policy": "summary_and_derived_tables"
+  },
+  "dataset": {
+    "name": "toy",
+    "expected_items": 3,
+    "sid_depth": 2
+  },
+  "inputs": {
+    "sid_assignments": "examples/conformance_failure_fixture/sid_assignments.csv",
+    "item_metadata": "examples/conformance_failure_fixture/item_metadata.csv",
+    "interactions": "examples/conformance_failure_fixture/interactions.csv"
+  },
+  "input_sha256": {
+    "sid_assignments": "6be7ae7db21fb701f954cc4ac4944d35ed54a1660c4871e3bf1ba7ac08e69134",
+    "item_metadata": "8000c669a74c5bcc2d3541259456a740983b7568d723629b8520d03e9dfd419c",
+    "interactions": "53d93f5788466a022c799d26aa5af3155b7423eeda3d02f241668d293d06d227"
+  },
+  "metric_smoke": {
+    "max_metric_items": 10,
+    "top_k": 1,
+    "max_pair_events": 100,
+    "max_user_items": 10
+  },
+  "reproduction": {
+    "command": [
+      "python3",
+      "tools/check_adapter_conformance.py",
+      "--manifest",
+      "examples/conformance_failure_fixture/manifest.json",
+      "--allow-fail"
+    ],
+    "runtime_class": "cpu_seconds",
+    "source_evidence": [
+      "examples/conformance_failure_fixture/README.md"
+    ]
+  },
+  "promotion": {
+    "route_id": "intentional_sid_mismatch_fixture",
+    "evidence_role": "control",
+    "paper_counted": false,
+    "conformance_status": "fixture_expected_failure",
+    "conformance_evidence": "examples/conformance_failure_fixture/conformance_report.json"
+  }
+}

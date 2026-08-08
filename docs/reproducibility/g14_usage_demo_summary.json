@@ -1,0 +1,27 @@
+{
+  "artifact_rows": 11,
+  "blocked_or_stress_only": [
+    "GRID-style cap",
+    "GRID-style ft",
+    "Hash-collide"
+  ],
+  "decision_counts": {
+    "candidate_for_training_or_comparison": 2,
+    "diagnostic_control_not_method_coverage": 2,
+    "intake_pass_monitor_exposure": 3,
+    "manual_review_before_claim": 1,
+    "stress_only_exclude_from_named_coverage": 3
+  },
+  "manual_review": [
+    "RQ-min ref"
+  ],
+  "promote_candidates": [
+    "LETTER",
+    "ReSID"
+  ],
+  "questions_answered": [
+    "Which artifact rows are safe to promote to expensive training/comparison?",
+    "Which rows should remain stress/control evidence rather than named method coverage?",
+    "Which rows need provenance or exposure monitoring before paper-facing use?"
+  ]
+}

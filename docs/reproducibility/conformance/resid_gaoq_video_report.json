@@ -1,0 +1,133 @@
+{
+  "artifact_id": "resid_gaoq_video",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "resid_gaoq_video",
+        "license_status": "licensed",
+        "paper_label": "ReSID-GAOQ / Video",
+        "source_revision": "45c1c6a23a370256d07be6e34cde20ff05a3686b"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 3,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 677712
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 24685
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 24685
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "Video_Games",
+            "interaction_items": 24683,
+            "interaction_without_sid": 0,
+            "metadata_items": 24685,
+            "metadata_without_sid": 0,
+            "method": "resid_gaoq_official_code_full",
+            "sid_items": 24685
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "4.890848;5.983080;6.045737",
+            "d1_level_count": 3,
+            "d1_unique_codes": "32;64;70",
+            "d3_depth1_mean_collab_recall": 0.22064814814814815,
+            "d3_depth1_weighted_collab_recall": 0.21283987915407854,
+            "d4_head_sid_unique_ratio": 1.0,
+            "d4_mid_sid_unique_ratio": 1.0,
+            "d4_tail_sid_unique_ratio": 1.0,
+            "dataset": "Video_Games",
+            "duplicate_sid_rate": 0.0,
+            "full_collision_rate": 0.0,
+            "method": "resid_gaoq_official_code_full",
+            "prefix_counts": "32;2048;24685",
+            "sid_length": 3,
+            "unique_sid": 24685
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "bash",
+          "experiments/v1_evidence_chain/autodl/run_remote_gate1_resid_gaoq_followup_batch.sh"
+        ],
+        "input_sha256": {
+          "interactions": "9ec2d0f3423f1e26c5fc1e613b350e6ce4cb4643918e1e8a34b5fe901e364536",
+          "item_metadata": "ae95f327981977540219f25c73656e8173b9bcf548d506e5c7d56e52014b9091",
+          "sid_assignments": "ae5cd520f5ee34004426dfe58cf703217780e338e7e264319e864cdd9dc6050f"
+        },
+        "runtime_class": "gpu_required",
+        "source_evidence": [
+          "experiments/v1_evidence_chain/runs/R145_resid_gaoq_followup_collection.json"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "official_code_derived_route",
+        "inventory_match": true,
+        "paper_counted": true,
+        "route_id": "resid_gaoq_video"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/resid_gaoq_video_manifest.json",
+  "paper_label": "ReSID-GAOQ / Video",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

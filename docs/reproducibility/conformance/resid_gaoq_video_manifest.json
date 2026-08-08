@@ -1,0 +1,41 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "resid_gaoq_video",
+  "paper_label": "ReSID-GAOQ / Video",
+  "method_family": "ReSID",
+  "configuration": "FAMAE+GAOQ; epochs=50; batch_size=4096; balanced_kmeans=false; b1=32; b2=64; g2=64; mapping_sha256=9c873cf12c1fc415d81a858d4add60c5edc25f6035b39296e2457f5adf3d4ae9",
+  "source": {
+    "url": "https://github.com/FuCongResearchSquad/ReSID",
+    "revision": "45c1c6a23a370256d07be6e34cde20ff05a3686b",
+    "license_status": "licensed",
+    "license_identifier": "MIT",
+    "derivation": "official_code_derived",
+    "artifact_name": "R144 returned GAOQ item-to-SID mapping",
+    "redistribution_policy": "summary_and_derived_tables"
+  },
+  "dataset": {"name": "Video", "normalized_name": "Video_Games", "expected_items": 24685, "sid_depth": 3},
+  "inputs": {
+    "sid_assignments": "experiments/v1_evidence_chain/autodl/returned/sidinspector_v1_gate1/resid_gaoq_followup_20260607T030047Z_slim/experiments/v1_evidence_chain/gate1_named_resid_gaoq_followup/R144/Video_Games/full/Video_Games/normalized/sid_assignments.parquet",
+    "item_metadata": "experiments/v1_evidence_chain/autodl/returned/sidinspector_v1_gate1/resid_gaoq_followup_20260607T030047Z_slim/experiments/v1_evidence_chain/gate1_named_resid_gaoq_followup/R144/Video_Games/full/Video_Games/normalized/item_metadata.parquet",
+    "interactions": "experiments/v1_evidence_chain/autodl/returned/sidinspector_v1_gate1/resid_gaoq_followup_20260607T030047Z_slim/experiments/v1_evidence_chain/gate1_named_resid_gaoq_followup/R144/Video_Games/full/Video_Games/normalized/interactions.parquet"
+  },
+  "input_availability": "local normalized inputs and returned logs are not redistributed; public report retains hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "ae5cd520f5ee34004426dfe58cf703217780e338e7e264319e864cdd9dc6050f",
+    "item_metadata": "ae95f327981977540219f25c73656e8173b9bcf548d506e5c7d56e52014b9091",
+    "interactions": "9ec2d0f3423f1e26c5fc1e613b350e6ce4cb4643918e1e8a34b5fe901e364536"
+  },
+  "metric_smoke": {"max_metric_items": 50000, "top_k": 5, "max_pair_events": 10000, "max_user_items": 50},
+  "reproduction": {
+    "command": ["bash", "experiments/v1_evidence_chain/autodl/run_remote_gate1_resid_gaoq_followup_batch.sh"],
+    "runtime_class": "gpu_required",
+    "source_evidence": ["experiments/v1_evidence_chain/runs/R145_resid_gaoq_followup_collection.json"]
+  },
+  "promotion": {
+    "route_id": "resid_gaoq_video",
+    "evidence_role": "official_code_derived_route",
+    "paper_counted": true,
+    "conformance_status": "c0_c5_pass",
+    "conformance_evidence": "docs/reproducibility/conformance/resid_gaoq_video_report.json"
+  }
+}

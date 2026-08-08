@@ -1,0 +1,122 @@
+{
+  "artifact_id": "intentional_sid_mismatch_fixture",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "intentional_sid_mismatch_fixture",
+        "license_status": "licensed",
+        "paper_label": "Intentional SID mismatch fixture",
+        "source_revision": "fixture-v1"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {},
+      "failures": [
+        "ValueError: sid does not match sid_level_* columns at row index 1"
+      ],
+      "level": "C1",
+      "status": "fail",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "toy",
+            "interaction_items": 3,
+            "interaction_without_sid": 0,
+            "metadata_items": 3,
+            "metadata_without_sid": 0,
+            "method": "broken_fixture",
+            "sid_items": 3
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 100,
+          "d3_max_user_items": 10,
+          "d3_top_k": 1,
+          "max_metric_items": 10,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "0.918296;0.918296",
+            "d1_level_count": 2,
+            "d1_unique_codes": "2;2",
+            "d3_depth1_mean_collab_recall": 0.6666666666666666,
+            "d3_depth1_weighted_collab_recall": 0.6666666666666666,
+            "d4_head_sid_unique_ratio": 1.0,
+            "d4_mid_sid_unique_ratio": 1.0,
+            "d4_tail_sid_unique_ratio": 1.0,
+            "dataset": "toy",
+            "duplicate_sid_rate": 0.0,
+            "full_collision_rate": 0.0,
+            "method": "broken_fixture",
+            "prefix_counts": "2;3",
+            "sid_length": 2,
+            "unique_sid": 3
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "python3",
+          "tools/check_adapter_conformance.py",
+          "--manifest",
+          "examples/conformance_failure_fixture/manifest.json",
+          "--allow-fail"
+        ],
+        "input_sha256": {
+          "interactions": "53d93f5788466a022c799d26aa5af3155b7423eeda3d02f241668d293d06d227",
+          "item_metadata": "8000c669a74c5bcc2d3541259456a740983b7568d723629b8520d03e9dfd419c",
+          "sid_assignments": "6be7ae7db21fb701f954cc4ac4944d35ed54a1660c4871e3bf1ba7ac08e69134"
+        },
+        "runtime_class": "cpu_seconds",
+        "source_evidence": [
+          "examples/conformance_failure_fixture/README.md"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "control",
+        "paper_counted": false,
+        "route_id": "intentional_sid_mismatch_fixture"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [
+    "C1"
+  ],
+  "manifest": "examples/conformance_failure_fixture/manifest.json",
+  "paper_label": "Intentional SID mismatch fixture",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "fail"
+}
