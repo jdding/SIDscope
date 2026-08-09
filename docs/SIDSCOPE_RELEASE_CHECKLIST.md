@@ -78,6 +78,7 @@ or otherwise hosted.
 Minimum commands:
 
 ```bash
+python3 -m pip install --upgrade "pip>=21.3"
 python3 -m pip install -e .
 python3 tools/verify_sidscope_resource_package.py
 python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1-release-candidate.zip

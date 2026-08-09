@@ -27,11 +27,12 @@ COPIED_TABLES = {
 }
 
 TABLE5_FIELDS = [
-    "group",
     "artifact",
-    "unique_sids",
-    "d2_aliasing_rate",
-    "d3_l1_weighted",
+    "d1_unique_codes",
+    "d2_collision_item_rate",
+    "d3_depth1_weighted",
+    "d4_tail_unique_ratio",
+    "d5_active_prefix_counts",
     "source_evidence",
 ]
 
@@ -167,31 +168,41 @@ def build_table4_adapter_conformance() -> list[dict[str, str]]:
 
 
 def build_table5_diagnostic_profile() -> list[dict[str, str]]:
-    _, rows = read_csv(ROOT / "docs" / "reproducibility" / "table2_musical_diagnostic.csv")
-    labels = {
-        "GRID-style ft": ("Stress/reference rows", "GRID-like stress"),
-        "GRID-style cap": ("Stress/reference rows", "GRID-like capacity"),
-        "RQ-min ref": ("Stress/reference rows", "RQ-min reference"),
-        "ReSID": ("Source-traced named rows", "ReSID"),
-        "Cat-prefix": ("Interpretation controls", "Category-prefix control"),
-        "Pop-balanced": ("Interpretation controls", "Popularity-balanced control"),
-        "Hash-collide": ("Interpretation controls", "Hash-collision control"),
-    }
-    by_artifact = {row["artifact"]: row for row in rows}
+    reports = [
+        ("ReSID-GAOQ / Video", "resid_gaoq_video_report.json"),
+        ("GRID / P5 Beauty", "grid_p5_beauty_report.json"),
+        ("CARD / P5 Beauty", "card_p5_beauty_report.json"),
+        ("DIGER / Beauty", "diger_beauty_report.json"),
+        ("ReSOT / Instruments", "resot_instruments_report.json"),
+        ("LETTER / Instruments", "letter_instruments_report.json"),
+        ("LC-Rec / Instruments", "lcrec_instruments_report.json"),
+    ]
     output: list[dict[str, str]] = []
-    for source_label in labels:
-        row = by_artifact.get(source_label)
-        if row is None:
-            raise RuntimeError(f"Diagnostic snapshot is missing {source_label}")
-        group, paper_label = labels[source_label]
+    for paper_label, report_name in reports:
+        report_path = ROOT / "docs" / "reproducibility" / "conformance" / report_name
+        report = read_json(report_path)
+        checks = report.get("checks")
+        if not isinstance(checks, list):
+            raise RuntimeError(f"Conformance report lacks checks: {report_path}")
+        metric_rows = [
+            check.get("details", {}).get("metric_smoke_summary", [])
+            for check in checks
+            if isinstance(check, dict) and check.get("title") == "Bounded D1-D5 smoke"
+        ]
+        if len(metric_rows) != 1 or not isinstance(metric_rows[0], list) or len(metric_rows[0]) != 1:
+            raise RuntimeError(f"Conformance report lacks one D1-D5 summary: {report_path}")
+        row = metric_rows[0][0]
+        if not isinstance(row, dict):
+            raise RuntimeError(f"Malformed D1-D5 summary: {report_path}")
         output.append(
             {
-                "group": group,
                 "artifact": paper_label,
-                "unique_sids": row["unique_sids"],
-                "d2_aliasing_rate": f"{float(row['d2_aliasing_rate']):.3f}",
-                "d3_l1_weighted": f"{float(row['d3_l1_weighted']):.3f}",
-                "source_evidence": "docs/reproducibility/table2_musical_diagnostic.csv",
+                "d1_unique_codes": str(row["d1_unique_codes"]),
+                "d2_collision_item_rate": f"{float(row['full_collision_rate']):.3f}",
+                "d3_depth1_weighted": f"{float(row['d3_depth1_weighted_collab_recall']):.3f}",
+                "d4_tail_unique_ratio": f"{float(row['d4_tail_sid_unique_ratio']):.3f}",
+                "d5_active_prefix_counts": str(row["prefix_counts"]),
+                "source_evidence": str(report_path.relative_to(ROOT)),
             }
         )
     return output
@@ -205,6 +216,7 @@ def build_table8_resot_walkthrough() -> list[dict[str, str]]:
     items = int(diagnostic["items"])
     interactions = int(diagnostic["interactions"])
     d3 = float(diagnostic["d3_depth1_weighted_collab_recall"])
+    control_d3 = float(diagnostic["same_dataset_category_control_d3"])
     rows = [
         {
             "stage": "Discover",
@@ -223,9 +235,9 @@ def build_table8_resot_walkthrough() -> list[dict[str, str]]:
         {
             "stage": "Inspect",
             "question": "Is the route coherent and diagnostically executable?",
-            "evidence": f"C0--C5 pass; D2=0; D3@1={d3:.4f}",
-            "decision": "Addressable row; prefix alignment remains modest",
-            "source_evidence": "docs/reproducibility/conformance/resot_instruments_report.json",
+            "evidence": f"C0--C5 pass; D2=0; D3@1={d3:.4f} vs. {control_d3:.4f} control",
+            "decision": "Addressable row; inspect early-prefix organization",
+            "source_evidence": "docs/reproducibility/resot_instruments_category_control.json",
         },
         {
             "stage": "Promote",
@@ -242,6 +254,55 @@ def build_table8_resot_walkthrough() -> list[dict[str, str]]:
             "source_evidence": "examples/conformance_failure_fixture/conformance_report.json",
         },
     ]
+    g22 = read_json(ROOT / "docs" / "reproducibility" / "g22_diagnose_repair_handoff_summary.json")
+    diagnosis = g22["mapping_diagnosis"]
+    protocol = g22["handoff_protocol"]
+    handoff = g22["handoff_results"]
+    if not isinstance(diagnosis, dict) or not isinstance(protocol, dict) or not isinstance(handoff, dict):
+        raise RuntimeError("G22 summary lacks diagnosis, protocol, or handoff fields")
+    adapted_seeds = [int(value) for value in protocol["adaptation_seeds"]]
+    adapted_common = [float(value) for value in handoff["adapted_common_ndcg_at_20"]]
+    adapted_new = [float(value) for value in handoff["adapted_new_item_recall_at_20"]]
+    if not (len(adapted_seeds) == len(adapted_common) == len(adapted_new)):
+        raise RuntimeError("G22 seed and adapted-result lengths differ")
+    rows.extend(
+        [
+            {
+                "stage": "Diagnose refresh",
+                "question": "What changes between released mapping snapshots?",
+                "evidence": (
+                    f"{int(diagnosis['old_catalog_without_sid']):,} old catalog gaps; "
+                    f"{float(diagnosis['common_full_code_churn_rate']):.1%} common-code churn"
+                ),
+                "decision": "Require paired re-audit and model handoff",
+                "source_evidence": "docs/reproducibility/g22_diagnose_repair_handoff_summary.json",
+            },
+            {
+                "stage": "Re-audit repair",
+                "question": "Does the repaired mapping close coverage?",
+                "evidence": (
+                    f"{int(diagnosis['repaired_catalog_without_sid'])} catalog gaps; "
+                    f"collision rate {float(diagnosis['repaired_full_collision_rate']):.6f}"
+                ),
+                "decision": "Mapping passes; generator adaptation still required",
+                "source_evidence": "docs/reproducibility/g22_diagnose_repair_handoff_summary.json",
+            },
+            {
+                "stage": "Audit handoff",
+                "question": "Does adaptation preserve common items and reach new ones?",
+                "evidence": (
+                    f"Seeds {'/'.join(str(seed) for seed in adapted_seeds)}: common NDCG@20 "
+                    f"{'/'.join(f'{value:.5f}' for value in adapted_common)}; new-item Recall@20 "
+                    f"{'/'.join(f'{value:.5f}' for value in adapted_new)}"
+                ),
+                "decision": (
+                    f"All exceed the {float(handoff['common_recovery_threshold_ndcg_at_20']):.5f} "
+                    "common-item threshold and reach new items"
+                ),
+                "source_evidence": "docs/reproducibility/g22_diagnose_repair_handoff_summary.json",
+            },
+        ]
+    )
     return rows
 
 

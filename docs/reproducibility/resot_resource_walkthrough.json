@@ -14,6 +14,8 @@
     "interactions": 136226,
     "items": 6250,
     "prefix_counts": "83;3645;5729;6250",
+    "same_dataset_category_control_d3": 0.4056412337662338,
+    "same_dataset_control_record": "docs/reproducibility/resot_instruments_category_control.json",
     "sid_depth": 4,
     "unique_full_sids": 6250
   },
@@ -45,7 +47,7 @@
     },
     {
       "evidence": "docs/reproducibility/conformance/resot_instruments_report.json",
-      "outcome": "C0-C5 pass; collision rate 0.000, depth-1 weighted D3 0.0629.",
+      "outcome": "C0-C5 pass; collision rate 0.000, depth-1 weighted D3 0.0629 versus 0.4056 for the same-dataset category-prefix control.",
       "question": "Do joins and bounded D1-D5 diagnostics execute?",
       "stage": "inspect"
     },

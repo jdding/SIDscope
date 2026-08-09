@@ -1,8 +1,8 @@
-axis,sidinspector_v0,sidscope,source_evidence
-Resource object,Static mapping audit,"Artifact-evidence chain over mappings, exposure, traces, and package records",experiments/v1_evidence_chain/V0_V1_DELTA_AND_VENUE_GATE.md
-Artifact intake,Reconstructed controls and mapping snapshots,Source-traced tokenizer rows separated from stress/reference rows,docs/reproducibility/table1_evidence_catalog.csv
-Utility evidence,D1-D5 diagnostic tables,"Prefix-candidate calibration, fixed-reranker anchors, and ranker controls",docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
-Trace layer,D7 input hook; no trace evaluation,"Constrained-aware labels, fixtures, public-beam joins, and trained-beam observability",docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
-Empirical scope,"Musical worked example, auxiliary checks","Eleven artifact clusters, seven named families, cluster-aware exposure ladder, and G20",docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
-Paper artifacts,Three tables and one figure,Ten tables and three figures; inherited anchor rows are explicitly labeled and no V0 float is reused unchanged,docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
-Reproducibility,Toolkit-style resource release,"C0-C5 conformance, source/license/config inventory, claim ledger, hashes, and quickstart",docs/reproducibility/sidscope_release_candidate_manifest.csv
+axis,sidinspector_v0,sidscope,article_evidence,source_evidence
+Resource object,Static mapping audit,"Artifact-evidence chain over mappings, exposure, traces, and package records",Figure 1; Sections 3 and 7,experiments/v1_evidence_chain/V0_V1_DELTA_AND_VENUE_GATE.md
+Artifact intake,Reconstructed controls and mapping snapshots,Source-traced tokenizer rows separated from stress/reference rows,Tables 2--4,docs/reproducibility/table1_evidence_catalog.csv
+Candidate evidence,D1-D5 diagnostic tables,"Prefix-candidate calibration, fixed-reranker anchors, and non-prefix controls",Figure 2; Table 6,docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
+Trace evidence,D7 input hook; no trace evaluation,"Constraint-aware labels, public-beam joins, and trained-beam observability",Tables 7--8; Figure 3,docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
+Empirical scope,"Musical worked example, auxiliary checks","Eleven artifact clusters, seven named families, controls, and trained traces","Tables 2, 5, and 7",docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
+Lifecycle evidence,Mapping snapshots and auxiliary checks,"One paired D6 refresh audit, mapping repair, and generator handoff",Table 9,docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
+Reproducibility,Toolkit-style resource release,"C0-C5 conformance, source/license/config inventory, compact evidence, hashes, and quickstart",Tables 3--4 and 10,docs/reproducibility/sidscope_release_candidate_manifest.csv

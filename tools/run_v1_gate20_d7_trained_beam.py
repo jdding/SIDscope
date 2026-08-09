@@ -570,14 +570,27 @@ def analyze_traces(
     for column in trace_flags.columns:
         if column != "trace_id":
             target_analysis[column] = pd.to_numeric(target_analysis[column], errors="coerce").fillna(0).astype(int)
-    family_rates: dict[str, dict[str, float | int]] = {}
+    family_rates: dict[str, dict[str, Any]] = {}
     for family in sorted(CONSTRAINED_SURVIVABLE - {"valid_hit"}):
+        if family == "high_uncertainty" and not labels["max_prefix_entropy"].notna().any():
+            family_rates[family] = {
+                "available": False,
+                "reason": "prefix_entropy_not_exported",
+                "users": int(target_analysis["user_id"].nunique()),
+                "targets": int(len(target_analysis)),
+                "rate": None,
+                "ci_low": None,
+                "ci_high": None,
+            }
+            continue
         values = target_analysis[family] if family in target_analysis else pd.Series(np.zeros(len(target_analysis)))
         rate_frame = target_analysis[["user_id"]].copy()
         rate_frame[family] = values.to_numpy()
         family_rates[family] = bootstrap_user_rate(
             rate_frame, value_col=family, samples=bootstrap_samples, seed=seed + len(family_rates) * 97
         )
+        if family == "high_uncertainty":
+            family_rates[family]["available"] = True
     for outcome in ("target_missed", "target_ambiguous", "target_path_survived", "target_item_uniquely_hit"):
         family_rates[outcome] = bootstrap_user_rate(
             target_analysis[["user_id", outcome]],
@@ -727,7 +740,10 @@ def write_report(result: dict[str, Any], output_root: Path) -> None:
         "| --- | ---: | ---: |",
     ]
     for name, row in result["analysis"]["family_rates"].items():
-        lines.append(f"| `{name}` | {row['rate']:.4f} | [{row['ci_low']:.4f}, {row['ci_high']:.4f}] |")
+        if row.get("available", True):
+            lines.append(f"| `{name}` | {row['rate']:.4f} | [{row['ci_low']:.4f}, {row['ci_high']:.4f}] |")
+        else:
+            lines.append(f"| `{name}` | unavailable | {row['reason']} |")
     lines.extend(
         [
             "",

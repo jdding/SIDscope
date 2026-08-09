@@ -1,0 +1,51 @@
+{
+  "schema": "sidinspector.g21.paper_summary.v1",
+  "date": "2026-08-09",
+  "source": {
+    "project": "DACT",
+    "model": "released TIGER/T5 backbone",
+    "dataset": "Tools",
+    "snapshot": "0.6_cf",
+    "source_revision": "0b8d8cec88fee83b2384dd236628c2802f337d26",
+    "checkpoint_sha256": "2e13d9e31788fe4471bd70e6a480aa27e144dbd84bc21337f54808d99e077f01",
+    "mapping_sha256": "90aed7df52a559d4ad6b77aa1bde5484fb596da5436feeb1eed8bb85c61371e9"
+  },
+  "protocol": {
+    "target_traces": 500,
+    "beam_width": 50,
+    "beam_rows_per_mode": 25000,
+    "decoding_modes": [
+      "constrained",
+      "unconstrained"
+    ],
+    "same_target_universe": true,
+    "reviewed_manifest_sha256": "f324afd3565adb99fa3885fbaeec242bd19c17f6f1cad305c29439a7e2a72495"
+  },
+  "results": {
+    "constrained": {
+      "invalid_path_rows": 0,
+      "targets_with_invalid_paths": 0,
+      "target_path_survival_rate": 0.078,
+      "unique_item_hit_rate": 0.078,
+      "recall_at_20": 0.042,
+      "ndcg_at_20": 0.022764992655719275
+    },
+    "unconstrained": {
+      "invalid_path_rows": 988,
+      "invalid_path_rate": 0.03952,
+      "targets_with_invalid_paths": 205,
+      "target_path_survival_rate": 0.07,
+      "unique_item_hit_rate": 0.07,
+      "recall_at_20": 0.042,
+      "ndcg_at_20": 0.022756185549316292
+    }
+  },
+  "cross_mode": {
+    "targets_surviving_both": 35,
+    "targets_surviving_constrained_only": 4,
+    "targets_surviving_unconstrained_only": 0
+  },
+  "telemetry_boundary": "The upstream route does not export prefix entropy; high-uncertainty rate is unavailable rather than zero.",
+  "result_sha256": "46e57f76594733458daf0e47f836508665de36d61a8170be235be1e5e685bf17",
+  "claim_boundary": "Released-checkpoint D7 portability and constrained-aware accounting only; no failure-mechanism, universal-prevalence, ranking-improvement, or D1-D5 predictivity claim."
+}

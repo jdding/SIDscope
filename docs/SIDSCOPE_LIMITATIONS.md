@@ -1,7 +1,7 @@
 # SIDScope Limitations
 
 Status: current TOIS manuscript and package limitation policy
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 
 ## Scope Limits
 
@@ -13,8 +13,8 @@ claims.
 ## Evidence Limits
 
 - D1-D5 diagnostics describe artifact structure and mapping behavior.
-- G2/G3/G4 support a train-only candidate-exposure proxy claim under
-  cluster-aware uncertainty.
+- G2/G3/G4 support within-protocol calibration between D3 and
+  prefix-structured candidate exposure under cluster-aware uncertainty.
 - G9 strengthens that claim by evaluating candidate exposure and bounded
   fixed-reranker Recall@20/NDCG@20 on users disjoint from the users used to
   compute D3 co-occurrence alignment.
@@ -35,6 +35,13 @@ claims.
   DIGER portability sensitivity, with path-versus-item accounting. The folds
   are repeated observations, not an independent estimate of universal failure
   prevalence.
+- G21 adds one released DACT TIGER/T5 checkpoint case. It validates D7
+  portability and constrained-aware invalid-path accounting, not a universal
+  failure rate or failure mechanism.
+- G22 exercises D6 on one released DACT 0.6-to-0.7 refresh and follows the
+  mapping repair into a preregistered three-seed generator handoff. It is a
+  reproducible positive case, not universal repair effectiveness, causal
+  diagnostic-to-quality evidence, or general D1-D5 predictivity.
 - Current evidence does not support final trained downstream recommendation
   improvement, a generator failure mechanism, or D1-D5 trained-generator
   predictivity.

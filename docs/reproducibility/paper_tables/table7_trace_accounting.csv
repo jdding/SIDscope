@@ -6,5 +6,8 @@ Public-beam accounting case,Target join,"240,000 rows",Survival-surface join,exp
 Public-beam accounting case,Budget check,1.000,Beam-budget consistency,experiments/v1_evidence_chain/gate46_d7_per_beam_trace_join/g46_d7_per_beam_trace_join_result.json
 Trained candidate-pool smoke,Trace export (40 IDs),800 rows,Real trace observability,experiments/v1_evidence_chain/gate19_d7_real_trained_trace/g19_trace_label_smoke_result.json
 Trained candidate-pool smoke,Resolution check,1.000,SID path resolves to exported item,experiments/v1_evidence_chain/gate19_d7_real_trained_trace/g19_trace_label_smoke_result.json
+Released TIGER/T5 checkpoint,Constrained decoding,"0/25,000 invalid",Trie-validity accounting,docs/reproducibility/g21_released_tiger_trace_summary.json
+Released TIGER/T5 checkpoint,Unconstrained decoding,"988/25,000 invalid",Invalid-path accounting,docs/reproducibility/g21_released_tiger_trace_summary.json
+Released TIGER/T5 checkpoint,Recall@20,0.042 both modes,Bounded performance context,docs/reproducibility/g21_released_tiger_trace_summary.json
 Validity boundary,Public beams,0 invalid,"Accounting case, not failure sample",experiments/v1_evidence_chain/gate46_d7_per_beam_trace_join/g46_d7_per_beam_trace_join_result.json
 Validity boundary,Trained smoke,0 invalid,Candidate-pool scoring case,experiments/v1_evidence_chain/gate19_d7_real_trained_trace/g19_trace_label_smoke_result.json

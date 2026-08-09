@@ -22,7 +22,7 @@ alongside downstream generative recommender experiments. It supports:
 - preflight validation over item metadata and interactions;
 - D1-D5 mapping diagnostics;
 - optional D6 refresh/churn diagnostics;
-- optional candidate-exposure proxy analysis;
+- optional prefix-candidate calibration analysis;
 - D7 constrained-aware generator-trace labeling and bounded trace accounting.
 
 SIDScope is not a tokenizer trainer, generator trainer, or downstream

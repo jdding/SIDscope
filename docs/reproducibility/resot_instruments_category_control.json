@@ -1,0 +1,38 @@
+{
+  "category_prefix_control": {
+    "d3_depth1_weighted_collab_recall": 0.4056412337662338,
+    "full_collision_rate": 0.0,
+    "items": 6250,
+    "method": "resot_same_dataset_category_prefix_control",
+    "unique_full_sids": 6250
+  },
+  "comparison": {
+    "absolute_d3_gap_control_minus_source": 0.34273538961038963,
+    "interpretation": "The released ReSOT mapping is collision-free, but its depth-1 prefixes preserve less train-only co-occurrence structure than a deterministic category-prefix control on the same data."
+  },
+  "control_role": "deterministic same-dataset interpretation control; not a named tokenizer row",
+  "dataset": "Instruments",
+  "inputs": {
+    "interactions_sha256": "01d2c554f3ecefa4517baf78c856517203dd69808d4a86988f4c4a534919ab9f",
+    "item_metadata_sha256": "bf7b3faa58550a82e5c43d9b6567397517dcfd75764e00acefa14df9f9f3f8ff",
+    "sid_assignments_sha256": "4eefcfcf219fbbe90c8281847c62f9c0e25395b46256a279eceb64546ffd532c"
+  },
+  "protocol": {
+    "category_path": "comma-separated metadata category; common leading path removed",
+    "d3_max_pair_events": 10000,
+    "d3_max_user_items": 50,
+    "d3_top_k": 5,
+    "leaf_level": "item-id-sorted ordinal within the three-level category prefix",
+    "prefix_levels": "first three remaining hierarchical category segments, lexicographically encoded within parent",
+    "removed_common_category_prefix": [
+      "Musical Instruments"
+    ]
+  },
+  "schema": "sidscope.resot.same_dataset_control.v1",
+  "source_artifact": {
+    "d3_depth1_weighted_collab_recall": 0.06290584415584416,
+    "items": 6250,
+    "method": "resot_text_index_official_code_derived"
+  },
+  "status": "pass"
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "sidinspector.g22.paper_summary.v1",
+  "date": "2026-08-09",
+  "source": {
+    "project": "DACT",
+    "dataset": "Tools",
+    "old_mapping": "0.6_cf",
+    "repaired_mapping": "0.7_dact",
+    "generator": "released TIGER/T5 backbone with same-architecture adaptation",
+    "source_revision": "0b8d8cec88fee83b2384dd236628c2802f337d26"
+  },
+  "mapping_diagnosis": {
+    "old_catalog_without_sid": 275,
+    "old_interaction_items_without_sid": 263,
+    "repaired_catalog_without_sid": 0,
+    "repaired_interaction_items_without_sid": 0,
+    "common_items": 9610,
+    "new_items": 275,
+    "common_full_code_churn_rate": 0.23631633714880332,
+    "old_full_collision_rate": 0.0,
+    "repaired_full_collision_rate": 0.0006069802731411229,
+    "old_d3_depth1": 0.028038553010389284,
+    "repaired_d3_depth1": 0.030587940328444276
+  },
+  "handoff_protocol": {
+    "target_rows": 5364,
+    "common_target_rows": 4780,
+    "new_target_rows": 584,
+    "beam_width": 20,
+    "adaptation_seeds": [
+      2025,
+      2026,
+      2027
+    ],
+    "test_used_for_training_or_selection": false,
+    "reviewed_manifest_sha256": "2f8f276c57f0c538812061846525befd84e3cf1780be3872b0200aba2b3fe520"
+  },
+  "handoff_results": {
+    "old_model_old_mapping_common_ndcg_at_20": 0.013939715220686297,
+    "old_model_new_mapping_overall_ndcg_at_20": 0.012331276197045828,
+    "old_model_new_mapping_common_ndcg_at_20": 0.013837858895597034,
+    "old_model_new_mapping_new_item_recall_at_20": 0.0,
+    "adapted_overall_ndcg_at_20": [
+      0.024698100454498714,
+      0.0237612341971014,
+      0.023929981069503933
+    ],
+    "adapted_common_ndcg_at_20": [
+      0.020996345339737394,
+      0.020574110237575396,
+      0.020258975921667106
+    ],
+    "adapted_new_item_recall_at_20": [
+      0.11986301369863013,
+      0.1267123287671233,
+      0.1267123287671233
+    ],
+    "common_recovery_threshold_ndcg_at_20": 0.013929529588177371,
+    "all_seeds_pass_preregistered_handoff_gate": true
+  },
+  "mapping_audit_sha256": "4e3c3b1449445fa84195b6840bb861373c86de6e6cf19723e09db56f2bc91b60",
+  "primary_result_sha256": "d001a61d103024f598ad92dda7fda1f023d0b9afa9c9cf7ba6ca6184a62c1391",
+  "claim_boundary": "One released DACT Tools lifecycle case; no universal repair-effectiveness, causal diagnostic-to-quality, or general D1-D5 predictivity claim."
+}

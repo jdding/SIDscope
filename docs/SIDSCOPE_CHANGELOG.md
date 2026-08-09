@@ -36,6 +36,9 @@ reviewer-visible
   directly runnable negative fixture.
 - Deterministic reconstruction of all manuscript-facing table snapshots.
 - G20 trained constrained-beam trace summaries and verification code.
+- G21 released DACT TIGER/T5 constrained/unconstrained trace summary.
+- G22 released DACT mapping-refresh diagnosis, D6 re-audit, and bounded
+  three-seed generator-handoff summary.
 
 ### Removed From Public Surface
 

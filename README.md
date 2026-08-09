@@ -23,11 +23,14 @@ compatibility with the released diagnostic code.
 
 The release verifier is CPU-only. It was checked with Python 3.9, and should run
 on Python 3.9+ with the dependencies in `pyproject.toml` / `requirements.txt`.
+Editable installation uses the PEP 660 path and requires pip 21.3 or newer;
+stock Python 3.9 installations with older pip should upgrade it first.
 No GPU is required for the bundled verifier, quickstart, or D1-D6 diagnostics;
 GPU use belongs to external tokenizer training pipelines, not to SIDScope's
 artifact inspection step.
 
 ```bash
+python3 -m pip install --upgrade "pip>=21.3"
 python3 -m pip install -e .
 ```
 

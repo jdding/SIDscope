@@ -1,0 +1,68 @@
+{
+  "schema": "sidinspector.paper_protocol_config.v1",
+  "date": "2026-08-09",
+  "purpose": "Compact reviewer-facing configuration for protocol constants stated in the SIDScope TOIS manuscript.",
+  "d3_alignment": {
+    "implementation": "src/sidinspector/metrics.py",
+    "runner_support": "tools/run_v1_gate10_independent_utility.py",
+    "event_scope": "training events when an explicit split is present; otherwise all provided interactions",
+    "deduplicate_user_item_events": true,
+    "eligible_mapped_items_per_user": {
+      "minimum": 2,
+      "maximum": 200
+    },
+    "pair_construction": "unordered within-user co-occurrence pairs",
+    "max_pair_events": 2000000,
+    "pair_budget_selection": "eligible users sorted by user_id; stop before the next user would exceed the budget",
+    "neighbors_per_item": 20,
+    "neighbor_order": [
+      "co_count_descending",
+      "neighbor_item_id_ascending"
+    ]
+  },
+  "g20_trained_trace_primary": {
+    "runner": "tools/run_v1_gate20_d7_trained_beam.py",
+    "registered_batch": "experiments/v1_evidence_chain/autodl/run_remote_gate20_d7_trained_beam_batch.sh",
+    "paper_summary": "docs/reproducibility/g20_trained_trace_summary.json",
+    "stage": "primary",
+    "folds": 2,
+    "max_users": 6000,
+    "max_user_items": 200,
+    "max_history_items": 50,
+    "train_targets_per_user": 3,
+    "max_train_samples": 50000,
+    "max_eval_targets": 500,
+    "beam_width": 50,
+    "epochs": 12,
+    "batch_size": 512,
+    "embedding_dim": 128,
+    "hidden_dim": 256,
+    "decoder_dim": 256,
+    "dropout": 0.1,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "bootstrap_samples": 1000,
+    "base_seed": 20260808,
+    "requested_device": "cuda",
+    "num_workers": 0,
+    "model": "gru_history_autoregressive_sid_sequence_generator",
+    "score_semantics": "sum_trie_child_log_softmax",
+    "formal_run_configuration_sha256": [
+      "409b00b341541075ae5903872478e2bdefcae30ecda242895fab110b1acd5822",
+      "38b727b1f05a0b6f18e16690ac7ed81b83bec2252407ba22e5075d19d1271305",
+      "5bda2867f1c153bbff24ae02250cf93c2616462700a68a90f8cbd3c0324ad730"
+    ]
+  },
+  "g4_wild_cluster_inference": {
+    "runner": "tools/run_v1_gate35_cluster_reanalysis.py",
+    "result": "experiments/v1_evidence_chain/gate35_cluster_reanalysis/g35_cluster_reanalysis_result.json",
+    "table": "experiments/v1_evidence_chain/gate35_cluster_reanalysis/g35_g3_wild_cluster_models.csv",
+    "cluster_unit": "dataset+label+method+manifest_row",
+    "effective_clusters": 11,
+    "wild_weight_distribution": "independent Rademacher weights {-1,+1} by artifact cluster",
+    "wild_bootstrap_samples": 4999,
+    "base_seed": 20260607,
+    "interval": "percentile 2.5/97.5 quantiles"
+  },
+  "claim_boundary": "This file exposes the frozen protocol constants used by the compact paper snapshots; it does not replace omitted raw datasets, checkpoints, or full remote beam traces."
+}

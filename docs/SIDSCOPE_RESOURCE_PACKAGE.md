@@ -48,10 +48,12 @@ Intentionally omitted:
 ## Install
 
 ```bash
+python3 -m pip install --upgrade "pip>=21.3"
 python3 -m pip install -e .
 ```
 
-The package is CPU-only for the bundled checks. GPU work belongs to upstream
+Editable installation requires pip 21.3 or newer. The package is CPU-only for
+the bundled checks. GPU work belongs to upstream
 tokenizer/generator training pipelines and is not required for SIDScope
 inspection.
 
@@ -231,10 +233,11 @@ Paper claims must preserve this separation.
 ## Current Boundary
 
 This package supports resource and evaluation claims about artifact inspection,
-candidate-exposure proxy diagnostics, G9 disjoint-user utility anchoring,
+prefix-candidate construct calibration, G9 disjoint-user ranking checks,
 bounded fixed-reranker Recall@20/NDCG@20 anchors, G10 non-prefix
-hard-negative sampled-ranking anchors, bounded public-beam D7 accounting, and
-G20 trained trie-constrained path-versus-item accounting. It does not claim
+hard-negative sampled-ranking anchors, bounded public-beam D7 accounting, G20
+trained trie-constrained path-versus-item accounting, G21 released-checkpoint
+trace portability, and one G22 released-refresh handoff. It does not claim
 final trained downstream recommendation improvement, a generator failure
 mechanism, D1-D5 trained-generator predictivity, universal ranking-quality prediction
 across candidate protocols, or a new Semantic-ID tokenizer method.

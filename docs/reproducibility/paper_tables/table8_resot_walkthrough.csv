@@ -1,6 +1,9 @@
 stage,question,evidence,decision,source_evidence
 Discover,Does the release contain item-level SIDs?,"6,250 four-level text-index rows in the upstream archive",Continue; do not redistribute archive,docs/reproducibility/resot_resource_walkthrough.json
 Normalize,Do artifact IDs join metadata and interactions?,"6,250/6,250/136,226 normalized rows; complete joins",Run conformance and diagnostics,docs/reproducibility/resot_resource_walkthrough.json
-Inspect,Is the route coherent and diagnostically executable?,C0--C5 pass; D2=0; D3@1=0.0629,Addressable row; prefix alignment remains modest,docs/reproducibility/conformance/resot_instruments_report.json
+Inspect,Is the route coherent and diagnostically executable?,C0--C5 pass; D2=0; D3@1=0.0629 vs. 0.4056 control,Addressable row; inspect early-prefix organization,docs/reproducibility/resot_instruments_category_control.json
 Promote,May it count as named artifact evidence?,"Matrix refresh recomputes D1--D5, exposure, and uncertainty",Admit released-archive row,docs/reproducibility/resot_resource_walkthrough.json
 Reject invalid,Does a contradictory export slip through?,Public fixture has full SID inconsistent with its level columns,Stop at C1; do not promote,examples/conformance_failure_fixture/conformance_report.json
+Diagnose refresh,What changes between released mapping snapshots?,275 old catalog gaps; 23.6% common-code churn,Require paired re-audit and model handoff,docs/reproducibility/g22_diagnose_repair_handoff_summary.json
+Re-audit repair,Does the repaired mapping close coverage?,0 catalog gaps; collision rate 0.000607,Mapping passes; generator adaptation still required,docs/reproducibility/g22_diagnose_repair_handoff_summary.json
+Audit handoff,Does adaptation preserve common items and reach new ones?,Seeds 2025/2026/2027: common NDCG@20 0.02100/0.02057/0.02026; new-item Recall@20 0.11986/0.12671/0.12671,All exceed the 0.01393 common-item threshold and reach new items,docs/reproducibility/g22_diagnose_repair_handoff_summary.json

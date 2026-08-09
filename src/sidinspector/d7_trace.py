@@ -48,7 +48,9 @@ def normalize_sid_path(value: Any) -> tuple[str, ...]:
         raise ValueError("sid_path is missing")
     text = str(value).strip()
     if not text:
-        raise ValueError("sid_path is empty")
+        # An explicit empty string represents immediate EOS from an
+        # unconstrained decoder. It is a valid trace row but not a catalog path.
+        return ()
     if text.startswith("[") and text.endswith("]"):
         parsed = ast.literal_eval(text)
         if not isinstance(parsed, (list, tuple)):

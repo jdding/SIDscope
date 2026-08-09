@@ -11,9 +11,9 @@ requires-python = ">=3.9"
 license = {file = "LICENSE"}
 authors = [
   {name = "Jiandong Ding"},
-  {name = "Heng Chang"},
   {name = "Huijie Qin"},
-  {name = "Tianying Liu"},
+  {name = "Tiandeng Wu"},
+  {name = "Yi Cao"},
 ]
 keywords = [
   "semantic-id",

@@ -54,6 +54,7 @@ REQUIRED_FILES = [
     "docs/reproducibility_matrix.csv",
     "docs/reproducibility/sidscope_sampled_regeneration_manifest.csv",
     "docs/reproducibility/sidscope_release_candidate_manifest.csv",
+    "docs/reproducibility/sidscope_paper_protocol_config.json",
     "docs/reproducibility/g14_usage_demo_decisions.csv",
     "docs/reproducibility/g14_usage_demo_summary.json",
     "docs/reproducibility/sidscope_source_license_config_inventory.csv",

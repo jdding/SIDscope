@@ -36,8 +36,8 @@ The second command compares headers and rows against the frozen snapshots under
 
 | Paper evidence | Source artifact | Command | Output | Runtime | Release status |
 |---|---|---|---|---|---|
-| SIDScope manuscript Tables 1--10 | `docs/reproducibility/paper_table_sources/*.csv`; compact evidence snapshots, source inventory, conformance records, walkthrough records, and G20 trained-trace summary | `python3 tools/build_sidscope_paper_tables.py --output-dir /tmp/sidscope_paper_tables` then `python3 tools/verify_sidscope_paper_tables.py` | ten deterministic CSV tables with 76-row verification | CPU seconds | fully runnable from release repo; does not rerun upstream tokenizer or generator training |
-| Release package verifier | tracked package files, examples, docs, tests | `python3 tools/verify_package.py` | package import, toy diagnostic, reviewer quickstart, unit tests | CPU seconds to minutes | fully runnable from release repo |
+| SIDScope manuscript Tables 1--10 | `docs/reproducibility/paper_table_sources/*.csv`; compact evidence snapshots, source inventory, conformance records, walkthrough records, G20--G21 trained-trace summaries, and the G22 lifecycle-handoff summary | `python3 tools/build_sidscope_paper_tables.py --output-dir /tmp/sidscope_paper_tables` then `python3 tools/verify_sidscope_paper_tables.py` | ten deterministic CSV tables with 86-row verification | CPU seconds | fully runnable from release repo; does not rerun upstream tokenizer or generator training |
+| Release package verifier | tracked package files, examples, docs, tests | `python3 tools/verify_sidscope_resource_package.py` | package import, toy diagnostic, reviewer quickstart, unit tests | CPU seconds to minutes | fully runnable from release repo |
 | SIDScope package verifier | tracked package files, SIDScope docs, sampled regeneration manifest, release-candidate manifest | `python3 tools/verify_sidscope_resource_package.py` | package import, reproducibility matrix validation, release-manifest validation, sampled regeneration | CPU seconds to minutes | fully runnable from release repo; local G8 contract verifier |
 | SIDScope release-candidate manifest | `docs/reproducibility/sidscope_release_candidate_manifest.csv`; `docs/SIDSCOPE_RELEASE_CHECKLIST.md` | `python3 tools/verify_sidscope_resource_package.py --skip-sampled-regeneration` | manifest path, evidence-level, gate-status, and package-boundary validation | CPU seconds | fully runnable from release repo; corrected `sidscope/main` public URL smoke pending; rerun after changes |
 | SIDScope canonical G9 table/figure ledger | `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`; `experiments/v1_evidence_chain/CLAIM_LEDGER.md` | `python3 tools/verify_sidscope_claim_ledger.py` | claim placement, source row, package-relative path, hash/regeneration-note validation | CPU seconds | tracked evidence snapshot; final TeX audit still required after manuscript writing |
@@ -62,6 +62,12 @@ The second command compares headers and rows against the frozen snapshots under
 
 The following tracked snapshots preserve the exact numbers used by the paper
 without shipping large local artifacts:
+
+Legacy filenames remain stable for released manifests. Manuscript Table 8 maps
+to `table10_g20_trained_trace.csv`, Table 9 to
+`table8_resot_walkthrough.csv`, and Table 10 to
+`table9_resource_contract.csv`; `sidscope_g7_full_table_figure_ledger.csv`
+records the same mapping.
 
 - `docs/reproducibility/table1_evidence_catalog.csv`
 - `docs/reproducibility/table2_musical_diagnostic.csv`
@@ -92,7 +98,7 @@ This checks that the matrix and tracked evidence snapshots are present,
 well-formed, and internally consistent. For a full package smoke test, run:
 
 ```bash
-python3 tools/verify_package.py
+python3 tools/verify_sidscope_resource_package.py
 ```
 
 The package verifier runs import checks, the toy diagnostic, the reviewer

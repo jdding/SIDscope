@@ -19,6 +19,10 @@ class ReSOTResourceWalkthroughTest(unittest.TestCase):
             ["discover", "normalize", "inspect", "promote", "reject-invalid"],
         )
         self.assertEqual(payload["diagnostic_snapshot"]["items"], 6250)
+        self.assertGreater(
+            payload["diagnostic_snapshot"]["same_dataset_category_control_d3"],
+            payload["diagnostic_snapshot"]["d3_depth1_weighted_collab_recall"],
+        )
 
     def test_walkthrough_rejects_cross_route_stage_substitution(self) -> None:
         root = Path(__file__).resolve().parents[1]

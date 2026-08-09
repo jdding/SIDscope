@@ -1,11 +1,11 @@
 group,artifact_catalog,source_route,artifact_local_items,variants,evidence_role,source_evidence
-Source-traced or rebuilt named routes,ReSID / Musical,Tracked snapshot,"23,742",1,Same-catalog ReSID contrast,docs/reproducibility/table1_evidence_catalog.csv
-Source-traced or rebuilt named routes,ReSID-GAOQ / Video,Official-code-derived,"24,685",1,ReSID-style second vertical,docs/reproducibility/table1_evidence_catalog.csv
-Source-traced or rebuilt named routes,GRID / P5 Beauty,Tokenizer-stage rebuild,"12,101",1,GRID tokenizer-stage source route,docs/reproducibility/table1_evidence_catalog.csv
-Source-traced or rebuilt named routes,CARD RQ-VAE / P5 Beauty,Official-code-derived,"12,101",1,CARD compatibility-shim source route,docs/reproducibility/table1_evidence_catalog.csv
-Source-traced or rebuilt named routes,DIGER RQ-VAE / Beauty,Official-code-derived,"12,101",1,Embedding/checkpoint source route,docs/reproducibility/official_adapter_metrics_snapshot.csv
-Released index or archive routes,ReSOT text-index / Instruments,Released archive,"6,250",1,Text-index archive source route,docs/reproducibility/official_adapter_metrics_snapshot.csv
-Released index or archive routes,LETTER / Instruments,Released index,"9,922",1,Released-index source route,docs/reproducibility/official_adapter_metrics_snapshot.csv
-Released index or archive routes,LC-Rec / Instruments,Released index,"9,922",1,Released-index source route,docs/reproducibility/official_adapter_metrics_snapshot.csv
-Stress/reference and controls,GRID-like stress / Musical,Stress/reference,"23,742",3,Full-code aliasing calibration,docs/reproducibility/table1_evidence_catalog.csv
-Stress/reference and controls,Deterministic controls / Musical,Deterministic control,"23,742",3,"Prefix, popularity, and hash controls",docs/reproducibility/table1_evidence_catalog.csv
+Source-traced or rebuilt named routes,ReSID / Musical,Tracked snapshot,"23,742",1,Same-catalog learned anchor,docs/reproducibility/table1_evidence_catalog.csv
+Source-traced or rebuilt named routes,ReSID-GAOQ / Video,Official-code-derived,"24,685",1,Second-domain source route,docs/reproducibility/table1_evidence_catalog.csv
+Source-traced or rebuilt named routes,GRID / P5 Beauty,Tokenizer-stage rebuild,"12,101",1,Tokenizer-rebuild coverage,docs/reproducibility/table1_evidence_catalog.csv
+Source-traced or rebuilt named routes,CARD RQ-VAE / P5 Beauty,Official-code-derived,"12,101",1,Compatibility-shim coverage,docs/reproducibility/table1_evidence_catalog.csv
+Source-traced or rebuilt named routes,DIGER RQ-VAE / Beauty,Official-code-derived,"12,101",1,Checkpoint-to-mapping coverage,docs/reproducibility/official_adapter_metrics_snapshot.csv
+Released index or archive routes,ReSOT text-index / Instruments,Released archive,"6,250",1,Intake-to-promotion walkthrough,docs/reproducibility/official_adapter_metrics_snapshot.csv
+Released index or archive routes,LETTER / Instruments,Released index,"9,922",1,Released-index coverage,docs/reproducibility/official_adapter_metrics_snapshot.csv
+Released index or archive routes,LC-Rec / Instruments,Released index,"9,922",1,Released-index coverage,docs/reproducibility/official_adapter_metrics_snapshot.csv
+Stress/reference and controls,GRID-like stress / Musical,Stress/reference,"23,742",3,Aliasing and capacity stress,docs/reproducibility/table1_evidence_catalog.csv
+Stress/reference and controls,Deterministic controls / Musical,Deterministic control,"23,742",3,Prefix-interpretation controls,docs/reproducibility/table1_evidence_catalog.csv

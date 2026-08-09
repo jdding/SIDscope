@@ -210,6 +210,8 @@ be reused as implicit approval.
 | G18 Tokenizer-family expansion | A bounded new candidate watch/intake gate after ReSOT/DIGER. | A future candidate enters the paper-facing matrix only after source route, normalized item-to-SID output, preflight, D1-D5/G2/G3/G4 refresh, and claim/package sync pass. | Keep candidates as watch/related-work rows; do not inflate coverage. |
 | G19 D7 trained-trace staging | A bounded D7 trained-trace export and labeling path. | R790 found no reusable per-beam source; R791/R792 then established the candidate-pool export and label smoke that G20 extends. | Treat G19 as staging evidence; the paper-facing trained constrained-beam result is G20. |
 | G20 Trained trie-constrained D7 case | A reviewed trained per-beam trace export with repeated constrained-survivable labels and target outcomes. | R807-R810 pass: two GRID/P5 folds observe `ambiguous_path` over 50,000 beam rows, DIGER adds a 25,000-row portability sensitivity, and compact hashes bind full outputs. | Keep the claim at trained-beam observability and path-versus-item accounting; do not claim universal prevalence, a failure mechanism, or D1-D5 predictivity. |
+| G21 Mature TIGER D7 robustness case | A released-checkpoint Transformer-style trace case under constrained and unconstrained decoding. | R820--R822 pass: released-checkpoint preflight, reviewed CUDA canary, and 500-target primary all close with matched accounting. | Promote released-checkpoint portability and constrained-aware trace accounting only; no universal prevalence, ranking-improvement, or failure-mechanism claim. |
+| G22 Diagnosis-to-action re-audit | A released stale mapping, released repair, D1--D6 re-audit, and same-architecture A/B/C generator handoff. | R823--R825 pass: paired mapping audit, corrected CUDA canary, and three-seed 5,364-target primary all satisfy the preregistered recovery, new-item, validity, and accounting gates. | Promote one positive released handoff case only; no universal repair-effectiveness, causal mapping-to-quality, or general D1-D5 predictivity claim. |
 
 ## Minimum High-Tier Package
 
@@ -265,6 +267,9 @@ contains:
 - G20 may appear in the main paper because the same constrained-survivable
   `ambiguous_path` family is observed in two declared GRID/P5 folds. Treat this
   as repeated observability, not independent prevalence replication.
+- G21/G22 primary runs remain blocked until their standalone CUDA canaries are
+  complete and independently reviewed. A remote connection failure is not a
+  scientific result and must not change paper claims.
 
 ## Recording Rules
 

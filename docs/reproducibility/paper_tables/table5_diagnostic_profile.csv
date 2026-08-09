@@ -1,8 +1,8 @@
-group,artifact,unique_sids,d2_aliasing_rate,d3_l1_weighted,source_evidence
-Stress/reference rows,GRID-like stress,3749,0.977,0.055,docs/reproducibility/table2_musical_diagnostic.csv
-Stress/reference rows,GRID-like capacity,9874,0.778,0.080,docs/reproducibility/table2_musical_diagnostic.csv
-Stress/reference rows,RQ-min reference,17247,0.440,0.065,docs/reproducibility/table2_musical_diagnostic.csv
-Source-traced named rows,ReSID,23742,0.000,0.154,docs/reproducibility/table2_musical_diagnostic.csv
-Interpretation controls,Category-prefix control,23742,0.000,0.447,docs/reproducibility/table2_musical_diagnostic.csv
-Interpretation controls,Popularity-balanced control,22707,0.086,0.303,docs/reproducibility/table2_musical_diagnostic.csv
-Interpretation controls,Hash-collision control,256,1.000,0.004,docs/reproducibility/table2_musical_diagnostic.csv
+artifact,d1_unique_codes,d2_collision_item_rate,d3_depth1_weighted,d4_tail_unique_ratio,d5_active_prefix_counts,source_evidence
+ReSID-GAOQ / Video,32;64;70,0.000,0.213,1.000,32;2048;24685,docs/reproducibility/conformance/resid_gaoq_video_report.json
+GRID / P5 Beauty,256;256;256,0.205,0.038,0.957,256;6138;10619,docs/reproducibility/conformance/grid_p5_beauty_report.json
+CARD / P5 Beauty,256;256;256;256,0.000,0.023,1.000,256;8870;11868;12098,docs/reproducibility/conformance/card_p5_beauty_report.json
+DIGER / Beauty,256;256;256,0.070,0.028,0.982,256;9650;11581,docs/reproducibility/conformance/diger_beauty_report.json
+ReSOT / Instruments,83;255;252;256,0.000,0.063,1.000,83;3645;5729;6250,docs/reproducibility/conformance/resot_instruments_report.json
+LETTER / Instruments,150;256;256;256,0.005,0.108,0.998,150;6702;9608;9897,docs/reproducibility/conformance/letter_instruments_report.json
+LC-Rec / Instruments,162;256;256;256,0.005,0.055,0.998,162;6996;9172;9897,docs/reproducibility/conformance/lcrec_instruments_report.json

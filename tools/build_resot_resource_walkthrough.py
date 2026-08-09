@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_JSON = ROOT / "docs/reproducibility/resot_resource_walkthrough.json"
 DEFAULT_OUTPUT_MD = ROOT / "docs/RESOT_RESOURCE_WALKTHROUGH.md"
 DEFAULT_SOURCE_BUNDLE = ROOT / "docs/reproducibility/resot_walkthrough_sources.json"
+DEFAULT_CONTROL = ROOT / "docs/reproducibility/resot_instruments_category_control.json"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -52,6 +53,7 @@ def build_walkthrough(root: Path, source_bundle: Path | None = None) -> dict[str
     promotion = sources["promotion"]
     conformance = _load_json(root / "docs/reproducibility/conformance/resot_instruments_report.json")
     failure = _load_json(root / "examples/conformance_failure_fixture/conformance_report.json")
+    control = _load_json(root / "docs/reproducibility/resot_instruments_category_control.json")
 
     if conformance.get("status") != "pass" or conformance.get("failed_levels"):
         raise ValueError("ReSOT conformance report must pass C0-C5")
@@ -121,6 +123,12 @@ def build_walkthrough(root: Path, source_bundle: Path | None = None) -> dict[str
     for name, (observed, expected) in float_pairs.items():
         if observed is None or expected is None or abs(float(observed) - float(expected)) > 1e-12:
             raise ValueError(f"walkthrough {name} does not match conformance report")
+    if control.get("status") != "pass" or control.get("dataset") != inventory["dataset"]:
+        raise ValueError("ReSOT same-dataset control is missing or bound to another dataset")
+    control_source = control.get("source_artifact", {})
+    control_row = control.get("category_prefix_control", {})
+    if abs(float(control_source.get("d3_depth1_weighted_collab_recall")) - float(intake["d3_depth1_weighted_collab_recall"])) > 1e-12:
+        raise ValueError("ReSOT same-dataset control is not bound to the walkthrough source artifact")
 
     return {
         "schema": "sidscope.resot_resource_walkthrough.v1",
@@ -160,7 +168,9 @@ def build_walkthrough(root: Path, source_bundle: Path | None = None) -> dict[str
                 "evidence": "docs/reproducibility/conformance/resot_instruments_report.json",
                 "outcome": (
                     f"C0-C5 pass; collision rate {intake['full_collision_rate']:.3f}, "
-                    f"depth-1 weighted D3 {intake['d3_depth1_weighted_collab_recall']:.4f}."
+                    f"depth-1 weighted D3 {intake['d3_depth1_weighted_collab_recall']:.4f} versus "
+                    f"{float(control_row['d3_depth1_weighted_collab_recall']):.4f} for the same-dataset "
+                    "category-prefix control."
                 ),
             },
             {
@@ -187,6 +197,8 @@ def build_walkthrough(root: Path, source_bundle: Path | None = None) -> dict[str
             "unique_full_sids": intake["unique_sid"],
             "full_collision_rate": intake["full_collision_rate"],
             "d3_depth1_weighted_collab_recall": intake["d3_depth1_weighted_collab_recall"],
+            "same_dataset_category_control_d3": control_row["d3_depth1_weighted_collab_recall"],
+            "same_dataset_control_record": "docs/reproducibility/resot_instruments_category_control.json",
             "prefix_counts": intake["prefix_counts"],
         },
         "decision": {
@@ -229,7 +241,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Diagnostic Snapshot",
             "",
-            f"The normalized row contains {diagnostic['items']:,} items and {diagnostic['interactions']:,} interactions. Its {diagnostic['sid_depth']}-level mapping has {diagnostic['unique_full_sids']:,} unique full SIDs, full-code collision rate {diagnostic['full_collision_rate']:.3f}, depth-1 weighted D3 {diagnostic['d3_depth1_weighted_collab_recall']:.4f}, and prefix counts `{diagnostic['prefix_counts']}`.",
+            f"The normalized row contains {diagnostic['items']:,} items and {diagnostic['interactions']:,} interactions. Its {diagnostic['sid_depth']}-level mapping has {diagnostic['unique_full_sids']:,} unique full SIDs, full-code collision rate {diagnostic['full_collision_rate']:.3f}, depth-1 weighted D3 {diagnostic['d3_depth1_weighted_collab_recall']:.4f}, and prefix counts `{diagnostic['prefix_counts']}`. The deterministic same-dataset category-prefix control reaches D3 {diagnostic['same_dataset_category_control_d3']:.4f} under the same bounded protocol.",
             "",
             "## Decision Boundary",
             "",

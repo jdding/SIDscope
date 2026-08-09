@@ -1,24 +1,29 @@
 from __future__ import annotations
 
+import importlib.util
 import unittest
 from pathlib import Path
 
-import pandas as pd
-import torch
+TORCH_AVAILABLE = importlib.util.find_spec("torch") is not None
 
-from sidinspector.d7_trace import label_traces
-from tools.run_v1_gate12b_sequence_generator_anchor import SequenceSIDGenerator, build_sid_encoding
-from tools.run_v1_gate20_d7_trained_beam import build_trie_index, trie_constrained_beam_decode
-from tools.run_v1_gate20_d7_trained_beam import (
-    bootstrap_user_rate,
-    analyze_traces,
-    determine_gate_status,
-    effective_seed,
-    evaluate_replicated_promotion,
-    split_g20_events,
-)
+if TORCH_AVAILABLE:  # pragma: no branch - imports are exercised in full environments
+    import pandas as pd
+    import torch
+
+    from sidinspector.d7_trace import label_traces
+    from tools.run_v1_gate12b_sequence_generator_anchor import SequenceSIDGenerator, build_sid_encoding
+    from tools.run_v1_gate20_d7_trained_beam import build_trie_index, trie_constrained_beam_decode
+    from tools.run_v1_gate20_d7_trained_beam import (
+        bootstrap_user_rate,
+        analyze_traces,
+        determine_gate_status,
+        effective_seed,
+        evaluate_replicated_promotion,
+        split_g20_events,
+    )
 
 
+@unittest.skipUnless(TORCH_AVAILABLE, "G20 trained-beam tests require optional PyTorch")
 class Gate20TrainedBeamTest(unittest.TestCase):
     def setUp(self) -> None:
         self.sid = pd.DataFrame(
@@ -208,6 +213,10 @@ class Gate20TrainedBeamTest(unittest.TestCase):
         self.assertEqual(int(pair.iloc[0]["target_count"]), 1)
         self.assertFalse(strata.empty)
         self.assertEqual(analysis["bootstrap_unit"], "user_cluster")
+        uncertainty = analysis["family_rates"]["high_uncertainty"]
+        self.assertFalse(uncertainty["available"])
+        self.assertEqual(uncertainty["reason"], "prefix_entropy_not_exported")
+        self.assertIsNone(uncertainty["rate"])
 
     def test_remote_runner_contract_is_fail_closed_and_replicated(self) -> None:
         runner = Path(
