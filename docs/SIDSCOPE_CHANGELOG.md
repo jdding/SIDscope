@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/SIDscope`. The earlier SIDInspector
@@ -10,6 +10,19 @@ release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
+
+## TOIS M1--M5 preparation refresh
+
+Date: 2026-08-09  
+Tag: `sidscope-tois-m1m5-20260809-r2`
+
+- Added G21 released-checkpoint and G22 refresh-handoff compact evidence.
+- Rebuilt all ten manuscript table snapshots with 86 verified rows.
+- Added torch-absent and missing-upstream skips for the clean reviewer package.
+- Refreshed the D3 calibration-reach claim ledger, pip floor, verifier commands,
+  and manuscript-to-package table mapping.
+- Kept the repository private; unauthenticated URL smoke remains a separate
+  submission-time gate.
 
 ## Official private preparation surface
 

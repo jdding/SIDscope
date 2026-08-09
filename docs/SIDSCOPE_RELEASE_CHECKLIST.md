@@ -1,7 +1,7 @@
 # SIDScope Release Candidate Checklist
 
 Status: local and private official-repository preparation gates pass; unauthenticated reviewer access remains pending
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 
 This checklist defines what must be true before a SIDScope reviewer package is
 called release-ready. The current resource package is release-ready for the
@@ -119,14 +119,14 @@ changes.
 ```text
 G5_G6_LOCAL_RELEASE_CANDIDATE: PASS_CURRENT after R768 verifier, R769 archive builder, and R770 archive smoke
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS via R603 and current archive smoke via R770
-SIDSCOPE_PRIVATE_CLEAN_CLONE_SMOKE: PASS; exact commit recorded package-externally in R813
+SIDSCOPE_PRIVATE_CLEAN_CLONE_SMOKE: PASS; exact commit recorded package-externally in R814
 SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
 PUBLIC_REVIEWER_ACCESS: PENDING; https://github.com/jdding/SIDscope is currently private
 G7_LITE_CLAIM_PACKAGE_BOUNDARY: PASS
 G7_FULL_CLAIM_TABLE_FIGURE_LEDGER: PASS for current local artifact registry
 G9_G10_UTILITY_ANCHORS: PASS for current local artifact registry
 G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
-PREPARATION_TAG: sidscope-tois-prep-20260808
+PREPARATION_TAG: sidscope-tois-m1m5-20260809-r2
 FINAL_RELEASE_TAG: REQUIRED_BEFORE_PUBLIC_SUBMISSION_SURFACE
 SUBMISSION_READY_RESOURCE_PACKAGE: PASS_FOR_LOCAL_RESOURCE_PACKAGE_LAYER_ONLY
 PAPER_SUBMISSION_READY: NOT_ASSESSED

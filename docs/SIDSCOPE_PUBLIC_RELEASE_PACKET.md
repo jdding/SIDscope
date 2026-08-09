@@ -2,7 +2,7 @@
 
 Status: private official-repository preparation package verified;
 unauthenticated public access remains a submission-time gate
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 
 This packet records the exact public/reviewer release surface for the SIDScope
 resource package. It is intentionally explicit about the local checks, public
@@ -22,9 +22,9 @@ candidate_public_url: https://github.com/jdding/SIDscope
 candidate_release_ref: main
 candidate_archive_name: sidscope-v1-release-candidate.zip
 local_archive_path: /tmp/sidscope-v1-release-candidate.zip
-preparation_commit: recorded package-externally in R813 after the root commit is frozen
-preparation_tag: sidscope-tois-prep-20260808
-archive_sha256: recorded package-externally in R813 to avoid recursive self-hashing
+preparation_commit: recorded package-externally in R814 after the package commit is frozen
+preparation_tag: sidscope-tois-m1m5-20260809-r2
+archive_sha256: recorded package-externally in R814 to avoid recursive self-hashing
 ```
 
 The GitHub URL is the reviewer-facing release surface. It must be checked after
@@ -99,10 +99,10 @@ Record:
 ```text
 LOCAL_RELEASE_CANDIDATE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT
-AUTHENTICATED_PRIVATE_REMOTE: PASS; exact commit recorded package-externally in R813
+AUTHENTICATED_PRIVATE_REMOTE: PASS; exact commit recorded package-externally in R814
 SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
 PUBLIC_URL_VERIFIED: PENDING; private repository is not an unauthenticated reviewer surface
-RELEASE_REF: main; preparation tag sidscope-tois-prep-20260808
+RELEASE_REF: main; preparation tag sidscope-tois-m1m5-20260809-r2
 HOSTED_ARCHIVE_VERIFIED: NOT_USED
 G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
 ```
