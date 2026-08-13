@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -34,6 +35,14 @@ GRID_FAITHFUL_BEAUTY = (
 CARD_RQVAE_BEAUTY = PROJECT_ROOT / "experiments/v1_evidence_chain/gate15_card_rqvae_intake"
 RESOT_TEXT_INTAKE = PROJECT_ROOT / "experiments/v1_evidence_chain/gate17_resot_intake/normalized_text"
 DIGER_RQVAE_BEAUTY = PROJECT_ROOT / "experiments/v1_evidence_chain/gate17_diger_intake/normalized_rqvae_beauty"
+DIGER_RQVAE_YELP = (
+    PROJECT_ROOT
+    / "experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/intake/normalized_rqvae_yelp"
+)
+G23_MATRIX_ADMISSION = (
+    PROJECT_ROOT
+    / "experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/G23_MATRIX_ADMISSION.json"
+)
 DEFAULT_V0_PROVENANCE_ROOT = (
     PROJECT_ROOT.parent / "SIDInspector-v0-review/_local_provenance/sidinspector_gate0/_gate0_artifacts"
 )
@@ -45,6 +54,7 @@ PRIMARY_ANALYSIS_ROLES = (
     "paper_named_card_refresh",
     "paper_named_resot_refresh",
     "paper_named_diger_refresh",
+    "paper_named_diger_yelp_refresh",
 )
 
 
@@ -58,6 +68,40 @@ class ManifestRow:
     interactions: Path
     row_family: str
     gate2_role: str
+
+
+def _sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(chunk_size), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _matrix_admission_valid(admission_path: Path, normalized_root: Path) -> bool:
+    try:
+        admission = json.loads(admission_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    if (
+        admission.get("schema") != "sidscope.g23_matrix_admission.v1"
+        or admission.get("route_id") != "diger_yelp"
+        or admission.get("status") != "PASS_AUTHORIZED"
+        or admission.get("matrix_change_authorized") is not True
+    ):
+        return False
+    expected = admission.get("normalized_input_sha256")
+    if not isinstance(expected, dict):
+        return False
+    paths = {
+        "sid_assignments": normalized_root / "sid_assignments.parquet",
+        "item_metadata": normalized_root / "item_metadata.parquet",
+        "interactions": normalized_root / "interactions.parquet",
+    }
+    return all(
+        path.is_file() and expected.get(name) == _sha256(path)
+        for name, path in paths.items()
+    )
 
 
 def default_manifest_rows() -> list[ManifestRow]:
@@ -211,6 +255,18 @@ def default_manifest_rows() -> list[ManifestRow]:
     )
     if all(path.exists() for path in (diger_rqvae.sid_assignments, diger_rqvae.item_metadata, diger_rqvae.interactions)):
         rows.append(diger_rqvae)
+    diger_yelp = ManifestRow(
+        label="diger_rqvae_yelp",
+        method="diger_rqvae_official_code_derived",
+        dataset="yelp",
+        sid_assignments=DIGER_RQVAE_YELP / "sid_assignments.parquet",
+        item_metadata=DIGER_RQVAE_YELP / "item_metadata.parquet",
+        interactions=DIGER_RQVAE_YELP / "interactions.parquet",
+        row_family="DIGER",
+        gate2_role="paper_named_diger_yelp_refresh",
+    )
+    if _matrix_admission_valid(G23_MATRIX_ADMISSION, DIGER_RQVAE_YELP):
+        rows.append(diger_yelp)
     return rows
 
 
@@ -307,7 +363,10 @@ def _prefix_maps(sid: pd.DataFrame, depth: int) -> tuple[dict[int, tuple[Any, ..
 
 
 def _stable_shard(value: Any, shards: int) -> int:
-    return abs(hash(str(value))) % shards
+    if shards <= 0:
+        raise ValueError("shards must be positive")
+    digest = hashlib.blake2b(str(value).encode("utf-8"), digest_size=8).digest()
+    return int.from_bytes(digest, byteorder="big", signed=False) % shards
 
 
 def run_prefix_exposure(
@@ -698,6 +757,11 @@ def analyze_utility(
     diger_refresh_rows = int(
         row_counts.loc[row_counts["gate2_role"] == "paper_named_diger_refresh", "evaluated_rows"].sum()
     )
+    diger_yelp_refresh_rows = int(
+        row_counts.loc[
+            row_counts["gate2_role"] == "paper_named_diger_yelp_refresh", "evaluated_rows"
+        ].sum()
+    )
     primary_rows = int(
         row_counts.loc[
             row_counts["gate2_role"].isin(PRIMARY_ANALYSIS_ROLES), "evaluated_rows"
@@ -725,6 +789,7 @@ def analyze_utility(
         "card_refresh_rows": card_refresh_rows,
         "resot_refresh_rows": resot_refresh_rows,
         "diger_refresh_rows": diger_refresh_rows,
+        "diger_yelp_refresh_rows": diger_yelp_refresh_rows,
         "manifest_rows": int(len(manifest)),
         "diagnostic_association_rows": int(len(association)),
         "top_primary_associations": best.to_dict(orient="records"),
@@ -742,6 +807,7 @@ def analyze_utility(
             "CARD RQ-VAE/P5 Beauty is official-code-derived with a local compatibility shim, not an author-released CARD mapping.",
             "ReSOT/Instruments is a released-archive text-index intake row; keep the no-license-detected reuse caveat visible.",
             "DIGER RQ-VAE/Beauty is official-code-derived from public embeddings and a public checkpoint, not an author-released item-to-SID table or full DIGER differentiable-assignment reproduction.",
+            "DIGER RQ-VAE/Yelp is a non-Amazon contract-portability row from the same upstream family; Beauty-Yelp differences are descriptive because dataset, checkpoint, and checkpoint configuration all differ.",
             "G3 remains required for controlled popularity/depth/collision modeling.",
         ],
     }
@@ -801,6 +867,7 @@ def _write_run_records(
             "card_refresh_rows": result["card_refresh_rows"],
             "resot_refresh_rows": result["resot_refresh_rows"],
             "diger_refresh_rows": result["diger_refresh_rows"],
+            "diger_yelp_refresh_rows": result["diger_yelp_refresh_rows"],
             "limitations": result["limitations"],
         },
     ]
@@ -835,6 +902,7 @@ def _write_report(output_root: Path, result: dict[str, Any]) -> None:
         "- Faithful GRID refresh vertical: `beauty`.",
         "- CARD RQ-VAE paper-named refresh vertical: `beauty`.",
         "- DIGER RQ-VAE paper-named refresh vertical: `beauty`.",
+        "- DIGER RQ-VAE non-Amazon refresh vertical: `yelp`.",
         "- ReSOT text-index paper-named refresh vertical: `Instruments`.",
         "- Supporting upstream rows: `LETTER_Instruments`, `LCRec_Instruments`.",
         "- Outcome: fixed train-only candidate exposure, not final downstream quality.",
@@ -847,6 +915,7 @@ def _write_report(output_root: Path, result: dict[str, Any]) -> None:
         f"- Faithful GRID refresh evaluated rows: {result['faithful_grid_refresh_rows']}.",
         f"- CARD RQ-VAE refresh evaluated rows: {result['card_refresh_rows']}.",
         f"- DIGER RQ-VAE refresh evaluated rows: {result['diger_refresh_rows']}.",
+        f"- DIGER RQ-VAE/Yelp refresh evaluated rows: {result['diger_yelp_refresh_rows']}.",
         f"- ReSOT text-index refresh evaluated rows: {result['resot_refresh_rows']}.",
         f"- Manifest rows: {result['manifest_rows']}.",
         "",

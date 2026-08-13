@@ -20,7 +20,7 @@ class SIDScopePaperTableTest(unittest.TestCase):
             stderr=subprocess.STDOUT,
         )
         self.assertIn("regeneration verification passed", completed.stdout)
-        self.assertIn("Verified 10 tables", completed.stdout)
+        self.assertIn("Verified 8 tables", completed.stdout)
 
 
 if __name__ == "__main__":

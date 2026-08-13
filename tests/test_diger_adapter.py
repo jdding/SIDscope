@@ -11,6 +11,11 @@ from sidinspector.adapters.diger import (
     normalize_diger_metadata,
     read_diger_emb_map,
 )
+from tools.run_v1_gate17_diger_intake import (
+    DATASET_PROFILES,
+    _resolve_item_count,
+    parse_args,
+)
 
 
 class DIGERAdapterTest(unittest.TestCase):
@@ -66,6 +71,44 @@ class DIGERAdapterTest(unittest.TestCase):
         user0 = out[out["user_id"] == 0].sort_values("position")
         self.assertEqual(list(user0["item_id"]), [0, 1, 2])
         self.assertEqual(len(out[out["user_id"] == 1]), 2)
+
+    def test_rejects_interaction_items_missing_from_map(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            emb_map = self._write_emb_map(root)
+            train = root / "train.jsonl"
+            train.write_text(
+                json.dumps(
+                    {
+                        "user_id": "0",
+                        "target_id": "item_1",
+                        "inter_history": ["unknown_item", "item_0"],
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "absent from DIGER emb_map"):
+                normalize_diger_interactions([train], emb_map, dataset="Yelp")
+
+    def test_yelp_profile_uses_map_and_embedding_count_without_stats_file(self):
+        profile = DATASET_PROFILES["yelp"]
+        self.assertIsNone(profile["stats_file"])
+        item_count, evidence = _resolve_item_count(
+            item_map_rows=20_033,
+            embedding_rows=20_033,
+            stats_path=None,
+        )
+        self.assertEqual(item_count, 20_033)
+        self.assertEqual(evidence["source"], "released_emb_map_and_embedding_shape")
+
+    def test_item_count_rejects_map_embedding_mismatch(self):
+        with self.assertRaisesRegex(ValueError, "map has 3 items"):
+            _resolve_item_count(item_map_rows=3, embedding_rows=2, stats_path=None)
+
+    def test_dataset_key_preserves_beauty_default_and_accepts_yelp(self):
+        self.assertEqual(parse_args([]).dataset_key, "beauty")
+        self.assertEqual(parse_args(["--dataset-key", "yelp"]).dataset_key, "yelp")
 
 
 if __name__ == "__main__":

@@ -1,13 +1,13 @@
 # SIDScope Release Candidate Checklist
 
-Status: local and private official-repository preparation gates pass; unauthenticated reviewer access remains pending
-Last updated: 2026-08-09
+Status: v1.0.0 local freeze in progress; unauthenticated reviewer access remains pending
+Last updated: 2026-08-13
 
 This checklist defines what must be true before a SIDScope reviewer package is
 called release-ready. The current resource package is release-ready for the
 local resource-package layer: the local package verifier, release-clean archive
 builder, and archive smoke pass after the ReSOT/DIGER and worktree-cleanup
-refresh. The private `https://github.com/jdding/SIDscope` repository is the
+refresh. The private `https://github.com/jdding/sidscope` repository is the
 approved official release surface. Its obsolete G14 history has been replaced
 by the current manifest-built root commit, tagged for TOIS preparation, and
 verified from a clean authenticated clone. Public URL smoke remains pending
@@ -50,7 +50,7 @@ clean-extract install usability.
 
 ## Public Release Gates
 
-The following items must be refreshed for the clean `jdding/SIDscope` public
+The following items must be refreshed for the clean `jdding/sidscope` public
 surface whenever a new release tag or reviewer package is cut:
 
 1. Create a release-clean branch or tag for the reviewed package boundary.
@@ -71,7 +71,7 @@ shell state. `tools/run_sidscope_g8_fresh_env_smoke.py` provides the local
 clean-extract version: it extracts the release archive into a temporary
 directory, creates a temporary virtual environment, installs the package, and
 runs the reviewer checks. R708 records the historical pre-split public URL/tag
-smoke. The clean `jdding/SIDscope` public surface must pass a fresh
+smoke. The clean `jdding/sidscope` public surface must pass a fresh
 unauthenticated public URL smoke after the current package surface is pushed
 or otherwise hosted.
 
@@ -93,7 +93,7 @@ For the final public/reviewer URL gate, run:
 
 ```bash
 python3 tools/run_sidscope_public_url_smoke.py \
-  --repo-url https://github.com/jdding/SIDscope.git \
+  --repo-url https://github.com/jdding/sidscope.git \
   --ref main \
   --result-json /tmp/sidscope_public_url_smoke.json
 ```
@@ -121,13 +121,13 @@ G5_G6_LOCAL_RELEASE_CANDIDATE: PASS_CURRENT after R768 verifier, R769 archive bu
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS via R603 and current archive smoke via R770
 SIDSCOPE_PRIVATE_CLEAN_CLONE_SMOKE: PASS; exact commit recorded package-externally in R814
 SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
-PUBLIC_REVIEWER_ACCESS: PENDING; https://github.com/jdding/SIDscope is currently private
+PUBLIC_REVIEWER_ACCESS: PENDING; https://github.com/jdding/sidscope is currently private
 G7_LITE_CLAIM_PACKAGE_BOUNDARY: PASS
 G7_FULL_CLAIM_TABLE_FIGURE_LEDGER: PASS for current local artifact registry
 G9_G10_UTILITY_ANCHORS: PASS for current local artifact registry
 G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
 PREPARATION_TAG: sidscope-tois-m1m5-20260809-r2
-FINAL_RELEASE_TAG: REQUIRED_BEFORE_PUBLIC_SUBMISSION_SURFACE
+FINAL_RELEASE_TAG: v1.0.0
 SUBMISSION_READY_RESOURCE_PACKAGE: PASS_FOR_LOCAL_RESOURCE_PACKAGE_LAYER_ONLY
 PAPER_SUBMISSION_READY: NOT_ASSESSED
 ```

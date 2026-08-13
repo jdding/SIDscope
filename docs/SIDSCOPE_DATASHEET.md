@@ -29,8 +29,10 @@ SIDScope is not a tokenizer trainer, generator trainer, or downstream
 recommendation benchmark.
 
 The current paper-facing matrix spans ReSID, GRID, CARD, LETTER, LC-Rec,
-ReSOT, and DIGER source routes. Controls and stress/reference rows are reported
-separately and do not count as additional named families.
+ReSOT, and DIGER source routes. DIGER/Yelp adds the only non-Amazon route, so
+the current coverage is seven named families, nine routes, and two data
+ecosystems. Controls and stress/reference rows are reported separately and do
+not count as additional named families.
 
 ## Inputs
 

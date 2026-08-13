@@ -26,9 +26,9 @@ checker is authoritative for semantic constraints that JSON Schema alone does
 not express, including joins, SID reconstruction, input hashes, and inventory
 promotion.
 
-The current public evidence contains seven paper-counted C0-C5 executions:
+The current public evidence contains eight paper-counted C0-C5 executions:
 `ReSID-GAOQ / Video`, `GRID / P5 Beauty`, `CARD RQ-VAE / P5 Beauty`,
-`DIGER RQ-VAE / Beauty`, `ReSOT text-index / Instruments`, and `LETTER /
+`DIGER RQ-VAE / Beauty`, `DIGER RQ-VAE / Yelp`, `ReSOT text-index / Instruments`, and `LETTER /
 Instruments`, plus `LC-Rec / Instruments`. They cover a returned
 official-code-derived route, a tokenizer-stage rebuild, checkpoint or
 code-derived routes, and released index or archive routes. ReSID/Musical
@@ -43,6 +43,6 @@ PYTHONPATH=src python3 tools/check_adapter_conformance.py \
   --allow-fail
 ```
 
-Run `python3 tools/verify_adapter_conformance_assets.py` to validate all seven
+Run `python3 tools/verify_adapter_conformance_assets.py` to validate all eight
 frozen route reports, rerun the negative fixture, and check the inventory
 evidence boundary without requiring non-redistributable upstream inputs.

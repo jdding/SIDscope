@@ -1,0 +1,63 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "diger_yelp",
+  "paper_label": "DIGER RQ-VAE / Yelp",
+  "method_family": "DIGER",
+  "configuration": "HF dataset=42f26ba9d98338ae24aa8b552a952326e516b5fd; HF model=ef1f7792daf39d963e88559c4d19ab5cf06195db; num_emb_list=256/256/256; e_dim=256; layers=2048/1024/512; beta=0.5; checkpoint_sha256=696b3df0197b3174e7e52acd6193bb9e08841275ed24b8dd2feb1b0124c1ba79",
+  "source": {
+    "url": "https://github.com/junchen-fu/DIGER",
+    "revision": "cd72dcdc25d28e0acfa5aea14788ad863b41ab4f",
+    "license_status": "no_license_detected",
+    "license_identifier": "NOASSERTION for GitHub code and audited Hugging Face dataset/model cards",
+    "derivation": "official_code_derived",
+    "artifact_name": "DIGER Yelp RQ-VAE checkpoint export",
+    "redistribution_policy": "summary_only"
+  },
+  "dataset": {
+    "name": "Yelp",
+    "normalized_name": "yelp",
+    "expected_items": 20033,
+    "sid_depth": 3
+  },
+  "inputs": {
+    "sid_assignments": "experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/intake/normalized_rqvae_yelp/sid_assignments.parquet",
+    "item_metadata": "experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/intake/normalized_rqvae_yelp/item_metadata.parquet",
+    "interactions": "experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/intake/normalized_rqvae_yelp/interactions.parquet"
+  },
+  "input_availability": "local normalized inputs are not redistributed; public report retains hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "0099cab028a87cef2514c4cc08d7b528b4e97cf6ccc9c73969dd2d0c8e1424c1",
+    "item_metadata": "75261417cedb356bd6eb89455dad69383848ca1c35c25b07c6c654139333c6d6",
+    "interactions": "a402219b5c0ef50d9d64a02007124579803f96b1af897c67998d152e3ed24548"
+  },
+  "metric_smoke": {
+    "max_metric_items": 50000,
+    "top_k": 5,
+    "max_pair_events": 10000,
+    "max_user_items": 50
+  },
+  "reproduction": {
+    "command": [
+      "python3",
+      "tools/run_v1_gate17_diger_intake.py",
+      "--dataset-key",
+      "yelp",
+      "--upstream-root",
+      "<clean-DIGER-checkout>",
+      "--hf-root",
+      "<local-HF-source-root>"
+    ],
+    "runtime_class": "cpu_minutes",
+    "source_evidence": [
+      "experiments/v1_evidence_chain/runs/R828_diger_yelp_intake.json",
+      "experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/G23_DIGER_YELP_INTAKE_RESULT.md"
+    ]
+  },
+  "promotion": {
+    "route_id": "diger_yelp",
+    "evidence_role": "official_code_derived_route",
+    "paper_counted": true,
+    "conformance_status": "c0_c5_pass",
+    "conformance_evidence": "docs/reproducibility/conformance/diger_yelp_report.json"
+  }
+}

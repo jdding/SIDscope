@@ -1,19 +1,38 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-09
+Last updated: 2026-08-13
 
 This changelog records reviewer-package changes for the standalone SIDScope
-repository at `https://github.com/jdding/SIDscope`. The earlier SIDInspector
+repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
 repository remains reserved for the CIKM V0 surface and is not a SIDScope
 release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.0.0 reviewer release
+
+Date: 2026-08-13
+Tag: `v1.0.0`
+
+- Froze the manifest-approved TOIS reviewer package as the first stable
+  SIDScope resource release.
+- Added the DIGER/Yelp non-Amazon route and refreshed the nine-route source,
+  license, configuration, and C0--C5 conformance inventory.
+- Bound all eight manuscript tables, D1--D7 diagnostics, the D3 evidence
+  ladder, trained-trace accounting, and the diagnosis--repair--re-audit
+  walkthrough to compact package-relative evidence.
+- Verified the CPU-only package contract, deterministic table regeneration,
+  claim ledger, clean archive extraction, and fresh-environment workflow.
+- Kept paper sources, private datasets, checkpoints, cloud payloads, and local
+  experiment provenance outside the release surface.
+- Public no-login URL smoke remains the only release-access check that must be
+  run after repository visibility is changed from private to public.
+
 ## TOIS M1--M5 preparation refresh
 
-Date: 2026-08-09  
+Date: 2026-08-09
 Tag: `sidscope-tois-m1m5-20260809-r2`
 
 - Added G21 released-checkpoint and G22 refresh-handoff compact evidence.
@@ -34,7 +53,7 @@ reviewer-visible
 ### Added
 
 - Standalone SIDScope official repository:
-  `https://github.com/jdding/SIDscope`.
+  `https://github.com/jdding/sidscope`.
 - SIDScope resource package docs, datasheet, limitations, maintenance policy,
   release checklist, and reproducibility matrix.
 - G14 usage-demo walkthrough:
@@ -45,7 +64,7 @@ reviewer-visible
 - CPU-only reviewer quickstart, sampled regeneration, release archive builder,
   package verifier, claim-ledger verifier, and public URL smoke runner.
 - Compact evidence snapshots under `docs/reproducibility/`.
-- Eight source-traced artifact routes, seven C0--C5 conformance reports, and a
+- Nine source-traced artifact routes, eight C0--C5 conformance reports, and a
   directly runnable negative fixture.
 - Deterministic reconstruction of all manuscript-facing table snapshots.
 - G20 trained constrained-beam trace summaries and verification code.
@@ -66,7 +85,7 @@ reviewer-visible
   the diagnostic toolkit.
 - The earlier SIDInspector repository remains the accepted CIKM 2026 resource
   surface and must not receive SIDScope journal-extension pushes.
-- Public URL smoke for `https://github.com/jdding/SIDscope` at `main` is
+- Public URL smoke for `https://github.com/jdding/sidscope` at `main` is
   required after the private preparation repository becomes reviewer-visible.
 
 ## Release boundary

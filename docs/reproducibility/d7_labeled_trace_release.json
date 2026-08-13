@@ -1,0 +1,99 @@
+{
+  "boundary": "Inspects complete label distributions and within-trace rank patterns without redistributing upstream identities, mappings, raw paths, or model scores.",
+  "cases": {
+    "dact_tiger_constrained": {
+      "failure_family_counts": {
+        "constrained_survivable": 25000
+      },
+      "primary_failure_counts": {
+        "valid_hit": 25000
+      },
+      "rows": 25000,
+      "source_path": "experiments/v1_evidence_chain/gate21_tiger_d7_robustness/remote_runs/20260809T030241Z/primary/g21_constrained_labels.csv",
+      "source_sha256": "d539c110427be8d6e2618a3f5292274294a4b81bbdde954042a4de839811aaa8",
+      "traces": 500
+    },
+    "dact_tiger_unconstrained": {
+      "failure_family_counts": {
+        "constrained_survivable": 24012,
+        "unconstrained_only": 988
+      },
+      "primary_failure_counts": {
+        "invalid_path": 988,
+        "valid_hit": 24012
+      },
+      "rows": 25000,
+      "source_path": "experiments/v1_evidence_chain/gate21_tiger_d7_robustness/remote_runs/20260809T030241Z/primary/g21_unconstrained_labels.csv",
+      "source_sha256": "15721ff2685b66cc7aaac9aad71dd488177c091b2ab7502c321221b8b3e722fd",
+      "traces": 500
+    },
+    "diger_fold0": {
+      "failure_family_counts": {
+        "constrained_survivable": 25000
+      },
+      "primary_failure_counts": {
+        "ambiguous_path": 2520,
+        "high_uncertainty": 22460,
+        "valid_hit": 20
+      },
+      "rows": 25000,
+      "source_path": "experiments/v1_evidence_chain/gate20_d7_failure_rich_trace/remote_runs/20260808T113802Z/diger_followup/g20_labeled_beam_traces.csv",
+      "source_sha256": "f2b2a13de225cec9ecc5ce3458da05d5447d4ce8d04fb83a2474b6c14e61f096",
+      "traces": 500
+    },
+    "grid_p5_fold0": {
+      "failure_family_counts": {
+        "constrained_survivable": 25000
+      },
+      "primary_failure_counts": {
+        "ambiguous_path": 8511,
+        "high_uncertainty": 16441,
+        "valid_hit": 48
+      },
+      "rows": 25000,
+      "source_path": "experiments/v1_evidence_chain/gate20_d7_failure_rich_trace/remote_runs/20260808T113802Z/grid_primary_fold0/g20_labeled_beam_traces.csv",
+      "source_sha256": "e7018fa993dc8ed230eb2f0702e7c8419a7829edda742800fc63713d052d20f9",
+      "traces": 500
+    },
+    "grid_p5_fold1": {
+      "failure_family_counts": {
+        "constrained_survivable": 25000
+      },
+      "primary_failure_counts": {
+        "ambiguous_path": 9269,
+        "high_uncertainty": 15706,
+        "valid_hit": 25
+      },
+      "rows": 25000,
+      "source_path": "experiments/v1_evidence_chain/gate20_d7_failure_rich_trace/remote_runs/20260808T113802Z/grid_primary_fold1/g20_labeled_beam_traces.csv",
+      "source_sha256": "6dce9489524d2da198c18fe2cac0a59083d47cbf3d94477d54e5789a742bd973",
+      "traces": 500
+    }
+  },
+  "deidentification": {
+    "removed": "user IDs, target/item IDs, SID paths, resolved item IDs, scores, and checkpoints",
+    "retained": "case, within-case trace key, beam rank, D7 labels, and path/item outcomes",
+    "trace_key": "deterministic within-case ordinal; not reversible to the source trace ID"
+  },
+  "release_fields": [
+    "case_id",
+    "trace_key",
+    "rank",
+    "decoding_mode",
+    "primary_failure",
+    "failure_flags",
+    "failure_family",
+    "resolved_item_count",
+    "target_path_survived",
+    "target_item_uniquely_hit",
+    "target_missed",
+    "generated_length",
+    "terminated_early",
+    "has_valid_prefix"
+  ],
+  "release_path": "docs/reproducibility/d7_labeled_trace_rows.csv.gz",
+  "release_sha256": "5efb77ba6144c6312dce11415dc34c2828419ea6c3003ef2695e14c0e89016e0",
+  "rows": 125000,
+  "schema": "sidscope.d7_labeled_trace_release.v1",
+  "status": "pass"
+}

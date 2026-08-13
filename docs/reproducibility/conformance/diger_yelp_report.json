@@ -1,0 +1,140 @@
+{
+  "artifact_id": "diger_yelp",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "diger_yelp",
+        "license_status": "no_license_detected",
+        "paper_label": "DIGER RQ-VAE / Yelp",
+        "source_revision": "cd72dcdc25d28e0acfa5aea14788ad863b41ab4f"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 3,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 316354
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 20033
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 20033
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "yelp",
+            "interaction_items": 20033,
+            "interaction_without_sid": 0,
+            "metadata_items": 20033,
+            "metadata_without_sid": 0,
+            "method": "diger_rqvae_official_code_derived",
+            "sid_items": 20033
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "7.994985;7.950456;7.912556",
+            "d1_level_count": 3,
+            "d1_unique_codes": "256;256;256",
+            "d3_depth1_mean_collab_recall": 0.009884937238493725,
+            "d3_depth1_weighted_collab_recall": 0.009739572305737878,
+            "d4_head_sid_unique_ratio": 0.9776879305181192,
+            "d4_mid_sid_unique_ratio": 0.9561245882000599,
+            "d4_tail_sid_unique_ratio": 0.9409914632319905,
+            "dataset": "yelp",
+            "duplicate_sid_rate": 0.06629062047621426,
+            "full_collision_rate": 0.10218140068886337,
+            "method": "diger_rqvae_official_code_derived",
+            "prefix_counts": "256;14918;18705",
+            "sid_length": 3,
+            "unique_sid": 18705
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "python3",
+          "tools/run_v1_gate17_diger_intake.py",
+          "--dataset-key",
+          "yelp",
+          "--upstream-root",
+          "<clean-DIGER-checkout>",
+          "--hf-root",
+          "<local-HF-source-root>"
+        ],
+        "input_sha256": {
+          "interactions": "a402219b5c0ef50d9d64a02007124579803f96b1af897c67998d152e3ed24548",
+          "item_metadata": "75261417cedb356bd6eb89455dad69383848ca1c35c25b07c6c654139333c6d6",
+          "sid_assignments": "0099cab028a87cef2514c4cc08d7b528b4e97cf6ccc9c73969dd2d0c8e1424c1"
+        },
+        "runtime_class": "cpu_minutes",
+        "source_evidence": [
+          "experiments/v1_evidence_chain/runs/R828_diger_yelp_intake.json",
+          "experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/G23_DIGER_YELP_INTAKE_RESULT.md"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "official_code_derived_route",
+        "inventory_match": true,
+        "paper_counted": true,
+        "route_id": "diger_yelp"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/diger_yelp_manifest.json",
+  "paper_label": "DIGER RQ-VAE / Yelp",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

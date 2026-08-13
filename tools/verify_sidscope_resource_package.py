@@ -57,6 +57,8 @@ REQUIRED_FILES = [
     "docs/reproducibility/sidscope_paper_protocol_config.json",
     "docs/reproducibility/g14_usage_demo_decisions.csv",
     "docs/reproducibility/g14_usage_demo_summary.json",
+    "docs/reproducibility/d7_labeled_trace_rows.csv.gz",
+    "docs/reproducibility/d7_labeled_trace_release.json",
     "docs/reproducibility/sidscope_source_license_config_inventory.csv",
     "docs/reproducibility/conformance/adapter_manifest.schema.json",
     "docs/reproducibility/conformance/resot_instruments_manifest.json",
@@ -69,6 +71,8 @@ REQUIRED_FILES = [
     "docs/reproducibility/conformance/card_p5_beauty_report.json",
     "docs/reproducibility/conformance/diger_beauty_manifest.json",
     "docs/reproducibility/conformance/diger_beauty_report.json",
+    "docs/reproducibility/conformance/diger_yelp_manifest.json",
+    "docs/reproducibility/conformance/diger_yelp_report.json",
     "docs/reproducibility/conformance/letter_instruments_manifest.json",
     "docs/reproducibility/conformance/letter_instruments_report.json",
     "docs/reproducibility/conformance/lcrec_instruments_manifest.json",
@@ -91,6 +95,7 @@ REQUIRED_FILES = [
     "tools/check_adapter_conformance.py",
     "tools/verify_adapter_conformance_assets.py",
     "tools/verify_sidscope_source_inventory.py",
+    "tools/verify_sidscope_d7_labeled_trace_release.py",
     "tools/build_resot_resource_walkthrough.py",
     "tools/verify_resot_resource_walkthrough.py",
     "tools/run_v1_gate2_cross_dataset_utility.py",
@@ -407,6 +412,7 @@ def main() -> None:
         run([sys.executable, "tools/verify_sidscope_source_inventory.py"]),
         run([sys.executable, "tools/verify_adapter_conformance_assets.py"]),
         run([sys.executable, "tools/verify_resot_resource_walkthrough.py"]),
+        run([sys.executable, "tools/verify_sidscope_d7_labeled_trace_release.py"]),
         run(claim_ledger_command),
     ]
 

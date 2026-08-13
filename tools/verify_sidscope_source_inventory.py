@@ -26,6 +26,7 @@ EXPECTED_ROUTE_IDS = {
     "grid_p5_beauty",
     "card_p5_beauty",
     "diger_beauty",
+    "diger_yelp",
     "resot_instruments",
     "letter_instruments",
     "lcrec_instruments",
@@ -190,12 +191,21 @@ def _route_summaries(path: Path) -> dict[str, dict[str, Any]]:
 def _coverage_rows(path: Path) -> dict[str, int]:
     with path.open(newline="", encoding="utf-8") as handle:
         rows = csv.DictReader(handle)
+        fields = set(rows.fieldnames or [])
         result: dict[str, int] = {}
-        for row in rows:
-            if row["group"] == "Stress/reference and controls":
-                continue
-            result[row["artifact_catalog"]] = int(row["artifact_local_items"].replace(",", ""))
-        return result
+        if {"route_id", "route_catalog", "evidence_class", "items"}.issubset(fields):
+            for row in rows:
+                if row["evidence_class"] != "Named":
+                    continue
+                result[row["route_id"]] = int(row["items"].replace(",", ""))
+            return result
+        if {"artifact_catalog", "artifact_local_items", "group"}.issubset(fields):
+            for row in rows:
+                if row["group"] == "Stress/reference and controls":
+                    continue
+                result[row["artifact_catalog"]] = int(row["artifact_local_items"].replace(",", ""))
+            return result
+        raise ValueError("coverage table schema is neither current nor legacy")
 
 
 def verify_inventory(inventory_path: Path, coverage_path: Path) -> dict[str, Any]:
@@ -217,6 +227,7 @@ def verify_inventory(inventory_path: Path, coverage_path: Path) -> dict[str, Any
 
     coverage = _coverage_rows(coverage_path)
     inventory_labels: dict[str, int] = {}
+    inventory_routes: dict[str, int] = {}
     for row_number, row in enumerate(rows, start=2):
         for column in REQUIRED_COLUMNS:
             if not row[column].strip():
@@ -232,6 +243,7 @@ def verify_inventory(inventory_path: Path, coverage_path: Path) -> dict[str, Any
             failures.append(f"row {row_number} item_count and sid_depth must be positive")
 
         inventory_labels[row["paper_label"]] = item_count
+        inventory_routes[row["route_id"]] = item_count
         if not row["source_url"].startswith("https://"):
             failures.append(f"row {row_number} source_url must use https")
         if row["license_status"] not in ALLOWED_LICENSE_STATUSES:
@@ -285,8 +297,11 @@ def verify_inventory(inventory_path: Path, coverage_path: Path) -> dict[str, Any
             if report_failure:
                 failures.append(f"row {row_number} {report_failure}")
 
-    if inventory_labels != coverage:
-        failures.append(f"paper-facing inventory does not match Table 2: inventory={inventory_labels} coverage={coverage}")
+    expected_coverage = inventory_routes if set(coverage).issubset(EXPECTED_ROUTE_IDS) else inventory_labels
+    if expected_coverage != coverage:
+        failures.append(
+            f"paper-facing inventory does not match Table 2: inventory={expected_coverage} coverage={coverage}"
+        )
 
     def report_path(path: Path) -> str:
         try:

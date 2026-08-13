@@ -28,6 +28,7 @@ def main() -> None:
         "grid_p5_beauty",
         "card_p5_beauty",
         "diger_beauty",
+        "diger_yelp",
         "resot_instruments",
         "letter_instruments",
         "lcrec_instruments",

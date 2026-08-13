@@ -142,14 +142,19 @@ def normalize_diger_interactions(jsonl_paths: list[Path], emb_map_path: Path, da
             if target is None:
                 raise ValueError(f"{path} user {user_id} missing target_id")
             sequence = [str(item) for item in history] + [str(target)]
+            unknown = [item for item in sequence if item not in source_to_item]
+            if unknown:
+                preview = ", ".join(repr(item) for item in unknown[:5])
+                raise ValueError(
+                    f"{path} user {user_id} references {len(unknown)} item(s) absent "
+                    f"from DIGER emb_map: {preview}"
+                )
             if len(sequence) > len(user_sequences.get(user_id, [])):
                 user_sequences[user_id] = sequence
 
     rows: list[dict[str, Any]] = []
     for user_id, sequence in sorted(user_sequences.items()):
         for position, source_item_id in enumerate(sequence):
-            if source_item_id not in source_to_item:
-                continue
             rows.append(
                 {
                     "user_id": user_id,

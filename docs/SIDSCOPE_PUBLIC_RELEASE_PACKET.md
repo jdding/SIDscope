@@ -1,8 +1,8 @@
 # SIDScope Public Release Packet
 
-Status: private official-repository preparation package verified;
+Status: v1.0.0 frozen on the private official repository;
 unauthenticated public access remains a submission-time gate
-Last updated: 2026-08-09
+Last updated: 2026-08-13
 
 This packet records the exact public/reviewer release surface for the SIDScope
 resource package. It is intentionally explicit about the local checks, public
@@ -17,14 +17,14 @@ drafts, AutoDL payloads, large caches, and planning records stay out of it.
 ```text
 project_name: SIDScope
 paper_title: SIDScope: Artifact-Level Diagnostics for Semantic-ID Generative Recommendation
-repository_remote: git@github.com:jdding/SIDscope.git
-candidate_public_url: https://github.com/jdding/SIDscope
-candidate_release_ref: main
-candidate_archive_name: sidscope-v1-release-candidate.zip
-local_archive_path: /tmp/sidscope-v1-release-candidate.zip
-preparation_commit: recorded package-externally in R814 after the package commit is frozen
-preparation_tag: sidscope-tois-m1m5-20260809-r2
-archive_sha256: recorded package-externally in R814 to avoid recursive self-hashing
+repository_remote: git@github.com:jdding/sidscope.git
+candidate_public_url: https://github.com/jdding/sidscope
+candidate_release_ref: v1.0.0
+candidate_archive_name: sidscope-v1.0.0.zip
+local_archive_path: /tmp/sidscope-v1.0.0.zip
+release_commit: recorded in the final freeze receipt after the package commit is created
+release_tag: v1.0.0
+archive_sha256: recorded in the final freeze receipt to avoid recursive self-hashing
 ```
 
 The GitHub URL is the reviewer-facing release surface. It must be checked after
@@ -52,8 +52,8 @@ Before creating a public release:
    table paths, row counts, source-row bindings, claim placement, and
    snapshot/provenance boundaries.
 2. `python3 tools/verify_sidscope_resource_package.py` passes.
-3. `python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1-release-candidate.zip` passes.
-4. `python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1-release-candidate.zip` passes.
+3. `python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.0.0.zip` passes.
+4. `python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.0.0.zip` passes.
 5. `pytest` passes.
 6. The release commit contains no private datasets, AutoDL payloads, checkpoints,
    local caches, `.aris`, `.codex`, `.agents`, `.codegraph`, or `.git` package
@@ -70,7 +70,7 @@ git push official HEAD:main
 ```
 
 If a GitHub release or external archive is used, upload
-`/tmp/sidscope-v1-release-candidate.zip` and record the hosted URL plus SHA256
+`/tmp/sidscope-v1.0.0.zip` and record the hosted URL plus SHA256
 in the final claim ledger.
 
 ## G8 Fresh-Environment Verification
@@ -79,8 +79,8 @@ After the public URL or hosted archive exists, run from a clean directory:
 
 ```bash
 python3 tools/run_sidscope_public_url_smoke.py \
-  --repo-url https://github.com/jdding/SIDscope.git \
-  --ref main \
+  --repo-url https://github.com/jdding/sidscope.git \
+  --ref v1.0.0 \
   --result-json /tmp/sidscope_public_url_smoke.json
 ```
 
@@ -99,15 +99,15 @@ Record:
 ```text
 LOCAL_RELEASE_CANDIDATE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT
-AUTHENTICATED_PRIVATE_REMOTE: PASS; exact commit recorded package-externally in R814
+AUTHENTICATED_PRIVATE_REMOTE: PENDING_CURRENT_V1_PUSH
 SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
 PUBLIC_URL_VERIFIED: PENDING; private repository is not an unauthenticated reviewer surface
-RELEASE_REF: main; preparation tag sidscope-tois-m1m5-20260809-r2
+RELEASE_REF: v1.0.0
 HOSTED_ARCHIVE_VERIFIED: NOT_USED
 G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
 ```
 
-`jdding/SIDscope` is the clean SIDScope official repository, but the final
+`jdding/sidscope` is the clean SIDScope official repository, but the final
 reviewer URL must be accessible without login.
 Rerun public URL smoke after each public-surface change and before using the URL
 in a submission or claim ledger.

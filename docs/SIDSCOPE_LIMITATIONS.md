@@ -64,13 +64,15 @@ claims.
   `data.zip` archive and must not be described as a trained-generator result or
   as full coverage of every ReSOT branch. No GitHub license was detected in the
   audited source route, so reuse wording must remain conservative.
-- DIGER is counted only after R763/R764 as an official-code-derived Beauty
-  RQ-VAE row. It is produced from public Hugging Face embeddings, interaction
-  JSONL, and checkpoint files through the official `RQVAE.get_indices(...)`
-  route. It must not be described as an author-released item-to-SID table, a
+- DIGER is counted through official-code-derived Beauty (R763/R764) and Yelp
+  (R828/R829) RQ-VAE rows. They are produced from public Hugging Face embeddings,
+  interaction JSONL, and checkpoint files through the official
+  `RQVAE.get_indices(...)` route. They must not be described as author-released item-to-SID tables, a
   trained-generator result, or full coverage of DIGER's differentiable
   assignment dynamics. No GitHub license was detected in the audited source
-  route, so reuse wording must remain conservative.
+  route, so reuse wording must remain conservative. Yelp is the only
+  non-Amazon route; it supports contract portability, not broad cross-ecosystem
+  generalization or a causal domain comparison.
 
 ## Reproducibility Limits
 

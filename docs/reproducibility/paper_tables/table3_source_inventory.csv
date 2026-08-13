@@ -4,6 +4,7 @@ ReSID-GAOQ / Video,Official-code-derived,FAMAE+GAOQ; 32/64/64; 50 epochs,MIT; su
 GRID / P5 Beauty,Tokenizer-stage rebuild,seed 42; 3 levels; width 256,Restricted research source; no upstream data redistribution,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
 CARD RQ-VAE / P5 Beauty,Code-derived with shim,4 levels; width 256; 20 epochs,No license detected; summary only,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
 DIGER RQ-VAE / Beauty,Official-code-derived,3 levels; width 256; checkpoint pinned,No license detected; summary only,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
+DIGER RQ-VAE / Yelp,Official-code-derived,3 levels; width 256; Yelp checkpoint pinned,No license detected; summary only,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
 ReSOT text-index / Instruments,Released archive,"text index; 4 levels; 6,250 unique leaves",No license detected; archive not redistributed,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
 LETTER / Instruments,Released index,"4 levels; 9,922 items; official index pinned",No license detected; upstream artifact not redistributed,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv
 LC-Rec / Instruments,Released index,"4 levels; 9,922 items; official archive pinned",No license detected; upstream artifact not redistributed,C0--C5 pass,docs/reproducibility/sidscope_source_license_config_inventory.csv

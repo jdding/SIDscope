@@ -1,7 +1,7 @@
 # SIDScope Resource Package
 
 Status: local reviewer-package contract for the TOIS journal extension
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 
 SIDScope is the V1 resource-paper layer on top of the SIDInspector toolkit. The
 package is designed to let reviewers inspect Semantic-ID artifacts, run small
@@ -31,7 +31,11 @@ Reviewer-facing contents:
 - `tools/run_sidscope_usage_demo.py`: G14 resource-use walkthrough that turns
   compact artifact diagnostics into triage decisions.
 - `tools/verify_adapter_conformance_assets.py`: validates the source inventory,
-  seven C0--C5 route reports, and a directly runnable negative fixture.
+  eight C0--C5 route reports, and a directly runnable negative fixture.
+- `docs/reproducibility/d7_labeled_trace_rows.csv.gz`: 125,000 deidentified
+  D7 beam-label rows across five trained/released-checkpoint cases.
+- `tools/verify_sidscope_d7_labeled_trace_release.py`: verifies the frozen
+  trace-row hash, schema, row/trace counts, and label distributions.
 - `tools/build_resot_resource_walkthrough.py`: rebuilds the ReSOT
   intake-to-promotion walkthrough from compact public inputs.
 - `tools/run_sidscope_public_url_smoke.py`: final public URL/tag smoke runner
@@ -42,7 +46,7 @@ Intentionally omitted:
 - raw Amazon/P5/HF datasets;
 - AutoDL payloads, returned archives, SSH targets, and cloud logs;
 - model checkpoints, tensor dumps, parquet caches, pickle/numpy arrays, and
-  target-level joined trace CSVs;
+  identifying target-level joined trace CSVs;
 - private paper-chain provenance and LaTeX/arXiv packaging artifacts.
 
 ## Install
@@ -134,12 +138,16 @@ is not promoted when its full SID disagrees with its level columns.
 
 ```bash
 python3 tools/verify_sidscope_resource_package.py
+python3 tools/verify_sidscope_d7_labeled_trace_release.py
 ```
 
 The verifier checks required package files, reviewer docs, compact evidence
 snapshots, quickstart executability, sampled regeneration, release-candidate
 manifest consistency, package boundary rules, and forbidden content tokens in
-the public-package file set. It is the current G5 local package check.
+the public-package file set. The D7 verifier separately checks that the released
+beam rows contain no user/item IDs, raw SID paths, scores, or checkpoint fields
+and reproduce the five case-level label distributions. These are the current
+local package checks.
 
 Run the claim-ledger boundary verifier:
 
@@ -171,14 +179,14 @@ This extracts the release archive into a temporary directory, creates a
 temporary virtual environment, installs the package, and reruns the reviewer
 checks. It is stronger than the no-git archive smoke, but still does not verify
 public URL, release tag, or hosted archive accessibility. The clean
-`jdding/SIDscope` `main` surface has a separate public URL smoke gate and must
+`jdding/sidscope` `main` surface has a separate public URL smoke gate and must
 be rechecked after public-package changes.
 
 The final public URL smoke for the active release candidate is:
 
 ```bash
 python3 tools/run_sidscope_public_url_smoke.py \
-  --repo-url https://github.com/jdding/SIDscope.git \
+  --repo-url https://github.com/jdding/sidscope.git \
   --ref main \
   --result-json /tmp/sidscope_public_url_smoke.json
 ```
@@ -237,7 +245,8 @@ prefix-candidate construct calibration, G9 disjoint-user ranking checks,
 bounded fixed-reranker Recall@20/NDCG@20 anchors, G10 non-prefix
 hard-negative sampled-ranking anchors, bounded public-beam D7 accounting, G20
 trained trie-constrained path-versus-item accounting, G21 released-checkpoint
-trace portability, and one G22 released-refresh handoff. It does not claim
+trace portability, a deidentified 125,000-row D7 label surface, and one G22
+released-refresh handoff. It does not claim
 final trained downstream recommendation improvement, a generator failure
 mechanism, D1-D5 trained-generator predictivity, universal ranking-quality prediction
 across candidate protocols, or a new Semantic-ID tokenizer method.

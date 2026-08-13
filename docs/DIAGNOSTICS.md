@@ -23,7 +23,8 @@ numbering gap.
 ## D1-D5 Reports
 
 - D1 utilization: per-level unique-code counts, entropy, Gini, and max code.
-- D2 aliasing: full-code and prefix collision counts/rates.
+- D2 aliasing: the mapping-level phenomenon of shared addresses, quantified as
+  non-singleton full-code or prefix collision groups and item rates.
 - D3 neighborhood alignment: prefix recall against item co-occurrence
   neighborhoods, with optional category-purity context when `category` exists.
 - D4 popularity allocation: SID capacity allocation over head/mid/tail buckets.
@@ -40,5 +41,8 @@ measure refresh-to-refresh SID churn and prefix collision changes.
 D7 labels generator beam/path rows against normalized SID mappings. It records
 valid hits, duplicate item/path cases, ambiguous paths, high-uncertainty rows
 when scores are available, and unconstrained-only invalid or stale/OOC paths.
+An `ambiguous_path` is a generated valid full SID that reverse-resolves to
+multiple items. It exposes full-code aliasing at generation time; it is not a
+prefix collision or uncertainty about the target identity.
 D7 is diagnostic accounting unless a trained generator trace with outcome
 variation is explicitly supplied.

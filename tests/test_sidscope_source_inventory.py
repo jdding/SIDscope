@@ -17,7 +17,7 @@ class SIDScopeSourceInventoryTest(unittest.TestCase):
     def test_repository_inventory_matches_paper_coverage(self) -> None:
         result = verify_inventory(DEFAULT_INVENTORY, DEFAULT_COVERAGE)
         self.assertEqual(result["status"], "pass", result["failures"])
-        self.assertEqual(result["route_count"], 8)
+        self.assertEqual(result["route_count"], 9)
 
     def test_no_license_route_cannot_claim_raw_redistribution(self) -> None:
         with DEFAULT_INVENTORY.open(newline="", encoding="utf-8") as handle:

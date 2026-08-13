@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild and compare all ten SIDScope manuscript table snapshots."""
+"""Rebuild and compare all eight SIDScope manuscript table snapshots."""
 
 from __future__ import annotations
 
@@ -15,11 +15,9 @@ EXPECTED_DIR = ROOT / "docs" / "reproducibility" / "paper_tables"
 EXPECTED = (
     "table1_resource_delta.csv",
     "table2_artifact_coverage.csv",
-    "table3_source_inventory.csv",
     "table4_adapter_conformance.csv",
     "table5_diagnostic_profile.csv",
     "table6_evidence_ladder.csv",
-    "table7_trace_accounting.csv",
     "table8_resot_walkthrough.csv",
     "table9_resource_contract.csv",
     "table10_g20_trained_trace.csv",

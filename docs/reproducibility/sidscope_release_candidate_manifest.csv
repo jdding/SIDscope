@@ -33,7 +33,7 @@ release_archive_builder,tools/build_sidscope_release_candidate_archive.py,releas
 resource_verifier,tools/verify_sidscope_resource_package.py,verification,fully_runnable,yes,pass_local,Validates G5/G6 local package contract.
 claim_ledger_verifier,tools/verify_sidscope_claim_ledger.py,verification,fully_runnable,yes,pass_local,Validates claim-ledger evidence paths and forbidden-claim boundaries.
 resot_intake_runner,tools/run_v1_gate17_resot_intake.py,adapter_intake,fully_runnable,yes,pass_local,Normalizes released ReSOT JSON index artifacts when upstream data.zip files are supplied.
-diger_intake_runner,tools/run_v1_gate17_diger_intake.py,adapter_intake,fully_runnable,yes,pass_local,Exports and normalizes DIGER RQ-VAE Beauty codes when upstream HF embeddings/checkpoint are supplied.
+diger_intake_runner,tools/run_v1_gate17_diger_intake.py,adapter_intake,fully_runnable,yes,pass_local,Exports and normalizes DIGER RQ-VAE Beauty or Yelp codes when pinned upstream HF embeddings and checkpoint are supplied.
 realistic_tutorial_runner,tools/run_sidscope_realistic_tutorial.py,verification,fully_runnable,yes,pass_local,Runs and validates the R509 reviewer tutorial workflow.
 usage_demo_runner,tools/run_sidscope_usage_demo.py,verification,fully_runnable,yes,pass_local,Runs and validates the G14 SIDScope usage-demo walkthrough.
 sampled_regeneration_runner,tools/run_sidscope_sampled_regeneration.py,verification,fully_runnable,yes,pass_local,Runs quickstart plus matrix validation.
@@ -49,16 +49,16 @@ g7_lite_boundary,experiments/v1_evidence_chain/G7_LITE_CLAIM_PACKAGE_BOUNDARY.md
 claim_ledger,experiments/v1_evidence_chain/CLAIM_LEDGER.md,claim_boundary,provenance_only,yes,pass_local,G7-full claim ledger closed for current paper artifact registry; final TeX audit remains after manuscript writing.
 probe_interpretation,docs/PROBE_INTERPRETATION.md,user_guidance,documentation,yes,pass_local,Maps each D1-D7 signal to its risk interpretation and next check without universal thresholds.
 paper_table_builder,tools/build_sidscope_paper_tables.py,table_regeneration,fully_runnable,yes,pass_local,Rebuilds all ten manuscript-facing table snapshots from compact released evidence.
-paper_table_verifier,tools/verify_sidscope_paper_tables.py,verification,fully_runnable,yes,pass_local,Rebuilds all ten manuscript tables in a temporary directory and compares all 86 rows with the frozen snapshots.
+paper_table_verifier,tools/verify_sidscope_paper_tables.py,verification,fully_runnable,yes,pass_local,Rebuilds all eight manuscript tables in a temporary directory and compares all 58 rows with the frozen snapshots.
 paper_table_tests,tests/test_sidscope_paper_tables.py,test,fully_runnable,yes,pass_local,Unit test for deterministic paper-table regeneration.
-source_inventory,docs/reproducibility/sidscope_source_license_config_inventory.csv,evidence_index,tracked_snapshot,yes,pass_local,Eight paper-facing routes with source revision configuration license and redistribution boundaries.
+source_inventory,docs/reproducibility/sidscope_source_license_config_inventory.csv,evidence_index,tracked_snapshot,yes,pass_local,Nine paper-facing routes with source revision configuration license and redistribution boundaries.
 source_route_evidence_summary,docs/reproducibility/source_route_evidence_summary.json,compact_evidence,tracked_snapshot,yes,pass_local,Portable route-level provenance summary retaining historical record identifiers without shipping private experiment directories.
 source_inventory_verifier,tools/verify_sidscope_source_inventory.py,verification,fully_runnable,yes,pass_local,Checks route identity paper coverage license policy and standard conformance evidence.
 adapter_conformance_module,src/sidinspector/conformance.py,runnable_code,fully_runnable,yes,pass_local,Implements the C0-C5 adapter conformance protocol.
 adapter_conformance_doc,docs/ADAPTER_CONFORMANCE.md,documentation,documentation,yes,pass_local,Defines C0-C5 questions evidence and promotion rules.
-adapter_conformance_assets,docs/reproducibility/conformance,compact_evidence,tracked_snapshot,yes,pass_local,Schema manifests and seven frozen C0-C5 route reports without upstream raw artifacts.
+adapter_conformance_assets,docs/reproducibility/conformance,compact_evidence,tracked_snapshot,yes,pass_local,Schema manifests and eight frozen C0-C5 route reports without upstream raw artifacts.
 adapter_conformance_checker,tools/check_adapter_conformance.py,verification,fully_runnable,yes,pass_local,Runs C0-C5 against a standard manifest.
-adapter_conformance_verifier,tools/verify_adapter_conformance_assets.py,verification,fully_runnable,yes,pass_local,Checks seven frozen route reports inventory boundaries and the rerunnable negative fixture.
+adapter_conformance_verifier,tools/verify_adapter_conformance_assets.py,verification,fully_runnable,yes,pass_local,Checks eight frozen route reports inventory boundaries and the rerunnable negative fixture.
 conformance_failure_fixture,examples/conformance_failure_fixture,example,fully_runnable,yes,pass_local,Public invalid mapping that must fail exactly C1.
 resot_walkthrough_doc,docs/RESOT_RESOURCE_WALKTHROUGH.md,documentation,documentation,yes,pass_local,Human-readable source-to-promotion ReSOT use case.
 resot_walkthrough_sources,docs/reproducibility/resot_walkthrough_sources.json,compact_evidence,tracked_snapshot,yes,pass_local,Portable source bundle derived from R758-R760.
@@ -89,6 +89,11 @@ g22_mapping_reaudit_runner,tools/run_v1_gate22_diagnose_repair_reaudit.py,runnab
 g22_handoff_runner,tools/run_v1_gate22_downstream_handoff.py,runnable_code,provenance_only,yes,pass_local,Reviewed same-architecture generator handoff runner with fixed test universe and preregistered recovery gates.
 g22_mapping_reaudit_tests,tests/test_gate22_diagnose_repair_reaudit.py,test,fully_runnable,yes,pass_local,Tests paired mapping joins churn collision and audit identities.
 g22_handoff_tests,tests/test_gate22_downstream_handoff.py,test,fully_runnable,yes,pass_local,Tests split isolation shared-target accounting handoff gates and missing-telemetry representation.
+d7_labeled_trace_release,docs/reproducibility/d7_labeled_trace_rows.csv.gz,compact_evidence,tracked_snapshot,yes,pass_local,Deidentified per-beam D7 labels across five trained or released-checkpoint cases.
+d7_labeled_trace_metadata,docs/reproducibility/d7_labeled_trace_release.json,compact_evidence,tracked_snapshot,yes,pass_local,Binds source hashes row counts trace counts schema and label distributions.
+d7_labeled_trace_builder,tools/build_sidscope_d7_labeled_trace_release.py,runnable_code,provenance_only,yes,pass_local,Deterministically builds the deidentified release from full local trace exports.
+d7_labeled_trace_verifier,tools/verify_sidscope_d7_labeled_trace_release.py,runnable_code,fully_runnable,yes,pass_local,Verifies release hash schema forbidden identity fields and label distributions.
+d7_labeled_trace_tests,tests/test_d7_labeled_trace_release.py,test,fully_runnable,yes,pass_local,Tests five cases 125000 rows and 2500 traces in the frozen release.
 acceptance_gates,experiments/v1_evidence_chain/ACCEPTANCE_GATES.md,gate_record,provenance_only,yes,pass_local,Acceptance gates record package-layer closure and remaining venue/paper-writing boundaries.
 large_raw_datasets,external_raw_datasets,omitted,excluded,no,excluded,Raw Amazon P5 HF and AutoDL data are intentionally not shipped.
 autodl_payloads,experiments/v1_evidence_chain/autodl/payloads,omitted,excluded,no,excluded,Cloud payloads and returned archives must not enter reviewer package.

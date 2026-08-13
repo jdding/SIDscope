@@ -18,6 +18,7 @@ compatibility with the released diagnostic code.
 - D4 popularity allocation: head/mid/tail capacity allocation.
 - D5 structural cost: SID length, unique full IDs, and active prefix counts.
 - D6 churn: optional refresh-to-refresh SID stability.
+- D7 trace accounting: generated-path validity, ambiguity, and item resolution.
 
 ## Install
 
@@ -25,7 +26,7 @@ The release verifier is CPU-only. It was checked with Python 3.9, and should run
 on Python 3.9+ with the dependencies in `pyproject.toml` / `requirements.txt`.
 Editable installation uses the PEP 660 path and requires pip 21.3 or newer;
 stock Python 3.9 installations with older pip should upgrade it first.
-No GPU is required for the bundled verifier, quickstart, or D1-D6 diagnostics;
+No GPU is required for the bundled verifier, quickstart, or D1-D7 audits;
 GPU use belongs to external tokenizer training pipelines, not to SIDScope's
 artifact inspection step.
 
@@ -80,7 +81,7 @@ The paper-facing evidence map is tracked in
 `docs/REPRODUCIBILITY_MATRIX.md` and `docs/reproducibility_matrix.csv`. It
 separates evidence that is fully runnable from this release checkout from
 evidence that depends on upstream public artifacts or saved local experiment
-manifests. Compact source summaries and frozen outputs for all ten manuscript-facing
+manifests. Compact source summaries and frozen outputs for all eight manuscript-facing
 tables are under `docs/reproducibility/paper_table_sources/` and
 `docs/reproducibility/paper_tables/`.
 
@@ -126,7 +127,7 @@ python3 tools/verify_resot_resource_walkthrough.py
 ```
 
 The C0-C5 protocol is documented in `docs/ADAPTER_CONFORMANCE.md`. The first
-command validates the eight-route source/license/config inventory, checks the
+command validates the nine-route source/license/config inventory, checks the
 frozen ReSOT C0-C5 report, and reruns a public fixture that must fail C1 only.
 The second deterministically rebuilds the ReSOT walkthrough from compact public
 inputs. The upstream ReSOT archive and normalized parquet files are not
@@ -163,7 +164,7 @@ smoke:
 
 ```bash
 python3 tools/run_sidscope_public_url_smoke.py \
-  --repo-url https://github.com/jdding/SIDscope.git \
+  --repo-url https://github.com/jdding/sidscope.git \
   --ref main \
   --result-json /tmp/sidscope_public_url_smoke.json
 ```
