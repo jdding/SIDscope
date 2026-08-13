@@ -1,6 +1,6 @@
 # SIDScope Release Candidate Checklist
 
-Status: v1.0.0 local freeze in progress; unauthenticated reviewer access remains pending
+Status: v1.0.0 frozen on the private official repository; unauthenticated reviewer access remains pending
 Last updated: 2026-08-13
 
 This checklist defines what must be true before a SIDScope reviewer package is
@@ -119,7 +119,7 @@ changes.
 ```text
 G5_G6_LOCAL_RELEASE_CANDIDATE: PASS_CURRENT after R768 verifier, R769 archive builder, and R770 archive smoke
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS via R603 and current archive smoke via R770
-SIDSCOPE_PRIVATE_CLEAN_CLONE_SMOKE: PASS; exact commit recorded package-externally in R814
+SIDSCOPE_PRIVATE_CLEAN_CLONE_SMOKE: PASS for an authenticated v1.0.0 clone
 SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
 PUBLIC_REVIEWER_ACCESS: PENDING; https://github.com/jdding/sidscope is currently private
 G7_LITE_CLAIM_PACKAGE_BOUNDARY: PASS
