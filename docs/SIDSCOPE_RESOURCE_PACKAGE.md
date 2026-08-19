@@ -1,7 +1,7 @@
 # SIDScope Resource Package
 
 Status: local reviewer-package contract for the TOIS journal extension
-Last updated: 2026-08-09
+Last updated: 2026-08-19
 
 SIDScope is the V1 resource-paper layer on top of the SIDInspector toolkit. The
 package is designed to let reviewers inspect Semantic-ID artifacts, run small
@@ -20,6 +20,11 @@ Reviewer-facing contents:
   SIDScope datasheet, limitations, changelog, public-release packet, and
   maintenance/versioning plan.
 - `docs/reproducibility/`: compact paper-evidence snapshots.
+- `docs/reproducibility/d3_catalog_dependence_summary.json` and
+  `d3_protocol_sensitivity.json`: dependence and bounded-parameter checks for
+  the D3 construct-calibration claim.
+- `docs/reproducibility/g22_handoff_uncertainty.json`: paired user-bootstrap
+  intervals and gate probabilities for the fixed DACT lifecycle case.
 - `docs/reproducibility/sidscope_release_candidate_manifest.csv`: the
   machine-readable release-candidate package boundary.
 - `tools/verify_sidscope_resource_package.py`: package contract verifier.

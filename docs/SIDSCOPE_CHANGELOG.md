@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-13
+Last updated: 2026-08-19
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -29,6 +29,20 @@ Tag: `v1.0.0`
   experiment provenance outside the release surface.
 - Public no-login URL smoke remains the only release-access check that must be
   run after repository visibility is changed from private to public.
+
+## SIDScope v1.0.1 statistical and reader-interface release
+
+Date: 2026-08-19
+Tag: `v1.0.1`
+
+- Added exact tokenizer-export and catalog-collapse sensitivity for the D3
+  construct-calibration row, plus a nine-configuration bounded protocol audit.
+- Added paired user-bootstrap intervals and gate probabilities to the DACT
+  refresh-and-handoff case without changing its preregistered decision rule.
+- Expanded the ReSOT same-dataset control from depth 1 to the full four-level
+  profile and added a worked item-to-SID teaching figure to the paper source.
+- Rebuilt the evidence ladder to 14 rows and refreshed the release manifest,
+  protocol configuration, claim ledger, and table/figure registry.
 
 ## TOIS M1--M5 preparation refresh
 

@@ -129,6 +129,16 @@ def build_walkthrough(root: Path, source_bundle: Path | None = None) -> dict[str
     control_row = control.get("category_prefix_control", {})
     if abs(float(control_source.get("d3_depth1_weighted_collab_recall")) - float(intake["d3_depth1_weighted_collab_recall"])) > 1e-12:
         raise ValueError("ReSOT same-dataset control is not bound to the walkthrough source artifact")
+    source_profile = [
+        float(row["weighted_collab_prefix_recall"])
+        for row in control_source.get("d3_by_depth", [])
+    ]
+    control_profile = [
+        float(row["weighted_collab_prefix_recall"])
+        for row in control_row.get("d3_by_depth", [])
+    ]
+    if len(source_profile) != int(intake["sid_length"]) or len(control_profile) != int(intake["sid_length"]):
+        raise ValueError("ReSOT same-dataset control lacks the declared depth profile")
 
     return {
         "schema": "sidscope.resot_resource_walkthrough.v1",
@@ -168,9 +178,10 @@ def build_walkthrough(root: Path, source_bundle: Path | None = None) -> dict[str
                 "evidence": "docs/reproducibility/conformance/resot_instruments_report.json",
                 "outcome": (
                     f"C0-C5 pass; collision rate {intake['full_collision_rate']:.3f}, "
-                    f"depth-1 weighted D3 {intake['d3_depth1_weighted_collab_recall']:.4f} versus "
-                    f"{float(control_row['d3_depth1_weighted_collab_recall']):.4f} for the same-dataset "
-                    "category-prefix control."
+                    "weighted D3 at depths 1-3 "
+                    f"{source_profile[0]:.4f}/{source_profile[1]:.4f}/{source_profile[2]:.4f} versus "
+                    f"{control_profile[0]:.4f}/{control_profile[1]:.4f}/{control_profile[2]:.4f} for the "
+                    "same-dataset category-prefix control."
                 ),
             },
             {
@@ -197,7 +208,9 @@ def build_walkthrough(root: Path, source_bundle: Path | None = None) -> dict[str
             "unique_full_sids": intake["unique_sid"],
             "full_collision_rate": intake["full_collision_rate"],
             "d3_depth1_weighted_collab_recall": intake["d3_depth1_weighted_collab_recall"],
+            "d3_weighted_by_depth": source_profile,
             "same_dataset_category_control_d3": control_row["d3_depth1_weighted_collab_recall"],
+            "same_dataset_category_control_d3_by_depth": control_profile,
             "same_dataset_control_record": "docs/reproducibility/resot_instruments_category_control.json",
             "prefix_counts": intake["prefix_counts"],
         },
@@ -241,7 +254,11 @@ def render_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Diagnostic Snapshot",
             "",
-            f"The normalized row contains {diagnostic['items']:,} items and {diagnostic['interactions']:,} interactions. Its {diagnostic['sid_depth']}-level mapping has {diagnostic['unique_full_sids']:,} unique full SIDs, full-code collision rate {diagnostic['full_collision_rate']:.3f}, depth-1 weighted D3 {diagnostic['d3_depth1_weighted_collab_recall']:.4f}, and prefix counts `{diagnostic['prefix_counts']}`. The deterministic same-dataset category-prefix control reaches D3 {diagnostic['same_dataset_category_control_d3']:.4f} under the same bounded protocol.",
+            f"The normalized row contains {diagnostic['items']:,} items and {diagnostic['interactions']:,} interactions. Its {diagnostic['sid_depth']}-level mapping has {diagnostic['unique_full_sids']:,} unique full SIDs, full-code collision rate {diagnostic['full_collision_rate']:.3f}, and prefix counts `{diagnostic['prefix_counts']}`. Weighted D3 at depths 1-3 is "
+            + "/".join(f"{value:.4f}" for value in diagnostic["d3_weighted_by_depth"][:3])
+            + "; the deterministic same-dataset category-prefix control reaches "
+            + "/".join(f"{value:.4f}" for value in diagnostic["same_dataset_category_control_d3_by_depth"][:3])
+            + " under the same bounded protocol. Both mappings reach zero at the item-unique fourth level.",
             "",
             "## Decision Boundary",
             "",

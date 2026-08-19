@@ -1,4 +1,4 @@
-route,split,targets,beam_rows,ambiguous_beam_rate,ambiguous_target_rate,target_path_survival,target_unique_item_hit,source_evidence
-GRID/P5,0,500,25000,0.340,1.000,0.064,0.034,docs/reproducibility/g20_trained_trace_summary.json
-GRID/P5,1,500,25000,0.371,1.000,0.050,0.030,docs/reproducibility/g20_trained_trace_summary.json
-DIGER sensitivity,0,500,25000,0.101,0.990,0.066,0.054,docs/reproducibility/g20_trained_trace_summary.json
+route,split,targets,beam_rows,ambiguous_beam_rate,target_path_survival,target_unique_item_hit,path_item_gap,source_evidence
+GRID/P5,0,500,25000,0.340,0.064,0.034,0.030,docs/reproducibility/g20_trained_trace_summary.json
+GRID/P5,1,500,25000,0.371,0.050,0.030,0.020,docs/reproducibility/g20_trained_trace_summary.json
+DIGER sensitivity,0,500,25000,0.101,0.066,0.054,0.012,docs/reproducibility/g20_trained_trace_summary.json

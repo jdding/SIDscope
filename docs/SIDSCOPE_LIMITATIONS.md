@@ -1,7 +1,7 @@
 # SIDScope Limitations
 
 Status: current TOIS manuscript and package limitation policy
-Last updated: 2026-08-09
+Last updated: 2026-08-19
 
 ## Scope Limits
 
@@ -30,6 +30,13 @@ claims.
   (Recall@20/NDCG@20 rho `0.207`, confidence intervals cross zero), so G11 is a
   boundary result, not a claim that D3 predicts generic non-prefix ranking
   utility.
+- The catalog-dependence audit removes deterministic controls and local RQ
+  references, then collapses shared routes to five catalogs. The direction is
+  stable, but the catalog-level exact test is not significant; report it as a
+  dependence sensitivity, not a cross-catalog population estimate.
+- The bounded C3 sensitivity grid preserves the eight-route D3 ordering across
+  nine `(m,U)` configurations. It supports rank robustness within that bounded
+  protocol family and does not authorize cross-dataset absolute thresholds.
 - G5-G7 support D7 schema, public-beam labeling, and bounded trace accounting;
   G20 observes trained trie-constrained ambiguity in two GRID/P5 folds and a
   DIGER portability sensitivity, with path-versus-item accounting. The folds
@@ -41,7 +48,9 @@ claims.
 - G22 exercises D6 on one released DACT 0.6-to-0.7 refresh and follows the
   mapping repair into a preregistered three-seed generator handoff. It is a
   reproducible positive case, not universal repair effectiveness, causal
-  diagnostic-to-quality evidence, or general D1-D5 predictivity.
+  diagnostic-to-quality evidence, or general D1-D5 predictivity. Paired
+  bootstrap intervals leave the mapping-only common-item change unresolved;
+  all adapted seeds pass the complete gate throughout the declared resamples.
 - Current evidence does not support final trained downstream recommendation
   improvement, a generator failure mechanism, or D1-D5 trained-generator
   predictivity.

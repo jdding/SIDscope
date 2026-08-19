@@ -198,16 +198,19 @@ def run(cmd: list[str]) -> dict[str, Any]:
         cmd,
         cwd=ROOT,
         env=env,
-        check=True,
+        check=False,
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
     )
-    return {
+    record = {
         "command": cmd,
         "returncode": completed.returncode,
         "stdout_tail": completed.stdout[-2000:],
     }
+    if completed.returncode != 0:
+        raise RuntimeError(json.dumps(record, indent=2, sort_keys=True))
+    return record
 
 
 def require_file(path: str) -> None:

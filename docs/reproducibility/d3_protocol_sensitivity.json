@@ -1,0 +1,120 @@
+{
+  "claim_boundary": "Secondary route-order sensitivity around the fixed C3 protocol; the primary paper values remain m=5, U=50, B=10000.",
+  "configurations": [
+    {
+      "max_user_items": 50,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 5
+    },
+    {
+      "max_user_items": 100,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 5
+    },
+    {
+      "max_user_items": 200,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 5
+    },
+    {
+      "max_user_items": 50,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 10
+    },
+    {
+      "max_user_items": 100,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 10
+    },
+    {
+      "max_user_items": 200,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 10
+    },
+    {
+      "max_user_items": 50,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 20
+    },
+    {
+      "max_user_items": 100,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 20
+    },
+    {
+      "max_user_items": 200,
+      "maximum_absolute_rank_shift": 0.0,
+      "route_rank_spearman_vs_primary": 1.0,
+      "top_k": 20
+    }
+  ],
+  "input_sha256": {
+    "card_rqvae_p5_beauty": {
+      "interactions": "1f2d6df2ea3c2c37c99e610f80fba6dee716983150b5abaddc3b1e23318312ec",
+      "item_metadata": "4d1dfeae2974e2157122c60bc9f7d132f7152225339aa322d1fa1f24bdfeb24d",
+      "sid_assignments": "3c51c5ec17fb3b91f16ef827e2cb947a9f4489db65824ac66ba985dad39362a7"
+    },
+    "diger_rqvae_beauty": {
+      "interactions": "15c83e93f0491131e8c47effbf3a7ab562a73d045c556b08a383c53034ea263b",
+      "item_metadata": "d4f5f533f104d1475d70bc42fb66ec2b84a8dc24a9bc439356e722c983bcb27f",
+      "sid_assignments": "b631e267d3d42cd1b7e592f1223f509c3e31f0eda6264d32cf1183c6637e85b3"
+    },
+    "diger_rqvae_yelp": {
+      "interactions": "a402219b5c0ef50d9d64a02007124579803f96b1af897c67998d152e3ed24548",
+      "item_metadata": "75261417cedb356bd6eb89455dad69383848ca1c35c25b07c6c654139333c6d6",
+      "sid_assignments": "0099cab028a87cef2514c4cc08d7b528b4e97cf6ccc9c73969dd2d0c8e1424c1"
+    },
+    "grid_faithful_p5_beauty": {
+      "interactions": "5bb7e4b13d3b65417f33755d0f2cd32ac98fd0e88c85f5b6259232393b16b5b2",
+      "item_metadata": "7be5f158dec450982364ebd673b5a11182592c0bc35b5e3db2e71d2cbd41c8b1",
+      "sid_assignments": "29b6a89842b95291cc5713626133e62acb4c33a1eb33dd5fe5c39cf53e1a8d4e"
+    },
+    "lcrec_official_instruments": {
+      "interactions": "564c57ffbe0870f0070ad013914c5ada84eb71836842e2b51e3d09094b622f6b",
+      "item_metadata": "2b9c519fe475047cac4aa59ebaea2e943c85d3c69724f322be277fdca4b4c0c0",
+      "sid_assignments": "9aafa10240da50bea0f90e0806d2c4aef35681b4582a4890326e9dec334dd2e5"
+    },
+    "letter_official_instruments": {
+      "interactions": "22ddba63e46a3d855542795bf3fc88150149e5ba2bcb163877bc2c5ffbbf9750",
+      "item_metadata": "82f0d94a229958b86042268391ccf4a2ff45cc2d2c2edceac94c1c60fbd85aa8",
+      "sid_assignments": "3e256d76e14aab395f0f80f22e6141ce8213e6ce80c957cdf7c0c53f19750fab"
+    },
+    "resid_gaoq_video_pilot": {
+      "interactions": "9ec2d0f3423f1e26c5fc1e613b350e6ce4cb4643918e1e8a34b5fe901e364536",
+      "item_metadata": "ae95f327981977540219f25c73656e8173b9bcf548d506e5c7d56e52014b9091",
+      "sid_assignments": "8d69e98015941249c98b7e729d802b823043ebc6e598956dff12ac2a7e171b00"
+    },
+    "resot_text_index_instruments": {
+      "interactions": "01d2c554f3ecefa4517baf78c856517203dd69808d4a86988f4c4a534919ab9f",
+      "item_metadata": "bf7b3faa58550a82e5c43d9b6567397517dcfd75764e00acefa14df9f9f3f8ff",
+      "sid_assignments": "4eefcfcf219fbbe90c8281847c62f9c0e25395b46256a279eceb64546ffd532c"
+    }
+  },
+  "maximum_rank_shift_over_grid": 0.0,
+  "minimum_rank_spearman_vs_primary": 1.0,
+  "primary": {
+    "max_pair_events": 10000,
+    "max_user_items": 50,
+    "top_k": 5
+  },
+  "route_labels": [
+    "resid_gaoq_video_pilot",
+    "grid_faithful_p5_beauty",
+    "card_rqvae_p5_beauty",
+    "diger_rqvae_beauty",
+    "diger_rqvae_yelp",
+    "resot_text_index_instruments",
+    "letter_official_instruments",
+    "lcrec_official_instruments"
+  ],
+  "routes": 8,
+  "schema": "sidscope.d3.protocol_sensitivity.v1"
+}

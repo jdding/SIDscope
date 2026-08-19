@@ -75,10 +75,10 @@ def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
         package_root.mkdir()
         safe_extract_zip(archive_path, package_root)
 
-        venv.EnvBuilder(with_pip=True, system_site_packages=True, clear=True).create(venv_dir)
+        venv.EnvBuilder(with_pip=True, clear=True).create(venv_dir)
         py = venv_python(venv_dir)
         commands = [
-            run([str(py), "-m", "pip", "install", "-e", ".", "--no-deps"], cwd=package_root),
+            run([str(py), "-m", "pip", "install", "-e", "."], cwd=package_root),
             run([str(py), "tools/verify_sidscope_resource_package.py"], cwd=package_root),
             run(
                 [
@@ -116,8 +116,8 @@ def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
         "archive_result": archive_result,
         "commands": commands,
         "install_boundary": (
-            "Local clean-extract smoke with a temporary venv using system site packages; "
-            "public URL/tag accessibility and dependency download from a blank machine remain separate gates."
+            "Local clean-extract smoke with a temporary isolated venv that installs the package and "
+            "its declared dependencies; public URL/tag accessibility remains a separate gate."
         ),
         "boundary": "G8 local fresh-environment evidence; does not verify public URL, release tag, or hosted archive access.",
     }

@@ -18,6 +18,7 @@ if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
 from sidinspector.preflight import build_metric_smoke_summary  # noqa: E402
+from sidinspector.metrics import alignment  # noqa: E402
 
 
 DEFAULT_INPUT_ROOT = ROOT / "experiments/v1_evidence_chain/gate17_resot_intake/normalized_text"
@@ -99,10 +100,26 @@ def build_result(input_root: Path) -> dict[str, Any]:
     control_row = build_metric_smoke_summary(
         control, metadata, interactions, top_k=5, max_pair_events=10_000, max_user_items=50
     )[0]
+    source_alignment = alignment(
+        source_sid, metadata, interactions, top_k=5, max_pair_events=10_000, max_user_items=50
+    )
+    control_alignment = alignment(
+        control, metadata, interactions, top_k=5, max_pair_events=10_000, max_user_items=50
+    )
+
+    def depth_values(frame: pd.DataFrame) -> list[dict[str, float | int]]:
+        return [
+            {
+                "prefix_depth": int(row.prefix_depth),
+                "weighted_collab_prefix_recall": float(row.weighted_collab_prefix_recall),
+            }
+            for row in frame.sort_values("prefix_depth").itertuples(index=False)
+        ]
+
     source_d3 = float(source_row["d3_depth1_weighted_collab_recall"])
     control_d3 = float(control_row["d3_depth1_weighted_collab_recall"])
     return {
-        "schema": "sidscope.resot.same_dataset_control.v1",
+        "schema": "sidscope.resot.same_dataset_control.v2",
         "status": "pass",
         "dataset": "Instruments",
         "control_role": "deterministic same-dataset interpretation control; not a named tokenizer row",
@@ -124,6 +141,7 @@ def build_result(input_root: Path) -> dict[str, Any]:
             "method": str(source_row["method"]),
             "items": int(len(source_sid)),
             "d3_depth1_weighted_collab_recall": source_d3,
+            "d3_by_depth": depth_values(source_alignment),
         },
         "category_prefix_control": {
             "method": str(control_row["method"]),
@@ -131,6 +149,7 @@ def build_result(input_root: Path) -> dict[str, Any]:
             "unique_full_sids": int(control_row["unique_sid"]),
             "full_collision_rate": float(control_row["full_collision_rate"]),
             "d3_depth1_weighted_collab_recall": control_d3,
+            "d3_by_depth": depth_values(control_alignment),
         },
         "comparison": {
             "absolute_d3_gap_control_minus_source": control_d3 - source_d3,

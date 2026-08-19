@@ -1,0 +1,62 @@
+{
+  "all_artifact_clusters": 12,
+  "artifact_collapse": "dataset+label+method+manifest_row",
+  "catalog_cluster_bootstrap": {
+    "bootstrap_samples": 4995,
+    "catalog_clusters": 5,
+    "ci_high": 1.0,
+    "ci_low": 0.9235668789808918
+  },
+  "catalog_clusters": 5,
+  "catalog_collapsed_exact": {
+    "attainable_two_sided_p_floor": 0.016666666666666666,
+    "exact_two_sided_p": 0.08333333333333333,
+    "permutations": 120,
+    "rho": 0.8999999999999998
+  },
+  "excluded_row_families": [
+    "deterministic_control",
+    "local_RQ_reference"
+  ],
+  "input": "experiments/v1_evidence_chain/gate2_cross_dataset_utility/analysis/g2_probe_diagnostics_joined.csv",
+  "input_sha256": "b731a10d645bdc89d450d37052fbce4fea56d55a201e9591fd5153be540d4591",
+  "interpretation": "Removing deterministic category controls and local RQ references does not remove the construct-calibration association. Catalog collapse reduces the effective unit to five catalogs; all catalog-level uncertainty is sensitivity evidence, not a population estimate.",
+  "leave_one_catalog_out": [
+    {
+      "omitted_catalog": "Instruments",
+      "remaining_catalogs": 4,
+      "rho": 1.0
+    },
+    {
+      "omitted_catalog": "Musical_Instruments",
+      "remaining_catalogs": 4,
+      "rho": 1.0
+    },
+    {
+      "omitted_catalog": "Video_Games",
+      "remaining_catalogs": 4,
+      "rho": 0.7999999999999999
+    },
+    {
+      "omitted_catalog": "beauty",
+      "remaining_catalogs": 4,
+      "rho": 0.7999999999999999
+    },
+    {
+      "omitted_catalog": "yelp",
+      "remaining_catalogs": 4,
+      "rho": 0.7999999999999999
+    }
+  ],
+  "outcome": "candidate_recall",
+  "schema": "sidscope.d3_catalog_dependence.v1",
+  "seed": 20260819,
+  "signal": "d3_weighted_collab_prefix_recall",
+  "tokenizer_export_artifacts": 8,
+  "tokenizer_export_exact": {
+    "attainable_two_sided_p_floor": 4.96031746031746e-05,
+    "exact_two_sided_p": 0.0003968253968253968,
+    "permutations": 40320,
+    "rho": 0.9761904761904763
+  }
+}

@@ -1,10 +1,15 @@
 {
   "schema": "sidinspector.paper_protocol_config.v1",
-  "date": "2026-08-09",
+  "date": "2026-08-19",
   "purpose": "Compact reviewer-facing configuration for protocol constants stated in the SIDScope TOIS manuscript.",
   "d3_alignment": {
     "implementation": "src/sidinspector/metrics.py",
     "runner_support": "tools/run_v1_gate10_independent_utility.py",
+    "parameterization": {
+      "m": "neighbors retained per item",
+      "U": "maximum mapped items retained per eligible user",
+      "B": "maximum unordered co-occurrence pair events"
+    },
     "event_scope": "training events when an explicit split is present; otherwise all provided interactions",
     "deduplicate_user_item_events": true,
     "eligible_mapped_items_per_user": {
@@ -18,7 +23,64 @@
     "neighbor_order": [
       "co_count_descending",
       "neighbor_item_id_ascending"
-    ]
+    ],
+    "protocol_instances": {
+      "cli_default": {
+        "m": 20,
+        "U": 200,
+        "B": 2000000,
+        "paper_binding": "Section 3 public command-line defaults"
+      },
+      "bounded_c3_matrix": {
+        "m": 5,
+        "U": 50,
+        "B": 10000,
+        "paper_binding": "Table 4 executable route profiles",
+        "realized_pair_events_note": "9817 is the realized LETTER/LC-Rec pair count, not the shared budget"
+      },
+      "evidence_ladder": {
+        "paper_binding": "Table 5 uses the protocol recorded by each row's source manifest; it is not a single C3 instance",
+        "source_index": "docs/reproducibility/paper_table_sources/table4_evidence_ladder_source.csv"
+      },
+      "bounded_c3_sensitivity": {
+        "paper_binding": "Section 3 secondary route-order sensitivity around the fixed C3 matrix",
+        "m_grid": [5, 10, 20],
+        "U_grid": [50, 100, 200],
+        "B": 10000,
+        "routes": 8,
+        "minimum_route_rank_spearman_vs_primary": 1.0,
+        "maximum_absolute_rank_shift": 0.0,
+        "source": "docs/reproducibility/d3_protocol_sensitivity.json"
+      }
+    }
+  },
+  "d3_catalog_dependence": {
+    "runner": "tools/analyze_d3_catalog_dependence.py",
+    "result": "docs/reproducibility/d3_catalog_dependence_summary.json",
+    "artifact_unit": "dataset+label+method+manifest_row",
+    "tokenizer_export_artifacts": 8,
+    "excluded_row_families": ["deterministic_control", "local_RQ_reference"],
+    "tokenizer_export_spearman": 0.9761904761904763,
+    "tokenizer_export_exact_two_sided_p": 0.0003968253968253968,
+    "catalog_clusters": 5,
+    "catalog_collapsed_spearman": 0.8999999999999998,
+    "catalog_exact_two_sided_p": 0.08333333333333333,
+    "leave_one_catalog_out_spearman_range": [0.7999999999999999, 1.0],
+    "claim_boundary": "Catalog collapse is a dependence sensitivity check over five catalogs, not a population estimate."
+  },
+  "g22_handoff_uncertainty": {
+    "runner": "tools/analyze_g22_handoff_uncertainty.py",
+    "result": "docs/reproducibility/g22_handoff_uncertainty.json",
+    "unit": "paired user",
+    "stratified_by": "target_stratum",
+    "bootstrap_samples": 4999,
+    "seed": 20260819,
+    "paired_users": 5364,
+    "common_users": 4780,
+    "new_item_users": 584,
+    "mapping_only_common_ndcg_delta_ci": [-0.002086376239734651, 0.001874534290990585],
+    "probability_all_adapted_seeds_pass": 1.0,
+    "claim_boundary": "Uncertainty within one released lifecycle case; not cross-lifecycle or causal generalization."
   },
   "g20_trained_trace_primary": {
     "runner": "tools/run_v1_gate20_d7_trained_beam.py",
@@ -58,7 +120,7 @@
     "result": "experiments/v1_evidence_chain/gate35_cluster_reanalysis/g35_cluster_reanalysis_result.json",
     "table": "experiments/v1_evidence_chain/gate35_cluster_reanalysis/g35_g3_wild_cluster_models.csv",
     "cluster_unit": "dataset+label+method+manifest_row",
-    "effective_clusters": 11,
+    "effective_clusters": 12,
     "wild_weight_distribution": "independent Rademacher weights {-1,+1} by artifact cluster",
     "wild_bootstrap_samples": 4999,
     "base_seed": 20260607,

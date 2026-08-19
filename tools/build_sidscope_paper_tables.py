@@ -27,11 +27,13 @@ COPIED_TABLES = {
 
 TABLE5_FIELDS = [
     "artifact",
-    "d1_unique_codes",
+    "items",
+    "sid_depth",
+    "d1_level1_symbols",
     "d2_collision_item_rate",
     "d3_depth1_weighted",
     "d4_tail_unique_ratio",
-    "d5_active_prefix_counts",
+    "d5_unique_full_codes",
     "source_evidence",
 ]
 
@@ -42,8 +44,11 @@ TABLE8_FIELDS = [
     "catalog_gaps",
     "d6_churn",
     "common_ndcg_at_20",
+    "common_ndcg_at_20_ci",
     "new_item_recall_at_20",
+    "new_item_recall_at_20_ci",
     "gate",
+    "gate_probability",
     "source_evidence",
 ]
 
@@ -92,6 +97,16 @@ def build_table4_adapter_conformance() -> list[dict[str, str]]:
     ]
 
 
+def first_count(value: object) -> str:
+    text = str(value)
+    first = text.split(";")[0]
+    return f"{int(first):,}"
+
+
+def format_count(value: object) -> str:
+    return f"{int(value):,}"
+
+
 def build_table5_diagnostic_profile() -> list[dict[str, str]]:
     reports = [
         ("ReSID-GAOQ / Video", "resid_gaoq_video_report.json"),
@@ -103,6 +118,8 @@ def build_table5_diagnostic_profile() -> list[dict[str, str]]:
         ("LETTER / Instruments", "letter_instruments_report.json"),
         ("LC-Rec / Instruments", "lcrec_instruments_report.json"),
     ]
+    _, coverage_rows = read_csv(SOURCE_DIR / "table2_artifact_coverage_source.csv")
+    coverage_by_label = {row["route_catalog"]: row for row in coverage_rows}
     output: list[dict[str, str]] = []
     for paper_label, report_name in reports:
         report_path = ROOT / "docs" / "reproducibility" / "conformance" / report_name
@@ -120,14 +137,19 @@ def build_table5_diagnostic_profile() -> list[dict[str, str]]:
         row = metric_rows[0][0]
         if not isinstance(row, dict):
             raise RuntimeError(f"Malformed D1-D5 summary: {report_path}")
+        coverage = coverage_by_label.get(paper_label)
+        if coverage is None:
+            raise RuntimeError(f"Missing coverage row for {paper_label}")
         output.append(
             {
                 "artifact": paper_label,
-                "d1_unique_codes": str(row["d1_unique_codes"]),
+                "items": coverage["items"],
+                "sid_depth": str(int(row["sid_length"])),
+                "d1_level1_symbols": first_count(row["d1_unique_codes"]),
                 "d2_collision_item_rate": f"{float(row['full_collision_rate']):.3f}",
                 "d3_depth1_weighted": f"{float(row['d3_depth1_weighted_collab_recall']):.3f}",
                 "d4_tail_unique_ratio": f"{float(row['d4_tail_sid_unique_ratio']):.3f}",
-                "d5_active_prefix_counts": str(row["prefix_counts"]),
+                "d5_unique_full_codes": format_count(row["unique_sid"]),
                 "source_evidence": str(report_path.relative_to(ROOT)),
             }
         )
@@ -136,6 +158,7 @@ def build_table5_diagnostic_profile() -> list[dict[str, str]]:
 
 def build_table8_dact_handoff() -> list[dict[str, str]]:
     g22 = read_json(ROOT / "docs" / "reproducibility" / "g22_diagnose_repair_handoff_summary.json")
+    uncertainty = read_json(ROOT / "docs" / "reproducibility" / "g22_handoff_uncertainty.json")
     diagnosis = g22["mapping_diagnosis"]
     protocol = g22["handoff_protocol"]
     handoff = g22["handoff_results"]
@@ -146,15 +169,25 @@ def build_table8_dact_handoff() -> list[dict[str, str]]:
     adapted_new = [float(value) for value in handoff["adapted_new_item_recall_at_20"]]
     if not (len(adapted_seeds) == len(adapted_common) == len(adapted_new)):
         raise RuntimeError("G22 seed and adapted-result lengths differ")
-    source = "docs/reproducibility/g22_diagnose_repair_handoff_summary.json"
+    state_uncertainty = uncertainty["states"]
+    gate_uncertainty = uncertainty["adapted_vs_mapping_only"]
+    source = "docs/reproducibility/g22_diagnose_repair_handoff_summary.json; docs/reproducibility/g22_handoff_uncertainty.json"
+
+    def ci_text(state: str, key: str) -> str:
+        values = state_uncertainty[state][key]
+        return f"[{float(values[0]):.5f}, {float(values[1]):.5f}]"
+
     rows = [
         {
             "mapping_model_state": "0.6 / released model",
             "catalog_gaps": str(int(diagnosis["old_catalog_without_sid"])),
             "d6_churn": "0.0%",
             "common_ndcg_at_20": f"{float(handoff['old_model_old_mapping_common_ndcg_at_20']):.5f}",
+            "common_ndcg_at_20_ci": ci_text("stale_old_model_old_mapping", "common_path_ndcg_at_20_ci"),
             "new_item_recall_at_20": "--",
+            "new_item_recall_at_20_ci": "--",
             "gate": "Baseline",
+            "gate_probability": "--",
             "source_evidence": source,
         },
         {
@@ -162,20 +195,27 @@ def build_table8_dact_handoff() -> list[dict[str, str]]:
             "catalog_gaps": str(int(diagnosis["repaired_catalog_without_sid"])),
             "d6_churn": f"{float(diagnosis['common_full_code_churn_rate']):.1%}",
             "common_ndcg_at_20": f"{float(handoff['old_model_new_mapping_common_ndcg_at_20']):.5f}",
+            "common_ndcg_at_20_ci": ci_text("mapping_only_old_model_new_mapping", "common_path_ndcg_at_20_ci"),
             "new_item_recall_at_20": f"{float(handoff['old_model_new_mapping_new_item_recall_at_20']):.5f}",
+            "new_item_recall_at_20_ci": ci_text("mapping_only_old_model_new_mapping", "new_item_recall_at_20_ci"),
             "gate": "Fail",
+            "gate_probability": "0.000",
             "source_evidence": source,
         },
     ]
     for seed, common, new_item in zip(adapted_seeds, adapted_common, adapted_new):
+        state = f"adapted_model_new_mapping_seed{seed}"
         rows.append(
             {
                 "mapping_model_state": f"0.7 / adapted, seed {seed}",
                 "catalog_gaps": str(int(diagnosis["repaired_catalog_without_sid"])),
                 "d6_churn": f"{float(diagnosis['common_full_code_churn_rate']):.1%}",
                 "common_ndcg_at_20": f"{common:.5f}",
+                "common_ndcg_at_20_ci": ci_text(state, "common_path_ndcg_at_20_ci"),
                 "new_item_recall_at_20": f"{new_item:.5f}",
+                "new_item_recall_at_20_ci": ci_text(state, "new_item_recall_at_20_ci"),
                 "gate": "Pass",
+                "gate_probability": f"{float(gate_uncertainty[state]['probability_full_gate']):.3f}",
                 "source_evidence": source,
             }
         )

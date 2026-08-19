@@ -63,10 +63,27 @@ ledger must be updated and re-verified before submission.
 | C13 | SIDScope makes artifact admission auditable through a nine-route source/license/configuration inventory, an executable C0--C5 conformance protocol, and a source-to-promotion ReSOT walkthrough. | supported | main | `docs/reproducibility/sidscope_source_license_config_inventory.csv`; `docs/reproducibility/source_route_evidence_summary.json`; `docs/reproducibility/conformance/`; `examples/conformance_failure_fixture/conformance_report.json`; `docs/reproducibility/resot_resource_walkthrough.json`; `docs/RESOT_RESOURCE_WALKTHROUGH.md`; `runs/R828_diger_yelp_intake.json`; `runs/R829_diger_yelp_matrix_refresh.json`; table rows T2/T3 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `python3 tools/verify_sidscope_source_inventory.py`; `python3 tools/verify_adapter_conformance_assets.py`; `python3 tools/verify_resot_resource_walkthrough.py`. | Inventory covers 9 paper-facing routes; eight routes across ReSID, GRID, CARD, DIGER, ReSOT, LETTER, and LC-Rec pass C0--C5; the public invalid fixture fails exactly C1; the ReSOT walkthrough binds 5 stages and cross-checks C1/C3/C5 evidence. | ReSID/Musical remains the sole auditable snapshot and is not described as fully regenerable. DIGER/Yelp is the only non-Amazon route, so the matrix demonstrates contract portability across two ecosystems rather than broad cross-ecosystem generalization. | New TOIS-only resource-evaluation and conformance contribution beyond the CIKM V0 interface. |
 | C14 | SIDScope supports one released mapping-refresh workflow from diagnosis through D6 re-audit to a preregistered generator handoff. | supported | main | `G22_DIAGNOSE_REPAIR_REAUDIT_PLAN.md`; `G22_PLAN_TO_RUN_GATE.json`; `gate22_diagnose_repair_reaudit/G22_PRIMARY_AUDIT.md`; `gate22_diagnose_repair_reaudit/mapping_audit/g22_mapping_reaudit_result.json`; `docs/reproducibility/g22_diagnose_repair_handoff_summary.json`; table row T7 in `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`. | `tools/run_v1_gate22_diagnose_repair_reaudit.py`; `tools/run_v1_gate22_downstream_handoff.py`; regenerate the compact paper row with `tools/build_sidscope_paper_tables.py`. | DACT Tools 0.6 has `275` catalog gaps (`263` interacted); 0.7 closes them; `2,271/9,610` common codes change (`23.6%` churn). On one shared `5,364`-target test universe, three adapted seeds reach common-item NDCG@20 `0.0203--0.0210` and new-item Recall@20 `0.1199--0.1267`; all pass the preregistered handoff gate. | One released lifecycle case. It does not establish universal repair effectiveness, a causal diagnostic-to-quality relation, or general D1-D5 trained-generator predictivity. | Adds the end-to-end diagnosis-to-action evidence and empirical D6 case absent from V0. |
 
+### 2026-08-19 Statistical Closure
+
+- C4 now binds `docs/reproducibility/d3_catalog_dependence_summary.json` and
+  `docs/reproducibility/d3_protocol_sensitivity.json`. Removing controls and
+  local RQ references leaves eight tokenizer exports with Spearman
+  `rho=0.9762` (exact `p=0.0004`). Collapsing shared routes to five catalog
+  means gives `rho=0.9000` (exact `p=0.0833`), so catalog-level evidence is a
+  dependence sensitivity rather than a population claim. Across the nine
+  bounded `(m,U)` configurations around C3, the eight-route ordering is
+  unchanged (`rho=1.0`, maximum rank shift `0`).
+- C14 now also binds
+  `docs/reproducibility/g22_handoff_uncertainty.json`. The mapping-only
+  common-item NDCG change is unresolved (paired 95% interval
+  `[-0.00209,0.00187]`), while all three adapted seeds pass the complete gate
+  in all 4,999 paired user-bootstrap resamples. The scope remains one released
+  lifecycle case.
+
 ### Current C10 Package Status
 
 R804 closed the pre-G20 package counts. The current builder reconstructs all
-eight manuscript tables with 58 verified rows; eight routes pass C0--C5. G20--G23
+eight manuscript tables with 60 verified rows; eight routes pass C0--C5. G20--G23
 add compact hashed trained-trace and lifecycle-handoff evidence while leaving
 full checkpoints and beam logs outside the public package. Public URL/tag validation and the final
 TOIS submission package remain separate gates.
@@ -119,7 +136,7 @@ Current registry rows:
   co-occurrence alignment, prefix load/collision, and code dispersion.
 - Cluster-aware and wild-cluster uncertainty preserve the positive direction of
   D3 construct calibration under conservative artifact-level independence
-  (`n=11` artifacts, `n=33` artifact-depth units after the ReSOT/DIGER refresh);
+  (`n=12` artifacts, `n=36` artifact-depth units after the Yelp refresh);
   bounded
   fixed-reranker Recall@20/NDCG@20 anchors are positive under G10/R701; non-prefix
   hard-negative SID-affinity Recall@20/NDCG@20/MRR@20 anchors are positive

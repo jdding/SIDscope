@@ -1,6 +1,6 @@
-mapping_model_state,catalog_gaps,d6_churn,common_ndcg_at_20,new_item_recall_at_20,gate,source_evidence
-0.6 / released model,275,0.0%,0.01394,--,Baseline,docs/reproducibility/g22_diagnose_repair_handoff_summary.json
-0.7 / released model,0,23.6%,0.01384,0.00000,Fail,docs/reproducibility/g22_diagnose_repair_handoff_summary.json
-"0.7 / adapted, seed 2025",0,23.6%,0.02100,0.11986,Pass,docs/reproducibility/g22_diagnose_repair_handoff_summary.json
-"0.7 / adapted, seed 2026",0,23.6%,0.02057,0.12671,Pass,docs/reproducibility/g22_diagnose_repair_handoff_summary.json
-"0.7 / adapted, seed 2027",0,23.6%,0.02026,0.12671,Pass,docs/reproducibility/g22_diagnose_repair_handoff_summary.json
+mapping_model_state,catalog_gaps,d6_churn,common_ndcg_at_20,common_ndcg_at_20_ci,new_item_recall_at_20,new_item_recall_at_20_ci,gate,gate_probability,source_evidence
+0.6 / released model,275,0.0%,0.01394,"[0.01153, 0.01650]",--,--,Baseline,--,docs/reproducibility/g22_diagnose_repair_handoff_summary.json; docs/reproducibility/g22_handoff_uncertainty.json
+0.7 / released model,0,23.6%,0.01384,"[0.01143, 0.01647]",0.00000,"[0.00000, 0.00000]",Fail,0.000,docs/reproducibility/g22_diagnose_repair_handoff_summary.json; docs/reproducibility/g22_handoff_uncertainty.json
+"0.7 / adapted, seed 2025",0,23.6%,0.02100,"[0.01795, 0.02412]",0.11986,"[0.09418, 0.14726]",Pass,1.000,docs/reproducibility/g22_diagnose_repair_handoff_summary.json; docs/reproducibility/g22_handoff_uncertainty.json
+"0.7 / adapted, seed 2026",0,23.6%,0.02057,"[0.01770, 0.02345]",0.12671,"[0.10103, 0.15411]",Pass,1.000,docs/reproducibility/g22_diagnose_repair_handoff_summary.json; docs/reproducibility/g22_handoff_uncertainty.json
+"0.7 / adapted, seed 2027",0,23.6%,0.02026,"[0.01725, 0.02324]",0.12671,"[0.10103, 0.15411]",Pass,1.000,docs/reproducibility/g22_diagnose_repair_handoff_summary.json; docs/reproducibility/g22_handoff_uncertainty.json

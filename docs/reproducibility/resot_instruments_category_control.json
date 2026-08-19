@@ -1,5 +1,23 @@
 {
   "category_prefix_control": {
+    "d3_by_depth": [
+      {
+        "prefix_depth": 1,
+        "weighted_collab_prefix_recall": 0.4056412337662338
+      },
+      {
+        "prefix_depth": 2,
+        "weighted_collab_prefix_recall": 0.20941558441558442
+      },
+      {
+        "prefix_depth": 3,
+        "weighted_collab_prefix_recall": 0.061079545454545456
+      },
+      {
+        "prefix_depth": 4,
+        "weighted_collab_prefix_recall": 0.0
+      }
+    ],
     "d3_depth1_weighted_collab_recall": 0.4056412337662338,
     "full_collision_rate": 0.0,
     "items": 6250,
@@ -28,8 +46,26 @@
       "Musical Instruments"
     ]
   },
-  "schema": "sidscope.resot.same_dataset_control.v1",
+  "schema": "sidscope.resot.same_dataset_control.v2",
   "source_artifact": {
+    "d3_by_depth": [
+      {
+        "prefix_depth": 1,
+        "weighted_collab_prefix_recall": 0.06290584415584416
+      },
+      {
+        "prefix_depth": 2,
+        "weighted_collab_prefix_recall": 0.01075487012987013
+      },
+      {
+        "prefix_depth": 3,
+        "weighted_collab_prefix_recall": 0.004261363636363636
+      },
+      {
+        "prefix_depth": 4,
+        "weighted_collab_prefix_recall": 0.0
+      }
+    ],
     "d3_depth1_weighted_collab_recall": 0.06290584415584416,
     "items": 6250,
     "method": "resot_text_index_official_code_derived"

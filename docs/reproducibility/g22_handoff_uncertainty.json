@@ -1,0 +1,136 @@
+{
+  "adapted_vs_mapping_only": {
+    "adapted_model_new_mapping_seed2025": {
+      "common_ndcg_delta_vs_mapping_only": 0.00715848644414036,
+      "common_ndcg_delta_vs_mapping_only_ci": [
+        0.004569835110829736,
+        0.009698822808101738
+      ],
+      "probability_above_mapping_only": 1.0,
+      "probability_full_gate": 1.0,
+      "probability_meeting_relative_recovery": 1.0,
+      "probability_reaching_new_items": 1.0
+    },
+    "adapted_model_new_mapping_seed2026": {
+      "common_ndcg_delta_vs_mapping_only": 0.006736251341978363,
+      "common_ndcg_delta_vs_mapping_only_ci": [
+        0.004213427071254623,
+        0.009217653208963278
+      ],
+      "probability_above_mapping_only": 1.0,
+      "probability_full_gate": 1.0,
+      "probability_meeting_relative_recovery": 1.0,
+      "probability_reaching_new_items": 1.0
+    },
+    "adapted_model_new_mapping_seed2027": {
+      "common_ndcg_delta_vs_mapping_only": 0.006421117026070072,
+      "common_ndcg_delta_vs_mapping_only_ci": [
+        0.0038145086678354726,
+        0.008962990799038057
+      ],
+      "probability_above_mapping_only": 1.0,
+      "probability_full_gate": 1.0,
+      "probability_meeting_relative_recovery": 1.0,
+      "probability_reaching_new_items": 1.0
+    }
+  },
+  "bootstrap": {
+    "samples": 4999,
+    "seed": 20260819,
+    "stratified_by": "target_stratum",
+    "unit": "paired user"
+  },
+  "claim_boundary": "Paired user-level uncertainty within one released DACT lifecycle case; not cross-lifecycle or causal generalization.",
+  "common_users": 4780,
+  "input_dir": "experiments/v1_evidence_chain/gate22_diagnose_repair_reaudit/remote_runs/20260809T032107Z/primary",
+  "input_sha256": {
+    "adapted_model_new_mapping_seed2025_outcomes.parquet": "a0fe59f61b4b0cabf33fd9f6124020275445caa58a73f9b026edfbc2ae6a69f2",
+    "adapted_model_new_mapping_seed2026_outcomes.parquet": "819e32f1cebe6204d2ff00005455a7161aa5a950ceba28fce917210da1914eeb",
+    "adapted_model_new_mapping_seed2027_outcomes.parquet": "1b17ace78a92507e0103e5bdd88462ea8e75144c751f90e73e30a8c7efde3127",
+    "mapping_only_old_model_new_mapping_outcomes.parquet": "787462b026be593591515a2d074dcb25e3158fddd3daddf79e185896cd56fb0e",
+    "stale_old_model_old_mapping_outcomes.parquet": "c626038150d3169d6bb2a69fc0192300796720d6fa497851afcdb67963886445"
+  },
+  "mapping_only_vs_stale": {
+    "common_ndcg_delta": -0.00010185632508926366,
+    "common_ndcg_delta_ci": [
+      -0.002086376239734651,
+      0.001874534290990585
+    ],
+    "interpretation": "The mapping-only common-item change is not statistically resolved; its new-item recall is exactly zero in this case.",
+    "probability_mapping_below_stale": 0.5433086617323465
+  },
+  "new_item_users": 584,
+  "paired_users": 5364,
+  "probability_all_adapted_seeds_pass": 1.0,
+  "relative_recovery_threshold": {
+    "bootstrap_ci": [
+      0.011527801263001515,
+      0.016416705214803956
+    ],
+    "fraction": 0.9,
+    "point": 0.013929529588177371
+  },
+  "schema": "sidscope.g22.handoff_uncertainty.v1",
+  "states": {
+    "adapted_model_new_mapping_seed2025": {
+      "common_path_ndcg_at_20": 0.020996345339737394,
+      "common_path_ndcg_at_20_ci": [
+        0.0179450560014741,
+        0.02412158424898916
+      ],
+      "new_item_recall_at_20": 0.11986301369863013,
+      "new_item_recall_at_20_ci": [
+        0.09417808219178082,
+        0.14726027397260275
+      ]
+    },
+    "adapted_model_new_mapping_seed2026": {
+      "common_path_ndcg_at_20": 0.020574110237575396,
+      "common_path_ndcg_at_20_ci": [
+        0.01769540898931596,
+        0.023453175688660243
+      ],
+      "new_item_recall_at_20": 0.1267123287671233,
+      "new_item_recall_at_20_ci": [
+        0.10102739726027397,
+        0.1541095890410959
+      ]
+    },
+    "adapted_model_new_mapping_seed2027": {
+      "common_path_ndcg_at_20": 0.020258975921667106,
+      "common_path_ndcg_at_20_ci": [
+        0.01725315237117435,
+        0.02324020523346117
+      ],
+      "new_item_recall_at_20": 0.1267123287671233,
+      "new_item_recall_at_20_ci": [
+        0.10102739726027397,
+        0.1541095890410959
+      ]
+    },
+    "mapping_only_old_model_new_mapping": {
+      "common_path_ndcg_at_20": 0.013837858895597034,
+      "common_path_ndcg_at_20_ci": [
+        0.01143028947409365,
+        0.016474534207326676
+      ],
+      "new_item_recall_at_20": 0.0,
+      "new_item_recall_at_20_ci": [
+        0.0,
+        0.0
+      ]
+    },
+    "stale_old_model_old_mapping": {
+      "common_path_ndcg_at_20": 0.013939715220686297,
+      "common_path_ndcg_at_20_ci": [
+        0.01153056621319186,
+        0.016500335528919188
+      ],
+      "new_item_recall_at_20": 0.0,
+      "new_item_recall_at_20_ci": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

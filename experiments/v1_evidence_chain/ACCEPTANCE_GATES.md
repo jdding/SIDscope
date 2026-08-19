@@ -12,7 +12,7 @@ The preparation target is a submission-ready TOIS substantial extension:
 
 ```text
 TARGET_READINESS: TOIS_SUBSTANTIAL_EXTENSION_WITH_REVIEWER_VERIFIABLE_RESOURCE
-CURRENT_READINESS: CONTENT_GATES_PASS_SUBMISSION_METADATA_AND_PUBLIC_RELEASE_OPEN
+CURRENT_READINESS: CONTENT_GATES_PASS_PRIVATE_V1_FROZEN_PUBLIC_ACCESS_AND_SUBMISSION_METADATA_OPEN
 TARGET_INTERPRETATION: build standard, not a guaranteed acceptance probability
 CIKM_V0_RESULT_DEPENDENCY: RESOLVED_ACCEPTED_2026_08_07
 VENUE_SWITCH_GATE: V0_V1_DELTA_AND_VENUE_GATE.md
@@ -65,7 +65,7 @@ G6_CURRENT_STATUS: BUILT_PASS_FOR_REAL_FORMAT_D7_BEAM_LABELING_R306
 G6_ARTIFACT: experiments/v1_evidence_chain/gate45_real_beam_d7/GATE45_RESULT.md
 G7_CURRENT_STATUS: BUILT_PASS_FOR_BOUNDED_PUBLIC_TRACE_ACCOUNTING_R307_R310
 G7_ARTIFACT: experiments/v1_evidence_chain/gate46_d7_per_beam_trace_join/GATE46_RESULT.md
-G8_CURRENT_STATUS: REVIEWER_PACKAGE_DOCUMENTATION_RELEASE_AND_PUBLIC_SMOKE_PASS_R501_R510_R601_R708_R746_R750
+G8_CURRENT_STATUS: REVIEWER_PACKAGE_PRIVATE_V1_FROZEN_R834_PUBLIC_NO_LOGIN_SMOKE_PENDING
 G8_ARTIFACTS: docs/SIDSCOPE_RESOURCE_PACKAGE.md; docs/SIDSCOPE_DATASHEET.md; docs/SIDSCOPE_LIMITATIONS.md; docs/SIDSCOPE_MAINTENANCE.md
 G9_CURRENT_STATUS: CLAIM_TABLE_FIGURE_LEDGER_CLOSED_FOR_CURRENT_ARTIFACT_REGISTRY_R510
 G9_ARTIFACT: experiments/v1_evidence_chain/CLAIM_LEDGER.md; docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv
@@ -139,10 +139,11 @@ extracts that zip without `.git` metadata and reruns the verifier plus sampled
 regeneration from the extracted package. The public release packet records the
 candidate GitHub URL, branch/archive surface, and G8 commands. R708 verifies a
 pre-split reviewer-tag public surface. The private standalone
-`jdding/SIDscope` repository is now the official release surface.
-Authenticated clean-clone smoke remains pending after its history is replaced
-by the current manifest-built root; unauthenticated URL smoke remains pending
-until reviewer visibility is enabled.
+`jdding/SIDscope` repository is now the official release surface. R834 freezes
+its manifest-built 159-file package at `v1.0.0`; the tag and `main` resolve to
+the same commit and an authenticated clean clone passes the package verifier
+and tests. Unauthenticated URL smoke remains pending until reviewer visibility
+is enabled.
 Canonical G9 table-to-artifact closure is now
 recorded in `CLAIM_LEDGER.md` and
 `docs/reproducibility/sidscope_g7_full_table_figure_ledger.csv`.

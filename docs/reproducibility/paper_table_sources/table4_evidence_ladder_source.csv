@@ -1,13 +1,15 @@
 group,evaluation_protocol,endpoint,unit,rho,uncertainty,source_evidence
-A. Within-protocol calibration,Artifact collapse,Prefix-candidate recall,12 artifacts,0.958,"[0.778, 1.000]",experiments/v1_evidence_chain/gate35_cluster_reanalysis/g35_g2_cluster_spearman.csv
-B. Disjoint-user calibration and ranking,Artifact collapse,Held-out candidate recall,8 artifacts,0.976,"[0.793, 1.000]",experiments/v1_evidence_chain/gate9_decoupled_utility/g9_decoupled_associations.csv
-B. Disjoint-user calibration and ranking,Fixed ranker,Recall@20,22 artifact-depth,0.645,"[0.322, 0.858]",experiments/v1_evidence_chain/gate9_decoupled_utility/g9_decoupled_associations.csv
-B. Disjoint-user calibration and ranking,Fixed ranker,NDCG@20,22 artifact-depth,0.545,"[0.147, 0.797]",experiments/v1_evidence_chain/gate9_decoupled_utility/g9_decoupled_associations.csv
-C. Sampled-candidate ranking,SID affinity hard negatives,Recall@20,24 artifact-depth,0.817,"[0.484, 0.933]",experiments/v1_evidence_chain/gate10_independent_utility_popularity_sensitivity/g10_independent_utility_result.json
-C. Sampled-candidate ranking,SID affinity hard negatives,NDCG@20,24 artifact-depth,0.690,"[0.395, 0.898]",experiments/v1_evidence_chain/gate10_independent_utility_popularity_sensitivity/g10_independent_utility_result.json
-C. Sampled-candidate ranking,Artifact collapse,NDCG@20,8 artifacts,0.690,"[-0.095, 0.988]",experiments/v1_evidence_chain/gate10_independent_utility_popularity_sensitivity/g10_independent_associations.csv
-C. Sampled-candidate ranking,Popularity residualization,NDCG@20,"24 rows / 8 artifacts",0.634,"[0.115, 0.951]",experiments/v1_evidence_chain/gate105_layerc_controls/g105_popularity_controlled_associations.csv
-C. Sampled-candidate ranking,Metadata affinity,NDCG@20,24 artifact-depth,0.207,"[-0.269, 0.588]",experiments/v1_evidence_chain/gate11_nonprefix_scoring_anchor/g11_nonprefix_associations.csv
-C. Sampled-candidate ranking,Random negatives,NDCG@20,24 artifact-depth,0.001,"[-0.346, 0.383]",experiments/v1_evidence_chain/gate10_independent_utility/g10_independent_utility_result.json
-D. Trained-generator boundary,SID-code generators,NDCG@20,5 artifacts,"[-0.564, 0.205]",exact p >= 0.400,experiments/v1_evidence_chain/gate16_trained_generator_anchor_audit/g16_trained_generator_exact_associations.csv
-D. Trained-generator boundary,Item-ID generator,NDCG@20,8 artifacts,0.144,exact p = 0.736,experiments/v1_evidence_chain/gate16_trained_generator_anchor_audit/g16_trained_generator_exact_associations.csv
+A. Same prefix construction,Per-artifact aggregate,Prefix-candidate recall,12 artifacts,0.958,"[0.778, 1.000]",experiments/v1_evidence_chain/gate35_cluster_reanalysis/g35_g2_cluster_spearman.csv
+A. Same prefix construction,Controls and local references removed,Prefix-candidate recall,8 tokenizer exports,0.976,exact p = 0.0004,docs/reproducibility/d3_catalog_dependence_summary.json
+A. Same prefix construction,Collapsed by shared catalog,Prefix-candidate recall,5 catalogs,0.900,exact p = 0.083,docs/reproducibility/d3_catalog_dependence_summary.json
+B. Held-out users and fixed reranking,Per-artifact aggregate,Held-out candidate recall,8 artifacts,0.976,"[0.793, 1.000]",experiments/v1_evidence_chain/gate9_decoupled_utility/g9_decoupled_associations.csv
+B. Held-out users and fixed reranking,"Prefix candidates, fixed reranker",Recall@20,22 artifact-depth,0.645,"[0.322, 0.858]",experiments/v1_evidence_chain/gate9_decoupled_utility/g9_decoupled_associations.csv
+B. Held-out users and fixed reranking,"Prefix candidates, fixed reranker",NDCG@20,22 artifact-depth,0.545,"[0.147, 0.797]",experiments/v1_evidence_chain/gate9_decoupled_utility/g9_decoupled_associations.csv
+C. Candidates sampled without prefix retrieval,"SID-prefix scorer, popular negatives",Recall@20,24 artifact-depth,0.817,"[0.484, 0.933]",experiments/v1_evidence_chain/gate10_independent_utility_popularity_sensitivity/g10_independent_utility_result.json
+C. Candidates sampled without prefix retrieval,"SID-prefix scorer, popular negatives",NDCG@20,24 artifact-depth,0.690,"[0.395, 0.898]",experiments/v1_evidence_chain/gate10_independent_utility_popularity_sensitivity/g10_independent_utility_result.json
+C. Candidates sampled without prefix retrieval,Per-artifact aggregate,NDCG@20,8 artifacts,0.690,"[-0.095, 0.988]",experiments/v1_evidence_chain/gate10_independent_utility_popularity_sensitivity/g10_independent_associations.csv
+C. Candidates sampled without prefix retrieval,"Same scorer, popularity controlled",NDCG@20,"24 rows; 8 artifact clusters",0.634,"[0.115, 0.951]",experiments/v1_evidence_chain/gate105_layerc_controls/g105_popularity_controlled_associations.csv
+C. Candidates sampled without prefix retrieval,Metadata-category scorer,NDCG@20,24 artifact-depth,0.207,"[-0.269, 0.588]",experiments/v1_evidence_chain/gate11_nonprefix_scoring_anchor/g11_nonprefix_associations.csv
+C. Candidates sampled without prefix retrieval,Random-negative pool,NDCG@20,24 artifact-depth,0.001,"[-0.346, 0.383]",experiments/v1_evidence_chain/gate10_independent_utility/g10_independent_utility_result.json
+D. Transfer to trained generators,Autoregressive SID generators,NDCG@20,5 artifacts,"[-0.564, 0.205]",exact p >= 0.400,experiments/v1_evidence_chain/gate16_trained_generator_anchor_audit/g16_trained_generator_exact_associations.csv
+D. Transfer to trained generators,Autoregressive item-ID generator,NDCG@20,8 artifacts,0.144,exact p = 0.736,experiments/v1_evidence_chain/gate16_trained_generator_anchor_audit/g16_trained_generator_exact_associations.csv

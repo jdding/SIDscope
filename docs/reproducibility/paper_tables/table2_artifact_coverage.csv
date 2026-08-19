@@ -1,12 +1,12 @@
-route_id,route_catalog,evidence_class,source_form,items,levels,package_status,source_evidence
-resid_musical_snapshot,ReSID / Musical,Named,Tracked snapshot,"23,742",3,Auditable snapshot,docs/reproducibility/table1_evidence_catalog.csv
-resid_gaoq_video,ReSID-GAOQ / Video,Named,Code-derived,"24,685",3,C0--C5; derived evidence,docs/reproducibility/table1_evidence_catalog.csv
-grid_p5_beauty,GRID / P5 Beauty,Named,Rebuilt tokenizer,"12,101",3,C0--C5; source restricted,docs/reproducibility/table1_evidence_catalog.csv
-card_p5_beauty,CARD / P5 Beauty,Named,Code-derived,"12,101",4,C0--C5; summary only,docs/reproducibility/table1_evidence_catalog.csv
-diger_beauty,DIGER / Beauty,Named,Checkpoint export,"12,101",3,C0--C5; summary only,docs/reproducibility/official_adapter_metrics_snapshot.csv
-diger_yelp,DIGER / Yelp,Named,Checkpoint export,"20,033",3,C0--C5; summary only,experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/DIGER_YELP_INTAKE_RESULT.json
-resot_instruments,ReSOT / Instruments,Named,Released archive,"6,250",4,C0--C5; archive excluded,docs/reproducibility/resot_resource_walkthrough.json
-letter_instruments,LETTER / Instruments,Named,Released index,"9,922",4,C0--C5; index excluded,docs/reproducibility/official_adapter_metrics_snapshot.csv
-lcrec_instruments,LC-Rec / Instruments,Named,Released index,"9,922",4,C0--C5; index excluded,docs/reproducibility/official_adapter_metrics_snapshot.csv
-stress_grid_like_musical,GRID-like / Musical,Stress,Local export,"23,742",3,Diagnostic reference,docs/reproducibility/table1_evidence_catalog.csv
-control_category_prefix_musical,Category-prefix / Musical,Control,Deterministic,"23,742",3,Interpretation control,docs/reproducibility/table1_evidence_catalog.csv
+route_id,route_catalog,display_method,display_data_source,evidence_class,source_form,items,levels,package_status,source_evidence
+resid_musical_snapshot,ReSID / Musical,ReSID,Amazon / Musical,Named,Tracked snapshot,"23,742",3,Auditable snapshot,docs/reproducibility/table1_evidence_catalog.csv
+resid_gaoq_video,ReSID-GAOQ / Video,ReSID-GAOQ,Amazon / Video Games,Named,Code-derived,"24,685",3,C0--C5; derived evidence,docs/reproducibility/table1_evidence_catalog.csv
+grid_p5_beauty,GRID / P5 Beauty,GRID,Amazon / Beauty (P5),Named,Rebuilt tokenizer,"12,101",3,C0--C5; source restricted,docs/reproducibility/table1_evidence_catalog.csv
+card_p5_beauty,CARD / P5 Beauty,CARD,Amazon / Beauty (P5),Named,Code-derived,"12,101",4,C0--C5; summary only,docs/reproducibility/table1_evidence_catalog.csv
+diger_beauty,DIGER / Beauty,DIGER,Amazon / Beauty (P5),Named,Checkpoint export,"12,101",3,C0--C5; summary only,docs/reproducibility/official_adapter_metrics_snapshot.csv
+diger_yelp,DIGER / Yelp,DIGER,Yelp / Business,Named,Checkpoint export,"20,033",3,C0--C5; summary only,experiments/v1_evidence_chain/gate23_non_amazon_route_expansion/DIGER_YELP_INTAKE_RESULT.json
+resot_instruments,ReSOT / Instruments,ReSOT,Amazon / Instruments,Named,Released archive,"6,250",4,C0--C5; archive excluded,docs/reproducibility/resot_resource_walkthrough.json
+letter_instruments,LETTER / Instruments,LETTER,Amazon / Instruments,Named,Released index,"9,922",4,C0--C5; index excluded,docs/reproducibility/official_adapter_metrics_snapshot.csv
+lcrec_instruments,LC-Rec / Instruments,LC-Rec,Amazon / Instruments,Named,Released index,"9,922",4,C0--C5; index excluded,docs/reproducibility/official_adapter_metrics_snapshot.csv
+stress_grid_like_musical,GRID-like / Musical,GRID-like,Amazon / Musical,Stress,Local export,"23,742",3,Diagnostic reference,docs/reproducibility/table1_evidence_catalog.csv
+control_category_prefix_musical,Category-prefix / Musical,Category-prefix,Amazon / Musical,Control,Deterministic,"23,742",3,Interpretation control,docs/reproducibility/table1_evidence_catalog.csv
