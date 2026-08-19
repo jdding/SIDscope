@@ -1,7 +1,7 @@
 # SIDScope Public Release Packet
 
-Status: v1.0.1 package verified locally and ready to freeze on the private
-official repository; unauthenticated public access remains a submission-time gate
+Status: v1.0.1 frozen on the private official repository and verified from an
+authenticated clean clone; unauthenticated public access remains a submission-time gate
 Last updated: 2026-08-19
 
 This packet records the exact public/reviewer release surface for the SIDScope
@@ -99,7 +99,7 @@ Record:
 ```text
 LOCAL_RELEASE_CANDIDATE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT
-AUTHENTICATED_PRIVATE_REMOTE: PENDING_V1.0.1_FREEZE; v1.0.0 is the previous frozen release
+AUTHENTICATED_PRIVATE_REMOTE: PASS; v1.0.1 resolves to the frozen release content
 SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
 PUBLIC_URL_VERIFIED: PENDING; private repository is not an unauthenticated reviewer surface
 RELEASE_REF: v1.0.1
