@@ -1,8 +1,8 @@
 # SIDScope Public Release Packet
 
-Status: v1.0.1 frozen on the private official repository and verified from an
-authenticated clean clone; unauthenticated public access remains a submission-time gate
-Last updated: 2026-08-19
+Status: v1.0.2 public-smoke patch candidate; public access verified and final
+tag smoke pending
+Last updated: 2026-08-20
 
 This packet records the exact public/reviewer release surface for the SIDScope
 resource package. It is intentionally explicit about the local checks, public
@@ -19,11 +19,11 @@ project_name: SIDScope
 paper_title: SIDScope: Artifact-Level Diagnostics for Semantic-ID Generative Recommendation
 repository_remote: git@github.com:jdding/sidscope.git
 candidate_public_url: https://github.com/jdding/sidscope
-candidate_release_ref: v1.0.1
-candidate_archive_name: sidscope-v1.0.1.zip
-local_archive_path: /tmp/sidscope-v1.0.1.zip
+candidate_release_ref: v1.0.2
+candidate_archive_name: sidscope-v1.0.2.zip
+local_archive_path: /tmp/sidscope-v1.0.2.zip
 release_commit: recorded in the final freeze receipt after the package commit is created
-release_tag: v1.0.1
+release_tag: v1.0.2
 archive_sha256: recorded in the final freeze receipt to avoid recursive self-hashing
 ```
 
@@ -52,8 +52,8 @@ Before creating a public release:
    table paths, row counts, source-row bindings, claim placement, and
    snapshot/provenance boundaries.
 2. `python3 tools/verify_sidscope_resource_package.py` passes.
-3. `python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.0.1.zip` passes.
-4. `python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.0.1.zip` passes.
+3. `python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.0.2.zip` passes.
+4. `python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.0.2.zip` passes.
 5. `pytest` passes.
 6. The release commit contains no private datasets, AutoDL payloads, checkpoints,
    local caches, `.aris`, `.codex`, `.agents`, `.codegraph`, or `.git` package
@@ -70,7 +70,7 @@ git push official HEAD:main
 ```
 
 If a GitHub release or external archive is used, upload
-`/tmp/sidscope-v1.0.1.zip` and record the hosted URL plus SHA256
+`/tmp/sidscope-v1.0.2.zip` and record the hosted URL plus SHA256
 in the final claim ledger.
 
 ## G8 Fresh-Environment Verification
@@ -80,7 +80,7 @@ After the public URL or hosted archive exists, run from a clean directory:
 ```bash
 python3 tools/run_sidscope_public_url_smoke.py \
   --repo-url https://github.com/jdding/sidscope.git \
-  --ref v1.0.1 \
+  --ref v1.0.2 \
   --result-json /tmp/sidscope_public_url_smoke.json
 ```
 
@@ -99,10 +99,10 @@ Record:
 ```text
 LOCAL_RELEASE_CANDIDATE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT
-AUTHENTICATED_PRIVATE_REMOTE: PASS; v1.0.1 resolves to the frozen release content
-SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
-PUBLIC_URL_VERIFIED: PENDING; private repository is not an unauthenticated reviewer surface
-RELEASE_REF: v1.0.1
+PUBLIC_REPOSITORY_ACCESS: PASS; page and git refs are available without authentication
+SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_FOR_V1.0.2_TAG
+PUBLIC_URL_VERIFIED: PASS_FOR_ACCESS; fresh-environment package execution pending
+RELEASE_REF: v1.0.2_PENDING_SMOKE
 HOSTED_ARCHIVE_VERIFIED: NOT_USED
 G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
 ```

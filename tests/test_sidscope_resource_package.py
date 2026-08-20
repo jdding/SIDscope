@@ -127,8 +127,11 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
                 str(target),
             ],
         )
-        self.assertIn("tools/verify_sidscope_resource_package.py", commands[1])
-        self.assertIn("tools/run_sidscope_g8_fresh_env_smoke.py", commands[4])
+        self.assertEqual(commands[0][-2:], ["--upgrade", "pip>=21.3"])
+        self.assertEqual(commands[1][-2:], ["-e", "."])
+        self.assertNotIn("--no-deps", commands[1])
+        self.assertIn("tools/verify_sidscope_resource_package.py", commands[2])
+        self.assertIn("tools/run_sidscope_g8_fresh_env_smoke.py", commands[5])
 
     def test_scanned_package_files_excludes_runtime_cache(self) -> None:
         scanned = scanned_package_files()

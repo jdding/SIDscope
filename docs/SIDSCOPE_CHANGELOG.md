@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-19
+Last updated: 2026-08-20
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -10,6 +10,17 @@ release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
+
+## SIDScope v1.0.2 public-smoke dependency fix
+
+Date: 2026-08-20
+Tag: `v1.0.2`
+
+- The unauthenticated public-URL smoke now upgrades pip and installs the
+  package with its declared dependencies before running conformance and
+  package verifiers.
+- Added a regression assertion that forbids the previous `--no-deps` path.
+- No diagnostic definition, evidence row, or manuscript result changes.
 
 ## SIDScope v1.0.0 reviewer release
 

@@ -48,7 +48,8 @@ def clone_command(repo_url: str, ref: str, target_dir: Path) -> list[str]:
 
 def smoke_commands(py: Path, archive_path: Path) -> list[list[str]]:
     return [
-        [str(py), "-m", "pip", "install", "-e", ".", "--no-deps"],
+        [str(py), "-m", "pip", "install", "--upgrade", "pip>=21.3"],
+        [str(py), "-m", "pip", "install", "-e", "."],
         [str(py), "tools/verify_sidscope_resource_package.py"],
         [
             str(py),

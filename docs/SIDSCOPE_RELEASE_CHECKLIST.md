@@ -1,18 +1,18 @@
 # SIDScope Release Candidate Checklist
 
-Status: v1.0.1 frozen on the private official repository and verified from an
-authenticated clean clone; unauthenticated reviewer access remains pending
-Last updated: 2026-08-19
+Status: v1.0.2 public-smoke patch candidate; public repository access verified,
+fresh-environment smoke pending for the new tag
+Last updated: 2026-08-20
 
 This checklist defines what must be true before a SIDScope reviewer package is
 called release-ready. The current resource package is release-ready for the
 local resource-package layer: the local package verifier, release-clean archive
 builder, and archive smoke pass after the ReSOT/DIGER and worktree-cleanup
-refresh. The private `https://github.com/jdding/sidscope` repository is the
-approved official release surface. Its obsolete G14 history has been replaced
-by the current manifest-built root commit, tagged for TOIS preparation, and
-verified from a clean authenticated clone. Public URL smoke remains pending
-until reviewer visibility is enabled.
+refresh. The public `https://github.com/jdding/sidscope` repository is the
+approved official release surface. Version 1.0.2 repairs the no-login smoke so
+that a fresh environment installs all declared dependencies before executing
+the conformance and package verifiers. The new tag is not final until that
+workflow passes from the public HTTPS URL.
 Paper submission readiness remains a separate writing and venue-decision gate.
 
 ## Release Candidate Inputs
@@ -120,15 +120,15 @@ changes.
 ```text
 G5_G6_LOCAL_RELEASE_CANDIDATE: PASS_CURRENT after R768 verifier, R769 archive builder, and R770 archive smoke
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS via R603 and current archive smoke via R770
-SIDSCOPE_PRIVATE_CLEAN_CLONE_SMOKE: PASS for an authenticated v1.0.1 clone
-SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_UNTIL_REVIEWER_VISIBLE
-PUBLIC_REVIEWER_ACCESS: PENDING; https://github.com/jdding/sidscope is currently private
+SIDSCOPE_PUBLIC_REPOSITORY_ACCESS: PASS; HTTPS page and git refs are visible without login
+SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_FOR_V1.0.2_TAG
+PUBLIC_REVIEWER_ACCESS: PASS; https://github.com/jdding/sidscope is public
 G7_LITE_CLAIM_PACKAGE_BOUNDARY: PASS
 G7_FULL_CLAIM_TABLE_FIGURE_LEDGER: PASS for current local artifact registry
 G9_G10_UTILITY_ANCHORS: PASS for current local artifact registry
 G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
 PREPARATION_TAG: sidscope-tois-m1m5-20260809-r2
-FINAL_RELEASE_TAG: v1.0.1
+FINAL_RELEASE_TAG: v1.0.2_PENDING_SMOKE
 SUBMISSION_READY_RESOURCE_PACKAGE: PASS_FOR_LOCAL_RESOURCE_PACKAGE_LAYER_ONLY
 PAPER_SUBMISSION_READY: NOT_ASSESSED
 ```
