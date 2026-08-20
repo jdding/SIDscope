@@ -1,7 +1,7 @@
 # SIDScope Public Release Packet
 
-Status: v1.0.2 public-smoke patch candidate; public access verified and final
-tag smoke pending
+Status: v1.0.2 public-smoke patch verified on the public main branch; immutable
+tag freeze pending
 Last updated: 2026-08-20
 
 This packet records the exact public/reviewer release surface for the SIDScope
@@ -22,9 +22,9 @@ candidate_public_url: https://github.com/jdding/sidscope
 candidate_release_ref: v1.0.2
 candidate_archive_name: sidscope-v1.0.2.zip
 local_archive_path: /tmp/sidscope-v1.0.2.zip
-release_commit: recorded in the final freeze receipt after the package commit is created
+public_main_smoke_commit: 9c0893d32359195995ca5bffc9b6d805c04492a3
 release_tag: v1.0.2
-archive_sha256: recorded in the final freeze receipt to avoid recursive self-hashing
+public_main_smoke_archive_sha256: f85b830ad8813ec258d158da813f72a06ec5081d9f8474aa00e28be8f98932d7
 ```
 
 The GitHub URL is the reviewer-facing release surface. It must be checked after
@@ -100,14 +100,14 @@ Record:
 LOCAL_RELEASE_CANDIDATE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT
 PUBLIC_REPOSITORY_ACCESS: PASS; page and git refs are available without authentication
-SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_FOR_V1.0.2_TAG
-PUBLIC_URL_VERIFIED: PASS_FOR_ACCESS; fresh-environment package execution pending
+SIDSCOPE_PUBLIC_URL_SMOKE: PASS_ON_PUBLIC_MAIN via R835
+PUBLIC_URL_VERIFIED: PASS_FOR_ACCESS_AND_FRESH_ENVIRONMENT_EXECUTION
 RELEASE_REF: v1.0.2_PENDING_SMOKE
 HOSTED_ARCHIVE_VERIFIED: NOT_USED
-G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
+G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PASS_ON_PUBLIC_MAIN at 9c0893d32359195995ca5bffc9b6d805c04492a3
 ```
 
-`jdding/sidscope` is the clean SIDScope official repository, but the final
-reviewer URL must be accessible without login.
+`jdding/sidscope` is the clean SIDScope official repository and is accessible
+without login. The immutable release tag remains the submission-facing ref.
 Rerun public URL smoke after each public-surface change and before using the URL
 in a submission or claim ledger.

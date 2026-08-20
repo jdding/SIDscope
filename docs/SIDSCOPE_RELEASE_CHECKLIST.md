@@ -1,7 +1,7 @@
 # SIDScope Release Candidate Checklist
 
-Status: v1.0.2 public-smoke patch candidate; public repository access verified,
-fresh-environment smoke pending for the new tag
+Status: v1.0.2 public-smoke patch verified on the public main branch; immutable
+tag freeze pending
 Last updated: 2026-08-20
 
 This checklist defines what must be true before a SIDScope reviewer package is
@@ -11,8 +11,10 @@ builder, and archive smoke pass after the ReSOT/DIGER and worktree-cleanup
 refresh. The public `https://github.com/jdding/sidscope` repository is the
 approved official release surface. Version 1.0.2 repairs the no-login smoke so
 that a fresh environment installs all declared dependencies before executing
-the conformance and package verifiers. The new tag is not final until that
-workflow passes from the public HTTPS URL.
+the conformance and package verifiers. The corrected workflow passed from the
+public HTTPS `main` branch at commit
+`9c0893d32359195995ca5bffc9b6d805c04492a3`; the immutable tag is the final
+remaining release action.
 Paper submission readiness remains a separate writing and venue-decision gate.
 
 ## Release Candidate Inputs
@@ -121,14 +123,14 @@ changes.
 G5_G6_LOCAL_RELEASE_CANDIDATE: PASS_CURRENT after R768 verifier, R769 archive builder, and R770 archive smoke
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS via R603 and current archive smoke via R770
 SIDSCOPE_PUBLIC_REPOSITORY_ACCESS: PASS; HTTPS page and git refs are visible without login
-SIDSCOPE_PUBLIC_URL_SMOKE: PENDING_FOR_V1.0.2_TAG
+SIDSCOPE_PUBLIC_URL_SMOKE: PASS_ON_PUBLIC_MAIN via R835 at 9c0893d32359195995ca5bffc9b6d805c04492a3
 PUBLIC_REVIEWER_ACCESS: PASS; https://github.com/jdding/sidscope is public
 G7_LITE_CLAIM_PACKAGE_BOUNDARY: PASS
 G7_FULL_CLAIM_TABLE_FIGURE_LEDGER: PASS for current local artifact registry
 G9_G10_UTILITY_ANCHORS: PASS for current local artifact registry
-G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_AFTER_PUBLIC_PUSH_OR_HOSTED_ARCHIVE
+G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PASS_ON_PUBLIC_MAIN; archive SHA256 f85b830ad8813ec258d158da813f72a06ec5081d9f8474aa00e28be8f98932d7
 PREPARATION_TAG: sidscope-tois-m1m5-20260809-r2
 FINAL_RELEASE_TAG: v1.0.2_PENDING_SMOKE
-SUBMISSION_READY_RESOURCE_PACKAGE: PASS_FOR_LOCAL_RESOURCE_PACKAGE_LAYER_ONLY
+SUBMISSION_READY_RESOURCE_PACKAGE: PASS_PENDING_IMMUTABLE_TAG
 PAPER_SUBMISSION_READY: NOT_ASSESSED
 ```
