@@ -43,6 +43,7 @@
       "No official trained checkpoint is released at the pinned source revision.",
       "No real trained PSID or Latte decode trace has passed G2 and G4.",
       "The official aggregation smoke and cache build do not substitute for a bounded trained-generator smoke at G5.",
+      "The trained-trace handoff verifier is available, but no real checkpoint-bound bundle has passed it.",
       "The Amazon Reviews 2023 dataset card has no explicit license identifier, so the derived cache remains hash-and-summary only."
     ]
   }

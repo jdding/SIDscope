@@ -93,6 +93,43 @@ aggregated score and number of supporting latent paths. Invalid latent tokens,
 out-of-range codes, wrong depth, unresolved SIDs, and cache collisions remain
 explicit; they are not silently converted to zero rows.
 
+## Trained-Trace Handoff
+
+Downstream projects can submit a bounded checkpoint-backed handoff through
+`sidscope.latte_psid_trained_trace_bundle.v1`. The bundle is deliberately
+stricter than an aggregate evaluation manifest. It binds the dataset manifest,
+split, `.sem_ids` cache, checkpoint, training configuration, execution command,
+and log summary by SHA-256. Every deidentified episode must preserve:
+
+- whether the trace is PSID or Latte and its native decoder-state kind;
+- every decode attempt, including an official Latte retry rather than only the
+  final retry result;
+- final-beam ancestry, ordered semantic and model-vocabulary tokens, per-step
+  log-probabilities, sequence scores, and compute accounting;
+- validity, failure labels, normalized item resolution, ranked items, scores,
+  and the number of latent paths supporting each item;
+- one stable split identity and a hash of the target universe.
+
+Raw user IDs, source item IDs, targets/labels, checkpoint paths, and absolute
+local paths are rejected. Confidence summaries, aggregate metrics, or claims
+that all steps were scored do not substitute for the actual ancestry and
+per-step score rows. A handoff is intentionally bounded to at most 256
+episodes, so it can be checked on CPU without redistributing a checkpoint.
+
+Validate a candidate bundle with:
+
+```bash
+PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
+  --bundle <deidentified-trained-trace-bundle.json> \
+  --result-json <verification-result.json>
+```
+
+The positive schema fixture is
+`examples/latte_psid_trained_trace_fixture/manifest.json`. Unit tests also
+remove beam ancestry and inject a raw identity field to prove fail-closed
+behavior. Passing the synthetic fixture proves only the intake contract; gate
+status changes only after a real checkpoint-bound bundle passes.
+
 ## Reproduction Commands
 
 The full cache build is deliberately outside the core install:

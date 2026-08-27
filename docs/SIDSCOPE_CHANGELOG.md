@@ -57,6 +57,14 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   tables, and checkpoints outside the public package. The cache route is
   statically closed, but Latte remains below complete G0--G5 named-adapter
   status until trained inference and real trace export pass.
+- Added a reusable fail-closed Latte/PSID trained-trace handoff contract and
+  verifier for checkpoint-owning downstream projects. It requires hash-bound
+  data, split, SID, checkpoint, configuration, command, and log evidence plus
+  per-attempt beam ancestry, step log-probabilities, item resolution, ranked
+  exports, retry state, and compute accounting. Aggregate confidence traces,
+  raw identities, labels, private paths, and unbounded exports are rejected;
+  the bundled positive fixture does not change the pending real G2/G4/G5
+  status.
 - Pinned the official LLaDA-Rec source at `83dbcd6` and recorded that the code
   repository has no detected license, tag, release, checkpoint, semantic-ID
   cache, processed dataset, or training log.

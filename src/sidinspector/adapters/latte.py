@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+import re
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -29,6 +30,241 @@ class LatteCacheContractError(ValueError):
         super().__init__(message)
         self.label = label
 
+
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_LATTE_SOURCE_URL = "https://github.com/hyp1231/Latte"
+_LATTE_SOURCE_REVISION = "05e4e6d983225bcb7172f148a076890e80c524d1"
+_FORBIDDEN_TRAINED_TRACE_KEYS = {
+    "user_id",
+    "source_user_id",
+    "source_item_id",
+    "target_item_id",
+    "label",
+    "labels",
+    "checkpoint_path",
+    "sid_path",
+}
+
+
+def _trained_trace_failure(label: str, detail: str) -> None:
+    raise LatteCacheContractError(label, detail)
+
+
+def _require_sha256(value: Any, field: str) -> None:
+    if not isinstance(value, str) or _SHA256_RE.fullmatch(value) is None:
+        _trained_trace_failure("invalid_evidence_hash", f"{field} must be a lowercase SHA-256")
+
+
+def _reject_private_trace_fields(value: Any, location: str = "bundle") -> None:
+    if isinstance(value, Mapping):
+        for key, child in value.items():
+            if key in _FORBIDDEN_TRAINED_TRACE_KEYS:
+                _trained_trace_failure("identity_leak", f"{location}.{key} is forbidden")
+            _reject_private_trace_fields(child, f"{location}.{key}")
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            _reject_private_trace_fields(child, f"{location}[{index}]")
+    elif isinstance(value, str) and (value.startswith("/") or ":\\" in value):
+        _trained_trace_failure("private_path_leak", f"{location} contains an absolute path")
+
+
+def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate a bounded, deidentified trained PSID/Latte trace bundle.
+
+    The contract deliberately requires final-beam ancestry and per-step
+    log-probabilities. Aggregate metrics or confidence-only episode summaries
+    cannot pass G2/G4/G5 through this interface.
+    """
+
+    _reject_private_trace_fields(bundle)
+    if bundle.get("schema") != "sidscope.latte_psid_trained_trace_bundle.v1":
+        _trained_trace_failure("invalid_trace_schema", "unexpected trained-trace schema")
+    if not isinstance(bundle.get("bundle_id"), str) or not bundle["bundle_id"]:
+        _trained_trace_failure("missing_bundle_id", "bundle_id is required")
+    method = bundle.get("method")
+    if method not in {"PSID", "Latte"}:
+        _trained_trace_failure("invalid_method", "method must be PSID or Latte")
+    expected_state = {
+        "PSID": "ordered_sid_prefix_beam",
+        "Latte": "latent_token_then_ordered_sid_prefix",
+    }[method]
+    if bundle.get("decode_state_kind") != expected_state:
+        _trained_trace_failure("decode_state_mismatch", f"{method} requires {expected_state}")
+    expected_aggregation = {"PSID": "none", "Latte": {"agg_max", "agg_sum"}}[method]
+    aggregation = bundle.get("aggregation_method")
+    if isinstance(expected_aggregation, set):
+        if aggregation not in expected_aggregation:
+            _trained_trace_failure("invalid_aggregation_method", str(aggregation))
+    elif aggregation != expected_aggregation:
+        _trained_trace_failure("invalid_aggregation_method", str(aggregation))
+
+    evidence = bundle.get("evidence")
+    if not isinstance(evidence, Mapping):
+        _trained_trace_failure("missing_evidence_binding", "evidence object is required")
+    if evidence.get("source_url") != _LATTE_SOURCE_URL:
+        _trained_trace_failure("source_url_mismatch", "trained trace must bind the official Latte source")
+    if evidence.get("source_revision") != _LATTE_SOURCE_REVISION:
+        _trained_trace_failure("source_revision_mismatch", "trained trace must bind the audited Latte revision")
+    if evidence.get("source_license") != "MIT":
+        _trained_trace_failure("source_license_mismatch", "trained trace must retain the MIT code boundary")
+    for field in (
+        "dataset_manifest_sha256",
+        "split_sha256",
+        "sid_cache_sha256",
+        "checkpoint_sha256",
+        "training_config_sha256",
+        "command_sha256",
+        "log_summary_sha256",
+    ):
+        _require_sha256(evidence.get(field), f"evidence.{field}")
+    if not isinstance(evidence.get("split_id"), str) or not evidence["split_id"]:
+        _trained_trace_failure("missing_split_identity", "evidence.split_id is required")
+    if not isinstance(evidence.get("training_boundary"), str) or not evidence["training_boundary"]:
+        _trained_trace_failure("missing_training_boundary", "evidence.training_boundary is required")
+
+    episodes = bundle.get("episodes")
+    if not isinstance(episodes, list) or not episodes:
+        _trained_trace_failure("empty_trained_trace", "episodes must be non-empty")
+    if len(episodes) > 256:
+        _trained_trace_failure("unbounded_smoke", "trained smoke may contain at most 256 episodes")
+    trace_ids: set[str] = set()
+    ranked_rows = 0
+    beam_rows = 0
+    retries = 0
+    for episode_index, episode in enumerate(episodes):
+        if not isinstance(episode, Mapping):
+            _trained_trace_failure("invalid_episode", f"episode {episode_index} is not an object")
+        trace_id = episode.get("trace_id")
+        if not isinstance(trace_id, str) or not trace_id or trace_id in trace_ids:
+            _trained_trace_failure("invalid_trace_id", f"episode {episode_index} trace_id is absent or duplicate")
+        trace_ids.add(trace_id)
+        if episode.get("target_free") is not True:
+            _trained_trace_failure("target_leakage_boundary", f"episode {trace_id} is not target-free")
+        if episode.get("split_id") != evidence["split_id"]:
+            _trained_trace_failure("split_identity_mismatch", f"episode {trace_id} split differs from evidence")
+        _require_sha256(episode.get("target_universe_sha256"), f"episode {trace_id}.target_universe_sha256")
+
+        attempts = episode.get("attempts")
+        if not isinstance(attempts, list) or not attempts:
+            _trained_trace_failure("missing_decode_attempt", f"episode {trace_id} has no attempts")
+        if episode.get("retry_performed") is not (len(attempts) > 1):
+            _trained_trace_failure("retry_state_mismatch", f"episode {trace_id} retry flag disagrees with attempts")
+        if method == "PSID" and len(attempts) != 1:
+            _trained_trace_failure("unexpected_retry", f"PSID episode {trace_id} must have one attempt")
+        if len(attempts) > 1:
+            retries += 1
+        for attempt_index, attempt in enumerate(attempts):
+            if not isinstance(attempt, Mapping) or attempt.get("attempt_index") != attempt_index:
+                _trained_trace_failure("attempt_index_mismatch", f"episode {trace_id} attempt order is invalid")
+            for field in ("num_beams", "generated_steps", "vocabulary_size", "logits_scored"):
+                if not isinstance(attempt.get(field), int) or attempt[field] <= 0:
+                    _trained_trace_failure("invalid_compute_accounting", f"episode {trace_id} attempt {field} is invalid")
+            if attempt["logits_scored"] != attempt["num_beams"] * attempt["generated_steps"] * attempt["vocabulary_size"]:
+                _trained_trace_failure("compute_accounting_mismatch", f"episode {trace_id} logits_scored mismatch")
+            beams = attempt.get("final_beams")
+            if not isinstance(beams, list) or len(beams) != attempt["num_beams"]:
+                _trained_trace_failure("beam_count_mismatch", f"episode {trace_id} final beam count mismatch")
+            beam_ids: set[str] = set()
+            for beam in beams:
+                if not isinstance(beam, Mapping):
+                    _trained_trace_failure("invalid_beam", f"episode {trace_id} contains a non-object beam")
+                beam_id = beam.get("beam_id")
+                if not isinstance(beam_id, str) or not beam_id or beam_id in beam_ids:
+                    _trained_trace_failure("invalid_beam_id", f"episode {trace_id} beam_id is absent or duplicate")
+                beam_ids.add(beam_id)
+                ancestry = beam.get("beam_ancestry")
+                step_scores = beam.get("step_log_probabilities")
+                if not isinstance(ancestry, list) or len(ancestry) != attempt["generated_steps"]:
+                    _trained_trace_failure("missing_beam_ancestry", f"episode {trace_id} beam {beam_id}")
+                if not all(
+                    isinstance(parent, int) and 0 <= parent < attempt["num_beams"] for parent in ancestry
+                ):
+                    _trained_trace_failure("invalid_beam_ancestry", f"episode {trace_id} beam {beam_id}")
+                if not isinstance(step_scores, list) or len(step_scores) != attempt["generated_steps"]:
+                    _trained_trace_failure("missing_step_logprob", f"episode {trace_id} beam {beam_id}")
+                if not all(isinstance(score, (int, float)) for score in step_scores):
+                    _trained_trace_failure("invalid_step_logprob", f"episode {trace_id} beam {beam_id}")
+                codes = beam.get("ordered_semantic_codes")
+                tokens = beam.get("ordered_model_vocabulary_tokens")
+                if not isinstance(codes, list) or not codes or not all(
+                    isinstance(code, int) and code >= 0 for code in codes
+                ):
+                    _trained_trace_failure("invalid_semantic_codes", f"episode {trace_id} beam {beam_id}")
+                if not isinstance(tokens, list) or len(tokens) != len(codes) or not all(
+                    isinstance(token, int) and token > 0 for token in tokens
+                ):
+                    _trained_trace_failure("model_vocabulary_mismatch", f"episode {trace_id} beam {beam_id}")
+                if method == "Latte" and not isinstance(beam.get("latent_token"), int):
+                    _trained_trace_failure("missing_latent_token", f"episode {trace_id} beam {beam_id}")
+                if method == "PSID" and beam.get("latent_token") is not None:
+                    _trained_trace_failure("unexpected_latent_token", f"episode {trace_id} beam {beam_id}")
+                valid = beam.get("valid")
+                failures = beam.get("failure_labels")
+                if not isinstance(valid, bool) or not isinstance(failures, list):
+                    _trained_trace_failure("invalid_resolution_state", f"episode {trace_id} beam {beam_id}")
+                if valid and failures:
+                    _trained_trace_failure("validity_label_conflict", f"episode {trace_id} beam {beam_id}")
+                if not valid and not failures:
+                    _trained_trace_failure("missing_failure_label", f"episode {trace_id} beam {beam_id}")
+                resolved = beam.get("normalized_item_id")
+                if valid and not isinstance(resolved, int):
+                    _trained_trace_failure("missing_item_resolution", f"episode {trace_id} beam {beam_id}")
+                if not valid and resolved is not None:
+                    _trained_trace_failure("invalid_path_resolved", f"episode {trace_id} beam {beam_id}")
+                if not isinstance(beam.get("sequence_score"), (int, float)):
+                    _trained_trace_failure("missing_sequence_score", f"episode {trace_id} beam {beam_id}")
+                beam_rows += 1
+
+        ranked = episode.get("ranked_items")
+        if not isinstance(ranked, list) or not ranked:
+            _trained_trace_failure("empty_ranked_export", f"episode {trace_id} has no ranked items")
+        final_support: dict[int, list[float]] = {}
+        for beam in attempts[-1]["final_beams"]:
+            if beam["valid"]:
+                final_support.setdefault(beam["normalized_item_id"], []).append(float(beam["sequence_score"]))
+        ranked_ids: set[int] = set()
+        previous_score: float | None = None
+        for expected_rank, row in enumerate(ranked, start=1):
+            if not isinstance(row, Mapping) or row.get("rank") != expected_rank:
+                _trained_trace_failure("rank_order_mismatch", f"episode {trace_id} ranked export is invalid")
+            if not isinstance(row.get("normalized_item_id"), int):
+                _trained_trace_failure("missing_ranked_item_identity", f"episode {trace_id} rank {expected_rank}")
+            item_id = row["normalized_item_id"]
+            if item_id in ranked_ids:
+                _trained_trace_failure("duplicate_ranked_item", f"episode {trace_id} item {item_id}")
+            ranked_ids.add(item_id)
+            if not isinstance(row.get("score"), (int, float)):
+                _trained_trace_failure("missing_ranked_item_score", f"episode {trace_id} rank {expected_rank}")
+            score = float(row["score"])
+            if previous_score is not None and score > previous_score:
+                _trained_trace_failure("rank_score_order_mismatch", f"episode {trace_id} rank {expected_rank}")
+            previous_score = score
+            if not isinstance(row.get("supporting_beam_count"), int) or row["supporting_beam_count"] <= 0:
+                _trained_trace_failure("invalid_support_count", f"episode {trace_id} rank {expected_rank}")
+            scores = final_support.get(item_id)
+            if not scores:
+                _trained_trace_failure("ranked_item_not_resolved", f"episode {trace_id} item {item_id}")
+            if row["supporting_beam_count"] != len(scores):
+                _trained_trace_failure("support_count_mismatch", f"episode {trace_id} item {item_id}")
+            expected_score = max(scores)
+            if method == "Latte" and aggregation == "agg_sum":
+                expected_score = float(np.logaddexp.reduce(scores))
+            if not np.isclose(score, expected_score, rtol=1e-6, atol=1e-8):
+                _trained_trace_failure("aggregation_score_mismatch", f"episode {trace_id} item {item_id}")
+            ranked_rows += 1
+
+    return {
+        "schema": "sidscope.latte_psid_trained_trace_verification.v1",
+        "status": "pass",
+        "method": method,
+        "episode_count": len(episodes),
+        "beam_row_count": beam_rows,
+        "ranked_item_row_count": ranked_rows,
+        "retry_episode_count": retries,
+        "checkpoint_sha256": evidence["checkpoint_sha256"],
+        "sid_cache_sha256": evidence["sid_cache_sha256"],
+        "split_id": evidence["split_id"],
+    }
 
 @dataclass(frozen=True)
 class LatteItemIdentity:

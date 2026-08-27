@@ -45,6 +45,8 @@ REQUIRED_FILES = [
     "examples/rpg_generator_fixture/manifest.json",
     "examples/dact_tiger_autoregressive_fixture/manifest.json",
     "examples/latte_psid_cache_fixture/manifest.json",
+    "examples/latte_psid_trained_trace_fixture/manifest.json",
+    "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
     "examples/llada_rec_diffusion_fixture/manifest.json",
     "examples/isd_decoder_overlay_fixture/manifest.json",
     "docs/ADAPTER_TEMPLATE.md",
@@ -146,6 +148,7 @@ REQUIRED_FILES = [
     "tools/normalize_latte_psid_cache.py",
     "tools/run_latte_official_source_smoke.py",
     "tools/verify_latte_psid_adapter.py",
+    "tools/verify_latte_psid_trained_trace_bundle.py",
     "tools/run_llada_rec_official_source_smoke.py",
     "tools/verify_llada_rec_adapter.py",
     "tools/run_isd_official_source_smoke.py",
@@ -476,6 +479,14 @@ def main() -> None:
         run([sys.executable, "tools/verify_dact_tiger_adapter.py"]),
         run([sys.executable, "tools/verify_rpg_generator_adapter.py"]),
         run([sys.executable, "tools/verify_latte_psid_adapter.py"]),
+        run(
+            [
+                sys.executable,
+                "tools/verify_latte_psid_trained_trace_bundle.py",
+                "--bundle",
+                "examples/latte_psid_trained_trace_fixture/manifest.json",
+            ]
+        ),
         run([sys.executable, "tools/verify_llada_rec_adapter.py"]),
         run([sys.executable, "tools/verify_isd_adapter.py"]),
         run([sys.executable, "tools/verify_adapter_conformance_assets.py"]),

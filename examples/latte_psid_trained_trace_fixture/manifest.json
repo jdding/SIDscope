@@ -1,0 +1,73 @@
+{
+  "schema": "sidscope.latte_psid_trained_trace_bundle.v1",
+  "bundle_id": "deidentified-latte-trained-smoke-fixture",
+  "method": "Latte",
+  "decode_state_kind": "latent_token_then_ordered_sid_prefix",
+  "aggregation_method": "agg_max",
+  "evidence": {
+    "source_url": "https://github.com/hyp1231/Latte",
+    "source_revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+    "source_license": "MIT",
+    "dataset_manifest_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "split_id": "fixture/test",
+    "split_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "sid_cache_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "checkpoint_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "training_boundary": "strict checkpoint replay; no retraining in SIDScope",
+    "training_config_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "command_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "log_summary_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+  },
+  "episodes": [
+    {
+      "trace_id": "fixture-trace-0001",
+      "target_free": true,
+      "retry_performed": false,
+      "split_id": "fixture/test",
+      "target_universe_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "attempts": [
+        {
+          "attempt_index": 0,
+          "num_beams": 2,
+          "generated_steps": 5,
+          "vocabulary_size": 16,
+          "logits_scored": 160,
+          "final_beams": [
+            {
+              "beam_id": "a0-b0",
+              "beam_ancestry": [0, 0, 0, 0, 0],
+              "latent_token": 1,
+              "ordered_semantic_codes": [0, 1, 2],
+              "ordered_model_vocabulary_tokens": [4, 9, 14],
+              "step_log_probabilities": [-0.05, -0.05, -0.04, -0.03, -0.03],
+              "sequence_score": -0.2,
+              "normalized_item_id": 0,
+              "valid": true,
+              "failure_labels": []
+            },
+            {
+              "beam_id": "a0-b1",
+              "beam_ancestry": [0, 1, 1, 1, 1],
+              "latent_token": 2,
+              "ordered_semantic_codes": [0, 1, 2],
+              "ordered_model_vocabulary_tokens": [4, 9, 14],
+              "step_log_probabilities": [-0.3, -0.2, -0.2, -0.2, -0.3],
+              "sequence_score": -1.2,
+              "normalized_item_id": 0,
+              "valid": true,
+              "failure_labels": []
+            }
+          ]
+        }
+      ],
+      "ranked_items": [
+        {
+          "rank": 1,
+          "normalized_item_id": 0,
+          "score": -0.2,
+          "supporting_beam_count": 2
+        }
+      ]
+    }
+  ]
+}

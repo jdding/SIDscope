@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import json
 from pathlib import Path
 
@@ -15,6 +16,7 @@ from sidinspector.adapters.latte import (
     psid_vocabulary_tokens,
     read_latte_item_mapping,
     read_sem_ids_cache,
+    validate_latte_psid_trained_trace_bundle,
 )
 from sidinspector.preflight import build_metric_smoke_summary
 
@@ -22,6 +24,19 @@ from sidinspector.preflight import build_metric_smoke_summary
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = ROOT / "examples" / "latte_psid_cache_fixture"
 MANIFEST = json.loads((FIXTURE_DIR / "manifest.json").read_text(encoding="utf-8"))
+TRAINED_TRACE_FIXTURE = json.loads(
+    (ROOT / "examples" / "latte_psid_trained_trace_fixture" / "manifest.json").read_text(
+        encoding="utf-8"
+    )
+)
+TRAINED_TRACE_EXPECTED_FAILURE = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "latte_psid_trained_trace_fixture"
+        / "expected_failure_missing_ancestry.json"
+    ).read_text(encoding="utf-8")
+)
 
 
 def _fixture_paths() -> dict[str, Path]:
@@ -102,6 +117,34 @@ def test_latte_trace_preserves_latent_paths_and_aggregation() -> None:
     assert trace["beams"][0]["prefix_states"][3]["ordered_semantic_prefix"] == [0, 1, 2]
     assert trace["beams"][3]["failure_labels"] == ["invalid_latent_token"]
     assert trace["beams"][4]["failure_labels"] == ["unresolved_semantic_id"]
+
+
+def test_trained_trace_bundle_preserves_ancestry_scores_and_hash_bindings() -> None:
+    result = validate_latte_psid_trained_trace_bundle(TRAINED_TRACE_FIXTURE)
+
+    assert result["status"] == "pass"
+    assert result["method"] == "Latte"
+    assert result["episode_count"] == 1
+    assert result["beam_row_count"] == 2
+    assert result["ranked_item_row_count"] == 1
+    assert result["checkpoint_sha256"] == "4" * 64
+
+
+def test_confidence_only_summary_cannot_pass_trained_trace_contract() -> None:
+    with pytest.raises(LatteCacheContractError) as raised:
+        validate_latte_psid_trained_trace_bundle(TRAINED_TRACE_EXPECTED_FAILURE)
+
+    assert raised.value.label == TRAINED_TRACE_EXPECTED_FAILURE["expected_failure_label"]
+
+
+def test_trained_trace_bundle_rejects_raw_identity_fields() -> None:
+    identity_leak = deepcopy(TRAINED_TRACE_FIXTURE)
+    identity_leak["episodes"][0]["user_id"] = "raw-user"
+
+    with pytest.raises(LatteCacheContractError) as raised:
+        validate_latte_psid_trained_trace_bundle(identity_leak)
+
+    assert raised.value.label == "identity_leak"
 
 
 def test_expected_collision_fixture_fails_with_typed_label(tmp_path: Path) -> None:

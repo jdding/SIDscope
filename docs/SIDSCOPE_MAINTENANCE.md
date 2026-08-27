@@ -95,6 +95,14 @@ report while redistributing only hashes, counts, bounded diagnostics, and a
 deidentified fixture. Raw histories, metadata text, sentence embeddings, the
 real `.sem_ids` cache, and normalized tables remain external.
 
+Checkpoint-owning downstream projects should return only the bounded,
+deidentified `sidscope.latte_psid_trained_trace_bundle.v1` handoff. SIDScope's
+trained-trace verifier rejects confidence-only summaries, missing beam
+ancestry or step log-probabilities, raw identities, targets, checkpoint paths,
+and unbounded episode exports. This lets the canonical repository close real
+G2/G4/G5 evidence without absorbing a downstream training fork or private
+checkpoint.
+
 The LLaDA-Rec integration demonstrates an absent-code-license boundary. The
 paper is CC BY 4.0, but the official code repository has no detected license;
 these are distinct artifacts. SIDScope may link to and hash the pinned source,

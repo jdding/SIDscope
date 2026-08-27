@@ -182,6 +182,18 @@ official-source tokenizer/aggregation smoke:
 PYTHONPATH=src python3 tools/verify_latte_psid_adapter.py
 ```
 
+Checkpoint-owning downstream projects can validate a bounded, deidentified
+trained trace before returning evidence to SIDScope:
+
+```bash
+PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
+  --bundle <trained-trace-bundle.json>
+```
+
+The trained handoff fails closed on aggregate-only summaries, missing beam
+ancestry or step log-probabilities, raw identities, labels, private paths, and
+unbounded exports.
+
 The Amazon raw data, metadata text, sentence embeddings, generated cache, and
 normalized tables are not redistributed because the audited dataset card does
 not declare an explicit license identifier. See
