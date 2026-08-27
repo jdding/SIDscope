@@ -80,6 +80,11 @@ The active queue and source-watch state are tracked in
 report failures through an issue packet and keep any workaround visibly
 non-canonical until it is incorporated and tested in SIDScope.
 
+The RPG integration demonstrates the license boundary: its official source is
+CC BY-NC 4.0, so SIDScope ships only an independently implemented MIT contract,
+deidentified fixture, source hashes, and derived smoke summary. Official code,
+data, `.sem_ids`, and checkpoints must remain external.
+
 ## License And Citation
 
 The code package uses the repository `LICENSE`. If an upstream artifact has a

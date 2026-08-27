@@ -12,6 +12,7 @@ reviewer_quickstart,examples/run_reviewer_quickstart.py,quickstart,fully_runnabl
 quickstart_data,examples/reviewer_quickstart_data,sample_data,fully_runnable,yes,pass_local,Bundled toy sample data for quickstart only.
 adapter_template,docs/ADAPTER_TEMPLATE.md,documentation,documentation,yes,pass_local,Adapter authoring and normalization contract.
 generator_adapter_conformance,docs/GENERATOR_ADAPTER_CONFORMANCE.md,documentation,documentation,yes,pass_local,Defines G0-G5 generator decoder-overlay and method-specific trace admission.
+rpg_generator_adapter_doc,docs/RPG_GENERATOR_ADAPTER.md,documentation,documentation,yes,pass_local,Defines RPG unordered token-set identity item-node resolution graph traces license boundary and promotion blockers.
 diagnostics_doc,docs/DIAGNOSTICS.md,documentation,documentation,yes,pass_local,D1-D6 diagnostic definitions and interpretation.
 resource_package_doc,docs/SIDSCOPE_RESOURCE_PACKAGE.md,documentation,documentation,yes,pass_local,G5 package contract.
 usage_demo_doc,docs/SIDSCOPE_USAGE_DEMO.md,documentation,documentation,yes,pass_local,G14 resource-use walkthrough for artifact triage decisions.
@@ -55,6 +56,14 @@ paper_table_verifier,tools/verify_sidscope_paper_tables.py,verification,fully_ru
 paper_table_tests,tests/test_sidscope_paper_tables.py,test,fully_runnable,yes,pass_local,Unit test for deterministic paper-table regeneration.
 source_inventory,docs/reproducibility/sidscope_source_license_config_inventory.csv,evidence_index,tracked_snapshot,yes,pass_local,Nine paper-facing routes with source revision configuration license and redistribution boundaries.
 generator_adapter_coverage,docs/reproducibility/generator_adapter_coverage.csv,evidence_index,tracked_snapshot,yes,pass_local,Typed generator-route status ledger separating reference evidence named adapters source-audit candidates and source watch.
+rpg_source_audit,docs/reproducibility/rpg_kdd2025_source_audit.json,compact_evidence,tracked_snapshot,yes,pass_local,Pinned RPG paper source license configuration asset and source-file hash audit.
+rpg_official_source_smoke,docs/reproducibility/rpg_kdd2025_official_source_smoke.json,compact_evidence,tracked_snapshot,yes,pass_local,Bounded CPU smoke over the pinned official RPG class with deterministic untrained weights and dummy item nodes.
+rpg_adapter_status,docs/reproducibility/rpg_kdd2025_adapter_status.json,compact_evidence,tracked_snapshot,yes,pass_local,G0-G5 status and hashes retaining the real-data and trained-asset promotion blockers.
+rpg_cpu_fixture,examples/rpg_generator_fixture,example,fully_runnable,yes,pass_local,Deidentified positive and expected-failure manifest for unordered RPG item-node graph decoding.
+rpg_adapter_module,src/sidinspector/adapters/rpg.py,runnable_code,fully_runnable,yes,pass_local,Independent MIT RPG interoperability contract without vendored upstream code or assets.
+rpg_adapter_verifier,tools/verify_rpg_generator_adapter.py,verification,fully_runnable,yes,pass_local,Replays the RPG fixture verifies source and smoke hashes and prevents named-adapter promotion.
+rpg_official_source_smoke_runner,tools/run_rpg_official_source_smoke.py,verification,provenance_only,yes,pass_local,Optionally replays the bounded CPU smoke against an external checkout at the pinned official revision.
+rpg_adapter_tests,tests/test_rpg_adapter.py,test,fully_runnable,yes,pass_local,Tests unordered identity ambiguity graph validity ranked export and expected failure labels.
 latte_psid_route_status,docs/reproducibility/latte_psid_route_status.md,compact_evidence,tracked_snapshot,yes,pass_local,Public route-status evidence for the verified Latte tokenizer path and remaining C0-C5 plus G0-G5 promotion gates.
 source_route_evidence_summary,docs/reproducibility/source_route_evidence_summary.json,compact_evidence,tracked_snapshot,yes,pass_local,Portable route-level provenance summary retaining historical record identifiers without shipping private experiment directories.
 source_inventory_verifier,tools/verify_sidscope_source_inventory.py,verification,fully_runnable,yes,pass_local,Checks route identity paper coverage license policy and standard conformance evidence.

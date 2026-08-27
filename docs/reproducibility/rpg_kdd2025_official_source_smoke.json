@@ -1,0 +1,84 @@
+{
+  "boundary": "Official source class with deterministic random weights and dummy data; not a trained checkpoint or recommendation result.",
+  "configuration": {
+    "activation_function": "gelu_new",
+    "attn_pdrop": 0.0,
+    "chunk_size": 4,
+    "codebook_size": 4,
+    "device": "cpu",
+    "embd_pdrop": 0.0,
+    "initializer_range": 0.02,
+    "layer_norm_epsilon": 1e-12,
+    "n_edges": 2,
+    "n_embd": 12,
+    "n_head": 3,
+    "n_inner": 24,
+    "n_layer": 1,
+    "num_beams": 2,
+    "propagation_steps": 2,
+    "resid_pdrop": 0.0,
+    "temperature": 0.07
+  },
+  "fixture": {
+    "codebook_size": 4,
+    "duplicate_token_set_item_nodes": [
+      1,
+      4
+    ],
+    "items": 4,
+    "n_codebooks": 3
+  },
+  "outputs": {
+    "adjacency_item_nodes": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "exhaustive_ranked_item_ids": [
+      [
+        2,
+        1
+      ]
+    ],
+    "graph_ranked_item_ids": [
+      [
+        2,
+        1
+      ]
+    ],
+    "visited_item_counts": [
+      [
+        4.0
+      ]
+    ]
+  },
+  "runtime": {
+    "device": "cpu",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.6"
+  },
+  "schema": "sidscope.rpg_official_source_smoke.v1",
+  "seed": 2024,
+  "source_model_sha256": "8d70fa9fde44279b3d0da9409e8e877b46ca4388d79442a2659d615336de6abc",
+  "source_revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+  "source_url": "https://github.com/facebookresearch/RPG_KDD2025",
+  "status": "pass"
+}

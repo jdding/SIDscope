@@ -25,7 +25,7 @@ retroactively change submitted claims or tables.
 
 | Priority | Route | Next closure |
 | --- | --- | --- |
-| P0 | RPG | Pin source/license and define unordered token-set identity, graph-valid resolution, traces, and bounded smoke. |
+| P0 | RPG | Real official-data C0--C5 round-trip and trained checkpoint or recorded-training-output G5 smoke; bounded unordered contract is complete. |
 | P0 | Latte / PSID | Freeze one official-code-derived cache, pass C0--C5, then add a bounded generator trace fixture for G0--G5. |
 | P1 | LLaDA-Rec | Define masked-state, refinement-step, confidence, and remasking trace schemas before implementation. |
 | P1 | TIGER / DACT | Backfill the released reference trace into a complete method-facing G0--G5 report. |

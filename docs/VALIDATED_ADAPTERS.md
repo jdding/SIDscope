@@ -84,8 +84,11 @@ adapter catalog so they are not mistaken for named-method evidence.
 Generator evidence uses a separate G0--G5 contract. The released DACT TIGER
 trace and the verified Latte/PSID tokenizer cache path are useful integration
 surfaces, but neither is currently labeled as a complete named-method generator
-adapter. RPG and LLaDA-Rec are source-audit candidates; ISD and ChronoSID remain
-source watch until an official reproducible route is available.
+adapter. RPG now has a pinned non-commercial source audit, a bounded parallel
+trace fixture, and an untrained official-source class smoke; its real-data
+round-trip and trained asset smoke remain open, so it is not a named adapter.
+LLaDA-Rec remains a source-audit candidate; ISD and ChronoSID remain source
+watch until an official reproducible route is available.
 
 See `docs/GENERATOR_ADAPTER_CONFORMANCE.md` and
 `docs/reproducibility/generator_adapter_coverage.csv` for the typed status and

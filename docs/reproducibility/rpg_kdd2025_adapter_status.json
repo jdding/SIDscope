@@ -1,0 +1,38 @@
+{
+  "schema": "sidscope.rpg_generator_adapter_status.v1",
+  "route_id": "rpg_kdd2025",
+  "source_revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+  "audited_at": "2026-08-27",
+  "gates": {
+    "G0": "pass_with_noncommercial_reuse_restriction",
+    "G1": "bounded_fixture_pass_official_data_roundtrip_pending",
+    "G2": "bounded_fixture_parallel_state_pass",
+    "G3": "bounded_fixture_validity_ambiguity_resolution_pass",
+    "G4": "bounded_fixture_trace_and_ranked_export_pass",
+    "G5": "partial_official_source_untrained_cpu_smoke_pass_trained_asset_smoke_pending"
+  },
+  "input_sha256": {
+    "source_audit": "60eb0f0c8fd4b4ec1d7961ce95b5e8bd88ce71768a690714499f1cb7617bab06",
+    "fixture_manifest": "c4509e802f6120db795f049a9b7676f5166e3898e24a7470849429e38fed1f66",
+    "official_source_smoke": "2b738dfec7360edea081210ce4baa5d13af0633cbfe4a603e75f7fff680c18df"
+  },
+  "verified_outputs": {
+    "trace_schema": "sidscope.rpg_parallel_trace.v1",
+    "ranked_item_ids": [
+      "2",
+      "1"
+    ],
+    "token_set_collision_count": 1,
+    "expected_failure_label": "duplicate_codebook_partition",
+    "official_source_smoke_status": "pass"
+  },
+  "promotion": {
+    "named_adapter": false,
+    "decision": "close_named_adapter",
+    "blockers": [
+      "No official checkpoint or precomputed .sem_ids cache is released.",
+      "A real official-data source-item round-trip has not passed C0-C5 and G1.",
+      "No trained official checkpoint or fully recorded official training output has passed G5."
+    ]
+  }
+}

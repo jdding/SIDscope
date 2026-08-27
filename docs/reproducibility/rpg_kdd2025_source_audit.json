@@ -1,0 +1,85 @@
+{
+  "schema": "sidscope.generator_source_audit.v1",
+  "route_id": "rpg_kdd2025",
+  "audited_at": "2026-08-27",
+  "paper": {
+    "title": "Generating Long Semantic IDs in Parallel for Recommendation",
+    "venue": "KDD 2025",
+    "doi": "10.1145/3711896.3736979",
+    "arxiv": "2506.05781v1",
+    "url": "https://arxiv.org/abs/2506.05781",
+    "license_identifier": "CC-BY-4.0"
+  },
+  "source": {
+    "url": "https://github.com/facebookresearch/RPG_KDD2025",
+    "revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+    "default_branch": "main",
+    "commit_date": "2025-09-07T17:47:38-07:00",
+    "license_identifier": "CC-BY-NC-4.0",
+    "license_file": "LICENSE.md",
+    "license_sha256": "a7950c0fed88e9a177617e3836e9dc0ae4f4a96e59b15c3706de38ace171aca4",
+    "reuse_boundary": "SIDScope ships an independent MIT interoperability contract and no RPG source, weights, data, or semantic-ID cache. Users executing RPG source must comply with its non-commercial license."
+  },
+  "source_files": [
+    {
+      "path": "genrec/models/RPG/tokenizer.py",
+      "sha256": "06f914b3bd9da01948396722d0101f6f35efaac63497742fd08ae18bc4c77773",
+      "evidence": "OPQ semantic codes are converted to disjoint codebook vocabulary ranges; the cache name ends in .sem_ids."
+    },
+    {
+      "path": "genrec/models/RPG/model.py",
+      "sha256": "8d70fa9fde44279b3d0da9409e8e877b46ca4388d79442a2659d615336de6abc",
+      "evidence": "The model predicts all codebooks in parallel, aggregates token log probabilities per item, and resolves through per-item graph nodes."
+    },
+    {
+      "path": "genrec/models/RPG/config.yaml",
+      "sha256": "884b457731edaa7b1acc6443deb30a24bf2c82fd663d3125c83a21c59d6be608",
+      "evidence": "Default codebook, graph, backbone, and embedding configuration."
+    },
+    {
+      "path": "genrec/datasets/AmazonReviews2014/dataset.py",
+      "sha256": "1c7b5e914945aed712143dd3b12ff1755a62027a463a7ec0175180c5110036e0",
+      "evidence": "Amazon 2014 review and metadata URLs, chronological sequences, source ASIN identity, and remapped item identity."
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "67cb6b616ed852b96839159ac0c3577c649d87f60fd34bd8d9a1cfbc7992501b",
+      "evidence": "Pinned upstream runtime dependencies."
+    }
+  ],
+  "configuration_boundary": {
+    "datasets": [
+      "Sports_and_Outdoors",
+      "Beauty",
+      "Toys_and_Games",
+      "CDs_and_Vinyl"
+    ],
+    "split": "leave_one_out",
+    "semantic_id_construction": "OPQ with one disjoint vocabulary range per codebook",
+    "default_n_codebooks": 32,
+    "default_codebook_size": 256,
+    "model": "GPT2Model with one prediction head per codebook",
+    "item_score": "sum or rank-equivalent mean of per-codebook token log probabilities",
+    "decoder": "random item-node frontier followed by iterative top-k graph propagation",
+    "checkpoint_boundary": "Training code accepts a local checkpoint path or trains and saves a local best state dict. No checkpoint is released by the official repository."
+  },
+  "asset_audit": {
+    "github_releases": 0,
+    "github_tags": 0,
+    "git_lfs_assets": 0,
+    "submodules": 0,
+    "checkpoint_found": false,
+    "semantic_id_cache_found": false,
+    "processed_dataset_found": false,
+    "shipped_asset": "asset/model.png",
+    "raw_dataset_route": "Automatic download from the Stanford SNAP Amazon Product Graph 2014 category files."
+  },
+  "risks_and_blocks": [
+    "No official checkpoint or precomputed .sem_ids cache is released.",
+    "The default text-embedding-3-large tokenizer route requires an API key and an OpenAI client that is not declared in the pinned requirements file.",
+    "The official graph decoder samples its initial item nodes; deterministic conformance must record or inject the initial frontier and random seed.",
+    "Identical token sets can map to multiple item nodes, so token-set resolution cannot silently collapse to one item.",
+    "The upstream code license is non-commercial and is not compatible with vendoring the implementation into SIDScope's MIT code surface without a separate boundary."
+  ],
+  "decision": "go_bounded_contract_fixture_not_named_adapter"
+}

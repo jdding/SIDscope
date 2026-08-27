@@ -157,6 +157,18 @@ is machine-readable in
 `docs/reproducibility/generator_adapter_coverage.csv`; reference traces and
 tokenizer-only intake are not labeled as complete named-method adapters.
 
+RPG now has a pinned source/license/asset audit, an independent unordered
+token-set and graph-propagation contract, a deterministic CPU fixture with an
+expected failure, and a bounded smoke against the pinned official `RPG` class:
+
+```bash
+PYTHONPATH=src python3 tools/verify_rpg_generator_adapter.py
+```
+
+See `docs/RPG_GENERATOR_ADAPTER.md`. This is source-shaped interoperability
+evidence, not a trained checkpoint result or a complete named adapter; the
+official code remains CC BY-NC 4.0 and is not vendored into SIDScope.
+
 Post-submission development is tracked as `1.1.0.dev0` on
 `codex/sidscope-v1.1`; see `docs/V1_1_ROADMAP.md`. The TOIS submission remains
 frozen outside this software worktree until an editorial revision request.

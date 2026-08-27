@@ -83,5 +83,6 @@ __all__ = [
     "load_sentence_transformer",
     "model_reference_kind",
     "resid",
+    "rpg",
     "sanity",
 ]

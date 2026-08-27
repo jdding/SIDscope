@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-25
+Last updated: 2026-08-27
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -28,6 +28,13 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   TIGER/DACT, Latte/PSID, RPG, LLaDA-Rec, ISD, and ChronoSID. The ledger keeps
   released reference evidence, named-adapter closure, source-audit candidates,
   and source-watch routes distinct.
+- Pinned RPG's official source at `7dcf95c`, recorded its CC BY-NC 4.0 code
+  boundary and absence of released checkpoints/caches, and added an independent
+  unordered token-set plus per-item graph-node adapter contract.
+- Added a deterministic RPG CPU fixture, ambiguity-preserving ranked-item trace,
+  expected invalid-token-set fixture, verifier, and bounded smoke against the
+  official source class. The smoke uses untrained weights and does not promote
+  RPG to a named adapter.
 
 ## SIDScope v1.0.2 public-smoke dependency fix
 
