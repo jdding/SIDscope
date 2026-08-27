@@ -88,9 +88,11 @@ labels, and an executable verifier. It is not a named adapter because G0 is
 blocked by the upstream repository's absent code and asset license; the frozen
 500-target primary also predates ancestry export and is not described otherwise.
 The verified Latte/PSID tokenizer cache likewise remains below full generator
-closure. RPG has a pinned non-commercial source audit, a bounded parallel
-trace fixture, and an untrained official-source class smoke; its real-data
-round-trip and trained asset smoke remain open, so it is not a named adapter.
+closure. RPG has a pinned non-commercial source audit, a real official-code-
+derived Beauty cache with non-paper-counted C0--C5 and all-item G1 round-trip,
+a bounded parallel trace fixture, and an untrained official-source class smoke.
+Its trained parallel decoding and ranked-item G2--G5 evidence remains open, so
+it is not a named adapter.
 LLaDA-Rec now has a pinned no-license source audit, bounded adaptive-unmasking
 trace fixture, and official class-method smoke. It remains below named-adapter
 status because G0 is blocked by the absent code license and no released cache,

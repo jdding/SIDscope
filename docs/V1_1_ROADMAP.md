@@ -25,7 +25,7 @@ retroactively change submitted claims or tables.
 
 | Priority | Route | Next closure |
 | --- | --- | --- |
-| P0 | RPG | Real official-data C0--C5 round-trip and trained checkpoint or recorded-training-output G5 smoke; bounded unordered contract is complete. |
+| P0 | RPG | Real official-code-derived Beauty cache now passes non-paper-counted C0--C5 and all-item G1 round-trip; next close trained parallel decoding G2--G5 with a checkpoint or fully recorded training output. |
 | P0 | Latte / PSID | Static closure complete: one real official-code-derived cache is hash-frozen and passes non-paper-counted C0--C5; next train or bind one checkpoint and close real G2--G5 inference traces. |
 | P1 | LLaDA-Rec | Source audit and bounded adaptive-unmasking schema/fixture complete; next obtain an explicit code license plus fixed tokenizer/checkpoint assets before real G1 and trained G4--G5. |
 | P1 | TIGER / DACT | Method-facing report complete: G1--G5 pass; obtain an explicit upstream code/asset license and rerun the 500-target primary with ancestry export to unblock G0 and promotion. |

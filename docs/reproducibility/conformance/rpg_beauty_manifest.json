@@ -1,0 +1,64 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "rpg_beauty",
+  "paper_label": "RPG OPQ / Beauty",
+  "method_family": "RPG",
+  "configuration": "official Amazon Reviews 2014 Beauty 5-core leave_one_out; sentence-t5-base revision fc5d462; PCA-128; official OPQ32,IVF1,PQ32x8; CPU",
+  "source": {
+    "url": "https://github.com/facebookresearch/RPG_KDD2025",
+    "revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+    "license_status": "restricted_source_license",
+    "license_identifier": "CC-BY-NC-4.0 code; Amazon Reviews 2014 redistribution boundary unresolved",
+    "derivation": "official_code_derived",
+    "artifact_name": "sentence-t5-base_OPQ32,IVF1,PQ32x8.sem_ids",
+    "redistribution_policy": "summary_only_no_source_data_text_embeddings_or_sem_ids"
+  },
+  "dataset": {
+    "name": "Beauty",
+    "normalized_name": "beauty",
+    "expected_items": 12101,
+    "sid_depth": 32
+  },
+  "inputs": {
+    "sid_assignments": ".local_artifacts/rpg_beauty/normalized/sid_assignments.parquet",
+    "item_metadata": ".local_artifacts/rpg_beauty/normalized/item_metadata.parquet",
+    "interactions": ".local_artifacts/rpg_beauty/normalized/interactions.parquet"
+  },
+  "input_availability": "official source inputs and normalized outputs are external; public reports retain hashes, row counts, collision counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "9858bd1af48f32423f8166b0e39979b1d741451be1b98119f92d8071132a8f9a",
+    "item_metadata": "4a23069327248a7672b64cd3bba80e06bb0cdebed4949904e938a35251a16b5d",
+    "interactions": "35395af3569c2a4122fea170463460e6800afc19c869d3b6fd98fe5673710b53"
+  },
+  "metric_smoke": {
+    "max_metric_items": 50000,
+    "top_k": 5,
+    "max_pair_events": 10000,
+    "max_user_items": 50
+  },
+  "reproduction": {
+    "command": [
+      "python3",
+      "tools/normalize_rpg_opq_cache.py",
+      "--processed-dir",
+      "<external-pinned-build/processed>",
+      "--output-dir",
+      "<external-normalized-output>",
+      "--summary",
+      "<external-intake-summary>"
+    ],
+    "runtime_class": "cpu_minutes",
+    "source_evidence": [
+      "docs/reproducibility/rpg_kdd2025_source_audit.json",
+      "docs/reproducibility/rpg_beauty_cache_build.json",
+      "docs/reproducibility/rpg_beauty_intake.json"
+    ]
+  },
+  "promotion": {
+    "route_id": "rpg_beauty",
+    "evidence_role": "official_code_derived_route",
+    "paper_counted": false,
+    "conformance_status": "c0_c5_pass_non_paper_counted",
+    "conformance_evidence": "docs/reproducibility/conformance/rpg_beauty_report.json"
+  }
+}

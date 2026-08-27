@@ -1,0 +1,70 @@
+{
+  "configuration": {
+    "category": "Beauty",
+    "codebook_size": 256,
+    "dataset": "AmazonReviews2014",
+    "device": "cpu",
+    "faiss_omp_num_threads": 4,
+    "index_factory": "OPQ32,IVF1,PQ32x8",
+    "metadata": "sentence",
+    "n_codebook": 32,
+    "sent_emb_batch_size": 64,
+    "sent_emb_dim": 768,
+    "sent_emb_model": "sentence-transformers/sentence-t5-base",
+    "sent_emb_pca": 128,
+    "split": "leave_one_out"
+  },
+  "counts": {
+    "interactions": 198502,
+    "items": 12101,
+    "metadata_items": 12101,
+    "training_items": 12068,
+    "users": 22363
+  },
+  "deterministic_replay": {
+    "cache_sha256_first_build": "37419441821b4ab1b8caada6e9a785d866e27a1d57e1cc17de3ff2b1064201f5",
+    "cache_sha256_replay": "37419441821b4ab1b8caada6e9a785d866e27a1d57e1cc17de3ff2b1064201f5",
+    "embedding_reused_for_replay": true,
+    "official_method": "RPGTokenizer._generate_semantic_id_opq",
+    "status": "pass"
+  },
+  "execution_note": {
+    "initial_combined_process": "sentence embeddings completed and were hash-frozen; the macOS process then stalled at an OpenMP semaphore before OPQ",
+    "recovery": "PCA and the exact pinned official OPQ class method ran in an isolated process without importing Torch; no source method was reimplemented",
+    "reusable_runner": "tools/generate_rpg_opq_from_embeddings.py"
+  },
+  "input_sha256": {
+    "meta_Beauty.json.gz": "c7977dc0e0ead14ac7df8c1c6de74da00e4bebfad87a0f0c5763d4c5bc9b53a0",
+    "official_dataset_source": "1c7b5e914945aed712143dd3b12ff1755a62027a463a7ec0175180c5110036e0",
+    "official_rpg_tokenizer_source": "06f914b3bd9da01948396722d0101f6f35efaac63497742fd08ae18bc4c77773",
+    "reviews_Beauty_5.json.gz": "e5925ec99023f1dc9c7d3dff7ef34cfeacd40d1b981b5525e1e4ba9c8abc18fe",
+    "sentence_transformer_snapshot": "cf01d40b682a22738163d67c3b9c6ee961ca74abb373b0ae5a34a911597517ba"
+  },
+  "output_bytes": {
+    "all_item_seqs.json": 3220678,
+    "id_mapping.json": 1351806,
+    "metadata.sentence.json": 7031117,
+    "sentence-t5-base.sent_emb": 37174272,
+    "sentence-t5-base_OPQ32,IVF1,PQ32x8.sem_ids": 1966949
+  },
+  "output_sha256": {
+    "all_item_seqs.json": "43476d3f941f103d32ae58eb87da79c8894d76e3fb64da57f8e2d18c0c51d1b1",
+    "id_mapping.json": "4d88fede709699e3415962419728b07dc8600140ebc000484dd371c81f66a0be",
+    "metadata.sentence.json": "278941a02299c1e6ddb2323b0395506d8e462ba5f0934bbb9e55fd6d281d3bf6",
+    "sentence-t5-base.sent_emb": "65ea278b4b2fc813a08e6233d8160009309fb7cb91abe0e09e92387f302122c5",
+    "sentence-t5-base_OPQ32,IVF1,PQ32x8.sem_ids": "37419441821b4ab1b8caada6e9a785d866e27a1d57e1cc17de3ff2b1064201f5"
+  },
+  "redistribution": "raw data, metadata text, embeddings, generated semantic IDs, and normalized tables remain external; public evidence contains hashes and aggregate diagnostics only",
+  "runtime": {
+    "faiss": "1.12.0",
+    "numpy": "1.26.4",
+    "platform": "darwin",
+    "python": "3.9.6",
+    "sentence_transformers": "5.1.2",
+    "sklearn": "1.6.1"
+  },
+  "schema": "sidscope.rpg_opq_cache_build.v1",
+  "sentence_transformer_revision": "fc5d4628481afbbaaacd7af6bb07cf9d3865f781",
+  "source_revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+  "status": "pass"
+}

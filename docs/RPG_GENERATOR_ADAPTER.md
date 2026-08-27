@@ -1,7 +1,7 @@
 # RPG Generator Adapter Contract
 
-Status: bounded contract and official-source smoke available; not a complete
-named-method adapter.
+Status: real static Beauty cache C0--C5/G1 plus bounded generator contract;
+not a complete named-method adapter.
 
 ## Source Boundary
 
@@ -31,16 +31,21 @@ share the same set, both item nodes remain visible and the resolution status is
 raw semantic codes, model-vocabulary tokens, the canonical unordered token
 set, and all resolved item IDs.
 
+The generic C0--C5 static diagnostic report serializes codebook positions into
+`sid_level_*` columns. Its reported `prefix_counts` describe only that stable
+table serialization; they are not RPG decoding prefixes and are never used as
+G2 parallel-generation evidence.
+
 ## G0--G5 Field Map
 
 | Gate | RPG field mapping | Current state |
 | --- | --- | --- |
 | G0 | source URL, revision, paper DOI, code/paper licenses, configuration, training/checkpoint boundary, source-file hashes | Pass with CC BY-NC reuse restriction; no released checkpoint/cache |
-| G1 | `source_item_id`, `normalized_item_id`, `semantic_codes`, `model_vocabulary_tokens`, `resolved_item_ids` | Bounded fixture round-trip passes; official dataset/cache round-trip pending |
+| G1 | `source_item_id`, `normalized_item_id`, `semantic_codes`, `model_vocabulary_tokens`, `resolved_item_ids` | Passes on all 12,101 Beauty items from a real official-code-derived cache; 2 token-set collisions covering 4 item nodes are retained |
 | G2 | `decode_state_kind=unordered_token_set_graph_propagation`, parallel token log probabilities, explicit initial item nodes, propagation steps and frontiers | Bounded fixture passes without prefix semantics |
 | G3 | `graph_valid`, `resolution_status`, `ambiguity_count`, collision groups and typed failure labels | Positive ambiguity case and expected invalid-token-set case pass |
 | G4 | deidentified trace ID, split ID, target universe, per-step candidates, ranked items, sum/mean log-probability scores and visited item nodes | Stable bounded export passes |
-| G5 | CPU fixture, expected failure, pinned-input hashes, verifier, and optional official-source model smoke | Partial: official source class smoke passes on deterministic untrained weights; trained checkpoint/data smoke remains open |
+| G5 | CPU fixture, expected failure, pinned-input hashes, verifier, and optional official-source model smoke | Partial: real cache build, deterministic replay, CPU fixture, and official source class smoke pass; trained checkpoint inference remains open |
 
 ## Reproduction
 
@@ -49,6 +54,14 @@ Run the hermetic contract verifier:
 ```bash
 PYTHONPATH=src python3 tools/verify_rpg_generator_adapter.py
 ```
+
+To build and normalize an external cache, use
+`tools/build_rpg_opq_cache.py`,
+`tools/generate_rpg_opq_from_embeddings.py`, and
+`tools/normalize_rpg_opq_cache.py`. The public build/intake summaries and
+C0--C5 report are under `docs/reproducibility/`; the raw Amazon files,
+metadata text, embeddings, generated cache, and normalized parquet tables are
+not redistributed.
 
 To replay the source-class smoke after checking out the exact official
 revision in a separate environment:
@@ -66,8 +79,6 @@ trained recommendation result and cannot promote the route to a named adapter.
 
 ## Promotion Blockers
 
-- Obtain or derive a real official-data item mapping with immutable raw-input
-  hashes and pass C0--C5.
 - Run the adapter over a trained official checkpoint or a fully recorded
   official training output.
 - Export real split-bound traces and ranked items, then rerun G1--G5 over those

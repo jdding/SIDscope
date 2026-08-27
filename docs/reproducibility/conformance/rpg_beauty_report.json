@@ -1,0 +1,118 @@
+{
+  "artifact_id": "rpg_beauty",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "rpg_beauty",
+        "license_status": "restricted_source_license",
+        "paper_label": "RPG OPQ / Beauty",
+        "source_revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 32,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {"availability": "summary_only_raw_not_redistributed", "rows": 198502},
+          "item_metadata": {"availability": "summary_only_raw_not_redistributed", "rows": 12101},
+          "sid_assignments": {"availability": "summary_only_raw_not_redistributed", "rows": 12101}
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "beauty",
+            "interaction_items": 12101,
+            "interaction_without_sid": 0,
+            "metadata_items": 12101,
+            "metadata_without_sid": 0,
+            "method": "rpg_opq_official_code_derived",
+            "sid_items": 12101
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "7.890643;7.875204;7.880516;7.868813;7.882893;7.880326;7.853554;7.889424;7.879174;7.869665;7.874452;7.872490;7.852636;7.867977;7.836335;7.893095;7.884963;7.873442;7.871912;7.865775;7.880649;7.887541;7.893857;7.871201;7.875997;7.889274;7.878772;7.881334;7.888395;7.864507;7.868495;7.876888",
+            "d1_level_count": 32,
+            "d1_unique_codes": "256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256;256",
+            "d3_depth1_mean_collab_recall": 0.006352833638025595,
+            "d3_depth1_weighted_collab_recall": 0.006401551891367604,
+            "d4_head_sid_unique_ratio": 1.0,
+            "d4_mid_sid_unique_ratio": 0.9997514292816306,
+            "d4_tail_sid_unique_ratio": 1.0,
+            "dataset": "beauty",
+            "duplicate_sid_rate": 0.00016527559705814543,
+            "full_collision_rate": 0.0003305511941161887,
+            "method": "rpg_opq_official_code_derived",
+            "prefix_counts": "256;10609;12013;12059;12074;12082;12086;12093;12095;12096;12096;12096;12097;12098;12098;12098;12098;12098;12098;12098;12098;12098;12099;12099;12099;12099;12099;12099;12099;12099;12099;12099",
+            "sid_length": 32,
+            "unique_sid": 12099
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": ["python3", "tools/normalize_rpg_opq_cache.py", "--processed-dir", "<external-pinned-build/processed>", "--output-dir", "<external-normalized-output>", "--summary", "<external-intake-summary>"],
+        "input_sha256": {
+          "interactions": "35395af3569c2a4122fea170463460e6800afc19c869d3b6fd98fe5673710b53",
+          "item_metadata": "4a23069327248a7672b64cd3bba80e06bb0cdebed4949904e938a35251a16b5d",
+          "sid_assignments": "9858bd1af48f32423f8166b0e39979b1d741451be1b98119f92d8071132a8f9a"
+        },
+        "runtime_class": "cpu_minutes",
+        "source_evidence": ["docs/reproducibility/rpg_kdd2025_source_audit.json", "docs/reproducibility/rpg_beauty_cache_build.json", "docs/reproducibility/rpg_beauty_intake.json"]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "official_code_derived_route",
+        "paper_counted": false,
+        "route_id": "rpg_beauty"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/rpg_beauty_manifest.json",
+  "paper_label": "RPG OPQ / Beauty",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

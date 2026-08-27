@@ -1,7 +1,7 @@
 {
   "schema": "sidscope.generator_source_audit.v1",
   "route_id": "rpg_kdd2025",
-  "audited_at": "2026-08-27",
+  "audited_at": "2026-08-28",
   "paper": {
     "title": "Generating Long Semantic IDs in Parallel for Recommendation",
     "venue": "KDD 2025",
@@ -73,6 +73,25 @@
     "processed_dataset_found": false,
     "shipped_asset": "asset/model.png",
     "raw_dataset_route": "Automatic download from the Stanford SNAP Amazon Product Graph 2014 category files."
+  },
+  "external_input_audit": {
+    "dataset_license_boundary": "The official code downloads SNAP-hosted Amazon Product Graph 2014 files, but no dataset license identifier is declared in the pinned RPG repository; raw files and derived row-level artifacts are not redistributed.",
+    "beauty_reviews": {
+      "url": "https://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Beauty_5.json.gz",
+      "sha256": "e5925ec99023f1dc9c7d3dff7ef34cfeacd40d1b981b5525e1e4ba9c8abc18fe",
+      "bytes": 44819276
+    },
+    "beauty_metadata": {
+      "url": "https://snap.stanford.edu/data/amazon/productGraph/categoryFiles/meta_Beauty.json.gz",
+      "sha256": "c7977dc0e0ead14ac7df8c1c6de74da00e4bebfad87a0f0c5763d4c5bc9b53a0",
+      "bytes": 99156148
+    },
+    "sentence_transformer": {
+      "model": "sentence-transformers/sentence-t5-base",
+      "revision": "fc5d4628481afbbaaacd7af6bb07cf9d3865f781",
+      "license_identifier": "Apache-2.0",
+      "local_snapshot_sha256": "cf01d40b682a22738163d67c3b9c6ee961ca74abb373b0ae5a34a911597517ba"
+    }
   },
   "risks_and_blocks": [
     "No official checkpoint or precomputed .sem_ids cache is released.",

@@ -60,11 +60,13 @@ Project-local workarounds may be attached as issue evidence, but they remain
 non-canonical until the corresponding SIDScope adapter and verifier pass. This
 prevents downstream projects from silently maintaining incompatible forks.
 
-RPG currently has a pinned G0 source audit, a method-preserving G1--G4 bounded
-fixture, and a G5 official-source class smoke over deterministic untrained
-weights. It remains below named-adapter status because a real official-data
-round-trip and trained checkpoint or fully recorded training-output smoke have
-not passed. The exact boundary is in `docs/RPG_GENERATOR_ADAPTER.md` and
+RPG now has a pinned G0 source audit, a real official-code-derived Beauty OPQ
+cache that passes non-paper-counted C0--C5 and a 12,101-item G1 round-trip, a
+method-preserving G2--G4 bounded fixture, and a G5 official-source class smoke
+over deterministic untrained weights. It remains below named-adapter status
+because no trained checkpoint or fully recorded training output has passed
+real parallel decoding and ranked-item export. The exact boundary is in
+`docs/RPG_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/rpg_kdd2025_adapter_status.json`.
 
 Latte/PSID has a real official-code-derived static cache round-trip and a

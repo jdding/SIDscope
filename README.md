@@ -159,15 +159,19 @@ tokenizer-only intake are not labeled as complete named-method adapters.
 
 RPG now has a pinned source/license/asset audit, an independent unordered
 token-set and graph-propagation contract, a deterministic CPU fixture with an
-expected failure, and a bounded smoke against the pinned official `RPG` class:
+expected failure, a bounded smoke against the pinned official `RPG` class, and
+a real official-code-derived Beauty OPQ cache whose 12,101 items pass
+non-paper-counted C0--C5 and G1 identity round-trip:
 
 ```bash
 PYTHONPATH=src python3 tools/verify_rpg_generator_adapter.py
 ```
 
-See `docs/RPG_GENERATOR_ADAPTER.md`. This is source-shaped interoperability
-evidence, not a trained checkpoint result or a complete named adapter; the
-official code remains CC BY-NC 4.0 and is not vendored into SIDScope.
+See `docs/RPG_GENERATOR_ADAPTER.md`. The real cache, raw Amazon data, metadata,
+embeddings, and normalized tables remain external. This is static mapping and
+interoperability evidence, not a trained checkpoint result or a complete named
+adapter; the official code remains CC BY-NC 4.0 and is not vendored into
+SIDScope.
 
 Latte/PSID now has a pinned source and asset audit, a real
 official-code-derived Musical Instruments `.sem_ids` cache bound by hashes, a

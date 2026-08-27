@@ -11,7 +11,13 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+import json
+from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
+
+import pandas as pd
+
+from sidinspector.interface import validate_columns
 
 
 class RPGContractError(ValueError):
@@ -30,6 +36,240 @@ class RPGCatalogItem:
     normalized_item_id: str
     semantic_codes: tuple[int, ...]
     model_vocabulary_tokens: tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class RPGItemIdentity:
+    """One real source item and its official PAD-reserved item-node identity."""
+
+    source_item_id: str
+    normalized_item_id: int
+    rpg_item_node_id: int
+
+
+def _reject_duplicate_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in output:
+            raise RPGContractError("duplicate_json_key", f"duplicate JSON key {key!r}")
+        output[key] = value
+    return output
+
+
+def read_json_object(path: Path) -> dict[str, Any]:
+    """Read an upstream JSON object while rejecting duplicate keys."""
+
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            value = json.load(handle, object_pairs_hook=_reject_duplicate_pairs)
+    except RPGContractError:
+        raise
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RPGContractError("invalid_json", f"cannot read {path}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise RPGContractError("expected_json_object", f"expected JSON object in {path}")
+    return value
+
+
+def read_rpg_item_mapping(path: Path) -> list[RPGItemIdentity]:
+    """Validate RPG's official source-ASIN to PAD-reserved item-node mapping."""
+
+    raw = read_json_object(path)
+    item2id = raw.get("item2id")
+    id2item = raw.get("id2item")
+    if not isinstance(item2id, dict) or not isinstance(id2item, list):
+        raise RPGContractError(
+            "invalid_item_mapping_shape",
+            "id_mapping.json must contain item2id object and id2item list",
+        )
+    if item2id.get("[PAD]") != 0 or not id2item or id2item[0] != "[PAD]":
+        raise RPGContractError("invalid_padding_identity", "RPG [PAD] must have item ID 0")
+    if len(item2id) != len(id2item):
+        raise RPGContractError(
+            "mapping_cardinality_mismatch", "item2id and id2item lengths differ"
+        )
+    identities: list[RPGItemIdentity] = []
+    for item_node_id, raw_source_item_id in enumerate(id2item):
+        source_item_id = str(raw_source_item_id)
+        if item2id.get(source_item_id) != item_node_id:
+            raise RPGContractError(
+                "mapping_inverse_mismatch",
+                f"item2id/id2item disagree for {source_item_id!r}",
+            )
+        if item_node_id:
+            identities.append(
+                RPGItemIdentity(
+                    source_item_id=source_item_id,
+                    normalized_item_id=item_node_id - 1,
+                    rpg_item_node_id=item_node_id,
+                )
+            )
+    if not identities:
+        raise RPGContractError("empty_item_mapping", "mapping contains no real items")
+    return identities
+
+
+def read_rpg_sem_ids(
+    path: Path,
+    *,
+    expected_source_items: Iterable[str],
+    n_codebooks: int,
+    codebook_size: int,
+) -> dict[str, tuple[int, ...]]:
+    """Validate a complete official-shaped RPG OPQ cache without hiding collisions."""
+
+    raw = read_json_object(path)
+    expected = {str(value) for value in expected_source_items}
+    missing = sorted(expected - set(raw))
+    extra = sorted(set(raw) - expected)
+    if missing or extra:
+        raise RPGContractError(
+            "cache_catalog_mismatch",
+            f"cache/catalog mismatch: missing={missing[:5]} extra={extra[:5]}",
+        )
+    output: dict[str, tuple[int, ...]] = {}
+    for source_item_id, raw_codes in raw.items():
+        if not isinstance(raw_codes, list) or len(raw_codes) != n_codebooks:
+            raise RPGContractError(
+                "wrong_semantic_code_count",
+                f"{source_item_id!r} must contain {n_codebooks} codes",
+            )
+        if any(not isinstance(value, int) or isinstance(value, bool) for value in raw_codes):
+            raise RPGContractError(
+                "semantic_code_not_integer",
+                f"{source_item_id!r} semantic codes must be JSON integers",
+            )
+        codes = tuple(raw_codes)
+        model_vocabulary_tokens(codes, codebook_size)
+        output[str(source_item_id)] = codes
+    return output
+
+
+def normalize_rpg_sem_ids(
+    sem_ids_path: Path,
+    item_mapping_path: Path,
+    *,
+    method: str,
+    dataset: str,
+    n_codebooks: int,
+    codebook_size: int,
+) -> pd.DataFrame:
+    """Normalize a real RPG item mapping and OPQ cache into SIDScope rows."""
+
+    identities = read_rpg_item_mapping(item_mapping_path)
+    cache = read_rpg_sem_ids(
+        sem_ids_path,
+        expected_source_items=(item.source_item_id for item in identities),
+        n_codebooks=n_codebooks,
+        codebook_size=codebook_size,
+    )
+    rows: list[dict[str, Any]] = []
+    for item in identities:
+        codes = cache[item.source_item_id]
+        tokens = model_vocabulary_tokens(codes, codebook_size)
+        row: dict[str, Any] = {
+            "item_id": item.normalized_item_id,
+            "source_item_id": item.source_item_id,
+            "rpg_item_node_id": item.rpg_item_node_id,
+            "method": method,
+            "dataset": dataset,
+            "unordered_model_vocabulary_tokens": list(tokens),
+        }
+        for level, code in enumerate(codes):
+            row[f"sid_level_{level}"] = code
+        row["sid"] = "-".join(str(code) for code in codes)
+        rows.append(row)
+    output = pd.DataFrame(rows)
+    validate_columns("sid_assignments", output.columns)
+    return output
+
+
+def normalize_rpg_metadata(
+    item_mapping_path: Path, *, dataset: str, category: str
+) -> pd.DataFrame:
+    """Export public-safe item identity metadata without upstream text."""
+
+    output = pd.DataFrame(
+        [
+            {
+                "item_id": item.normalized_item_id,
+                "source_item_id": item.source_item_id,
+                "rpg_item_node_id": item.rpg_item_node_id,
+                "dataset": dataset,
+                "category": category,
+            }
+            for item in read_rpg_item_mapping(item_mapping_path)
+        ]
+    )
+    validate_columns("item_metadata", output.columns)
+    return output
+
+
+def normalize_rpg_interactions(
+    all_item_seqs_path: Path,
+    item_mapping_path: Path,
+    *,
+    dataset: str,
+) -> pd.DataFrame:
+    """Normalize official chronological sequences with leave-one-out roles."""
+
+    mapping = read_json_object(item_mapping_path)
+    sequences = read_json_object(all_item_seqs_path)
+    identities = read_rpg_item_mapping(item_mapping_path)
+    source_to_item = {item.source_item_id: item for item in identities}
+    user2id = mapping.get("user2id")
+    id2user = mapping.get("id2user")
+    if not isinstance(user2id, dict) or not isinstance(id2user, list):
+        raise RPGContractError("invalid_user_mapping_shape", "mapping lacks user2id/id2user")
+    rows: list[dict[str, Any]] = []
+    for source_user_id in sorted(sequences):
+        user_node_id = user2id.get(source_user_id)
+        if not isinstance(user_node_id, int) or user_node_id <= 0:
+            raise RPGContractError(
+                "unknown_source_user", f"unknown source user {source_user_id!r}"
+            )
+        if user_node_id >= len(id2user) or str(id2user[user_node_id]) != source_user_id:
+            raise RPGContractError(
+                "mapping_inverse_mismatch", f"user mapping disagrees for {source_user_id!r}"
+            )
+        sequence = sequences[source_user_id]
+        if not isinstance(sequence, list) or not sequence:
+            raise RPGContractError(
+                "invalid_item_sequence", f"user {source_user_id!r} has no item sequence"
+            )
+        for position, raw_source_item_id in enumerate(sequence):
+            source_item_id = str(raw_source_item_id)
+            item = source_to_item.get(source_item_id)
+            if item is None:
+                raise RPGContractError(
+                    "interaction_catalog_mismatch",
+                    f"user {source_user_id!r} references unknown item {source_item_id!r}",
+                )
+            split_role = (
+                "test_target"
+                if position == len(sequence) - 1
+                else "validation_target"
+                if position == len(sequence) - 2
+                else "train"
+            )
+            rows.append(
+                {
+                    "user_id": user_node_id - 1,
+                    "source_user_id": source_user_id,
+                    "rpg_user_node_id": user_node_id,
+                    "item_id": item.normalized_item_id,
+                    "source_item_id": source_item_id,
+                    "rpg_item_node_id": item.rpg_item_node_id,
+                    "dataset": dataset,
+                    "position": position,
+                    "split": split_role,
+                }
+            )
+    if not rows:
+        raise RPGContractError("empty_interactions", "all_item_seqs has no interactions")
+    output = pd.DataFrame(rows)
+    validate_columns("interactions", output.columns)
+    return output
 
 
 def model_vocabulary_tokens(semantic_codes: Sequence[int], codebook_size: int) -> tuple[int, ...]:
@@ -315,9 +555,15 @@ def run_deterministic_graph_fixture(manifest: Mapping[str, Any]) -> dict[str, An
 __all__ = [
     "RPGCatalogItem",
     "RPGContractError",
+    "RPGItemIdentity",
     "build_catalog",
     "canonical_unordered_token_set",
     "model_vocabulary_tokens",
+    "normalize_rpg_interactions",
+    "normalize_rpg_metadata",
+    "normalize_rpg_sem_ids",
+    "read_rpg_item_mapping",
+    "read_rpg_sem_ids",
     "run_deterministic_graph_fixture",
     "token_set_resolution",
 ]

@@ -35,6 +35,16 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   expected invalid-token-set fixture, verifier, and bounded smoke against the
   official source class. The smoke uses untrained weights and does not promote
   RPG to a named adapter.
+- Built and hash-froze a real Beauty OPQ32 cache from the pinned official RPG
+  dataset/tokenizer classes and a pinned Sentence-T5 snapshot. All 12,101 items
+  pass source-item to item-node to SID to disjoint-vocabulary to item-node
+  round-trip; two real token-set collisions covering four item nodes remain
+  explicit rather than being collapsed.
+- Added the RPG cache builder, an OpenMP-isolated exact official OPQ runner,
+  cache normalizer, positive and expected-failure tests, deterministic replay,
+  public summary-only evidence, and a non-paper-counted C0--C5 report. Raw data,
+  text, embeddings, generated `.sem_ids`, and normalized tables stay external;
+  trained RPG decoding G2--G5 remains open.
 - Pinned the official Latte/PSID source, Amazon Reviews 2023 input revision,
   and Sentence-T5 model revision; generated and hash-froze one real
   Musical Instruments `rqkmeans` cache through official metadata-cleaning,

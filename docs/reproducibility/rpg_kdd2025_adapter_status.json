@@ -2,19 +2,23 @@
   "schema": "sidscope.rpg_generator_adapter_status.v1",
   "route_id": "rpg_kdd2025",
   "source_revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
-  "audited_at": "2026-08-27",
+  "audited_at": "2026-08-28",
   "gates": {
+    "C0_C5": "pass_official_code_derived_beauty_cache_non_paper_counted_summary_only",
     "G0": "pass_with_noncommercial_reuse_restriction",
-    "G1": "bounded_fixture_pass_official_data_roundtrip_pending",
+    "G1": "pass_real_official_beauty_item_sid_vocabulary_item_node_roundtrip",
     "G2": "bounded_fixture_parallel_state_pass",
     "G3": "bounded_fixture_validity_ambiguity_resolution_pass",
     "G4": "bounded_fixture_trace_and_ranked_export_pass",
-    "G5": "partial_official_source_untrained_cpu_smoke_pass_trained_asset_smoke_pending"
+    "G5": "partial_real_cache_cpu_fixture_and_official_source_untrained_smoke_pass_trained_asset_smoke_pending"
   },
   "input_sha256": {
-    "source_audit": "60eb0f0c8fd4b4ec1d7961ce95b5e8bd88ce71768a690714499f1cb7617bab06",
+    "source_audit": "3484a1efba2fd689d643ab2c064a40fc94658d0eb1a17873052e2be13b07ef33",
     "fixture_manifest": "c4509e802f6120db795f049a9b7676f5166e3898e24a7470849429e38fed1f66",
-    "official_source_smoke": "2b738dfec7360edea081210ce4baa5d13af0633cbfe4a603e75f7fff680c18df"
+    "official_source_smoke": "2b738dfec7360edea081210ce4baa5d13af0633cbfe4a603e75f7fff680c18df",
+    "cache_build_report": "b6ccf550369cb33e4db3887e209454809c31b77e8895062b3ffb95814531be59",
+    "normalized_intake": "6d8641be60e8ed794f64069d6912ae84c1377cdc838864c9a2a985a889181726",
+    "c0_c5_report": "45a02bdfe2eda2e21b01e299c2b77f1bb32b4dc11d5bfef0cbb789248cd9807e"
   },
   "verified_outputs": {
     "trace_schema": "sidscope.rpg_parallel_trace.v1",
@@ -24,14 +28,19 @@
     ],
     "token_set_collision_count": 1,
     "expected_failure_label": "duplicate_codebook_partition",
-    "official_source_smoke_status": "pass"
+    "official_source_smoke_status": "pass",
+    "real_cache_checked_items": 12101,
+    "real_cache_unique_token_sets": 12099,
+    "real_cache_collision_count": 2,
+    "real_cache_items_in_collision_groups": 4,
+    "real_cache_deterministic_replay": "pass",
+    "real_cache_c0_c5": "pass_non_paper_counted"
   },
   "promotion": {
     "named_adapter": false,
     "decision": "close_named_adapter",
     "blockers": [
-      "No official checkpoint or precomputed .sem_ids cache is released.",
-      "A real official-data source-item round-trip has not passed C0-C5 and G1.",
+      "No official checkpoint or precomputed .sem_ids cache is released; the verified Beauty cache is locally official-code-derived and not redistributed.",
       "No trained official checkpoint or fully recorded official training output has passed G5."
     ]
   }

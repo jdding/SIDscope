@@ -82,8 +82,10 @@ non-canonical until it is incorporated and tested in SIDScope.
 
 The RPG integration demonstrates the license boundary: its official source is
 CC BY-NC 4.0, so SIDScope ships only an independently implemented MIT contract,
-deidentified fixture, source hashes, and derived smoke summary. Official code,
-data, `.sem_ids`, and checkpoints must remain external.
+deidentified fixture, source hashes, and derived smoke/cache summaries. The
+official-code-derived Beauty cache can pass non-paper-counted C0--C5 and G1
+without redistributing official code, raw data, text, embeddings, `.sem_ids`,
+normalized tables, or checkpoints; those artifacts remain external.
 
 The Latte/PSID integration demonstrates a data-license boundary. The upstream
 code is MIT and Sentence-T5 is Apache-2.0, but the audited Amazon Reviews 2023
