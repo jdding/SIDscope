@@ -396,6 +396,18 @@ def validate_mode_accounting(
             steps = json.loads(str(row.step_logprob))
             if len(steps) != int(row.generated_length):
                 raise RuntimeError(f"{mode} transition-score length mismatch for {trace_id} rank {row.rank}")
+            prefixes = json.loads(str(row.ordered_prefixes))
+            ancestry = json.loads(str(row.beam_ancestry))
+            if len(prefixes) != int(row.generated_length):
+                raise RuntimeError(f"{mode} ordered-prefix length mismatch for {trace_id} rank {row.rank}")
+            if len(ancestry) != int(row.generated_length):
+                raise RuntimeError(f"{mode} beam-ancestry length mismatch for {trace_id} rank {row.rank}")
+            path = [int(token) for token in str(row.sid_path).split("-") if token]
+            expected_prefixes = [path[:prefix_depth] for prefix_depth in range(1, len(path) + 1)]
+            if prefixes != expected_prefixes:
+                raise RuntimeError(f"{mode} ordered prefixes differ from the generated path for {trace_id} rank {row.rank}")
+            if any(not isinstance(parent, int) or parent < 0 for parent in ancestry):
+                raise RuntimeError(f"{mode} beam ancestry is invalid for {trace_id} rank {row.rank}")
     if mode == "constrained" and traces["terminated_early"].astype(bool).any():
         raise RuntimeError("constrained generation terminated before the full SID depth")
     return {
@@ -447,12 +459,13 @@ def decode_mode(
                 normalize_logits=True,
             )
         sequences = generated.sequences.detach().cpu().reshape(len(batch), beam_width, -1)
+        beam_indices = generated.beam_indices.detach().cpu().reshape(len(batch), beam_width, -1)
         transition = transition.detach().cpu().reshape(len(batch), beam_width, -1)
         sequence_scores = generated.sequences_scores.detach().cpu().reshape(len(batch), beam_width)
         for batch_index, example in enumerate(batch):
             target = int(example["target_item_id"])
             target_code = item_to_code[target]
-            decoded: list[tuple[float, tuple[int, ...], list[float], bool]] = []
+            decoded: list[tuple[float, tuple[int, ...], list[float], list[int], bool]] = []
             for rank_index in range(beam_width):
                 sequence = sequences[batch_index, rank_index].tolist()
                 candidate = [int(token) for token in sequence[1 : 1 + depth]]
@@ -463,11 +476,18 @@ def decode_mode(
                     float(value)
                     for value in transition[batch_index, rank_index, :generated_length].tolist()
                 ]
+                ancestry = [
+                    int(value)
+                    for value in beam_indices[
+                        batch_index, rank_index, :generated_length
+                    ].tolist()
+                ]
                 decoded.append(
                     (
                         float(sequence_scores[batch_index, rank_index]),
                         code,
                         steps,
+                        ancestry,
                         generated_length < depth,
                     )
                 )
@@ -491,7 +511,7 @@ def decode_mode(
                     "decoding_mode": mode,
                 }
             )
-            for rank_index, (sequence_score, code, steps, terminated_early) in enumerate(decoded):
+            for rank_index, (sequence_score, code, steps, ancestry, terminated_early) in enumerate(decoded):
                 resolved = reverse.get(code, ())
                 trace_rows.append(
                     {
@@ -508,6 +528,10 @@ def decode_mode(
                         "generated_code": json.dumps(code),
                         "score": sequence_score,
                         "step_logprob": json.dumps(steps),
+                        "ordered_prefixes": json.dumps(
+                            [list(code[:prefix_depth]) for prefix_depth in range(1, len(code) + 1)]
+                        ),
+                        "beam_ancestry": json.dumps(ancestry),
                         "prefix_entropy": None,
                         "generated_length": len(code),
                         "terminated_early": terminated_early,

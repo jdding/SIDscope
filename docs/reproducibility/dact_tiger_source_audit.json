@@ -1,0 +1,100 @@
+{
+  "schema": "sidscope.generator_source_audit.v1",
+  "route_id": "dact_tiger",
+  "audited_at": "2026-08-28",
+  "source": {
+    "project": "DACT: Drift-Aware Continual Tokenization for Generative Recommendation",
+    "repository_url": "https://github.com/HomesAmaranta/DACT",
+    "paper_url": "https://arxiv.org/abs/2603.29705",
+    "doi": "10.1145/3805712.3809645",
+    "revision": "0b8d8cec88fee83b2384dd236628c2802f337d26",
+    "tree": "84ac97c8379e9557aac5a2e9fe200ff50e3fe195",
+    "revision_timestamp": "2026-06-16T17:30:00+08:00",
+    "default_branch": "master",
+    "license_status": "no_license_detected",
+    "license_identifier": "NOASSERTION",
+    "license_files_found": [],
+    "github_api_license": null,
+    "paper_license": "arXiv non-exclusive license to distribute 1.0",
+    "paper_license_is_not_code_license": true,
+    "tag_found": false,
+    "release_found": false,
+    "requirements_file_found": false,
+    "readme_sha256": "3cd805bc76c6e8d036e42395c24e29ce610f8628471f7b5e08640df40f548b0c"
+  },
+  "asset_audit": {
+    "assets_are_git_tracked_at_revision": true,
+    "released_tiger_checkpoint": {
+      "path": "TIGER-backbone/ckpt/tiger_Tools_0.6_cf.pth",
+      "sha256": "2e13d9e31788fe4471bd70e6a480aa27e144dbd84bc21337f54808d99e077f01",
+      "bytes": 18653194
+    },
+    "released_sid_mapping": {
+      "path": "data/Tools/Tools_0.6_cf.npy",
+      "sha256": "90aed7df52a559d4ad6b77aa1bde5484fb596da5436feeb1eed8bb85c61371e9",
+      "shape": [9610, 4],
+      "dtype": "int64",
+      "unique_full_codes": 9610
+    },
+    "source_item_mapping": {
+      "path": "data/Tools/item_mapping.npy",
+      "sha256": "0abcc168bf38f58dd9a478952c4c9a1bafc1dd25c3566a656c9a682322a266ba",
+      "entries": 10217,
+      "identity": "raw Amazon item key to one-based normalized integer item ID"
+    },
+    "released_test_split": {
+      "path": "data/Tools/test_0.6.parquet",
+      "sha256": "989b9203013351be3c4bd3ed9c47552f4867fe82db2dcbaaaf54056527733f0d",
+      "rows": 11693,
+      "columns": ["history", "target", "user"]
+    },
+    "official_generator_source": {
+      "path": "TIGER-backbone/main_trie.py",
+      "sha256": "7c836b114f24cedde8b90d02f7f81246be23521de7295eed9b44d9467c375fa9"
+    },
+    "official_dataset_source": {
+      "path": "TIGER-backbone/dataset.py",
+      "sha256": "c474bceb799c72d602aef117a3f0c9bfca2fc0d7c474b5b959c69e81bfbd79db"
+    },
+    "official_finetune_script": {
+      "path": "TIGER-backbone/finetune.sh",
+      "sha256": "8543fefce7a3e2c820523f12669f453c7c66d68e49916f2ac3fb5e8a68f8e7c0"
+    }
+  },
+  "configuration_boundary": {
+    "snapshot": "Tools_0.6_cf",
+    "model_family": "released TIGER/T5 encoder-decoder",
+    "model": {
+      "num_layers": 4,
+      "num_decoder_layers": 4,
+      "d_model": 128,
+      "d_ff": 1024,
+      "num_heads": 6,
+      "d_kv": 64,
+      "vocab_size": 1505,
+      "pad_token_id": 0,
+      "eos_token_id": 0
+    },
+    "parameter_count": 4652288,
+    "sid_depth": 4,
+    "codebook_size": 256,
+    "vocabulary_rule": "token = raw_code + position * 256 + 1",
+    "training_boundary": "SIDScope does not retrain the 0.6 checkpoint; G21 loads the released state dict strictly and compares its preprocessing with the official GenRecDataset implementation."
+  },
+  "identity_round_trip": {
+    "source_item": "raw Amazon item key in item_mapping.npy",
+    "normalized_item": "one-based integer used by released parquet histories and targets",
+    "semantic_id": "row normalized_item - 1 in Tools_0.6_cf.npy",
+    "model_vocabulary": "four position-disjoint offset tokens",
+    "resolved_item": "reverse lookup from the complete four-token path",
+    "released_snapshot_catalog_items": 9610,
+    "released_snapshot_unique_full_codes": 9610,
+    "official_preprocessing_parity": "PASS on the hash-bound G21 route",
+    "boundary": "Raw item keys and upstream arrays are inspected externally and are not redistributed by SIDScope."
+  },
+  "redistribution": {
+    "upstream_source_or_assets_vendored": false,
+    "policy": "links_hashes_counts_and_independent_deidentified_fixture_only",
+    "reason": "The pinned repository contains no explicit code or asset license."
+  }
+}

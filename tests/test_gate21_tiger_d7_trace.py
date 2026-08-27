@@ -255,6 +255,8 @@ class Gate21TigerD7TraceTest(unittest.TestCase):
             )
             self.assertEqual(result["status"], "PASS")
             self.assertEqual(result["trace_rows"], 6)
+            self.assertTrue(traces["ordered_prefixes"].notna().all())
+            self.assertTrue(traces["beam_ancestry"].notna().all())
 
 
 if __name__ == "__main__":

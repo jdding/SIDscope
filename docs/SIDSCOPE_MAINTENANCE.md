@@ -101,6 +101,14 @@ deidentified contract fixture. It must not vendor the upstream implementation
 or promote the route until an explicit reusable source license and the missing
 model/tokenizer assets are available.
 
+The DACT/TIGER integration demonstrates that released checkpoints and passing
+real-model traces do not override an absent license. Its official repository
+contains the Tools mapping, test split, and TIGER weights but no detected code
+or asset license. SIDScope can verify hashes, run those assets externally, and
+ship independent ordered-prefix fixtures and derived/deidentified summaries;
+it must not vendor the upstream files or label the route a named adapter until
+reuse permission is explicit.
+
 ## License And Citation
 
 The code package uses the repository `LICENSE`. If an upstream artifact has a

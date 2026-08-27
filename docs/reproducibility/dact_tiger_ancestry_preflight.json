@@ -1,0 +1,49 @@
+{
+  "schema": "sidscope.dact_tiger_ancestry_preflight.v1",
+  "status": "pass",
+  "executed_at": "2026-08-28",
+  "source_revision": "0b8d8cec88fee83b2384dd236628c2802f337d26",
+  "runtime": {
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.6",
+    "device": "cpu"
+  },
+  "configuration": {
+    "stage": "preflight",
+    "dataset": "Tools",
+    "snapshot": "0.6_cf",
+    "targets": 4,
+    "beam_width": 4,
+    "batch_size": 2,
+    "max_history_items": 20,
+    "modes": ["constrained", "unconstrained"],
+    "seed": 20260827
+  },
+  "inputs": {
+    "checkpoint_sha256": "2e13d9e31788fe4471bd70e6a480aa27e144dbd84bc21337f54808d99e077f01",
+    "mapping_sha256": "90aed7df52a559d4ad6b77aa1bde5484fb596da5436feeb1eed8bb85c61371e9",
+    "test_split_sha256": "989b9203013351be3c4bd3ed9c47552f4867fe82db2dcbaaaf54056527733f0d",
+    "configuration_sha256": "8f98a0abe902be58b85ee4256d80a574ab64da4dfde708c3a6109fd27926ad5e"
+  },
+  "official_preprocessing_parity": {
+    "status": "pass",
+    "checked_rows": 4,
+    "official_dataset_rows": 11693
+  },
+  "outputs": {
+    "status": "PASS_G21_PREFLIGHT",
+    "parameter_count": 4652288,
+    "catalog_items": 9610,
+    "unique_full_codes": 9610,
+    "constrained_trace_rows": 16,
+    "unconstrained_trace_rows": 16,
+    "ordered_prefixes_present": true,
+    "beam_ancestry_present": true,
+    "finite_ranked_sequence_scores": true,
+    "exporter_labeler_resolution_match": true,
+    "constrained_trace_sha256": "66eb43d87f77b2c4374618d1648d6527899e3b6e14072ac61c8728a813f00e18",
+    "unconstrained_trace_sha256": "d64a67b99df5c35ae952c0cc5caf4363830f9dafdfe37552ed7fb53dbcaa373f"
+  },
+  "boundary": "This bounded replay proves that the revised exporter captures ordered prefixes and Hugging Face beam ancestry from the released checkpoint. The frozen 500-target primary was not rerun, so its compact evidence remains ancestry-free. Full output files and upstream assets are not redistributed."
+}

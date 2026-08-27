@@ -200,6 +200,19 @@ tokenizer cache, or training output. SIDScope therefore ships only its
 independent contract and compact evidence and does not label this route a
 complete named adapter. See `docs/LLADA_REC_DIFFUSION_ADAPTER.md`.
 
+DACT/TIGER now has a released-asset G0--G5 report, an ordered-prefix and
+parent-beam fixture, and a bounded replay of the official Tools `0.6_cf`
+checkpoint:
+
+```bash
+PYTHONPATH=src python3 tools/verify_dact_tiger_adapter.py
+```
+
+G1--G5 pass. G0 remains blocked because the official DACT repository contains
+no explicit code or asset license, so SIDScope redistributes only hashes,
+derived/deidentified evidence, and its independent fixture. See
+`docs/DACT_TIGER_GENERATOR_ADAPTER.md`.
+
 Post-submission development is tracked as `1.1.0.dev0` on
 `codex/sidscope-v1.1`; see `docs/V1_1_ROADMAP.md`. The TOIS submission remains
 frozen outside this software worktree until an editorial revision request.

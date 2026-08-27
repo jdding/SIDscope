@@ -1,0 +1,45 @@
+{
+  "schema": "sidscope.dact_tiger_adapter_status.v1",
+  "route_id": "dact_tiger",
+  "source_revision": "0b8d8cec88fee83b2384dd236628c2802f337d26",
+  "audited_at": "2026-08-28",
+  "gates": {
+    "G0": "blocked_no_source_or_asset_license",
+    "G1": "pass_released_source_normalized_sid_vocabulary_resolved_item_round_trip",
+    "G2": "pass_ordered_prefix_beam_ancestry_and_step_logprob_contract",
+    "G3": "pass_validity_ambiguity_collision_resolution_and_failure_labels",
+    "G4": "pass_deidentified_trace_ranked_item_score_and_split_export",
+    "G5": "pass_cpu_fixture_released_checkpoint_smoke_expected_failure_hashes_and_verifier"
+  },
+  "input_sha256": {
+    "source_audit": "90add856ea9135cc6c8e3f730381ac28faafbd7293aebc086f6058e0f2435e11",
+    "fixture_manifest": "21573778b13cab110ec13e4485e2e7a883173584b6dd33fa81a217ac3ffbd03a",
+    "ancestry_preflight": "f69b4b2476aca3f5e3e905937524a33cb70f3e6129fa5b581a207e21523ef156",
+    "g21_primary_summary": "6d6b912e64bbcdd8efd430e63fea76adafac33c79194fa34a2fda8f84a5df878",
+    "g22_handoff_summary": "e8a183277dd4f8e333b877d939201a828023f2127bf03d58b722b1c9d792e3ce",
+    "deidentified_trace_manifest": "6d3aa42aa96d24de5bd911b3b8122297b3c49c3eaf975eded43cd8c2c3aa6f72",
+    "deidentified_trace_rows": "5efb77ba6144c6312dce11415dc34c2828419ea6c3003ef2695e14c0e89016e0",
+    "released_trace_runner": "ed41d65face12256fd714c012f9b591df186b8cf4e46db759814b63afcf11aae"
+  },
+  "verified_outputs": {
+    "trace_schema": "sidscope.dact_tiger_autoregressive_trace.v1",
+    "decode_state_kind": "ordered_autoregressive_prefix_beam",
+    "fixture_ranked_item_ids": ["1", "2", "3", "4"],
+    "fixture_catalog_collision_count": 1,
+    "expected_failure_label": "token_outside_position_vocabulary",
+    "released_checkpoint_preflight_status": "PASS_G21_PREFLIGHT",
+    "primary_target_traces": 500,
+    "primary_beam_rows_per_mode": 25000,
+    "public_deidentified_rows": 50000,
+    "primary_prefix_entropy_available": false
+  },
+  "promotion": {
+    "named_adapter": false,
+    "decision": "close_named_adapter",
+    "blockers": [
+      "The pinned official repository contains no explicit code or asset license, so reuse and redistribution permission is not established.",
+      "The historical 500-target primary predates ancestry export; its aggregate and label evidence remains valid, but a full-size ancestry refresh is not claimed."
+    ],
+    "next_gate": "Obtain an explicit upstream code and asset license; then rerun the 500-target primary with ordered_prefixes and beam_ancestry before promotion."
+  }
+}

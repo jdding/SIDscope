@@ -83,3 +83,13 @@ filled positions. G0 is blocked because the code repository has no detected
 license, while real-data identity and trained trace gates remain open. The
 exact boundary is in `docs/LLADA_REC_DIFFUSION_ADAPTER.md` and
 `docs/reproducibility/llada_rec_adapter_status.json`.
+
+DACT/TIGER now has a complete method-facing report: the released source-item
+mapping, Tools `0.6_cf` SID array, official preprocessing, checkpoint,
+constrained/unconstrained primary traces, item resolution, and split identity
+are hash-bound. A deterministic ordered-prefix fixture and a real four-target
+CPU replay preserve parent-beam ancestry and step log-probabilities. G1--G5
+pass, while G0 remains blocked because the official repository declares no
+code or asset license. The route therefore remains below named-adapter status.
+See `docs/DACT_TIGER_GENERATOR_ADAPTER.md` and
+`docs/reproducibility/dact_tiger_adapter_status.json`.

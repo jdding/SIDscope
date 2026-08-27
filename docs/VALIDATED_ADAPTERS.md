@@ -81,10 +81,14 @@ adapter catalog so they are not mistaken for named-method evidence.
 
 ## Generator Coverage
 
-Generator evidence uses a separate G0--G5 contract. The released DACT TIGER
-trace and the verified Latte/PSID tokenizer cache path are useful integration
-surfaces, but neither is currently labeled as a complete named-method generator
-adapter. RPG now has a pinned non-commercial source audit, a bounded parallel
+Generator evidence uses a separate G0--G5 contract. DACT/TIGER now passes
+G1--G5 with a released source-item/mapping/checkpoint round-trip, an ordered
+prefix and beam-ancestry contract, real checkpoint smoke, public deidentified
+labels, and an executable verifier. It is not a named adapter because G0 is
+blocked by the upstream repository's absent code and asset license; the frozen
+500-target primary also predates ancestry export and is not described otherwise.
+The verified Latte/PSID tokenizer cache likewise remains below full generator
+closure. RPG has a pinned non-commercial source audit, a bounded parallel
 trace fixture, and an untrained official-source class smoke; its real-data
 round-trip and trained asset smoke remain open, so it is not a named adapter.
 LLaDA-Rec now has a pinned no-license source audit, bounded adaptive-unmasking

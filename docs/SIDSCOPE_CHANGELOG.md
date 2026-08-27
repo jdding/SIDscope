@@ -55,6 +55,16 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   deidentified CPU fixture, an expected remasking failure, and an official
   class-method smoke using handcrafted logits. The pinned inference code does
   not remask filled positions, so the route remains below named-adapter status.
+- Backfilled DACT/TIGER into a complete method-facing G0--G5 report. The
+  released source-item mapping, Tools `0.6_cf` SID array, test split, official
+  preprocessing, and TIGER checkpoint are revision- and hash-bound.
+- Added an ordered-prefix/parent-beam adapter contract, deidentified positive
+  and typed failure fixture, and real four-target CPU checkpoint replay. The
+  revised G21 exporter now records ordered prefixes and Hugging Face beam
+  ancestry together with transition and sequence scores.
+- DACT/TIGER passes G1--G5 but remains below named-adapter status because the
+  official repository has no detected code or asset license. The historical
+  500-target primary is retained accurately as pre-ancestry evidence.
 
 ## SIDScope v1.0.2 public-smoke dependency fix
 

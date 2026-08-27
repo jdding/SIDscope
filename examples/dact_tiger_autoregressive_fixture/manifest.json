@@ -1,0 +1,146 @@
+{
+  "schema": "sidscope.dact_tiger_fixture.v1",
+  "route_id": "dact_tiger",
+  "trace_id": "fixture-user-001",
+  "source": {
+    "project": "DACT",
+    "repository": "https://github.com/HomesAmaranta/DACT",
+    "revision": "0b8d8cec88fee83b2384dd236628c2802f337d26",
+    "artifact": "independent_deidentified_contract_fixture"
+  },
+  "configuration": {
+    "codebook_size": 256,
+    "sid_depth": 4,
+    "beam_width": 3,
+    "decoding_mode": "trie_constrained_beam",
+    "score_semantics": "sum_of_token_log_probabilities"
+  },
+  "split_identity": {
+    "dataset": "deidentified_fixture",
+    "snapshot": "fixture-v1",
+    "split": "test"
+  },
+  "target_normalized_item_id": "1",
+  "catalog": [
+    {
+      "source_item_id": "source-item-a",
+      "normalized_item_id": "1",
+      "semantic_codes": [0, 1, 2, 3]
+    },
+    {
+      "source_item_id": "source-item-b",
+      "normalized_item_id": "2",
+      "semantic_codes": [0, 1, 2, 4]
+    },
+    {
+      "source_item_id": "source-item-c",
+      "normalized_item_id": "3",
+      "semantic_codes": [2, 3, 4, 5]
+    },
+    {
+      "source_item_id": "source-item-d",
+      "normalized_item_id": "4",
+      "semantic_codes": [2, 3, 4, 5]
+    }
+  ],
+  "steps": [
+    {
+      "prefix_depth": 1,
+      "transitions": [
+        {
+          "beam_id": "b1",
+          "parent_beam_id": "root",
+          "prefix_tokens": [1],
+          "appended_token": 1,
+          "token_log_probability": -0.1,
+          "cumulative_score": -0.1
+        },
+        {
+          "beam_id": "b2",
+          "parent_beam_id": "root",
+          "prefix_tokens": [3],
+          "appended_token": 3,
+          "token_log_probability": -0.4,
+          "cumulative_score": -0.4
+        }
+      ]
+    },
+    {
+      "prefix_depth": 2,
+      "transitions": [
+        {
+          "beam_id": "b1-2",
+          "parent_beam_id": "b1",
+          "prefix_tokens": [1, 258],
+          "appended_token": 258,
+          "token_log_probability": -0.1,
+          "cumulative_score": -0.2
+        },
+        {
+          "beam_id": "b2-2",
+          "parent_beam_id": "b2",
+          "prefix_tokens": [3, 260],
+          "appended_token": 260,
+          "token_log_probability": -0.2,
+          "cumulative_score": -0.6
+        }
+      ]
+    },
+    {
+      "prefix_depth": 3,
+      "transitions": [
+        {
+          "beam_id": "b1-3",
+          "parent_beam_id": "b1-2",
+          "prefix_tokens": [1, 258, 515],
+          "appended_token": 515,
+          "token_log_probability": -0.1,
+          "cumulative_score": -0.3
+        },
+        {
+          "beam_id": "b2-3",
+          "parent_beam_id": "b2-2",
+          "prefix_tokens": [3, 260, 517],
+          "appended_token": 517,
+          "token_log_probability": -0.2,
+          "cumulative_score": -0.8
+        }
+      ]
+    },
+    {
+      "prefix_depth": 4,
+      "transitions": [
+        {
+          "beam_id": "candidate-a",
+          "parent_beam_id": "b1-3",
+          "prefix_tokens": [1, 258, 515, 772],
+          "appended_token": 772,
+          "token_log_probability": -0.1,
+          "cumulative_score": -0.4
+        },
+        {
+          "beam_id": "candidate-b",
+          "parent_beam_id": "b1-3",
+          "prefix_tokens": [1, 258, 515, 773],
+          "appended_token": 773,
+          "token_log_probability": -0.25,
+          "cumulative_score": -0.55
+        },
+        {
+          "beam_id": "candidate-collision",
+          "parent_beam_id": "b2-3",
+          "prefix_tokens": [3, 260, 517, 774],
+          "appended_token": 774,
+          "token_log_probability": -0.2,
+          "cumulative_score": -1.0
+        }
+      ]
+    }
+  ],
+  "expected_failure": {
+    "prefix_depth": 4,
+    "transition_index": 0,
+    "invalid_appended_token": 700,
+    "failure_label": "token_outside_position_vocabulary"
+  }
+}
