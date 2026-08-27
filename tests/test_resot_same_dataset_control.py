@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from pathlib import Path
 
@@ -33,6 +34,15 @@ def test_category_prefix_control_removes_common_root_and_is_unique() -> None:
 
 def test_frozen_resot_control_reports_all_prefix_depths() -> None:
     root = Path(__file__).resolve().parents[1]
-    result = build_result(root / "experiments/v1_evidence_chain/gate17_resot_intake/normalized_text")
+    normalized = root / "experiments/v1_evidence_chain/gate17_resot_intake/normalized_text"
+    required = (
+        normalized / "sid_assignments.parquet",
+        normalized / "item_metadata.parquet",
+        normalized / "interactions.parquet",
+    )
+    if not all(path.is_file() for path in required):
+        pytest.skip("frozen ReSOT normalized inputs are not redistributed")
+
+    result = build_result(normalized)
     assert [row["prefix_depth"] for row in result["source_artifact"]["d3_by_depth"]] == [1, 2, 3, 4]
     assert [row["prefix_depth"] for row in result["category_prefix_control"]["d3_by_depth"]] == [1, 2, 3, 4]

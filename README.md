@@ -37,6 +37,24 @@ python3 -m pip install -e .
 
 This installs the `sidinspector` package from the repository's `src/` layout.
 
+### Optional Latte Tokenizer Intake
+
+SIDScope's core artifact audits do not require tokenizer-training libraries.
+When a workflow must execute the tokenizer-only Latte/PSID export path before
+normalization, install the isolated optional environment:
+
+```bash
+python3 -m pip install -e '.[latte]'
+```
+
+This extra supplies `faiss-cpu` and `sentence-transformers`. Local Sentence-T5
+checkpoints are passed directly to `SentenceTransformer`; SIDScope never
+infers the model backend from directory-name fragments such as
+`sentence-transformers`. The tokenizer-only intake does not require the
+HuggingFace `datasets` package. A full upstream Latte training or evaluation
+workflow may have additional dependencies and should remain in its own
+hermetic environment.
+
 ## Run The Bundled Smoke Example
 
 ```bash
@@ -132,6 +150,16 @@ frozen ReSOT C0-C5 report, and reruns a public fixture that must fail C1 only.
 The second deterministically rebuilds the ReSOT walkthrough from compact public
 inputs. The upstream ReSOT archive and normalized parquet files are not
 redistributed.
+
+Generator, diffusion, and decoder-overlay integrations follow the separate
+G0-G5 protocol in `docs/GENERATOR_ADAPTER_CONFORMANCE.md`. Current route status
+is machine-readable in
+`docs/reproducibility/generator_adapter_coverage.csv`; reference traces and
+tokenizer-only intake are not labeled as complete named-method adapters.
+
+Post-submission development is tracked as `1.1.0.dev0` on
+`codex/sidscope-v1.1`; see `docs/V1_1_ROADMAP.md`. The TOIS submission remains
+frozen outside this software worktree until an editorial revision request.
 
 Run the local reviewer-resource package verifier:
 

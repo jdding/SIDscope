@@ -1,7 +1,7 @@
 # SIDScope Maintenance And Versioning
 
 Status: current maintenance plan for standalone SIDScope public repository
-Last updated: 2026-08-08
+Last updated: 2026-08-27
 
 ## Release Policy
 
@@ -23,6 +23,10 @@ Release refs:
 - `sidscope-v1-tois-submission`: frozen journal-submission package.
 - `sidscope-v1-tois-revision-N`: revised journal packages when requested by
   the editor; each tag must bind a verifier record and archive checksum.
+
+Active development occurs on `codex/sidscope-v1.1` as `1.1.0.dev0`. It may
+change code and public resource documentation, but it must not contain or edit
+the frozen TOIS manuscript.
 
 ## Maintenance Commitments
 
@@ -61,6 +65,20 @@ Report and triage issues by category:
 
 Evidence snapshot mismatch and package usability failure are release blockers
 for resource-paper packaging.
+
+## Generator Adapter Lifecycle
+
+Generator integrations use the G0--G5 protocol in
+`docs/GENERATOR_ADAPTER_CONFORMANCE.md` in addition to any applicable C0--C5
+mapping checks. A successful upstream training command or local workaround is
+not a named adapter. Promotion requires typed method-specific traces, item
+round-trip evidence, ranked-item export, a CPU fixture, a bounded model smoke,
+and a passing verifier.
+
+The active queue and source-watch state are tracked in
+`docs/reproducibility/generator_adapter_coverage.csv`. Downstream projects should
+report failures through an issue packet and keep any workaround visibly
+non-canonical until it is incorporated and tested in SIDScope.
 
 ## License And Citation
 

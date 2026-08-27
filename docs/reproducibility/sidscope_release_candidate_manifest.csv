@@ -11,12 +11,14 @@ toy_data,examples/sample_data,sample_data,fully_runnable,yes,pass_local,Bundled 
 reviewer_quickstart,examples/run_reviewer_quickstart.py,quickstart,fully_runnable,yes,pass_local,CPU reviewer quickstart command.
 quickstart_data,examples/reviewer_quickstart_data,sample_data,fully_runnable,yes,pass_local,Bundled toy sample data for quickstart only.
 adapter_template,docs/ADAPTER_TEMPLATE.md,documentation,documentation,yes,pass_local,Adapter authoring and normalization contract.
+generator_adapter_conformance,docs/GENERATOR_ADAPTER_CONFORMANCE.md,documentation,documentation,yes,pass_local,Defines G0-G5 generator decoder-overlay and method-specific trace admission.
 diagnostics_doc,docs/DIAGNOSTICS.md,documentation,documentation,yes,pass_local,D1-D6 diagnostic definitions and interpretation.
 resource_package_doc,docs/SIDSCOPE_RESOURCE_PACKAGE.md,documentation,documentation,yes,pass_local,G5 package contract.
 usage_demo_doc,docs/SIDSCOPE_USAGE_DEMO.md,documentation,documentation,yes,pass_local,G14 resource-use walkthrough for artifact triage decisions.
 datasheet,docs/SIDSCOPE_DATASHEET.md,documentation,documentation,yes,pass_local,G6 resource datasheet.
 limitations,docs/SIDSCOPE_LIMITATIONS.md,documentation,documentation,yes,pass_local,G6 limitation boundary.
 maintenance,docs/SIDSCOPE_MAINTENANCE.md,documentation,documentation,yes,pass_local,G6 maintenance and versioning plan.
+v1_1_roadmap,docs/V1_1_ROADMAP.md,documentation,documentation,yes,pass_local,Post-submission software roadmap and paper-freeze boundary for SIDScope 1.1 development.
 changelog,docs/SIDSCOPE_CHANGELOG.md,documentation,documentation,yes,pass_local,Release-candidate changelog records the clean sidscope split and requires a fresh public smoke for main.
 release_checklist,docs/SIDSCOPE_RELEASE_CHECKLIST.md,release_gate,documentation,yes,pass_local,Defines local and public release gates; R708 passed for rc2.
 public_release_packet,docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md,release_gate,documentation,yes,pass_local,Records candidate public URL tag archive checksum and G8 commands for rc2.
@@ -52,6 +54,8 @@ paper_table_builder,tools/build_sidscope_paper_tables.py,table_regeneration,full
 paper_table_verifier,tools/verify_sidscope_paper_tables.py,verification,fully_runnable,yes,pass_local,Rebuilds all eight manuscript tables in a temporary directory and compares all 60 rows with the frozen snapshots.
 paper_table_tests,tests/test_sidscope_paper_tables.py,test,fully_runnable,yes,pass_local,Unit test for deterministic paper-table regeneration.
 source_inventory,docs/reproducibility/sidscope_source_license_config_inventory.csv,evidence_index,tracked_snapshot,yes,pass_local,Nine paper-facing routes with source revision configuration license and redistribution boundaries.
+generator_adapter_coverage,docs/reproducibility/generator_adapter_coverage.csv,evidence_index,tracked_snapshot,yes,pass_local,Typed generator-route status ledger separating reference evidence named adapters source-audit candidates and source watch.
+latte_psid_route_status,docs/reproducibility/latte_psid_route_status.md,compact_evidence,tracked_snapshot,yes,pass_local,Public route-status evidence for the verified Latte tokenizer path and remaining C0-C5 plus G0-G5 promotion gates.
 source_route_evidence_summary,docs/reproducibility/source_route_evidence_summary.json,compact_evidence,tracked_snapshot,yes,pass_local,Portable route-level provenance summary retaining historical record identifiers without shipping private experiment directories.
 source_inventory_verifier,tools/verify_sidscope_source_inventory.py,verification,fully_runnable,yes,pass_local,Checks route identity paper coverage license policy and standard conformance evidence.
 adapter_conformance_module,src/sidinspector/conformance.py,runnable_code,fully_runnable,yes,pass_local,Implements the C0-C5 adapter conformance protocol.

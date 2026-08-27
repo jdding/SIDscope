@@ -5,6 +5,12 @@ import unittest
 import zipfile
 from pathlib import Path
 
+from sidinspector.adapters import (
+    LATTE_TOKENIZER_OPTIONAL_DISTRIBUTIONS,
+    latte_tokenizer_runtime_status,
+    load_sentence_transformer,
+    model_reference_kind,
+)
 from tools.build_sidscope_release_candidate_archive import build_archive
 from tools.run_sidscope_public_url_smoke import clone_command, smoke_commands
 from tools.run_sidscope_realistic_tutorial import run_tutorial
@@ -22,6 +28,49 @@ from tools.verify_sidscope_resource_package import (
 
 
 class SIDScopeResourcePackageTest(unittest.TestCase):
+    def test_latte_accepts_local_sentence_t5_path_without_name_heuristic(self) -> None:
+        calls: list[tuple[str, bool]] = []
+
+        def fake_loader(model_reference: str, *, local_files_only: bool) -> object:
+            calls.append((model_reference, local_files_only))
+            return object()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            local_model = Path(tmp) / "local_sentence_t5_checkpoint"
+            local_model.mkdir()
+
+            self.assertEqual(model_reference_kind(local_model), "local_path")
+            loaded = load_sentence_transformer(local_model, loader=fake_loader)
+
+        self.assertIsNotNone(loaded)
+        self.assertEqual(calls, [(str(local_model), True)])
+
+    def test_latte_tokenizer_extra_is_hermetic_and_datasets_free(self) -> None:
+        requested_imports: list[str] = []
+
+        def fake_finder(module_name: str) -> object:
+            requested_imports.append(module_name)
+            return object()
+
+        status = latte_tokenizer_runtime_status(fake_finder)
+
+        self.assertEqual(
+            LATTE_TOKENIZER_OPTIONAL_DISTRIBUTIONS,
+            ("faiss-cpu", "sentence-transformers"),
+        )
+        self.assertTrue(status["ready"])
+        self.assertFalse(status["datasets_required"])
+        self.assertEqual(requested_imports, ["faiss", "sentence_transformers"])
+        self.assertNotIn("datasets", requested_imports)
+
+        pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+        latte_extra = pyproject.split("[project.optional-dependencies]", 1)[1].split(
+            "[project.urls]", 1
+        )[0]
+        self.assertIn('"faiss-cpu>=1.8,<2"', latte_extra)
+        self.assertIn('"sentence-transformers>=3.0,<6"', latte_extra)
+        self.assertNotIn("datasets", latte_extra)
+
     def test_forbidden_tracked_patterns_catch_private_artifacts(self) -> None:
         findings = check_forbidden_tracked(
             [

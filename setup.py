@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="sidinspector",
-    version="1.0.1",
+    version="1.1.0.dev0",
     description="Mapping-first diagnostics for semantic-ID tokenizer artifacts",
     package_dir={"": "src"},
     packages=find_packages("src"),
@@ -13,5 +13,11 @@ setup(
         "pyarrow>=14.0",
         "scikit-learn>=1.3",
     ],
+    extras_require={
+        "latte": [
+            "faiss-cpu>=1.8,<2",
+            "sentence-transformers>=3.0,<6",
+        ],
+    },
     python_requires=">=3.9",
 )

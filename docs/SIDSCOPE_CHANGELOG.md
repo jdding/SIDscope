@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-20
+Last updated: 2026-08-25
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -10,6 +10,24 @@ release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
+
+## SIDScope v1.1.0-dev: Generator adapter maintenance
+
+Development opened: 2026-08-27
+Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
+
+- Replaced path-name model detection with an explicit SentenceTransformer
+  loader that accepts local Sentence-T5 checkpoints and registry identifiers.
+- Added the optional `latte` dependency group with `faiss-cpu` and
+  `sentence-transformers`, while keeping the core SIDScope installation lean.
+- Documented and tested that tokenizer-only Latte intake does not require the
+  HuggingFace `datasets` package. Full upstream Latte pipelines remain isolated
+  in their own environments.
+- No diagnostic definition, evidence snapshot, or manuscript/PDF change.
+- Added a G0--G5 generator-adapter protocol and a verified coverage ledger for
+  TIGER/DACT, Latte/PSID, RPG, LLaDA-Rec, ISD, and ChronoSID. The ledger keeps
+  released reference evidence, named-adapter closure, source-audit candidates,
+  and source-watch routes distinct.
 
 ## SIDScope v1.0.2 public-smoke dependency fix
 

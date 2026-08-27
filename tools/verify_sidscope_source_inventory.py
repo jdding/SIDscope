@@ -18,6 +18,7 @@ if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 DEFAULT_INVENTORY = ROOT / "docs/reproducibility/sidscope_source_license_config_inventory.csv"
 DEFAULT_COVERAGE = ROOT / "docs/reproducibility/paper_table_sources/table2_artifact_coverage_source.csv"
+DEFAULT_GENERATOR_COVERAGE = ROOT / "docs/reproducibility/generator_adapter_coverage.csv"
 ROUTE_SUMMARY = ROOT / "docs/reproducibility/source_route_evidence_summary.json"
 
 EXPECTED_ROUTE_IDS = {
@@ -83,6 +84,44 @@ ALLOWED_REDISTRIBUTION_POLICIES = {
         "summary_only_no_archive_redistribution",
         "summary_only_no_upstream_artifact_redistribution",
     },
+}
+
+EXPECTED_GENERATOR_ROUTE_IDS = {
+    "dact_tiger",
+    "latte_psid",
+    "rpg_kdd2025",
+    "llada_rec",
+    "isd",
+    "chronosid",
+}
+GENERATOR_REQUIRED_COLUMNS = {
+    "route_id",
+    "paper_label",
+    "adapter_kind",
+    "source_url",
+    "source_revision",
+    "source_state",
+    "mapping_state",
+    "trace_state",
+    "contract_state",
+    "current_decision",
+    "evidence_path",
+    "next_gate",
+    "last_audited",
+}
+ALLOWED_GENERATOR_ADAPTER_KINDS = {
+    "autoregressive_generator",
+    "parallel_generator",
+    "diffusion_generator",
+    "decoder_overlay",
+    "temporal_protocol",
+}
+ALLOWED_GENERATOR_DECISIONS = {
+    "reference_trace_available",
+    "close_named_adapter",
+    "go_source_audit",
+    "watch_official_source",
+    "named_adapter",
 }
 
 
@@ -327,10 +366,86 @@ def verify_inventory(inventory_path: Path, coverage_path: Path) -> dict[str, Any
     }
 
 
+def verify_generator_coverage(path: Path) -> dict[str, Any]:
+    failures: list[str] = []
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = set(reader.fieldnames or [])
+        rows = list(reader)
+
+    missing = sorted(GENERATOR_REQUIRED_COLUMNS - fieldnames)
+    if missing:
+        failures.append(f"generator coverage missing columns: {missing}")
+    route_ids = [row.get("route_id", "") for row in rows]
+    if len(route_ids) != len(set(route_ids)):
+        failures.append("generator route_id values must be unique")
+    if set(route_ids) != EXPECTED_GENERATOR_ROUTE_IDS:
+        failures.append(
+            "generator route set mismatch: "
+            f"expected={sorted(EXPECTED_GENERATOR_ROUTE_IDS)} observed={sorted(set(route_ids))}"
+        )
+
+    for row_number, row in enumerate(rows, start=2):
+        for column in GENERATOR_REQUIRED_COLUMNS:
+            if not row.get(column, "").strip():
+                failures.append(f"generator row {row_number} has blank {column}")
+        if row.get("adapter_kind") not in ALLOWED_GENERATOR_ADAPTER_KINDS:
+            failures.append(
+                f"generator row {row_number} has unsupported adapter_kind={row.get('adapter_kind')!r}"
+            )
+        if row.get("current_decision") not in ALLOWED_GENERATOR_DECISIONS:
+            failures.append(
+                f"generator row {row_number} has unsupported current_decision={row.get('current_decision')!r}"
+            )
+        if not row.get("source_url", "").startswith("https://"):
+            failures.append(f"generator row {row_number} source_url must use https")
+        if row.get("source_state") == "no_official_code_found" and row.get(
+            "current_decision"
+        ) != "watch_official_source":
+            failures.append(
+                f"generator row {row_number} without official code must remain source watch"
+            )
+        if row.get("current_decision") == "named_adapter" and row.get(
+            "contract_state"
+        ) != "g0_g5_pass":
+            failures.append(
+                f"generator row {row_number} cannot be named_adapter before G0-G5 pass"
+            )
+        evidence = row.get("evidence_path", "")
+        if evidence and evidence != "none":
+            try:
+                evidence_path = _package_file(evidence)
+            except ValueError as exc:
+                failures.append(f"generator row {row_number} evidence: {exc}")
+            else:
+                if not evidence_path.is_file():
+                    failures.append(
+                        f"generator row {row_number} evidence path does not exist: {evidence}"
+                    )
+
+    try:
+        coverage_path = path.relative_to(ROOT).as_posix()
+    except ValueError:
+        coverage_path = str(path)
+
+    return {
+        "schema": "sidscope.generator_adapter_coverage.verification.v1",
+        "status": "pass" if not failures else "fail",
+        "coverage": coverage_path,
+        "route_count": len(rows),
+        "decision_counts": {
+            decision: sum(row.get("current_decision") == decision for row in rows)
+            for decision in sorted(ALLOWED_GENERATOR_DECISIONS)
+        },
+        "failures": failures,
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
     parser.add_argument("--coverage", type=Path, default=DEFAULT_COVERAGE)
+    parser.add_argument("--generator-coverage", type=Path, default=DEFAULT_GENERATOR_COVERAGE)
     parser.add_argument("--output", type=Path)
     return parser.parse_args()
 
@@ -338,6 +453,11 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     result = verify_inventory(args.inventory.resolve(), args.coverage.resolve())
+    generator_result = verify_generator_coverage(args.generator_coverage.resolve())
+    result["generator_coverage"] = generator_result
+    if generator_result["status"] != "pass":
+        result["status"] = "fail"
+        result["failures"].extend(generator_result["failures"])
     payload = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

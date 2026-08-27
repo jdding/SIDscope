@@ -52,3 +52,21 @@ activate D7.
 - If an upstream repository exposes only checkpoints or intermediate features,
   the adapter should record that provenance and avoid claiming faithful support
   until a validated item-to-code export is available.
+
+## Upstream Tokenizer Runtime Isolation
+
+Keep tokenizer execution outside the core SIDScope environment. For the
+tokenizer-only Latte/PSID path, install `.[latte]`, generate the item-level SID
+export in a hermetic environment, and then hand the normalized mapping to the
+standard preflight and diagnostics.
+
+Model type must come from the selected loader or explicit configuration, never
+from a substring in a model path. In particular, a valid local Sentence-T5
+checkpoint need not have `sentence-transformers` in its directory name. Use
+`sidinspector.adapters.load_sentence_transformer`, which accepts local paths
+and model identifiers through the same explicit SentenceTransformer path.
+
+The tokenizer-only bridge requires `faiss-cpu` and `sentence-transformers` but
+does not require HuggingFace `datasets`. Full upstream training pipelines may
+retain broader data dependencies in their own environment; those dependencies
+are not part of SIDScope's artifact-inspection contract.

@@ -46,3 +46,12 @@ PYTHONPATH=src python3 tools/check_adapter_conformance.py \
 Run `python3 tools/verify_adapter_conformance_assets.py` to validate all eight
 frozen route reports, rerun the negative fixture, and check the inventory
 evidence boundary without requiring non-redistributable upstream inputs.
+
+## Generator Boundary
+
+Passing C0--C5 admits a static item-to-SID mapping to the diagnostic matrix. It
+does not establish that the corresponding generator, decoder, or lifecycle
+protocol is reproducible. Named generator integrations additionally follow the
+method-aware G0--G5 protocol in
+`docs/GENERATOR_ADAPTER_CONFORMANCE.md`; their current status is recorded in
+`docs/reproducibility/generator_adapter_coverage.csv`.

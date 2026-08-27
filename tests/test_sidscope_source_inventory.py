@@ -7,13 +7,26 @@ from pathlib import Path
 from tests import local_test_bootstrap  # noqa: F401
 from tools.verify_sidscope_source_inventory import (
     DEFAULT_COVERAGE,
+    DEFAULT_GENERATOR_COVERAGE,
     DEFAULT_INVENTORY,
     _verify_c0_c5_report,
+    verify_generator_coverage,
     verify_inventory,
 )
 
 
 class SIDScopeSourceInventoryTest(unittest.TestCase):
+    def test_generator_coverage_ledger_is_typed_and_gated(self) -> None:
+        result = verify_generator_coverage(DEFAULT_GENERATOR_COVERAGE)
+
+        self.assertEqual(result["status"], "pass", result["failures"])
+        self.assertEqual(result["route_count"], 6)
+        self.assertEqual(result["decision_counts"]["reference_trace_available"], 1)
+        self.assertEqual(result["decision_counts"]["close_named_adapter"], 1)
+        self.assertEqual(result["decision_counts"]["go_source_audit"], 2)
+        self.assertEqual(result["decision_counts"]["watch_official_source"], 2)
+        self.assertEqual(result["decision_counts"]["named_adapter"], 0)
+
     def test_repository_inventory_matches_paper_coverage(self) -> None:
         result = verify_inventory(DEFAULT_INVENTORY, DEFAULT_COVERAGE)
         self.assertEqual(result["status"], "pass", result["failures"])
