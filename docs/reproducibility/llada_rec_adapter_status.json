@@ -1,0 +1,55 @@
+{
+  "schema": "sidscope.llada_rec_adapter_status.v1",
+  "route_id": "llada_rec",
+  "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+  "audited_at": "2026-08-27",
+  "gates": {
+    "G0": "blocked_no_source_license_and_no_released_assets",
+    "G1": "bounded_fixture_only_official_data_roundtrip_pending",
+    "G2": "bounded_masked_adaptive_unmasking_state_and_official_method_smoke_pass",
+    "G3": "bounded_validity_ambiguity_resolution_and_remasking_failure_contract_pass",
+    "G4": "bounded_trace_and_ranked_item_export_pass_real_trained_trace_pending",
+    "G5": "partial_cpu_fixture_and_official_class_method_smoke_pass_checkpoint_pending"
+  },
+  "input_sha256": {
+    "source_audit": "0f3ae8fa02c772a17b4f5244d4bb7e5a73eb77992357f4b066929d2245f85cad",
+    "fixture_manifest": "84d11f874473672e00c243fcea30e952b29adf766a2cd56a2f3bb999825663bf",
+    "official_source_smoke": "6882f62ecb16860b3ed7c82d245920427f870c403f7a5468218367430b8c0568"
+  },
+  "verified_outputs": {
+    "trace_schema": "sidscope.llada_rec_diffusion_trace.v1",
+    "decode_state_kind": "masked_parallel_adaptive_unmasking",
+    "ranked_item_ids": [
+      "1",
+      "2"
+    ],
+    "generation_orders": [
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ]
+    ],
+    "catalog_collision_count": 1,
+    "remasking_transition_count": 0,
+    "expected_failure_label": "unsupported_remasking_transition",
+    "official_source_smoke_status": "pass"
+  },
+  "promotion": {
+    "named_adapter": false,
+    "decision": "close_named_adapter",
+    "blockers": [
+      "The public source repository has no detected code license; the paper's CC BY 4.0 license does not license the code.",
+      "No tag, release, checkpoint, semantic-ID cache, processed dataset, or training log is published.",
+      "No real official-data source-item to SID to model-vocabulary to resolved-item round-trip has passed G1.",
+      "No trained trace or end-to-end bounded checkpoint smoke has passed G4-G5."
+    ]
+  }
+}

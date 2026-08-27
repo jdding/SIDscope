@@ -185,6 +185,21 @@ not declare an explicit license identifier. See
 does not claim a complete Latte generator adapter: no released or locally
 trained checkpoint has yet passed bounded inference and real trace export.
 
+LLaDA-Rec now has a pinned source/license/asset audit, a masked-state adaptive
+unmasking trace contract, a deidentified deterministic CPU fixture with a
+typed remasking failure, and a smoke against the pinned official class methods:
+
+```bash
+PYTHONPATH=src python3 tools/verify_llada_rec_adapter.py
+```
+
+The audit found that the pinned inference implementation monotonically fills
+confidence-selected masked positions; it does not remask filled positions.
+The official repository also has no detected code license or released model,
+tokenizer cache, or training output. SIDScope therefore ships only its
+independent contract and compact evidence and does not label this route a
+complete named adapter. See `docs/LLADA_REC_DIFFUSION_ADAPTER.md`.
+
 Post-submission development is tracked as `1.1.0.dev0` on
 `codex/sidscope-v1.1`; see `docs/V1_1_ROADMAP.md`. The TOIS submission remains
 frozen outside this software worktree until an editorial revision request.

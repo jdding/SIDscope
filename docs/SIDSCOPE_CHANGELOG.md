@@ -47,6 +47,14 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   tables, and checkpoints outside the public package. The cache route is
   statically closed, but Latte remains below complete G0--G5 named-adapter
   status until trained inference and real trace export pass.
+- Pinned the official LLaDA-Rec source at `83dbcd6` and recorded that the code
+  repository has no detected license, tag, release, checkpoint, semantic-ID
+  cache, processed dataset, or training log.
+- Added an independent masked-state adaptive-unmasking trace contract,
+  position-specific vocabulary and ambiguity-aware item resolution, a
+  deidentified CPU fixture, an expected remasking failure, and an official
+  class-method smoke using handcrafted logits. The pinned inference code does
+  not remask filled positions, so the route remains below named-adapter status.
 
 ## SIDScope v1.0.2 public-smoke dependency fix
 

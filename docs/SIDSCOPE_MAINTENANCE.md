@@ -93,6 +93,14 @@ report while redistributing only hashes, counts, bounded diagnostics, and a
 deidentified fixture. Raw histories, metadata text, sentence embeddings, the
 real `.sem_ids` cache, and normalized tables remain external.
 
+The LLaDA-Rec integration demonstrates an absent-code-license boundary. The
+paper is CC BY 4.0, but the official code repository has no detected license;
+these are distinct artifacts. SIDScope may link to and hash the pinned source,
+run external source-shaped checks, and publish an independently written
+deidentified contract fixture. It must not vendor the upstream implementation
+or promote the route until an explicit reusable source license and the missing
+model/tokenizer assets are available.
+
 ## License And Citation
 
 The code package uses the repository `LICENSE`. If an upstream artifact has a

@@ -1,0 +1,157 @@
+{
+  "schema": "sidscope.llada_rec_diffusion_fixture.v1",
+  "route_id": "llada_rec",
+  "trace_id": "llada-rec-cpu-fixture-001",
+  "source": {
+    "url": "https://github.com/TengShi-RUC/LLaDA-Rec",
+    "revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+    "license_identifier": "NOASSERTION"
+  },
+  "configuration": {
+    "codebook_sizes": [4, 4, 4, 4],
+    "gen_steps": 4,
+    "beam_size": 2,
+    "top_k": 2,
+    "split_id": "fixture/test",
+    "target_universe": "four deidentified source items"
+  },
+  "catalog": [
+    {
+      "source_item_id": "fixture-source-a",
+      "normalized_item_id": "1",
+      "semantic_codes": [0, 1, 0, 2]
+    },
+    {
+      "source_item_id": "fixture-source-b",
+      "normalized_item_id": "2",
+      "semantic_codes": [1, 0, 2, 1]
+    },
+    {
+      "source_item_id": "fixture-source-c",
+      "normalized_item_id": "3",
+      "semantic_codes": [3, 3, 3, 3]
+    },
+    {
+      "source_item_id": "fixture-source-d",
+      "normalized_item_id": "4",
+      "semantic_codes": [3, 3, 3, 3]
+    }
+  ],
+  "steps": [
+    {
+      "refinement_step": 1,
+      "transitions": [
+        {
+          "beam_id": "a1",
+          "parent_beam_id": "root",
+          "pre_tokens": [18, 18, 18, 18],
+          "selected_positions": [2],
+          "predicted_tokens": [9],
+          "confidences": [0.93],
+          "remasked_positions": [],
+          "post_tokens": [18, 18, 9, 18],
+          "beam_score_log_probability": -0.10
+        },
+        {
+          "beam_id": "b1",
+          "parent_beam_id": "root",
+          "pre_tokens": [18, 18, 18, 18],
+          "selected_positions": [2],
+          "predicted_tokens": [11],
+          "confidences": [0.88],
+          "remasked_positions": [],
+          "post_tokens": [18, 18, 11, 18],
+          "beam_score_log_probability": -0.18
+        }
+      ]
+    },
+    {
+      "refinement_step": 2,
+      "transitions": [
+        {
+          "beam_id": "a2",
+          "parent_beam_id": "a1",
+          "pre_tokens": [18, 18, 9, 18],
+          "selected_positions": [0],
+          "predicted_tokens": [1],
+          "confidences": [0.86],
+          "remasked_positions": [],
+          "post_tokens": [1, 18, 9, 18],
+          "beam_score_log_probability": -0.25
+        },
+        {
+          "beam_id": "b2",
+          "parent_beam_id": "b1",
+          "pre_tokens": [18, 18, 11, 18],
+          "selected_positions": [3],
+          "predicted_tokens": [14],
+          "confidences": [0.90],
+          "remasked_positions": [],
+          "post_tokens": [18, 18, 11, 14],
+          "beam_score_log_probability": -0.29
+        }
+      ]
+    },
+    {
+      "refinement_step": 3,
+      "transitions": [
+        {
+          "beam_id": "a3",
+          "parent_beam_id": "a2",
+          "pre_tokens": [1, 18, 9, 18],
+          "selected_positions": [3],
+          "predicted_tokens": [15],
+          "confidences": [0.81],
+          "remasked_positions": [],
+          "post_tokens": [1, 18, 9, 15],
+          "beam_score_log_probability": -0.46
+        },
+        {
+          "beam_id": "b3",
+          "parent_beam_id": "b2",
+          "pre_tokens": [18, 18, 11, 14],
+          "selected_positions": [0],
+          "predicted_tokens": [2],
+          "confidences": [0.84],
+          "remasked_positions": [],
+          "post_tokens": [2, 18, 11, 14],
+          "beam_score_log_probability": -0.47
+        }
+      ]
+    },
+    {
+      "refinement_step": 4,
+      "transitions": [
+        {
+          "beam_id": "a4",
+          "parent_beam_id": "a3",
+          "pre_tokens": [1, 18, 9, 15],
+          "selected_positions": [1],
+          "predicted_tokens": [6],
+          "confidences": [0.78],
+          "remasked_positions": [],
+          "post_tokens": [1, 6, 9, 15],
+          "beam_score_log_probability": -0.55
+        },
+        {
+          "beam_id": "b4",
+          "parent_beam_id": "b3",
+          "pre_tokens": [2, 18, 11, 14],
+          "selected_positions": [1],
+          "predicted_tokens": [5],
+          "confidences": [0.75],
+          "remasked_positions": [],
+          "post_tokens": [2, 5, 11, 14],
+          "beam_score_log_probability": -0.65
+        }
+      ]
+    }
+  ],
+  "target_normalized_item_id": "1",
+  "expected_failure": {
+    "refinement_step": 2,
+    "transition_index": 0,
+    "remasked_positions": [2],
+    "failure_label": "unsupported_remasking_transition"
+  }
+}

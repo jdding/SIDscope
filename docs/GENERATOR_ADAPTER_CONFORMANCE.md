@@ -74,3 +74,12 @@ generator status because no trained checkpoint or recorded training output has
 passed bounded inference and real trace export. The exact boundary is in
 `docs/LATTE_PSID_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/latte_psid_adapter_status.json`.
+
+LLaDA-Rec has a pinned source audit, an independent masked-state trace schema,
+a deterministic CPU fixture, and an official class-method smoke for all-mask
+initialization, confidence-selected position transfer, and position-valid beam
+expansion. The pinned source monotonically unmasks positions and never remasks
+filled positions. G0 is blocked because the code repository has no detected
+license, while real-data identity and trained trace gates remain open. The
+exact boundary is in `docs/LLADA_REC_DIFFUSION_ADAPTER.md` and
+`docs/reproducibility/llada_rec_adapter_status.json`.

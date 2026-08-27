@@ -87,8 +87,12 @@ surfaces, but neither is currently labeled as a complete named-method generator
 adapter. RPG now has a pinned non-commercial source audit, a bounded parallel
 trace fixture, and an untrained official-source class smoke; its real-data
 round-trip and trained asset smoke remain open, so it is not a named adapter.
-LLaDA-Rec remains a source-audit candidate; ISD and ChronoSID remain source
-watch until an official reproducible route is available.
+LLaDA-Rec now has a pinned no-license source audit, bounded adaptive-unmasking
+trace fixture, and official class-method smoke. It remains below named-adapter
+status because G0 is blocked by the absent code license and no released cache,
+checkpoint, official-data round-trip, or trained trace exists. ISD and
+ChronoSID remain source watch until an official reproducible route is
+available.
 
 See `docs/GENERATOR_ADAPTER_CONFORMANCE.md` and
 `docs/reproducibility/generator_adapter_coverage.csv` for the typed status and

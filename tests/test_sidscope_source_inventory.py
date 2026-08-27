@@ -22,8 +22,8 @@ class SIDScopeSourceInventoryTest(unittest.TestCase):
         self.assertEqual(result["status"], "pass", result["failures"])
         self.assertEqual(result["route_count"], 6)
         self.assertEqual(result["decision_counts"]["reference_trace_available"], 1)
-        self.assertEqual(result["decision_counts"]["close_named_adapter"], 2)
-        self.assertEqual(result["decision_counts"]["go_source_audit"], 1)
+        self.assertEqual(result["decision_counts"]["close_named_adapter"], 3)
+        self.assertEqual(result["decision_counts"]["go_source_audit"], 0)
         self.assertEqual(result["decision_counts"]["watch_official_source"], 2)
         self.assertEqual(result["decision_counts"]["named_adapter"], 0)
 

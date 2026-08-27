@@ -1,0 +1,101 @@
+{
+  "schema": "sidscope.generator_source_audit.v1",
+  "route_id": "llada_rec",
+  "audited_at": "2026-08-27",
+  "method": {
+    "paper_title": "LLaDA-Rec: Discrete Diffusion for Parallel Semantic ID Generation in Generative Recommendation",
+    "paper_url": "https://arxiv.org/abs/2511.06254v1",
+    "paper_revision": "arXiv:2511.06254v1",
+    "paper_license_identifier": "CC-BY-4.0",
+    "adapter_kind": "diffusion_generator"
+  },
+  "source": {
+    "url": "https://github.com/TengShi-RUC/LLaDA-Rec",
+    "revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+    "default_branch": "main",
+    "commit_date": "2025-12-09T15:17:19+08:00",
+    "commit_count": 3,
+    "license_status": "no_license_detected",
+    "license_identifier": "NOASSERTION",
+    "license_files_found": [],
+    "github_api_license": null,
+    "tag_found": false,
+    "release_found": false,
+    "redistribution_policy": "link_and_hash_only_no_upstream_source_redistribution"
+  },
+  "source_sha256": {
+    "README.md": "0fed053e8afbed913204da9a664e7305956b369275c97c4dbc25cb551d4ae073",
+    "requirements.txt": "475a392e320513db23aad16be92451f599c225c1d0caf5f6a32d446a2f8ea944",
+    "run_pipeline.py": "09d877e0e2ff14838b01b97c83436705aaf3e9a521d95e885303b17b421ff64e",
+    "genrec/models/LLaDARec/config.yaml": "17362d7b1c34ec7e7a52713087bd71e7084eb8e081bf54a823c0fef274706b5a",
+    "genrec/models/LLaDARec/model.py": "280b0332e1bef6ee3ae40011a9e481102f158a55e02118a492e8f1087f681133",
+    "genrec/models/LLaDARec/tokenizer.py": "ff887fa391b6063c8bf4e777d295fdb8826d443dbb1aa7446d295b2d37c6e6e8",
+    "genrec/tokenizers/MultiHeadVQVAE/config.yaml": "e0850bcd283525200d7a6cc174b01c4b1f4d69f0c79b1bbfb11f83b847b74092",
+    "genrec/tokenizers/MultiHeadVQVAE/tokenizer.py": "377cc774bba53feb36f19f82fad69291d1c7f1890acaf9f2bd36cb9732b3b73a"
+  },
+  "asset_audit": {
+    "checkpoint_found": false,
+    "semantic_id_cache_found": false,
+    "processed_dataset_found": false,
+    "training_log_found": false,
+    "tokenizer_training_code_found": true,
+    "generator_training_code_found": true,
+    "official_dataset_links_found": true
+  },
+  "configuration": {
+    "dataset": "Amazon Reviews 2023",
+    "categories": [
+      "Industrial_and_Scientific",
+      "Musical_Instruments",
+      "Video_Games"
+    ],
+    "split": "last_out",
+    "kcore": "5core",
+    "tokenizer": "MultiHeadVQVAE",
+    "sentence_embedding_model": "sentence-t5-base",
+    "sentence_embedding_pca": 128,
+    "vq_n_codebooks": 4,
+    "vq_codebook_size": 256,
+    "vqvae_epoch": 10000,
+    "generator_train_epochs": 150,
+    "generator_d_model": 256,
+    "generator_n_layers": 4,
+    "gen_steps": 4,
+    "test_num_beams": 50,
+    "rand_seed": 2024
+  },
+  "identity_contract": {
+    "source_item_identity": "Amazon Reviews 2023 parent_asin",
+    "semantic_id": "four position-specific parallel MultiHeadVQVAE codes",
+    "model_vocabulary": "code[position] + sum(previous codebook sizes) + 1",
+    "padding_token": 0,
+    "eos_token": "sum(codebook_sizes) + 1",
+    "mask_token": "sum(codebook_sizes) + 2",
+    "official_evaluation_identity": "exact semantic-token tuple comparison; no source-item ranked export"
+  },
+  "inference_contract": {
+    "initial_target_state": "all positions masked",
+    "position_selection": "highest argmax softmax confidence among currently masked positions",
+    "beam_expansion": "position-specific valid-token vocabulary with cumulative log-softmax score",
+    "generation_order": "adaptive and beam-specific",
+    "filled_position_behavior": "kept unchanged",
+    "remasking_observed_in_pinned_source": false,
+    "final_output": "semantic-token tuples only",
+    "item_resolution_gap": "official inference does not export source or normalized item identity and does not specify collision resolution"
+  },
+  "runtime_boundary": {
+    "declared_torch": "2.6.0+cu124",
+    "declared_flash_attn": "2.8.3",
+    "declared_accelerate": "1.10.0",
+    "declared_transformers": "4.55.0",
+    "requirements_anomaly": "requirements.txt declares both PyYAML==6.0.2 and PyYAML==6.0.3",
+    "core_install_policy": "keep all LLaDA-Rec dependencies outside SIDScope core",
+    "checkpoint_boundary": "training is required because no checkpoint or recorded training output is released"
+  },
+  "promotion_boundary": {
+    "g0_blocker": "the public code repository has no detected source license",
+    "g1_blocker": "no released semantic-ID cache or official-data normalized round-trip",
+    "g5_blocker": "no checkpoint or fully recorded training output",
+    "named_adapter": false
+  }
+}

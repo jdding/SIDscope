@@ -79,6 +79,7 @@ __all__ = [
     "grid",
     "latte",
     "latte_tokenizer_runtime_status",
+    "llada_rec",
     "lcrec",
     "letter",
     "load_sentence_transformer",

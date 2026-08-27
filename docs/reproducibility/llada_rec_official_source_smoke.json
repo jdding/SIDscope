@@ -1,0 +1,88 @@
+{
+  "boundary": "Pinned official class methods with handcrafted logits and no model instantiation, weights, training, dataset, or recommendation result.",
+  "configuration": {
+    "beam_size": 2,
+    "codebook_sizes": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "mask_token_id": 18,
+    "n_digit": 4
+  },
+  "inference_semantics": {
+    "filled_positions_remasked": false,
+    "initial_state": "all_mask",
+    "position_order": "adaptive_argmax_softmax_confidence",
+    "position_vocabulary": "codebook_disjoint"
+  },
+  "outputs": {
+    "attention_shape": [
+      2,
+      8
+    ],
+    "expanded_beam_scores": [
+      -0.31326165795326233,
+      -1.31326162815094
+    ],
+    "expanded_target_states": [
+      [
+        18,
+        18,
+        9,
+        18
+      ],
+      [
+        18,
+        18,
+        11,
+        18
+      ]
+    ],
+    "filled_position_excluded_next_selection": [
+      [
+        0
+      ]
+    ],
+    "first_confidence_selected_positions": [
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "initial_beam_scores": [
+      0.0,
+      -1000000000.0
+    ],
+    "initial_target_states": [
+      [
+        18,
+        18,
+        18,
+        18
+      ],
+      [
+        18,
+        18,
+        18,
+        18
+      ]
+    ]
+  },
+  "runtime": {
+    "device": "cpu",
+    "python": "3.9.6",
+    "torch": "2.8.0"
+  },
+  "schema": "sidscope.llada_rec_official_source_smoke.v1",
+  "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+  "source_sha256": {
+    "model": "280b0332e1bef6ee3ae40011a9e481102f158a55e02118a492e8f1087f681133",
+    "tokenizer": "ff887fa391b6063c8bf4e777d295fdb8826d443dbb1aa7446d295b2d37c6e6e8"
+  },
+  "source_url": "https://github.com/TengShi-RUC/LLaDA-Rec",
+  "status": "pass"
+}
