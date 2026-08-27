@@ -66,3 +66,11 @@ weights. It remains below named-adapter status because a real official-data
 round-trip and trained checkpoint or fully recorded training-output smoke have
 not passed. The exact boundary is in `docs/RPG_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/rpg_kdd2025_adapter_status.json`.
+
+Latte/PSID has a real official-code-derived static cache round-trip and a
+non-paper-counted C0--C5 report, plus a method-preserving latent-token fixture
+and official tokenizer/aggregation class-method smoke. It remains below named
+generator status because no trained checkpoint or recorded training output has
+passed bounded inference and real trace export. The exact boundary is in
+`docs/LATTE_PSID_GENERATOR_ADAPTER.md` and
+`docs/reproducibility/latte_psid_adapter_status.json`.

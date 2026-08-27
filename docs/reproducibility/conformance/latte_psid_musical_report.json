@@ -1,0 +1,144 @@
+{
+  "artifact_id": "latte_psid_musical",
+  "checks": [
+    {
+      "details": {
+        "artifact_id": "latte_psid_musical",
+        "license_status": "source_licensed_artifact_boundary_unresolved",
+        "paper_label": "Latte / PSID rqkmeans / Musical Instruments",
+        "source_revision": "05e4e6d983225bcb7172f148a076890e80c524d1"
+      },
+      "failures": [],
+      "level": "C0",
+      "status": "pass",
+      "title": "Source and license declaration"
+    },
+    {
+      "details": {
+        "sid_depth": 3,
+        "sid_reconstruction_match": true,
+        "tables": {
+          "interactions": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 511836
+          },
+          "item_metadata": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 24587
+          },
+          "sid_assignments": {
+            "availability": "summary_only_raw_not_redistributed",
+            "rows": 24587
+          }
+        }
+      },
+      "failures": [],
+      "level": "C1",
+      "status": "pass",
+      "title": "Normalized table schema"
+    },
+    {
+      "details": {
+        "coverage": [
+          {
+            "dataset": "musical_instruments",
+            "interaction_items": 24587,
+            "interaction_without_sid": 0,
+            "metadata_items": 24587,
+            "metadata_without_sid": 0,
+            "method": "latte_psid_rqkmeans_official_code_derived",
+            "sid_items": 24587
+          }
+        ],
+        "status": "passed"
+      },
+      "failures": [],
+      "level": "C2",
+      "status": "pass",
+      "title": "Coverage and join preflight"
+    },
+    {
+      "details": {
+        "bounds": {
+          "d3_max_pair_events": 10000,
+          "d3_max_user_items": 50,
+          "d3_top_k": 5,
+          "max_metric_items": 50000,
+          "run_metric_smoke": true
+        },
+        "metric_smoke_summary": [
+          {
+            "d1_entropy": "7.675968;6.838064;7.558184",
+            "d1_level_count": 3,
+            "d1_unique_codes": "256;256;256",
+            "d3_depth1_mean_collab_recall": 0.028722382324687802,
+            "d3_depth1_weighted_collab_recall": 0.028727770177838577,
+            "d4_head_sid_unique_ratio": 1.0,
+            "d4_mid_sid_unique_ratio": 1.0,
+            "d4_tail_sid_unique_ratio": 1.0,
+            "dataset": "musical_instruments",
+            "duplicate_sid_rate": 0.0,
+            "full_collision_rate": 0.0,
+            "method": "latte_psid_rqkmeans_official_code_derived",
+            "prefix_counts": "256;9197;24587",
+            "sid_length": 3,
+            "unique_sid": 24587
+          }
+        ]
+      },
+      "failures": [],
+      "level": "C3",
+      "status": "pass",
+      "title": "Bounded D1-D5 smoke"
+    },
+    {
+      "details": {
+        "command": [
+          "python3",
+          "tools/normalize_latte_psid_cache.py",
+          "--id-mapping",
+          "<local-pinned-build/id_mapping.json>",
+          "--semantic-ids",
+          "<local-pinned-build/sentence-t5-base_rqkmeans_3x256_psid.sem_ids>",
+          "--metadata",
+          "<local-pinned-build/metadata.sentence.json>",
+          "--sequences",
+          "<local-pinned-build/all_item_seqs.json>",
+          "--output-dir",
+          "<local-SIDScope-output-root>"
+        ],
+        "input_sha256": {
+          "interactions": "c13ec183889f9ac77e622864a9caf1a028f22b0e8fe815e95f019d8f7dba8472",
+          "item_metadata": "b433475aa4414e1a35c12f9a62a3ddbc6818f6037fd95290507552fb39d5bc53",
+          "sid_assignments": "694f3476eefb088ad7a3fd922c49e0a1e5518911df37fe1c2de0279cf89f8fe6"
+        },
+        "runtime_class": "cpu_minutes",
+        "source_evidence": [
+          "docs/reproducibility/latte_psid_source_audit.json",
+          "docs/reproducibility/latte_psid_musical_cache_build.json",
+          "docs/reproducibility/latte_psid_musical_intake.json"
+        ]
+      },
+      "failures": [],
+      "level": "C4",
+      "status": "pass",
+      "title": "Reproduction record and input hashes"
+    },
+    {
+      "details": {
+        "evidence_role": "official_code_derived_route",
+        "paper_counted": false,
+        "route_id": "latte_psid_musical"
+      },
+      "failures": [],
+      "level": "C5",
+      "status": "pass",
+      "title": "Paper-promotion contract"
+    }
+  ],
+  "failed_levels": [],
+  "manifest": "docs/reproducibility/conformance/latte_psid_musical_manifest.json",
+  "paper_label": "Latte / PSID rqkmeans / Musical Instruments",
+  "schema": "sidscope.adapter_conformance_report.v1",
+  "status": "pass"
+}

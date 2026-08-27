@@ -1,0 +1,75 @@
+{
+  "schema": "sidscope.latte_psid_source_audit.v1",
+  "audited_at": "2026-08-27",
+  "method": {
+    "paper_title": "Expressiveness Limits of Autoregressive Semantic ID Generation in Generative Recommendation",
+    "paper_url": "https://arxiv.org/abs/2605.06331",
+    "paper_revision": "arXiv:2605.06331v1",
+    "adapter_kind": "autoregressive_generator"
+  },
+  "source": {
+    "url": "https://github.com/hyp1231/Latte",
+    "revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+    "default_branch": "main",
+    "commit_date": "2026-05-08T14:57:06-07:00",
+    "license_identifier": "MIT",
+    "license_file_sha256": "0f5372dd36270083fb778c288460104353aaf5412fa5d461188de5bac2650670",
+    "tag_found": false,
+    "release_found": false
+  },
+  "source_sha256": {
+    "README.md": "8656afa784b73bd2340c5dd87f56c58390540621ec42151bee055bbe745e9b61",
+    "pyproject.toml": "79f24e351febe5ef9554991fe73bf616c2882c817a25ded036b7aa179cf07f95",
+    "genrec/models/Latte/config.yaml": "a2ddae4b5f9460b58e30a03d063e502242cbc483ed3b1fc9cc2a9db49d16c474",
+    "genrec/models/PSID/config.yaml": "8bff5f1d58d1facd6f7bdca791015d0e0ce25917b54277239645306513e8a892",
+    "genrec/datasets/AmazonReviews2023/config.yaml": "bbd42540294674534c7a971adde90315e73d7063a57e7b4c83dac212b033aacc",
+    "genrec/models/Latte/tokenizer.py": "c80694d1339f8e7b23c5ced9d3b94e27bbebd58e385ac621a05c3513c26193bf",
+    "genrec/models/PSID/tokenizer.py": "4329b170f912d3138a62e4e641b0d869db2985fc0bc742abd56e377eef1f05b7",
+    "genrec/models/Latte/model.py": "4a98fdb09453e1a1f1827bed1bd1d0c7687fd974af574aa6c4135ea64f145df0",
+    "genrec/models/PSID/model.py": "cafd5a3af1f0b0b7174183d115ddeea62b83b45a689ac0780df21b43aa47a2a8",
+    "genrec/datasets/AmazonReviews2023/dataset.py": "dae96587fb329181282e8bb6dbc6760a3d3204b7eb6f705db5b4f6204c0a08d0"
+  },
+  "asset_audit": {
+    "checkpoint_found": false,
+    "precomputed_sem_ids_found": false,
+    "processed_dataset_found_in_source_repository": false,
+    "training_scripts_found": true,
+    "cache_generation_route_found": true
+  },
+  "cache_contract": {
+    "filename_template": "<basename(sent_emb_model)>_<vq_method>_<n_codebooks>x<codebook_size>_psid.sem_ids",
+    "source_item_identity": "Amazon Reviews 2023 parent_asin",
+    "value_identity": "zero-based ordered semantic code per codebook",
+    "conflict_policy": "PSID reassigns colliding items; admitted cache must be conflict-free",
+    "psid_model_vocabulary": "code[level] + level * codebook_size + 1",
+    "latte_model_vocabulary": "code[level] + n_latent_tokens + level * codebook_size + 1"
+  },
+  "generator_contract": {
+    "psid_state": "ordered autoregressive semantic-ID prefix",
+    "latte_state": "latent token followed by ordered autoregressive semantic-ID prefix",
+    "latte_resolution": "conflict-free semantic token tuple to source item",
+    "latte_aggregation": ["agg_max", "agg_sum_logsumexp"],
+    "checkpoint_boundary": "no official checkpoint released; training is required for generator closure"
+  },
+  "external_sources": {
+    "dataset": {
+      "url": "https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023",
+      "revision": "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e",
+      "license_identifier": "NOASSERTION",
+      "license_note": "No explicit dataset license identifier was found on the audited dataset card; derived cache redistribution is withheld."
+    },
+    "sentence_embedding_model": {
+      "url": "https://huggingface.co/sentence-transformers/sentence-t5-base",
+      "revision": "fc5d4628481afbbaaacd7af6bb07cf9d3865f781",
+      "license_identifier": "Apache-2.0"
+    }
+  },
+  "redistribution": {
+    "official_source_code": "link_and_hash_only",
+    "amazon_raw_data": "not_redistributed",
+    "metadata_text": "not_redistributed",
+    "sentence_embeddings": "not_redistributed",
+    "generated_sem_ids": "hash_and_summary_only_pending_dataset_license_clarification",
+    "checkpoint": "none_available"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "sidscope.latte_psid_adapter_status.v1",
+  "route_id": "latte_psid",
+  "source_revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+  "audited_at": "2026-08-27",
+  "gates": {
+    "C0_C5": "pass_official_code_derived_cache_non_paper_counted_summary_only",
+    "G0": "pass_source_config_and_training_boundary_checkpoint_unreleased",
+    "G1": "pass_real_cache_item_sid_vocabulary_resolution_roundtrip",
+    "G2": "bounded_fixture_and_official_method_smoke_pass_trained_decode_pending",
+    "G3": "pass_typed_validity_collision_and_resolution_contract",
+    "G4": "bounded_fixture_trace_and_ranked_export_pass_real_trained_trace_pending",
+    "G5": "partial_cache_build_cpu_fixture_and_official_aggregation_smoke_pass_trained_generator_pending"
+  },
+  "input_sha256": {
+    "source_audit": "5f55bd41ba6c858f260b25045a1aae1105c9d864ff7955c5de76220fc3053b9c",
+    "fixture_manifest": "cb86cc821b4f8d76f0500a9767a250fb4d8c4aeb04e1527e978624a2b18e88b7",
+    "official_source_smoke": "931acd91b0b311dc5dfec7b66b01207603aba55c9a417e4194d048f743130c20",
+    "cache_build_report": "23a9ee1174c37fbeae637f502b3da916cd956df2a54612739d973fa350b81462",
+    "normalized_intake": "89674fb801b3e24f4b38be5cbd9e963cba1f1421d1074ee16fd884b9fdf2852c",
+    "c0_c5_report": "64ccccfa3635a7ac808122d2ab7420ef0f5dc6bc89da3c101b50b34dd0c9b716"
+  },
+  "verified_outputs": {
+    "cache_sha256": "1f32a88c74771915139a7906af17557d3fdfe7e4f3b739e88ded3682a66863b8",
+    "cache_items": 24587,
+    "cache_sid_depth": 3,
+    "cache_unique_sid": 24587,
+    "cache_deterministic_replay": "pass",
+    "c0_c5_status": "pass",
+    "g1_roundtrip_items": 24587,
+    "trace_schema": "sidscope.latte_autoregressive_trace.v1",
+    "fixture_ranked_source_items": [
+      "fixture-asin-a",
+      "fixture-asin-b"
+    ],
+    "expected_failure_label": "semantic_id_collision",
+    "official_source_smoke_status": "pass"
+  },
+  "promotion": {
+    "named_adapter": false,
+    "decision": "close_named_adapter",
+    "blockers": [
+      "No official trained checkpoint is released at the pinned source revision.",
+      "No real trained PSID or Latte decode trace has passed G2 and G4.",
+      "The official aggregation smoke and cache build do not substitute for a bounded trained-generator smoke at G5.",
+      "The Amazon Reviews 2023 dataset card has no explicit license identifier, so the derived cache remains hash-and-summary only."
+    ]
+  }
+}

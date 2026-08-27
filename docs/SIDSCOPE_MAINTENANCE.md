@@ -85,6 +85,14 @@ CC BY-NC 4.0, so SIDScope ships only an independently implemented MIT contract,
 deidentified fixture, source hashes, and derived smoke summary. Official code,
 data, `.sem_ids`, and checkpoints must remain external.
 
+The Latte/PSID integration demonstrates a data-license boundary. The upstream
+code is MIT and Sentence-T5 is Apache-2.0, but the audited Amazon Reviews 2023
+dataset card does not declare an explicit license identifier. SIDScope can
+therefore record a reproducible official-code-derived cache build and C0--C5
+report while redistributing only hashes, counts, bounded diagnostics, and a
+deidentified fixture. Raw histories, metadata text, sentence embeddings, the
+real `.sem_ids` cache, and normalized tables remain external.
+
 ## License And Citation
 
 The code package uses the repository `LICENSE`. If an upstream artifact has a

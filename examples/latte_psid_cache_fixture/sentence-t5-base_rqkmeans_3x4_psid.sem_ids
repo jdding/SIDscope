@@ -1,0 +1,6 @@
+{
+  "fixture-asin-a": [0, 1, 2],
+  "fixture-asin-b": [1, 1, 2],
+  "fixture-asin-c": [2, 0, 3],
+  "fixture-asin-d": [3, 2, 0]
+}

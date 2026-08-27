@@ -26,7 +26,7 @@ retroactively change submitted claims or tables.
 | Priority | Route | Next closure |
 | --- | --- | --- |
 | P0 | RPG | Real official-data C0--C5 round-trip and trained checkpoint or recorded-training-output G5 smoke; bounded unordered contract is complete. |
-| P0 | Latte / PSID | Freeze one official-code-derived cache, pass C0--C5, then add a bounded generator trace fixture for G0--G5. |
+| P0 | Latte / PSID | Static closure complete: one real official-code-derived cache is hash-frozen and passes non-paper-counted C0--C5; next train or bind one checkpoint and close real G2--G5 inference traces. |
 | P1 | LLaDA-Rec | Define masked-state, refinement-step, confidence, and remasking trace schemas before implementation. |
 | P1 | TIGER / DACT | Backfill the released reference trace into a complete method-facing G0--G5 report. |
 | P2 | Item-Supported Decoding | Treat as a decoder overlay; reopen when official source or a versioned reproduction route is available. |

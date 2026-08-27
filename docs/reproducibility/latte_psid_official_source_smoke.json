@@ -1,0 +1,36 @@
+{
+  "boundary": {
+    "cache": "deidentified in-memory schema fixture; not official-code-derived Amazon cache",
+    "checkpoint": "none",
+    "model_smoke": "official aggregation method only; T5 weights were not instantiated",
+    "training": "none"
+  },
+  "configuration": {
+    "n_latent_tokens": 3,
+    "vq_codebook_size": 4,
+    "vq_n_codebooks": 3
+  },
+  "outputs": {
+    "latte_agg_max_ranked_tokens": [[[5, 9, 14], [4, 9, 14]]],
+    "latte_agg_sum_ranked_tokens": [[[4, 9, 14], [5, 9, 14]]],
+    "latte_item_tokens": {
+      "fixture-asin-a": [4, 9, 14],
+      "fixture-asin-b": [5, 9, 14],
+      "fixture-asin-c": [6, 8, 15]
+    },
+    "psid_item_tokens": {
+      "fixture-asin-a": [1, 6, 11],
+      "fixture-asin-b": [2, 6, 11],
+      "fixture-asin-c": [3, 5, 12]
+    }
+  },
+  "runtime": "cpu_official_class_methods_no_checkpoint_no_training",
+  "schema": "sidscope.latte_psid_official_source_smoke.v1",
+  "source_revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+  "source_sha256": {
+    "latte_model": "4a98fdb09453e1a1f1827bed1bd1d0c7687fd974af574aa6c4135ea64f145df0",
+    "latte_tokenizer": "c80694d1339f8e7b23c5ced9d3b94e27bbebd58e385ac621a05c3513c26193bf",
+    "psid_tokenizer": "4329b170f912d313a62e4e641b0d869db2985fc0bc742abd56e377eef1f05b7"
+  },
+  "status": "pass"
+}

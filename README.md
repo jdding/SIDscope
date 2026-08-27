@@ -169,6 +169,22 @@ See `docs/RPG_GENERATOR_ADAPTER.md`. This is source-shaped interoperability
 evidence, not a trained checkpoint result or a complete named adapter; the
 official code remains CC BY-NC 4.0 and is not vendored into SIDScope.
 
+Latte/PSID now has a pinned source and asset audit, a real
+official-code-derived Musical Instruments `.sem_ids` cache bound by hashes, a
+C0--C5 normalized intake report, a deidentified CPU fixture, and an
+official-source tokenizer/aggregation smoke:
+
+```bash
+PYTHONPATH=src python3 tools/verify_latte_psid_adapter.py
+```
+
+The Amazon raw data, metadata text, sentence embeddings, generated cache, and
+normalized tables are not redistributed because the audited dataset card does
+not declare an explicit license identifier. See
+`docs/LATTE_PSID_GENERATOR_ADAPTER.md`. This closes the static cache route but
+does not claim a complete Latte generator adapter: no released or locally
+trained checkpoint has yet passed bounded inference and real trace export.
+
 Post-submission development is tracked as `1.1.0.dev0` on
 `codex/sidscope-v1.1`; see `docs/V1_1_ROADMAP.md`. The TOIS submission remains
 frozen outside this software worktree until an editorial revision request.

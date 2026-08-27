@@ -34,6 +34,13 @@ official-code-derived route, a tokenizer-stage rebuild, checkpoint or
 code-derived routes, and released index or archive routes. ReSID/Musical
 remains the sole auditable snapshot without a complete reconstruction route.
 
+Latte/PSID additionally has a non-paper-counted C0--C5 execution over one real
+official-code-derived Musical Instruments cache. The public package retains
+hashes, counts, and bounded diagnostics while withholding the cache and
+normalized tables because the audited Amazon Reviews 2023 dataset card does
+not declare an explicit license identifier. This post-submission resource row
+does not change the submitted paper matrix.
+
 The bundled negative fixture is intentionally inconsistent and must fail C1
 only:
 

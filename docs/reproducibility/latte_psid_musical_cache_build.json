@@ -1,0 +1,88 @@
+{
+  "configuration": {
+    "category": "Musical_Instruments",
+    "faiss_omp_num_threads": 1,
+    "kcore": "5core",
+    "metadata": "sentence",
+    "rand_seed": 2024,
+    "sent_emb_batch_size": 256,
+    "sent_emb_dim": 768,
+    "sent_emb_model": "sentence-transformers/sentence-t5-base",
+    "sent_emb_pca": 192,
+    "sent_emb_reused": false,
+    "split": "last_out",
+    "torch_num_threads": 2,
+    "vq_codebook_size": 256,
+    "vq_method": "rqkmeans",
+    "vq_n_codebooks": 3
+  },
+  "counts": {
+    "interactions": 511836,
+    "items": 24587,
+    "metadata_items": 24587,
+    "training_items": 24556,
+    "users": 57439
+  },
+  "dataset_revision": "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e",
+  "deterministic_replay": {
+    "cache_sha256_first_build": "1f32a88c74771915139a7906af17557d3fdfe7e4f3b739e88ded3682a66863b8",
+    "cache_sha256_replay": "1f32a88c74771915139a7906af17557d3fdfe7e4f3b739e88ded3682a66863b8",
+    "embedding_reused_for_bounded_replay": true,
+    "status": "pass"
+  },
+  "input_sha256": {
+    "amazon_metadata_jsonl": "96f40b5440918f07e3e08e84b7a6874a06a5e32a9988998ca9520cfd1b51a12c",
+    "amazon_test_csv": "74e7d20eb8586a1b55fdd60afbf64498629793ad1056fa99ce2c2b672332cde3",
+    "amazon_train_csv": "79539d2759a653f1f1e882a07bf7f2984cdd9326a7cbb3276d9f7084fe5f0527",
+    "amazon_valid_csv": "ee07113a09ed45e619c49efcb11e9e3ba3f23344a54340e9c09e771084623520",
+    "official_dataset_source": "dae96587fb329181282e8bb6dbc6760a3d3204b7eb6f705db5b4f6204c0a08d0",
+    "official_latte_tokenizer_source": "c80694d1339f8e7b23c5ced9d3b94e27bbebd58e385ac621a05c3513c26193bf"
+  },
+  "numerical_audit": {
+    "embedding_finite": true,
+    "embedding_inf_count": 0,
+    "embedding_nan_count": 0,
+    "embedding_row_norm_max": 1.0000002,
+    "embedding_row_norm_min": 0.99999976,
+    "pca_components_finite": true,
+    "pca_explained_variance_finite": true,
+    "pca_explained_variance_max": 0.01678332,
+    "pca_explained_variance_min": 0.00009427231,
+    "pca_explained_variance_ratio_sum": 0.9418024,
+    "pca_output_finite": true,
+    "pca_output_mean_abs_max": 0.000023895007,
+    "pca_output_std_max": 1.0000491,
+    "pca_output_std_min": 0.9998843,
+    "pca_runtime_warning_count": 9,
+    "pca_solver_selected_by_sklearn": "covariance_eigh",
+    "warning_disposition": "retained in the build evidence; finite outputs and deterministic cache replay passed"
+  },
+  "output_bytes": {
+    "all_item_seqs.json": 9118706,
+    "id_mapping.json": 4916748,
+    "metadata.sentence.json": 30219391,
+    "sentence-t5-base.sent_emb": 75531264,
+    "sentence-t5-base_rqkmeans_3x256_psid.sem_ids": 727223
+  },
+  "output_sha256": {
+    "all_item_seqs.json": "d9c5020f7370c4fd77a26f69ff19685a8256adab404d12f1f163b5dcbab9be36",
+    "id_mapping.json": "6525e3f586ec8741ac1c26f2f9abc4fff703ff4809407b855c481d84b7b7c3da",
+    "metadata.sentence.json": "c0539d77aa1673570a3ae083e75845454f3bc6ca0e5609da27d8c5896ed75ab7",
+    "sentence-t5-base.sent_emb": "766aba63df174cce6c5e1bc4c03082e220c97d13912cd7fcb9908e5f8cd7bb14",
+    "sentence-t5-base_rqkmeans_3x256_psid.sem_ids": "1f32a88c74771915139a7906af17557d3fdfe7e4f3b739e88ded3682a66863b8"
+  },
+  "redistribution": "raw data, metadata text, embeddings, normalized tables, and generated cache remain external because the dataset card has no explicit license identifier; public evidence contains hashes and aggregate diagnostics only",
+  "runtime": {
+    "faiss": "1.12.0",
+    "numpy": "2.2.6",
+    "platform": "darwin",
+    "python": "3.12.13",
+    "sentence_transformers": "5.1.0",
+    "sklearn": "1.7.1",
+    "torch": "2.8.0"
+  },
+  "schema": "sidscope.latte_psid_cache_build.v1",
+  "sentence_transformer_revision": "fc5d4628481afbbaaacd7af6bb07cf9d3865f781",
+  "source_revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+  "status": "pass"
+}

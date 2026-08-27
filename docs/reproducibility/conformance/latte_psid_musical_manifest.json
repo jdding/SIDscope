@@ -1,0 +1,68 @@
+{
+  "schema_version": "sidscope.adapter_manifest.v1",
+  "artifact_id": "latte_psid_musical",
+  "paper_label": "Latte / PSID rqkmeans / Musical Instruments",
+  "method_family": "Latte / PSID",
+  "configuration": "official Amazon Reviews 2023 Musical_Instruments 5core last_out; sentence-t5-base revision fc5d462; PCA-192; official rqkmeans 3x256; seed 2024",
+  "source": {
+    "url": "https://github.com/hyp1231/Latte",
+    "revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+    "license_status": "source_licensed_artifact_boundary_unresolved",
+    "license_identifier": "MIT code; Amazon Reviews 2023 dataset NOASSERTION",
+    "derivation": "official_code_derived",
+    "artifact_name": "sentence-t5-base_rqkmeans_3x256_psid.sem_ids",
+    "redistribution_policy": "summary_only_no_dataset_or_derived_artifact_redistribution"
+  },
+  "dataset": {
+    "name": "Musical Instruments",
+    "normalized_name": "musical_instruments",
+    "expected_items": 24587,
+    "sid_depth": 3
+  },
+  "inputs": {
+    "sid_assignments": ".local_artifacts/latte_psid_musical/normalized/sid_assignments.parquet",
+    "item_metadata": ".local_artifacts/latte_psid_musical/normalized/item_metadata.parquet",
+    "interactions": ".local_artifacts/latte_psid_musical/normalized/interactions.parquet"
+  },
+  "input_availability": "pinned official source inputs and normalized local outputs are not redistributed; public reports retain hashes, row counts, and bounded diagnostics",
+  "input_sha256": {
+    "sid_assignments": "694f3476eefb088ad7a3fd922c49e0a1e5518911df37fe1c2de0279cf89f8fe6",
+    "item_metadata": "b433475aa4414e1a35c12f9a62a3ddbc6818f6037fd95290507552fb39d5bc53",
+    "interactions": "c13ec183889f9ac77e622864a9caf1a028f22b0e8fe815e95f019d8f7dba8472"
+  },
+  "metric_smoke": {
+    "max_metric_items": 50000,
+    "top_k": 5,
+    "max_pair_events": 10000,
+    "max_user_items": 50
+  },
+  "reproduction": {
+    "command": [
+      "python3",
+      "tools/normalize_latte_psid_cache.py",
+      "--id-mapping",
+      "<local-pinned-build/id_mapping.json>",
+      "--semantic-ids",
+      "<local-pinned-build/sentence-t5-base_rqkmeans_3x256_psid.sem_ids>",
+      "--metadata",
+      "<local-pinned-build/metadata.sentence.json>",
+      "--sequences",
+      "<local-pinned-build/all_item_seqs.json>",
+      "--output-dir",
+      "<local-SIDScope-output-root>"
+    ],
+    "runtime_class": "cpu_minutes",
+    "source_evidence": [
+      "docs/reproducibility/latte_psid_source_audit.json",
+      "docs/reproducibility/latte_psid_musical_cache_build.json",
+      "docs/reproducibility/latte_psid_musical_intake.json"
+    ]
+  },
+  "promotion": {
+    "route_id": "latte_psid_musical",
+    "evidence_role": "official_code_derived_route",
+    "paper_counted": false,
+    "conformance_status": "c0_c5_pass_non_paper_counted",
+    "conformance_evidence": "docs/reproducibility/conformance/latte_psid_musical_report.json"
+  }
+}

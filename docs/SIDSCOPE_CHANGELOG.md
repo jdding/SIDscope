@@ -35,6 +35,18 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   expected invalid-token-set fixture, verifier, and bounded smoke against the
   official source class. The smoke uses untrained weights and does not promote
   RPG to a named adapter.
+- Pinned the official Latte/PSID source, Amazon Reviews 2023 input revision,
+  and Sentence-T5 model revision; generated and hash-froze one real
+  Musical Instruments `rqkmeans` cache through official metadata-cleaning,
+  quantization, and conflict-resolution methods.
+- Added a PAD-aware Latte/PSID cache normalizer, exact PSID/Latte vocabulary
+  offsets, typed collision/catalog failures, a latent-path aggregation trace,
+  positive and expected-failure fixtures, an official-source CPU method smoke,
+  C0--C5 intake evidence, and an executable verifier.
+- Kept Amazon raw data, metadata, embeddings, the generated cache, normalized
+  tables, and checkpoints outside the public package. The cache route is
+  statically closed, but Latte remains below complete G0--G5 named-adapter
+  status until trained inference and real trace export pass.
 
 ## SIDScope v1.0.2 public-smoke dependency fix
 

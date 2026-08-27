@@ -77,6 +77,7 @@ __all__ = [
     "card",
     "dact",
     "grid",
+    "latte",
     "latte_tokenizer_runtime_status",
     "lcrec",
     "letter",

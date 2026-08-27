@@ -1,0 +1,82 @@
+{
+  "dataset": "musical_instruments",
+  "input_sha256": {
+    "interactions": "c13ec183889f9ac77e622864a9caf1a028f22b0e8fe815e95f019d8f7dba8472",
+    "item_metadata": "b433475aa4414e1a35c12f9a62a3ddbc6818f6037fd95290507552fb39d5bc53",
+    "sid_assignments": "694f3476eefb088ad7a3fd922c49e0a1e5518911df37fe1c2de0279cf89f8fe6"
+  },
+  "method": "latte_psid_rqkmeans_official_code_derived",
+  "preflight": {
+    "bounds": {
+      "d3_max_pair_events": 10000,
+      "d3_max_user_items": 50,
+      "d3_top_k": 5,
+      "max_metric_items": 50000,
+      "run_metric_smoke": true
+    },
+    "coverage": [
+      {
+        "dataset": "musical_instruments",
+        "interaction_items": 24587,
+        "interaction_without_sid": 0,
+        "metadata_items": 24587,
+        "metadata_without_sid": 0,
+        "method": "latte_psid_rqkmeans_official_code_derived",
+        "sid_items": 24587
+      }
+    ],
+    "metric_smoke_summary": [
+      {
+        "d1_entropy": "7.675968;6.838064;7.558184",
+        "d1_level_count": 3,
+        "d1_unique_codes": "256;256;256",
+        "d3_depth1_mean_collab_recall": 0.028722382324687802,
+        "d3_depth1_weighted_collab_recall": 0.028727770177838577,
+        "d4_head_sid_unique_ratio": 1.0,
+        "d4_mid_sid_unique_ratio": 1.0,
+        "d4_tail_sid_unique_ratio": 1.0,
+        "dataset": "musical_instruments",
+        "duplicate_sid_rate": 0.0,
+        "full_collision_rate": 0.0,
+        "method": "latte_psid_rqkmeans_official_code_derived",
+        "prefix_counts": "256;9197;24587",
+        "sid_length": 3,
+        "unique_sid": 24587
+      }
+    ],
+    "status": "passed",
+    "tables": {
+      "interactions": {
+        "availability": "summary_only_raw_not_redistributed",
+        "rows": 511836
+      },
+      "item_metadata": {
+        "availability": "summary_only_raw_not_redistributed",
+        "rows": 24587
+      },
+      "sid_assignments": {
+        "availability": "summary_only_raw_not_redistributed",
+        "rows": 24587
+      }
+    }
+  },
+  "redistribution": "normalized tables remain external; only hashes, counts, and bounded diagnostics are public",
+  "roundtrip": {
+    "checked_items": 24587,
+    "latte_n_latent_tokens": 8,
+    "latte_vocabulary_unique_items": 24587,
+    "normalized_item_to_sid": "pass",
+    "psid_vocabulary_unique_items": 24587,
+    "sid_to_latte_vocabulary_to_source_item": "pass",
+    "sid_to_psid_vocabulary_to_source_item": "pass",
+    "source_to_normalized_item": "pass"
+  },
+  "rows": {
+    "interactions": 511836,
+    "item_metadata": 24587,
+    "sid_assignments": 24587
+  },
+  "schema": "sidscope.latte_psid_normalized_intake.v1",
+  "source_cache_sha256": "1f32a88c74771915139a7906af17557d3fdfe7e4f3b739e88ded3682a66863b8",
+  "status": "pass"
+}

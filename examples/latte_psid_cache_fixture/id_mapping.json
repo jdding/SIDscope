@@ -1,0 +1,6 @@
+{
+  "user2id": {"[PAD]": 0, "fixture-user-a": 1, "fixture-user-b": 2},
+  "item2id": {"[PAD]": 0, "fixture-asin-a": 1, "fixture-asin-b": 2, "fixture-asin-c": 3, "fixture-asin-d": 4},
+  "id2user": ["[PAD]", "fixture-user-a", "fixture-user-b"],
+  "id2item": ["[PAD]", "fixture-asin-a", "fixture-asin-b", "fixture-asin-c", "fixture-asin-d"]
+}

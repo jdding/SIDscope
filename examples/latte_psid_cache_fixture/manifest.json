@@ -1,0 +1,39 @@
+{
+  "schema": "sidscope.latte_psid_cache_fixture.v1",
+  "route_id": "latte_psid",
+  "fixture_role": "deidentified_schema_and_contract_fixture_not_official_code_derived_cache",
+  "source": {
+    "url": "https://github.com/hyp1231/Latte",
+    "revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+    "license_identifier": "MIT"
+  },
+  "configuration": {
+    "dataset": "fixture_amazon_reviews_2023_shape",
+    "category": "deidentified_fixture",
+    "metadata": "sentence",
+    "sent_emb_model": "sentence-transformers/sentence-t5-base",
+    "vq_method": "rqkmeans",
+    "vq_n_codebooks": 3,
+    "vq_codebook_size": 4,
+    "n_latent_tokens": 3,
+    "aggregation_method": "agg_sum",
+    "split_id": "fixture/test"
+  },
+  "inputs": {
+    "sem_ids": "sentence-t5-base_rqkmeans_3x4_psid.sem_ids",
+    "item_mapping": "id_mapping.json",
+    "metadata": "metadata.sentence.json",
+    "all_item_seqs": "all_item_seqs.json"
+  },
+  "beams": [
+    {"beam_id": "b0", "parent_beam_id": "root", "latent_token": 1, "semantic_codes": [0, 1, 2], "score": -0.2},
+    {"beam_id": "b1", "parent_beam_id": "root", "latent_token": 2, "semantic_codes": [0, 1, 2], "score": -1.2},
+    {"beam_id": "b2", "parent_beam_id": "root", "latent_token": 3, "semantic_codes": [1, 1, 2], "score": -0.1},
+    {"beam_id": "b3", "parent_beam_id": "root", "latent_token": 4, "semantic_codes": [2, 0, 3], "score": -0.05},
+    {"beam_id": "b4", "parent_beam_id": "root", "latent_token": 2, "semantic_codes": [0, 0, 0], "score": -0.4}
+  ],
+  "expected_failure": {
+    "cache": {"fixture-asin-a": [0, 1, 2], "fixture-asin-b": [0, 1, 2]},
+    "failure_label": "semantic_id_collision"
+  }
+}

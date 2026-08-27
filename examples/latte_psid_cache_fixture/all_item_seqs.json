@@ -1,0 +1,4 @@
+{
+  "fixture-user-a": ["fixture-asin-a", "fixture-asin-b", "fixture-asin-c", "fixture-asin-d"],
+  "fixture-user-b": ["fixture-asin-d", "fixture-asin-b", "fixture-asin-a"]
+}
