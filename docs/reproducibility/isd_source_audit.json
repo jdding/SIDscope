@@ -1,0 +1,117 @@
+{
+  "schema": "sidscope.generator_source_audit.v1",
+  "route_id": "isd",
+  "audited_at": "2026-08-28",
+  "paper": {
+    "title": "Understanding Semantic IDs: From Item Representation to Item Selection in Generative Recommendation",
+    "authors": [
+      "Junting Wang",
+      "Xinrui He",
+      "Yunzhe Li",
+      "Hari Sundaram"
+    ],
+    "arxiv": "2607.24995v1",
+    "submitted": "2026-07-27",
+    "url": "https://arxiv.org/abs/2607.24995",
+    "html_url": "https://arxiv.org/html/2607.24995",
+    "license_identifier": "ARXIV_PERPETUAL_NON_EXCLUSIVE_LICENSE",
+    "artifact_link_location": "paper HTML code-and-data availability statement"
+  },
+  "source": {
+    "url": "https://anonymous.4open.science/r/ISD-CF7C",
+    "file_api_url": "https://anonymous.4open.science/api/repo/ISD-CF7C/file/",
+    "snapshot_id": "ISD-CF7C",
+    "revision": null,
+    "revision_status": "snapshot_identifier_exposed_but_git_revision_metadata_unavailable",
+    "metadata_api_status": "401_not_connected",
+    "license_identifier": "NOASSERTION",
+    "license_status": "no_root_code_license_detected",
+    "license_files_found": [],
+    "reuse_boundary": "SIDScope records URLs and hashes and ships an independent MIT interoperability contract. It does not vendor source from the anonymous artifact."
+  },
+  "snapshot_consistency": {
+    "paper_artifact_label": "ISD-CF7C",
+    "root_readme_title": "Causal Representation for Recommendation",
+    "root_readme_sha256": "f8c2aa82163946a71a54566b4810473a342e45d17ed4ce2c931cf68d3813aeeb",
+    "assessment": "The paper links the snapshot and the snapshot contains exact ISD evaluators and tests, but the root README describes a broader different review snapshot. Treat method files as official anonymous artifact evidence while retaining the repository-level mismatch."
+  },
+  "source_files": [
+    {
+      "path": "scripts/generative/eval_sid_route_unified_tiger_liger_v1.py",
+      "listing_sha": "2cfeb033",
+      "sha256": "c4f7a2593ce819171c368be1af5a5a3e8cfc7821831d6eb0f42f2cc94af66421",
+      "evidence": "support_maps, native candidate ranking, equal-weight prefix RRF, valid generated-item filtering, and final item RRF"
+    },
+    {
+      "path": "scripts/generative/eval_sid_route_sasrec_isd_v1.py",
+      "listing_sha": "719b9940",
+      "sha256": "055b263e5f7fd9e4b35aea30ec9297b09e36363924f0907bcdf97b6392439586",
+      "evidence": "target-free provider context, deterministic shortlist construction, prefix receipts, provider audit fields, and SASRec-ISD rule identity"
+    },
+    {
+      "path": "scripts/generative/eval_sid_route_unisrec_isd_v1.py",
+      "listing_sha": "a0588fef",
+      "sha256": "a78937f6d90ba96a9f9110aabdc452f77de136b48433c9d7bb7ca03823a5b1f7",
+      "evidence": "cached train-only UniSRec provider route and target-history leakage checks"
+    },
+    {
+      "path": "scripts/generative/build_sid_route_sasrec_isd_v1.py",
+      "listing_sha": "8fd6f53a",
+      "sha256": "e7f32b2aaec9262b3f49ba4e2dc2d21c21c70670f3682983956f03798c5dcca8",
+      "evidence": "beam width 50, shortlist size 50, RRF constant 60, equal weights, immutable input bindings, and validation-only split boundary"
+    },
+    {
+      "path": "tests/test_eval_sid_route_sasrec_isd_v1.py",
+      "listing_sha": "30313d6a",
+      "sha256": "334a2b8755546994127e612f4d7c03ec07e752f6d5633e522af5603081b0110c",
+      "evidence": "stable score ties, visited-item masking, target-free context sanitization, and shortlist-only support-map tests"
+    },
+    {
+      "path": "tests/test_eval_sid_route_unisrec_isd_v1.py",
+      "listing_sha": "fc15a9a6",
+      "sha256": "8c0820dd1724cdd28b18467a8a2d73918af8f18996a2be5677f9168ab514cc37",
+      "evidence": "cached provider target-free context contract"
+    }
+  ],
+  "method_contract": {
+    "adapter_kind": "decoder_overlay",
+    "provider_boundary": "rank the eligible catalog once from target-free observed history and keep the top-J items",
+    "prefix_support_rank": "minimum provider rank among shortlist items whose SID begins with the candidate prefix",
+    "prefix_score": "1/(kappa + native_prefix_rank) plus 1/(kappa + support_item_rank) when supported",
+    "prefix_selection": "retain the B highest fused prefixes at each semantic position; collision suffix remains native-scored in the audited evaluator",
+    "final_item_score": "1/(kappa + generated_SID_rank) plus 1/(kappa + provider_item_rank) when present",
+    "non_insertion_invariant": "final ranking may reorder only items resolved from generated complete SIDs"
+  },
+  "configuration_boundary": {
+    "audited_rule_id": "equal_rrf_native_sasrec_prefix_and_final",
+    "beam_width": 50,
+    "provider_shortlist_size": 50,
+    "rrf_constant": 60,
+    "rrf_weights": {
+      "native_rank": 1.0,
+      "provider_rank": 1.0
+    },
+    "split": "validation_only_in_audited_registration_builder",
+    "provider_routes": [
+      "matched train-only SASRec",
+      "cached train-only UniSRec"
+    ],
+    "checkpoint_boundary": "Source expects hash-bound local generator and provider checkpoints; none are distributed by the anonymous source-only snapshot."
+  },
+  "asset_audit": {
+    "checkpoint_found": false,
+    "semantic_id_cache_found": false,
+    "processed_dataset_found": false,
+    "generated_trace_found": false,
+    "training_log_found": false,
+    "root_readme_declares_source_only_snapshot": true
+  },
+  "risks_and_blocks": [
+    "The anonymous snapshot does not expose a Git commit, tag, or other immutable repository revision through its public metadata endpoint.",
+    "No root code license is present; the arXiv manuscript license does not license the source snapshot.",
+    "The root README title and main workflow do not identify ISD even though exact ISD scripts and tests are present.",
+    "No checkpoint, semantic-ID cache, processed dataset, trace output, or training log is distributed.",
+    "The audited evaluator resolves complete SIDs through a one-item map; SIDScope must preserve collisions explicitly instead of silently overwriting an item."
+  ],
+  "decision": "go_bounded_decoder_overlay_contract_not_named_adapter"
+}

@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-27
+Last updated: 2026-08-28
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -65,6 +65,15 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
 - DACT/TIGER passes G1--G5 but remains below named-adapter status because the
   official repository has no detected code or asset license. The historical
   500-target primary is retained accurately as pre-ancestry evidence.
+- Located the ISD paper's anonymous official artifact and audited the exact
+  support-map, prefix-selection, and final-RRF implementation. The artifact has
+  no exposed Git revision or root code license, ships no data or checkpoints,
+  and has a mismatched root README; those boundaries are retained explicitly.
+- Added an independent ISD decoder-overlay contract, deterministic CPU fixture,
+  collision-preserving item resolution, base-candidate and pruning trace,
+  final non-inserting RRF export, typed provider-only insertion failure,
+  exact-function source smoke, verifier, and package tests. ISD is no longer a
+  source-watch route, but remains below named-adapter status.
 
 ## SIDScope v1.0.2 public-smoke dependency fix
 

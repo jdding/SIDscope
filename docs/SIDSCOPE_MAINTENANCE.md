@@ -1,7 +1,7 @@
 # SIDScope Maintenance And Versioning
 
 Status: current maintenance plan for standalone SIDScope public repository
-Last updated: 2026-08-27
+Last updated: 2026-08-28
 
 ## Release Policy
 
@@ -108,6 +108,14 @@ or asset license. SIDScope can verify hashes, run those assets externally, and
 ship independent ordered-prefix fixtures and derived/deidentified summaries;
 it must not vendor the upstream files or label the route a named adapter until
 reuse permission is explicit.
+
+The ISD integration demonstrates an anonymous-review-snapshot boundary. The
+paper links an artifact containing exact method files, but the artifact exposes
+no Git revision or root code license, its root README describes a different
+review snapshot, and it ships no model/data outputs. SIDScope binds selected
+files by SHA-256, runs exact pure functions externally, and publishes only an
+independent overlay contract and deidentified fixture. Snapshot identity alone
+must not be represented as an immutable source revision.
 
 ## License And Citation
 

@@ -213,6 +213,21 @@ no explicit code or asset license, so SIDScope redistributes only hashes,
 derived/deidentified evidence, and its independent fixture. See
 `docs/DACT_TIGER_GENERATOR_ADAPTER.md`.
 
+ISD now has a paper-linked anonymous-source audit, a deterministic
+decoder-overlay fixture, and an exact-function smoke over the official
+`support_maps`, prefix-selection, and final-RRF functions:
+
+```bash
+PYTHONPATH=src python3 tools/verify_isd_adapter.py
+```
+
+The contract retains base candidate scores and parents, best item-support
+ranks, RRF pruning survival, collision-aware resolution, and final reranking
+without inserting provider-only items. The anonymous artifact exposes no Git
+revision or root code license and ships no data, checkpoint, cache, or trace,
+so this is bounded interoperability evidence rather than a named adapter. See
+`docs/ISD_DECODER_OVERLAY_ADAPTER.md`.
+
 Post-submission development is tracked as `1.1.0.dev0` on
 `codex/sidscope-v1.1`; see `docs/V1_1_ROADMAP.md`. The TOIS submission remains
 frozen outside this software worktree until an editorial revision request.

@@ -1,0 +1,164 @@
+{
+  "boundary": "Exact official support-map, prefix-selection, and final-RRF functions only; no model, checkpoint, data, or full evaluator execution. The anonymous snapshot exposes no Git revision or root code license.",
+  "expected": {
+    "depth_1_supports": [
+      {
+        "best_supporting_item_rank": 2,
+        "prefix_tokens": [
+          1
+        ]
+      },
+      {
+        "best_supporting_item_rank": 1,
+        "prefix_tokens": [
+          2
+        ]
+      }
+    ],
+    "final_ranked_item_indices": [
+      0,
+      2,
+      3
+    ],
+    "selected_prefixes": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "selected_support_ranks": [
+      2,
+      1
+    ]
+  },
+  "inputs": {
+    "beam_width": 2,
+    "internal_sids": [
+      [
+        1,
+        5,
+        9
+      ],
+      [
+        1,
+        6,
+        10
+      ],
+      [
+        2,
+        7,
+        11
+      ],
+      [
+        2,
+        8,
+        12
+      ]
+    ],
+    "provider_shortlist_item_indices": [
+      2,
+      0,
+      1
+    ],
+    "rrf_constant": 60
+  },
+  "outputs": {
+    "final_ranked_item_indices": [
+      0,
+      2,
+      3
+    ],
+    "selected_native_scores": [
+      -0.1,
+      -0.2
+    ],
+    "selected_prefixes": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "selected_support_ranks": [
+      2,
+      1
+    ],
+    "support_maps": {
+      "1": [
+        {
+          "best_supporting_item_rank": 2,
+          "prefix_tokens": [
+            1
+          ]
+        },
+        {
+          "best_supporting_item_rank": 1,
+          "prefix_tokens": [
+            2
+          ]
+        }
+      ],
+      "2": [
+        {
+          "best_supporting_item_rank": 2,
+          "prefix_tokens": [
+            1,
+            5
+          ]
+        },
+        {
+          "best_supporting_item_rank": 3,
+          "prefix_tokens": [
+            1,
+            6
+          ]
+        },
+        {
+          "best_supporting_item_rank": 1,
+          "prefix_tokens": [
+            2,
+            7
+          ]
+        }
+      ],
+      "3": [
+        {
+          "best_supporting_item_rank": 2,
+          "prefix_tokens": [
+            1,
+            5,
+            9
+          ]
+        },
+        {
+          "best_supporting_item_rank": 3,
+          "prefix_tokens": [
+            1,
+            6,
+            10
+          ]
+        },
+        {
+          "best_supporting_item_rank": 1,
+          "prefix_tokens": [
+            2,
+            7,
+            11
+          ]
+        }
+      ]
+    }
+  },
+  "runtime": "CPU NumPy; selected pure functions loaded by AST from external source",
+  "schema": "sidscope.isd_official_source_smoke.v1",
+  "source_revision": null,
+  "source_sha256": {
+    "eval_sid_route_sasrec_isd_v1.py": "055b263e5f7fd9e4b35aea30ec9297b09e36363924f0907bcdf97b6392439586",
+    "eval_sid_route_unified_tiger_liger_v1.py": "c4f7a2593ce819171c368be1af5a5a3e8cfc7821831d6eb0f42f2cc94af66421"
+  },
+  "source_snapshot_id": "ISD-CF7C",
+  "status": "pass"
+}

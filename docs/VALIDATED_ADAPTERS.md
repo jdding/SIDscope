@@ -94,9 +94,12 @@ round-trip and trained asset smoke remain open, so it is not a named adapter.
 LLaDA-Rec now has a pinned no-license source audit, bounded adaptive-unmasking
 trace fixture, and official class-method smoke. It remains below named-adapter
 status because G0 is blocked by the absent code license and no released cache,
-checkpoint, official-data round-trip, or trained trace exists. ISD and
-ChronoSID remain source watch until an official reproducible route is
-available.
+checkpoint, official-data round-trip, or trained trace exists. ISD has moved
+off source watch: its paper-linked anonymous artifact now supports an exact-
+function smoke and bounded decoder-overlay contract. It remains below named-
+adapter status because the snapshot lacks an immutable revision, code license,
+released assets, official-data round-trip, and real model-backed trace.
+ChronoSID remains on source watch.
 
 See `docs/GENERATOR_ADAPTER_CONFORMANCE.md` and
 `docs/reproducibility/generator_adapter_coverage.csv` for the typed status and

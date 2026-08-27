@@ -93,3 +93,13 @@ pass, while G0 remains blocked because the official repository declares no
 code or asset license. The route therefore remains below named-adapter status.
 See `docs/DACT_TIGER_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/dact_tiger_adapter_status.json`.
+
+ISD now has a paper-linked anonymous-source audit, an exact-function CPU smoke,
+and an independent decoder-overlay fixture. The trace preserves base candidate
+scores and ancestry, best supporting item ranks, prefix RRF survival,
+collision-aware item resolution, and final RRF without inserting provider-only
+items. G0 remains blocked because the anonymous artifact exposes no Git
+revision or root code license and ships no data, checkpoints, SID cache, or
+traces. G1 and the real-model portions of G4--G5 remain open. See
+`docs/ISD_DECODER_OVERLAY_ADAPTER.md` and
+`docs/reproducibility/isd_adapter_status.json`.
