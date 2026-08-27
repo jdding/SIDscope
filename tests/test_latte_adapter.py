@@ -8,6 +8,7 @@ import pytest
 
 from sidinspector.adapters.latte import (
     LatteCacheContractError,
+    canonical_target_universe_sha256,
     export_latte_trace,
     latte_vocabulary_tokens,
     normalize_latte_interactions,
@@ -35,6 +36,14 @@ TRAINED_TRACE_EXPECTED_FAILURE = json.loads(
         / "examples"
         / "latte_psid_trained_trace_fixture"
         / "expected_failure_missing_ancestry.json"
+    ).read_text(encoding="utf-8")
+)
+PSID_EVALUATION_SLOT_FIXTURE = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "latte_psid_trained_trace_fixture"
+        / "psid_evaluation_slots.json"
     ).read_text(encoding="utf-8")
 )
 
@@ -128,6 +137,70 @@ def test_trained_trace_bundle_preserves_ancestry_scores_and_hash_bindings() -> N
     assert result["beam_row_count"] == 2
     assert result["ranked_item_row_count"] == 1
     assert result["checkpoint_sha256"] == "4" * 64
+    assert result["target_universe_row_count"] == 2
+    early_beam = TRAINED_TRACE_FIXTURE["episodes"][0]["attempts"][0]["final_beams"][1]
+    assert early_beam["failure_labels"] == ["early_eos", "wrong_sid_depth"]
+    assert early_beam["ordered_model_vocabulary_tokens"] == [15, 0, 0]
+    assert early_beam["beam_ancestry"] == [0, -1, -1, -1, -1]
+
+
+def test_early_ended_beam_accepts_nullable_hf_padding_slots() -> None:
+    nullable = deepcopy(TRAINED_TRACE_FIXTURE)
+    beam = nullable["episodes"][0]["attempts"][0]["final_beams"][1]
+    beam["beam_ancestry"][1:] = [None, None, None, None]
+    beam["generated_token_slots"][2:] = [None, None, None]
+
+    result = validate_latte_psid_trained_trace_bundle(nullable)
+
+    assert result["beam_row_count"] == 2
+
+
+def test_psid_evaluation_slots_preserve_invalid_rank_without_backfill() -> None:
+    result = validate_latte_psid_trained_trace_bundle(PSID_EVALUATION_SLOT_FIXTURE)
+    slots = PSID_EVALUATION_SLOT_FIXTURE["episodes"][0]["evaluation_slots"]
+
+    assert result["method"] == "PSID"
+    assert result["evaluation_slot_count"] == 2
+    assert result["invalid_evaluation_slot_count"] == 1
+    assert slots[0]["rank"] == 1 and slots[0]["normalized_item_id"] is None
+    assert slots[1]["rank"] == 2 and slots[1]["normalized_item_id"] == 1
+
+
+def test_psid_evaluation_slots_reject_dense_backfill() -> None:
+    backfilled = deepcopy(PSID_EVALUATION_SLOT_FIXTURE)
+    episode = backfilled["episodes"][0]
+    episode["evaluation_slots"] = [deepcopy(episode["evaluation_slots"][1])]
+    episode["evaluation_slots"][0]["rank"] = 1
+    episode["evaluation_cutoff"] = 1
+
+    with pytest.raises(LatteCacheContractError) as raised:
+        validate_latte_psid_trained_trace_bundle(backfilled)
+
+    assert raised.value.label == "evaluation_slot_beam_mismatch"
+
+
+def test_trained_trace_v1_requires_explicit_migration() -> None:
+    legacy = deepcopy(TRAINED_TRACE_FIXTURE)
+    legacy["schema"] = "sidscope.latte_psid_trained_trace_bundle.v1"
+
+    with pytest.raises(LatteCacheContractError) as raised:
+        validate_latte_psid_trained_trace_bundle(legacy)
+
+    assert raised.value.label == "invalid_trace_schema"
+
+
+def test_target_universe_hash_binds_normalized_item_and_sid_tokens() -> None:
+    rows = TRAINED_TRACE_FIXTURE["target_universe"]["rows"]
+    assert canonical_target_universe_sha256(rows) == TRAINED_TRACE_FIXTURE[
+        "target_universe"
+    ]["sha256"]
+
+    changed = deepcopy(TRAINED_TRACE_FIXTURE)
+    changed["target_universe"]["rows"][0]["ordered_model_vocabulary_tokens"][0] = 5
+    with pytest.raises(LatteCacheContractError) as raised:
+        validate_latte_psid_trained_trace_bundle(changed)
+
+    assert raised.value.label == "target_universe_hash_mismatch"
 
 
 def test_confidence_only_summary_cannot_pass_trained_trace_contract() -> None:

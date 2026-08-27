@@ -47,6 +47,7 @@ REQUIRED_FILES = [
     "examples/latte_psid_cache_fixture/manifest.json",
     "examples/latte_psid_trained_trace_fixture/manifest.json",
     "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
+    "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
     "examples/llada_rec_diffusion_fixture/manifest.json",
     "examples/isd_decoder_overlay_fixture/manifest.json",
     "docs/ADAPTER_TEMPLATE.md",
@@ -485,6 +486,14 @@ def main() -> None:
                 "tools/verify_latte_psid_trained_trace_bundle.py",
                 "--bundle",
                 "examples/latte_psid_trained_trace_fixture/manifest.json",
+            ]
+        ),
+        run(
+            [
+                sys.executable,
+                "tools/verify_latte_psid_trained_trace_bundle.py",
+                "--bundle",
+                "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
             ]
         ),
         run([sys.executable, "tools/verify_llada_rec_adapter.py"]),

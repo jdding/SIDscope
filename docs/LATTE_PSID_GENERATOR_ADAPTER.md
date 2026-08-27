@@ -96,7 +96,7 @@ explicit; they are not silently converted to zero rows.
 ## Trained-Trace Handoff
 
 Downstream projects can submit a bounded checkpoint-backed handoff through
-`sidscope.latte_psid_trained_trace_bundle.v1`. The bundle is deliberately
+`sidscope.latte_psid_trained_trace_bundle.v2`. The bundle is deliberately
 stricter than an aggregate evaluation manifest. It binds the dataset manifest,
 split, `.sem_ids` cache, checkpoint, training configuration, execution command,
 and log summary by SHA-256. Every deidentified episode must preserve:
@@ -104,11 +104,28 @@ and log summary by SHA-256. Every deidentified episode must preserve:
 - whether the trace is PSID or Latte and its native decoder-state kind;
 - every decode attempt, including an official Latte retry rather than only the
   final retry result;
-- final-beam ancestry, ordered semantic and model-vocabulary tokens, per-step
-  log-probabilities, sequence scores, and compute accounting;
+- all returned final beams, raw generated-token slots, actual decoded and
+  ancestry lengths, padded ancestry, typed termination, ordered semantic and
+  model-vocabulary tokens, per-step log-probabilities, sequence scores, and
+  compute accounting;
 - validity, failure labels, normalized item resolution, ranked items, scores,
   and the number of latent paths supporting each item;
-- one stable split identity and a hash of the target universe.
+- one stable split identity and a hash computed over canonical deidentified
+  `(normalized_item_id, ordered model-vocabulary SID tokens)` rows.
+
+Early-ended or invalid Hugging Face beams remain first-class trace rows. Raw
+PAD token `0`, `beam_indices=-1`, or their canonical `null` padding forms are
+allowed only outside the declared decoded/ancestry lengths. Invalid SID slices
+may retain PAD or sentinel codes, but they must have a null resolved item plus
+typed failure labels. Valid beams must resolve to an exact canonical target
+universe row. The verifier still requires exactly `num_beams` final rows for
+every attempt.
+
+PSID and Latte expose different ranking surfaces. PSID exports the exact first
+top-k `evaluation_slots`, including typed invalid slots, because its evaluator
+does not backfill past an invalid raw beam. A valid item after an invalid slot
+therefore keeps its original rank. Latte continues to export dense
+`ranked_items` after latent-path aggregation over the final attempt.
 
 Raw user IDs, source item IDs, targets/labels, checkpoint paths, and absolute
 local paths are rejected. Confidence summaries, aggregate metrics, or claims
@@ -124,11 +141,33 @@ PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
   --result-json <verification-result.json>
 ```
 
-The positive schema fixture is
-`examples/latte_psid_trained_trace_fixture/manifest.json`. Unit tests also
-remove beam ancestry and inject a raw identity field to prove fail-closed
-behavior. Passing the synthetic fixture proves only the intake contract; gate
-status changes only after a real checkpoint-bound bundle passes.
+The Latte positive schema fixture is
+`examples/latte_psid_trained_trace_fixture/manifest.json`; it retains one
+early-ended PAD/`-1` beam. The companion `psid_evaluation_slots.json` keeps an
+invalid rank-1 slot and a valid item at rank 2. Unit tests also remove beam
+ancestry and inject a raw identity field to prove fail-closed behavior. Passing
+the synthetic fixtures proves only the intake contract; gate status changes
+only after a real checkpoint-bound bundle passes.
+
+### Migration from v1
+
+Version 1 accepted only complete positive-token beams and contiguous dense
+ranked items. It cannot faithfully encode HF early termination or PSID's raw
+evaluation ranks and is rejected rather than silently reinterpreted. Producers
+must migrate as follows:
+
+1. Set the bundle schema to `sidscope.latte_psid_trained_trace_bundle.v2` and
+   declare PAD, EOS, and ancestry padding IDs.
+2. Preserve every returned final beam in its original order. Add
+   `generated_token_slots`, `decoded_length`, `beam_ancestry`,
+   `ancestry_length`, `step_log_probabilities`, and `termination_reason`.
+   Preserve tail PAD/`-1` values or convert only those padding slots to `null`.
+3. Retain invalid or partial SID slices with typed failure labels and null item
+   resolution; do not drop, backfill, or fabricate them.
+4. Hash the sorted canonical target-universe rows, not catalog cardinality, and
+   bind the same hash at bundle evidence and episode levels.
+5. For PSID, export the exact consumed top-k beams as `evaluation_slots`. For
+   Latte, export aggregated dense `ranked_items` as before.
 
 ## Reproduction Commands
 

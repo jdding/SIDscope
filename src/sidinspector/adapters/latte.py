@@ -12,6 +12,7 @@ Latte checkpoint, Amazon data, sentence embeddings, or generated caches.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -34,6 +35,14 @@ class LatteCacheContractError(ValueError):
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _LATTE_SOURCE_URL = "https://github.com/hyp1231/Latte"
 _LATTE_SOURCE_REVISION = "05e4e6d983225bcb7172f148a076890e80c524d1"
+_TRAINED_TRACE_SCHEMA = "sidscope.latte_psid_trained_trace_bundle.v2"
+_TERMINATION_REASONS = {
+    "eos",
+    "max_new_tokens",
+    "generation_error",
+    "invalid_token",
+    "pad_only",
+}
 _FORBIDDEN_TRAINED_TRACE_KEYS = {
     "user_id",
     "source_user_id",
@@ -68,6 +77,45 @@ def _reject_private_trace_fields(value: Any, location: str = "bundle") -> None:
         _trained_trace_failure("private_path_leak", f"{location} contains an absolute path")
 
 
+def canonical_target_universe_sha256(rows: Sequence[Mapping[str, Any]]) -> str:
+    """Hash canonical deidentified ``(normalized_item_id, SID tokens)`` rows."""
+
+    canonical: list[dict[str, Any]] = []
+    previous_item_id: int | None = None
+    sid_depth: int | None = None
+    for index, row in enumerate(rows):
+        if not isinstance(row, Mapping) or set(row) != {
+            "normalized_item_id",
+            "ordered_model_vocabulary_tokens",
+        }:
+            _trained_trace_failure("invalid_target_universe_row", f"target universe row {index}")
+        item_id = row["normalized_item_id"]
+        tokens = row["ordered_model_vocabulary_tokens"]
+        if not isinstance(item_id, int) or isinstance(item_id, bool) or item_id < 0:
+            _trained_trace_failure("invalid_target_universe_item", f"target universe row {index}")
+        if previous_item_id is not None and item_id <= previous_item_id:
+            _trained_trace_failure("noncanonical_target_universe_order", f"target universe row {index}")
+        if not isinstance(tokens, list) or not tokens or not all(
+            isinstance(token, int) and not isinstance(token, bool) and token > 0 for token in tokens
+        ):
+            _trained_trace_failure("invalid_target_universe_sid", f"target universe row {index}")
+        if sid_depth is None:
+            sid_depth = len(tokens)
+        elif len(tokens) != sid_depth:
+            _trained_trace_failure("target_universe_depth_mismatch", f"target universe row {index}")
+        canonical.append(
+            {
+                "normalized_item_id": item_id,
+                "ordered_model_vocabulary_tokens": tokens,
+            }
+        )
+        previous_item_id = item_id
+    if not canonical:
+        _trained_trace_failure("empty_target_universe", "target universe rows are empty")
+    payload = json.dumps(canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[str, Any]:
     """Validate a bounded, deidentified trained PSID/Latte trace bundle.
 
@@ -77,7 +125,7 @@ def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[
     """
 
     _reject_private_trace_fields(bundle)
-    if bundle.get("schema") != "sidscope.latte_psid_trained_trace_bundle.v1":
+    if bundle.get("schema") != _TRAINED_TRACE_SCHEMA:
         _trained_trace_failure("invalid_trace_schema", "unexpected trained-trace schema")
     if not isinstance(bundle.get("bundle_id"), str) or not bundle["bundle_id"]:
         _trained_trace_failure("missing_bundle_id", "bundle_id is required")
@@ -98,6 +146,41 @@ def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[
     elif aggregation != expected_aggregation:
         _trained_trace_failure("invalid_aggregation_method", str(aggregation))
 
+    vocabulary = bundle.get("decoder_vocabulary")
+    if not isinstance(vocabulary, Mapping):
+        _trained_trace_failure("missing_decoder_vocabulary", "decoder_vocabulary is required")
+    pad_token_id = vocabulary.get("pad_token_id")
+    eos_token_id = vocabulary.get("eos_token_id")
+    ancestry_padding_value = vocabulary.get("ancestry_padding_value")
+    if (
+        not isinstance(pad_token_id, int)
+        or isinstance(pad_token_id, bool)
+        or pad_token_id < 0
+        or not isinstance(eos_token_id, int)
+        or isinstance(eos_token_id, bool)
+        or eos_token_id < 0
+    ):
+        _trained_trace_failure("invalid_decoder_vocabulary", "PAD and EOS token IDs must be integers")
+    if pad_token_id == eos_token_id or ancestry_padding_value != -1:
+        _trained_trace_failure("invalid_decoder_vocabulary", "PAD/EOS must differ and ancestry padding must be -1")
+
+    target_universe = bundle.get("target_universe")
+    if not isinstance(target_universe, Mapping) or target_universe.get("schema") != (
+        "sidscope.normalized_item_sid_universe.v1"
+    ):
+        _trained_trace_failure("invalid_target_universe_schema", "canonical target universe is required")
+    target_rows = target_universe.get("rows")
+    if not isinstance(target_rows, list):
+        _trained_trace_failure("missing_target_universe_rows", "canonical target universe rows are required")
+    target_universe_hash = canonical_target_universe_sha256(target_rows)
+    if target_universe.get("sha256") != target_universe_hash:
+        _trained_trace_failure("target_universe_hash_mismatch", "canonical target universe hash mismatch")
+    target_tokens = {
+        row["normalized_item_id"]: tuple(row["ordered_model_vocabulary_tokens"])
+        for row in target_rows
+    }
+    sid_depth = len(next(iter(target_tokens.values())))
+
     evidence = bundle.get("evidence")
     if not isinstance(evidence, Mapping):
         _trained_trace_failure("missing_evidence_binding", "evidence object is required")
@@ -115,12 +198,15 @@ def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[
         "training_config_sha256",
         "command_sha256",
         "log_summary_sha256",
+        "target_universe_sha256",
     ):
         _require_sha256(evidence.get(field), f"evidence.{field}")
     if not isinstance(evidence.get("split_id"), str) or not evidence["split_id"]:
         _trained_trace_failure("missing_split_identity", "evidence.split_id is required")
     if not isinstance(evidence.get("training_boundary"), str) or not evidence["training_boundary"]:
         _trained_trace_failure("missing_training_boundary", "evidence.training_boundary is required")
+    if evidence["target_universe_sha256"] != target_universe_hash:
+        _trained_trace_failure("target_universe_evidence_mismatch", "evidence does not bind canonical rows")
 
     episodes = bundle.get("episodes")
     if not isinstance(episodes, list) or not episodes:
@@ -131,6 +217,8 @@ def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[
     ranked_rows = 0
     beam_rows = 0
     retries = 0
+    evaluation_slots = 0
+    invalid_evaluation_slots = 0
     for episode_index, episode in enumerate(episodes):
         if not isinstance(episode, Mapping):
             _trained_trace_failure("invalid_episode", f"episode {episode_index} is not an object")
@@ -142,12 +230,13 @@ def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[
             _trained_trace_failure("target_leakage_boundary", f"episode {trace_id} is not target-free")
         if episode.get("split_id") != evidence["split_id"]:
             _trained_trace_failure("split_identity_mismatch", f"episode {trace_id} split differs from evidence")
-        _require_sha256(episode.get("target_universe_sha256"), f"episode {trace_id}.target_universe_sha256")
+        if episode.get("target_universe_sha256") != target_universe_hash:
+            _trained_trace_failure("target_universe_episode_mismatch", f"episode {trace_id}")
 
         attempts = episode.get("attempts")
         if not isinstance(attempts, list) or not attempts:
             _trained_trace_failure("missing_decode_attempt", f"episode {trace_id} has no attempts")
-        if episode.get("retry_performed") is not (len(attempts) > 1):
+        if episode.get("retry_performed") != (len(attempts) > 1):
             _trained_trace_failure("retry_state_mismatch", f"episode {trace_id} retry flag disagrees with attempts")
         if method == "PSID" and len(attempts) != 1:
             _trained_trace_failure("unexpected_retry", f"PSID episode {trace_id} must have one attempt")
@@ -157,7 +246,11 @@ def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[
             if not isinstance(attempt, Mapping) or attempt.get("attempt_index") != attempt_index:
                 _trained_trace_failure("attempt_index_mismatch", f"episode {trace_id} attempt order is invalid")
             for field in ("num_beams", "generated_steps", "vocabulary_size", "logits_scored"):
-                if not isinstance(attempt.get(field), int) or attempt[field] <= 0:
+                if (
+                    not isinstance(attempt.get(field), int)
+                    or isinstance(attempt[field], bool)
+                    or attempt[field] <= 0
+                ):
                     _trained_trace_failure("invalid_compute_accounting", f"episode {trace_id} attempt {field} is invalid")
             if attempt["logits_scored"] != attempt["num_beams"] * attempt["generated_steps"] * attempt["vocabulary_size"]:
                 _trained_trace_failure("compute_accounting_mismatch", f"episode {trace_id} logits_scored mismatch")
@@ -173,98 +266,209 @@ def validate_latte_psid_trained_trace_bundle(bundle: Mapping[str, Any]) -> dict[
                     _trained_trace_failure("invalid_beam_id", f"episode {trace_id} beam_id is absent or duplicate")
                 beam_ids.add(beam_id)
                 ancestry = beam.get("beam_ancestry")
+                raw_tokens = beam.get("generated_token_slots")
                 step_scores = beam.get("step_log_probabilities")
                 if not isinstance(ancestry, list) or len(ancestry) != attempt["generated_steps"]:
                     _trained_trace_failure("missing_beam_ancestry", f"episode {trace_id} beam {beam_id}")
-                if not all(
-                    isinstance(parent, int) and 0 <= parent < attempt["num_beams"] for parent in ancestry
-                ):
-                    _trained_trace_failure("invalid_beam_ancestry", f"episode {trace_id} beam {beam_id}")
+                if not isinstance(raw_tokens, list) or len(raw_tokens) != attempt["generated_steps"]:
+                    _trained_trace_failure("missing_generated_token_slots", f"episode {trace_id} beam {beam_id}")
                 if not isinstance(step_scores, list) or len(step_scores) != attempt["generated_steps"]:
                     _trained_trace_failure("missing_step_logprob", f"episode {trace_id} beam {beam_id}")
-                if not all(isinstance(score, (int, float)) for score in step_scores):
-                    _trained_trace_failure("invalid_step_logprob", f"episode {trace_id} beam {beam_id}")
+                decoded_length = beam.get("decoded_length")
+                ancestry_length = beam.get("ancestry_length")
+                if (
+                    not isinstance(decoded_length, int)
+                    or isinstance(decoded_length, bool)
+                    or not 0 <= decoded_length <= attempt["generated_steps"]
+                ):
+                    _trained_trace_failure("invalid_decoded_length", f"episode {trace_id} beam {beam_id}")
+                if (
+                    not isinstance(ancestry_length, int)
+                    or isinstance(ancestry_length, bool)
+                    or not 0 <= ancestry_length <= decoded_length
+                ):
+                    _trained_trace_failure("invalid_ancestry_length", f"episode {trace_id} beam {beam_id}")
+                for slot, token in enumerate(raw_tokens):
+                    if slot < decoded_length:
+                        if not isinstance(token, int) or isinstance(token, bool):
+                            _trained_trace_failure("invalid_generated_token_slot", f"episode {trace_id} beam {beam_id}")
+                        if not 0 <= token < attempt["vocabulary_size"]:
+                            _trained_trace_failure("generated_token_out_of_vocabulary", f"episode {trace_id} beam {beam_id}")
+                    elif token is not None and token != pad_token_id:
+                        _trained_trace_failure("nonpadding_token_after_decoded_length", f"episode {trace_id} beam {beam_id}")
+                for slot, parent in enumerate(ancestry):
+                    if slot < ancestry_length:
+                        if not isinstance(parent, int) or isinstance(parent, bool) or not 0 <= parent < attempt["num_beams"]:
+                            _trained_trace_failure("invalid_beam_ancestry", f"episode {trace_id} beam {beam_id}")
+                    elif parent is not None and parent != ancestry_padding_value:
+                        _trained_trace_failure("invalid_beam_ancestry_padding", f"episode {trace_id} beam {beam_id}")
+                for slot, score in enumerate(step_scores):
+                    if slot < decoded_length:
+                        if (
+                            not isinstance(score, (int, float))
+                            or isinstance(score, bool)
+                            or not np.isfinite(score)
+                        ):
+                            _trained_trace_failure("invalid_step_logprob", f"episode {trace_id} beam {beam_id}")
+                    elif score is not None:
+                        _trained_trace_failure("nonempty_score_after_decoded_length", f"episode {trace_id} beam {beam_id}")
+                termination_reason = beam.get("termination_reason")
+                if termination_reason not in _TERMINATION_REASONS:
+                    _trained_trace_failure("invalid_termination_reason", f"episode {trace_id} beam {beam_id}")
                 codes = beam.get("ordered_semantic_codes")
                 tokens = beam.get("ordered_model_vocabulary_tokens")
-                if not isinstance(codes, list) or not codes or not all(
-                    isinstance(code, int) and code >= 0 for code in codes
+                if not isinstance(codes, list) or not all(
+                    isinstance(code, int) and not isinstance(code, bool) for code in codes
                 ):
                     _trained_trace_failure("invalid_semantic_codes", f"episode {trace_id} beam {beam_id}")
                 if not isinstance(tokens, list) or len(tokens) != len(codes) or not all(
-                    isinstance(token, int) and token > 0 for token in tokens
+                    isinstance(token, int) and not isinstance(token, bool) for token in tokens
                 ):
                     _trained_trace_failure("model_vocabulary_mismatch", f"episode {trace_id} beam {beam_id}")
-                if method == "Latte" and not isinstance(beam.get("latent_token"), int):
+                if method == "Latte" and (
+                    not isinstance(beam.get("latent_token"), int)
+                    or isinstance(beam["latent_token"], bool)
+                ):
                     _trained_trace_failure("missing_latent_token", f"episode {trace_id} beam {beam_id}")
+                if method == "Latte" and decoded_length > 0 and raw_tokens[0] != beam["latent_token"]:
+                    _trained_trace_failure("latent_token_slot_mismatch", f"episode {trace_id} beam {beam_id}")
                 if method == "PSID" and beam.get("latent_token") is not None:
                     _trained_trace_failure("unexpected_latent_token", f"episode {trace_id} beam {beam_id}")
                 valid = beam.get("valid")
                 failures = beam.get("failure_labels")
                 if not isinstance(valid, bool) or not isinstance(failures, list):
                     _trained_trace_failure("invalid_resolution_state", f"episode {trace_id} beam {beam_id}")
+                if not all(isinstance(label, str) and re.fullmatch(r"[a-z0-9_]+", label) for label in failures):
+                    _trained_trace_failure("invalid_failure_label", f"episode {trace_id} beam {beam_id}")
                 if valid and failures:
                     _trained_trace_failure("validity_label_conflict", f"episode {trace_id} beam {beam_id}")
                 if not valid and not failures:
                     _trained_trace_failure("missing_failure_label", f"episode {trace_id} beam {beam_id}")
                 resolved = beam.get("normalized_item_id")
-                if valid and not isinstance(resolved, int):
+                if valid and (not isinstance(resolved, int) or isinstance(resolved, bool)):
                     _trained_trace_failure("missing_item_resolution", f"episode {trace_id} beam {beam_id}")
                 if not valid and resolved is not None:
                     _trained_trace_failure("invalid_path_resolved", f"episode {trace_id} beam {beam_id}")
-                if not isinstance(beam.get("sequence_score"), (int, float)):
+                if valid:
+                    if len(codes) != sid_depth or len(tokens) != sid_depth or any(
+                        code < 0 for code in codes
+                    ) or any(token <= 0 for token in tokens):
+                        _trained_trace_failure("valid_sid_shape_mismatch", f"episode {trace_id} beam {beam_id}")
+                    if resolved not in target_tokens or tuple(tokens) != target_tokens[resolved]:
+                        _trained_trace_failure("target_universe_resolution_mismatch", f"episode {trace_id} beam {beam_id}")
+                    sid_start = 1 if method == "Latte" else 0
+                    if raw_tokens[sid_start : sid_start + sid_depth] != tokens:
+                        _trained_trace_failure("raw_token_resolution_mismatch", f"episode {trace_id} beam {beam_id}")
+                if (
+                    not isinstance(beam.get("sequence_score"), (int, float))
+                    or isinstance(beam["sequence_score"], bool)
+                    or not np.isfinite(beam["sequence_score"])
+                ):
                     _trained_trace_failure("missing_sequence_score", f"episode {trace_id} beam {beam_id}")
                 beam_rows += 1
 
         ranked = episode.get("ranked_items")
-        if not isinstance(ranked, list) or not ranked:
-            _trained_trace_failure("empty_ranked_export", f"episode {trace_id} has no ranked items")
         final_support: dict[int, list[float]] = {}
         for beam in attempts[-1]["final_beams"]:
             if beam["valid"]:
                 final_support.setdefault(beam["normalized_item_id"], []).append(float(beam["sequence_score"]))
-        ranked_ids: set[int] = set()
-        previous_score: float | None = None
-        for expected_rank, row in enumerate(ranked, start=1):
-            if not isinstance(row, Mapping) or row.get("rank") != expected_rank:
-                _trained_trace_failure("rank_order_mismatch", f"episode {trace_id} ranked export is invalid")
-            if not isinstance(row.get("normalized_item_id"), int):
-                _trained_trace_failure("missing_ranked_item_identity", f"episode {trace_id} rank {expected_rank}")
-            item_id = row["normalized_item_id"]
-            if item_id in ranked_ids:
-                _trained_trace_failure("duplicate_ranked_item", f"episode {trace_id} item {item_id}")
-            ranked_ids.add(item_id)
-            if not isinstance(row.get("score"), (int, float)):
-                _trained_trace_failure("missing_ranked_item_score", f"episode {trace_id} rank {expected_rank}")
-            score = float(row["score"])
-            if previous_score is not None and score > previous_score:
-                _trained_trace_failure("rank_score_order_mismatch", f"episode {trace_id} rank {expected_rank}")
-            previous_score = score
-            if not isinstance(row.get("supporting_beam_count"), int) or row["supporting_beam_count"] <= 0:
-                _trained_trace_failure("invalid_support_count", f"episode {trace_id} rank {expected_rank}")
-            scores = final_support.get(item_id)
-            if not scores:
-                _trained_trace_failure("ranked_item_not_resolved", f"episode {trace_id} item {item_id}")
-            if row["supporting_beam_count"] != len(scores):
-                _trained_trace_failure("support_count_mismatch", f"episode {trace_id} item {item_id}")
-            expected_score = max(scores)
-            if method == "Latte" and aggregation == "agg_sum":
-                expected_score = float(np.logaddexp.reduce(scores))
-            if not np.isclose(score, expected_score, rtol=1e-6, atol=1e-8):
-                _trained_trace_failure("aggregation_score_mismatch", f"episode {trace_id} item {item_id}")
-            ranked_rows += 1
+        if method == "Latte":
+            if not isinstance(ranked, list) or not ranked:
+                _trained_trace_failure("empty_ranked_export", f"episode {trace_id} has no ranked items")
+            if episode.get("evaluation_slots") is not None:
+                _trained_trace_failure("unexpected_evaluation_slots", f"Latte episode {trace_id}")
+            ranked_ids: set[int] = set()
+            previous_score: float | None = None
+            for expected_rank, row in enumerate(ranked, start=1):
+                if not isinstance(row, Mapping) or row.get("rank") != expected_rank:
+                    _trained_trace_failure("rank_order_mismatch", f"episode {trace_id} ranked export is invalid")
+                item_id = row.get("normalized_item_id")
+                if not isinstance(item_id, int) or isinstance(item_id, bool) or item_id not in target_tokens:
+                    _trained_trace_failure("missing_ranked_item_identity", f"episode {trace_id} rank {expected_rank}")
+                if item_id in ranked_ids:
+                    _trained_trace_failure("duplicate_ranked_item", f"episode {trace_id} item {item_id}")
+                ranked_ids.add(item_id)
+                if (
+                    not isinstance(row.get("score"), (int, float))
+                    or isinstance(row["score"], bool)
+                    or not np.isfinite(row["score"])
+                ):
+                    _trained_trace_failure("missing_ranked_item_score", f"episode {trace_id} rank {expected_rank}")
+                score = float(row["score"])
+                if previous_score is not None and score > previous_score:
+                    _trained_trace_failure("rank_score_order_mismatch", f"episode {trace_id} rank {expected_rank}")
+                previous_score = score
+                if (
+                    not isinstance(row.get("supporting_beam_count"), int)
+                    or isinstance(row["supporting_beam_count"], bool)
+                    or row["supporting_beam_count"] <= 0
+                ):
+                    _trained_trace_failure("invalid_support_count", f"episode {trace_id} rank {expected_rank}")
+                scores = final_support.get(item_id)
+                if not scores:
+                    _trained_trace_failure("ranked_item_not_resolved", f"episode {trace_id} item {item_id}")
+                if row["supporting_beam_count"] != len(scores):
+                    _trained_trace_failure("support_count_mismatch", f"episode {trace_id} item {item_id}")
+                expected_score = max(scores)
+                if aggregation == "agg_sum":
+                    expected_score = float(np.logaddexp.reduce(scores))
+                if not np.isclose(score, expected_score, rtol=1e-6, atol=1e-8):
+                    _trained_trace_failure("aggregation_score_mismatch", f"episode {trace_id} item {item_id}")
+                ranked_rows += 1
+        else:
+            if ranked is not None:
+                _trained_trace_failure("unexpected_dense_ranking", f"PSID episode {trace_id}")
+            slots = episode.get("evaluation_slots")
+            cutoff = episode.get("evaluation_cutoff")
+            if not isinstance(slots, list) or not slots or cutoff != len(slots):
+                _trained_trace_failure("invalid_evaluation_slots", f"PSID episode {trace_id}")
+            if (
+                not isinstance(cutoff, int)
+                or isinstance(cutoff, bool)
+                or cutoff > attempts[-1]["num_beams"]
+            ):
+                _trained_trace_failure("invalid_evaluation_cutoff", f"PSID episode {trace_id}")
+            final_beams = attempts[-1]["final_beams"]
+            for expected_rank, slot in enumerate(slots, start=1):
+                if not isinstance(slot, Mapping) or slot.get("rank") != expected_rank:
+                    _trained_trace_failure("evaluation_rank_mismatch", f"PSID episode {trace_id}")
+                beam = final_beams[expected_rank - 1]
+                for field in ("beam_id", "valid", "normalized_item_id", "failure_labels"):
+                    if slot.get(field) != beam.get(field):
+                        _trained_trace_failure("evaluation_slot_beam_mismatch", f"PSID episode {trace_id} rank {expected_rank}")
+                if (
+                    not isinstance(slot.get("score"), (int, float))
+                    or isinstance(slot["score"], bool)
+                    or not np.isfinite(slot["score"])
+                    or not np.isclose(
+                        float(slot["score"]),
+                        float(beam["sequence_score"]),
+                        rtol=1e-6,
+                        atol=1e-8,
+                    )
+                ):
+                    _trained_trace_failure("evaluation_slot_score_mismatch", f"PSID episode {trace_id} rank {expected_rank}")
+                evaluation_slots += 1
+                if not slot["valid"]:
+                    invalid_evaluation_slots += 1
 
     return {
-        "schema": "sidscope.latte_psid_trained_trace_verification.v1",
+        "schema": "sidscope.latte_psid_trained_trace_verification.v2",
         "status": "pass",
         "method": method,
         "episode_count": len(episodes),
         "beam_row_count": beam_rows,
         "ranked_item_row_count": ranked_rows,
         "retry_episode_count": retries,
+        "evaluation_slot_count": evaluation_slots,
+        "invalid_evaluation_slot_count": invalid_evaluation_slots,
+        "target_universe_row_count": len(target_rows),
+        "target_universe_sha256": target_universe_hash,
         "checkpoint_sha256": evidence["checkpoint_sha256"],
         "sid_cache_sha256": evidence["sid_cache_sha256"],
         "split_id": evidence["split_id"],
     }
+
 
 @dataclass(frozen=True)
 class LatteItemIdentity:

@@ -65,6 +65,13 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   raw identities, labels, private paths, and unbounded exports are rejected;
   the bundled positive fixture does not change the pending real G2/G4/G5
   status.
+- Replaced the initial trained-trace handoff v1 with v2 after independent
+  downstream review found that legitimate HF early termination uses PAD token
+  `0` and `beam_indices=-1`. V2 retains every final beam, explicit decoded and
+  ancestry lengths, raw or nullable padding slots, typed termination/failure
+  labels, and canonical normalized-item/SID target-universe hashing. It also
+  preserves PSID's raw top-k invalid rank slots instead of densely backfilling
+  valid items; Latte aggregation remains a dense ranked-item export.
 - Pinned the official LLaDA-Rec source at `83dbcd6` and recorded that the code
   repository has no detected license, tag, release, checkpoint, semantic-ID
   cache, processed dataset, or training log.

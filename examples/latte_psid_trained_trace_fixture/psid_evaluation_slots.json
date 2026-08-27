@@ -1,0 +1,112 @@
+{
+  "schema": "sidscope.latte_psid_trained_trace_bundle.v2",
+  "bundle_id": "deidentified-psid-evaluation-slot-fixture",
+  "method": "PSID",
+  "decode_state_kind": "ordered_sid_prefix_beam",
+  "aggregation_method": "none",
+  "decoder_vocabulary": {
+    "pad_token_id": 0,
+    "eos_token_id": 15,
+    "ancestry_padding_value": -1
+  },
+  "target_universe": {
+    "schema": "sidscope.normalized_item_sid_universe.v1",
+    "sha256": "1e1b5fdaaadf35110272182c8c4b3568e5486f1d429b01e52f6fba9921b52971",
+    "rows": [
+      {
+        "normalized_item_id": 0,
+        "ordered_model_vocabulary_tokens": [4, 9, 14]
+      },
+      {
+        "normalized_item_id": 1,
+        "ordered_model_vocabulary_tokens": [5, 9, 14]
+      }
+    ]
+  },
+  "evidence": {
+    "source_url": "https://github.com/hyp1231/Latte",
+    "source_revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+    "source_license": "MIT",
+    "dataset_manifest_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "split_id": "fixture/test",
+    "split_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "sid_cache_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "checkpoint_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "training_boundary": "strict checkpoint replay; no retraining in SIDScope",
+    "training_config_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "command_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "log_summary_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+    "target_universe_sha256": "1e1b5fdaaadf35110272182c8c4b3568e5486f1d429b01e52f6fba9921b52971"
+  },
+  "episodes": [
+    {
+      "trace_id": "fixture-psid-slots-0001",
+      "target_free": true,
+      "retry_performed": false,
+      "split_id": "fixture/test",
+      "target_universe_sha256": "1e1b5fdaaadf35110272182c8c4b3568e5486f1d429b01e52f6fba9921b52971",
+      "attempts": [
+        {
+          "attempt_index": 0,
+          "num_beams": 2,
+          "generated_steps": 4,
+          "vocabulary_size": 16,
+          "logits_scored": 128,
+          "final_beams": [
+            {
+              "beam_id": "a0-b0",
+              "beam_ancestry": [-1, -1, -1, -1],
+              "ancestry_length": 0,
+              "generated_token_slots": [15, 0, 0, 0],
+              "decoded_length": 1,
+              "termination_reason": "eos",
+              "latent_token": null,
+              "ordered_semantic_codes": [-1, -1, -1],
+              "ordered_model_vocabulary_tokens": [15, 0, 0],
+              "step_log_probabilities": [-0.1, null, null, null],
+              "sequence_score": -0.1,
+              "normalized_item_id": null,
+              "valid": false,
+              "failure_labels": ["early_eos", "wrong_sid_depth"]
+            },
+            {
+              "beam_id": "a0-b1",
+              "beam_ancestry": [0, 1, 1, 1],
+              "ancestry_length": 4,
+              "generated_token_slots": [5, 9, 14, 15],
+              "decoded_length": 4,
+              "termination_reason": "eos",
+              "latent_token": null,
+              "ordered_semantic_codes": [1, 1, 2],
+              "ordered_model_vocabulary_tokens": [5, 9, 14],
+              "step_log_probabilities": [-0.05, -0.05, -0.05, -0.05],
+              "sequence_score": -0.2,
+              "normalized_item_id": 1,
+              "valid": true,
+              "failure_labels": []
+            }
+          ]
+        }
+      ],
+      "evaluation_cutoff": 2,
+      "evaluation_slots": [
+        {
+          "rank": 1,
+          "beam_id": "a0-b0",
+          "score": -0.1,
+          "normalized_item_id": null,
+          "valid": false,
+          "failure_labels": ["early_eos", "wrong_sid_depth"]
+        },
+        {
+          "rank": 2,
+          "beam_id": "a0-b1",
+          "score": -0.2,
+          "normalized_item_id": 1,
+          "valid": true,
+          "failure_labels": []
+        }
+      ]
+    }
+  ]
+}

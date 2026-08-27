@@ -1,9 +1,28 @@
 {
-  "schema": "sidscope.latte_psid_trained_trace_bundle.v1",
+  "schema": "sidscope.latte_psid_trained_trace_bundle.v2",
   "bundle_id": "deidentified-latte-trained-smoke-expected-failure",
   "method": "Latte",
   "decode_state_kind": "latent_token_then_ordered_sid_prefix",
   "aggregation_method": "agg_max",
+  "decoder_vocabulary": {
+    "pad_token_id": 0,
+    "eos_token_id": 15,
+    "ancestry_padding_value": -1
+  },
+  "target_universe": {
+    "schema": "sidscope.normalized_item_sid_universe.v1",
+    "sha256": "1e1b5fdaaadf35110272182c8c4b3568e5486f1d429b01e52f6fba9921b52971",
+    "rows": [
+      {
+        "normalized_item_id": 0,
+        "ordered_model_vocabulary_tokens": [4, 9, 14]
+      },
+      {
+        "normalized_item_id": 1,
+        "ordered_model_vocabulary_tokens": [5, 9, 14]
+      }
+    ]
+  },
   "expected_failure_label": "missing_beam_ancestry",
   "evidence": {
     "source_url": "https://github.com/hyp1231/Latte",
@@ -17,7 +36,8 @@
     "training_boundary": "strict checkpoint replay; no retraining in SIDScope",
     "training_config_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
     "command_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
-    "log_summary_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+    "log_summary_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+    "target_universe_sha256": "1e1b5fdaaadf35110272182c8c4b3568e5486f1d429b01e52f6fba9921b52971"
   },
   "episodes": [
     {
@@ -25,7 +45,7 @@
       "target_free": true,
       "retry_performed": false,
       "split_id": "fixture/test",
-      "target_universe_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "target_universe_sha256": "1e1b5fdaaadf35110272182c8c4b3568e5486f1d429b01e52f6fba9921b52971",
       "attempts": [
         {
           "attempt_index": 0,
@@ -36,6 +56,10 @@
           "final_beams": [
             {
               "beam_id": "a0-b0",
+              "ancestry_length": 5,
+              "generated_token_slots": [1, 4, 9, 14, 15],
+              "decoded_length": 5,
+              "termination_reason": "eos",
               "latent_token": 1,
               "ordered_semantic_codes": [0, 1, 2],
               "ordered_model_vocabulary_tokens": [4, 9, 14],

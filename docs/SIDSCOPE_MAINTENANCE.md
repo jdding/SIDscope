@@ -96,12 +96,18 @@ deidentified fixture. Raw histories, metadata text, sentence embeddings, the
 real `.sem_ids` cache, and normalized tables remain external.
 
 Checkpoint-owning downstream projects should return only the bounded,
-deidentified `sidscope.latte_psid_trained_trace_bundle.v1` handoff. SIDScope's
+deidentified `sidscope.latte_psid_trained_trace_bundle.v2` handoff. SIDScope's
 trained-trace verifier rejects confidence-only summaries, missing beam
 ancestry or step log-probabilities, raw identities, targets, checkpoint paths,
 and unbounded episode exports. This lets the canonical repository close real
 G2/G4/G5 evidence without absorbing a downstream training fork or private
 checkpoint.
+
+The v2 handoff preserves early-ended and invalid HF beams with explicit raw
+token slots, decoded/ancestry lengths, PAD or null tail slots, termination and
+failure labels. It also preserves PSID's raw top-k evaluation slots without
+backfilling and binds target-universe identity to canonical normalized-item/SID
+rows. Schema v1 bundles must be regenerated; they are not auto-upgraded.
 
 The LLaDA-Rec integration demonstrates an absent-code-license boundary. The
 paper is CC BY 4.0, but the official code repository has no detected license;

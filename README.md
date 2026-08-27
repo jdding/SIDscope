@@ -192,7 +192,8 @@ PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
 
 The trained handoff fails closed on aggregate-only summaries, missing beam
 ancestry or step log-probabilities, raw identities, labels, private paths, and
-unbounded exports.
+unbounded exports. Schema v2 preserves PAD/`-1` early-ended beams and PSID's
+raw invalid top-k rank slots, while Latte retains dense post-aggregation ranks.
 
 The Amazon raw data, metadata text, sentence embeddings, generated cache, and
 normalized tables are not redistributed because the audited dataset card does

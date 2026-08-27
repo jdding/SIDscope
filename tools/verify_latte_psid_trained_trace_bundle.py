@@ -29,7 +29,7 @@ def main() -> None:
         result["bundle_sha256"] = hashlib.sha256(args.bundle.read_bytes()).hexdigest()
     except (OSError, json.JSONDecodeError, LatteCacheContractError) as exc:
         result = {
-            "schema": "sidscope.latte_psid_trained_trace_verification.v1",
+            "schema": "sidscope.latte_psid_trained_trace_verification.v2",
             "status": "fail",
             "failure_label": getattr(exc, "label", "invalid_bundle_file"),
             "detail": str(exc),
