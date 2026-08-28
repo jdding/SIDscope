@@ -32,6 +32,8 @@ except ModuleNotFoundError:
 
 DEFAULT_MANIFEST = ROOT / "docs" / "reproducibility" / "sidscope_release_candidate_manifest.csv"
 DEFAULT_OUTPUT = Path("/tmp") / "sidscope-v1-release-candidate.zip"
+FIXED_ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
+FIXED_FILE_MODE = 0o100644
 
 
 def file_sha256(path: Path) -> str:
@@ -59,9 +61,23 @@ def build_archive(*, manifest_path: Path, output_path: Path) -> dict[str, Any]:
     if output_path.exists():
         output_path.unlink()
 
-    with zipfile.ZipFile(output_path, mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for rel_path in package_paths:
-            archive.write(ROOT / rel_path, arcname=rel_path)
+    with zipfile.ZipFile(
+        output_path,
+        mode="w",
+        compression=zipfile.ZIP_DEFLATED,
+        compresslevel=9,
+    ) as archive:
+        for rel_path in sorted(package_paths):
+            info = zipfile.ZipInfo(rel_path, date_time=FIXED_ZIP_TIMESTAMP)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3
+            info.external_attr = FIXED_FILE_MODE << 16
+            archive.writestr(
+                info,
+                (ROOT / rel_path).read_bytes(),
+                compress_type=zipfile.ZIP_DEFLATED,
+                compresslevel=9,
+            )
 
     return {
         "schema": "sidscope.release_candidate_archive.v1",
@@ -75,7 +91,7 @@ def build_archive(*, manifest_path: Path, output_path: Path) -> dict[str, Any]:
         "included_files": len(package_paths),
         "forbidden_findings": forbidden,
         "forbidden_public_content_findings": public_content_findings,
-        "boundary": "Release-clean archive built from git-tracked public_package=yes manifest paths; public URL, tag, and G8 remain separate gates.",
+        "boundary": "Deterministic release-clean archive built from sorted git-tracked public_package=yes manifest paths with fixed ZIP metadata; public URL, tag, and G8 remain separate gates.",
     }
 
 

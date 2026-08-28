@@ -90,6 +90,10 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   installation. This avoids Apple Command Line Tools Python 3.9 falling back
   to `setup.py develop` and losing pip inside its PEP 517 subprocess; a focused
   regression test now keeps the local and public URL install sequences aligned.
+- Made the release archive deterministic by sorting manifest-approved paths and
+  fixing ZIP timestamps, permissions, and compression settings. Rebuilding the
+  same release tree now produces the same archive SHA-256 inside and outside a
+  clean extracted environment.
 - Pinned the official LLaDA-Rec source at `83dbcd6` and recorded that the code
   repository has no detected license, tag, release, checkpoint, semantic-ID
   cache, processed dataset, or training log.

@@ -11,7 +11,7 @@ from sidinspector.adapters import (
     load_sentence_transformer,
     model_reference_kind,
 )
-from tools.build_sidscope_release_candidate_archive import build_archive
+from tools.build_sidscope_release_candidate_archive import FIXED_ZIP_TIMESTAMP, build_archive
 from tools.run_sidscope_public_url_smoke import clone_command, smoke_commands
 from tools.run_sidscope_g8_fresh_env_smoke import fresh_env_install_commands
 from tools.run_sidscope_realistic_tutorial import run_tutorial
@@ -169,6 +169,24 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("tools/run_sidscope_g8_fresh_env_smoke.py", names)
         self.assertIn("tools/run_sidscope_public_url_smoke.py", names)
         self.assertNotIn("experiments/v1_evidence_chain/autodl/payloads", names)
+
+    def test_release_candidate_archive_has_deterministic_zip_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            first_path = Path(tmp) / "first.zip"
+            second_path = Path(tmp) / "second.zip"
+            first = build_archive(
+                manifest_path=ROOT / "docs" / "reproducibility" / "sidscope_release_candidate_manifest.csv",
+                output_path=first_path,
+            )
+            second = build_archive(
+                manifest_path=ROOT / "docs" / "reproducibility" / "sidscope_release_candidate_manifest.csv",
+                output_path=second_path,
+            )
+            with zipfile.ZipFile(first_path) as archive:
+                timestamps = {info.date_time for info in archive.infolist()}
+
+        self.assertEqual(first["archive_sha256"], second["archive_sha256"])
+        self.assertEqual(timestamps, {FIXED_ZIP_TIMESTAMP})
 
     def test_public_url_smoke_command_contract(self) -> None:
         target = Path("/tmp/sidscope-checkout")

@@ -24,7 +24,6 @@ candidate_archive_name: sidscope-v1.1.0.zip
 local_archive_path: /tmp/sidscope-v1.1.0.zip
 candidate_commit: release commit containing this packet
 release_tag: not created
-tested_precommit_archive_sha256: 1022abaaf47567b4cd1ab431ae5ec1fc9c69f9300846b202baadfef6747842be
 final_tag_archive_sha256: record externally after the final tag to avoid a self-referential archive hash
 public_url_smoke: pending tag and publication
 ```
