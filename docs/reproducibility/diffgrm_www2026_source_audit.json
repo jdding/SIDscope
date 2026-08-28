@@ -1,0 +1,64 @@
+{
+  "schema": "sidscope.generator_source_audit.v1",
+  "route_id": "diffgrm_www2026",
+  "audited_at": "2026-08-28",
+  "method": {
+    "paper_title": "DiffGRM: Diffusion-based Generative Recommendation Model",
+    "venue": "The Web Conference 2026 research track",
+    "doi": "10.1145/3774904.3792156",
+    "paper_url": "https://doi.org/10.1145/3774904.3792156",
+    "accepted_paper_list": "https://www2026.thewebconf.org/accepted/research-tracks.html",
+    "adapter_kind": "diffusion_generator"
+  },
+  "source": {
+    "url": "https://github.com/liuzhao09/DiffGRM",
+    "revision": "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c",
+    "default_branch": "main",
+    "license_status": "no_root_license_detected",
+    "license_identifier": "NOASSERTION",
+    "license_files_found": [],
+    "redistribution_policy": "link_and_hash_only_no_upstream_source_redistribution",
+    "execution_policy": "staged_contract_only_pending_explicit_author_permission"
+  },
+  "source_sha256": {
+    "README.md": "a822a2461afae4428e41f8985486616a0f566434b92b5d44e77b533f22b48096",
+    "main.py": "02cf49c69e1b35e4a8442ccafcaeb78eb8924243d3667e35cafabc78ac477507",
+    "genrec/models/DIFF_GRM/model.py": "bf8de24f164fe2d7a765b5d4d443d5f10872cba40cc420c58875d3f6bb93c5a1",
+    "genrec/models/DIFF_GRM/tokenizer.py": "15c18ff56461662c20a7ec9571517a409d01a1e2a82e799ea1674415e0cf1a32",
+    "genrec/models/DIFF_GRM/beam.py": "ff0699d1dacd6a9c6f8b859d49ee6ba817119b10f8617d6f82bdd062e3cdf0b6"
+  },
+  "identity_contract": {
+    "n_digit": 4,
+    "codebook_size": 256,
+    "padding_token": 0,
+    "bos_token": 1,
+    "eos_token": 2,
+    "mask_token": -1,
+    "sid_offset": 3,
+    "model_vocabulary": "codebook_id + 3 + position * 256",
+    "quantizer": "OPQ4,IVF1,PQ4x8 over sentence-t5-base metadata embeddings",
+    "training_catalog": "train-observed items only"
+  },
+  "inference_contract": {
+    "initial_target_state": "all four code positions masked",
+    "reverse_process": "confidence-guided adaptive position filling",
+    "beam_state": "parallel masked code tuple with real parent expansion ancestry",
+    "capture_boundary": "before legality filtering deduplication and short-list padding",
+    "resolution": "exact SID tuple to all matching catalog items",
+    "projection": "not applicable",
+    "official_final_beam_capacity": 256,
+    "official_default_metric_depth": 10
+  },
+  "compatibility_boundary": {
+    "rpg_vg_opq32_compatible": false,
+    "reason": "RPG VG uses 32 code positions while DiffGRM requires an exact four-position OPQ4 identity; cropping or reordering is forbidden.",
+    "formal_plan": "freeze a separate official DiffGRM OPQ4 tokenizer over the same frozen train-only catalog and declare tokenizer identity as a second factor"
+  },
+  "promotion_boundary": {
+    "publication_and_revision_identity": "pass",
+    "g0_permission": "pending_explicit_author_code_permission",
+    "named_adapter": false,
+    "upstream_execution_allowed": false,
+    "gpu_work_allowed": false
+  }
+}

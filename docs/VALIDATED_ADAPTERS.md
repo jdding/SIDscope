@@ -107,6 +107,13 @@ adapter status because the snapshot lacks an immutable revision, code license,
 released assets, official-data round-trip, and real model-backed trace.
 ChronoSID remains on source watch.
 
+DiffGRM is the staged publication-prioritized masked/diffusion candidate. Its
+The Web Conference 2026 publication and immutable source revision are bound,
+and its independent dataset-neutral contract/verifier pass without executing
+upstream code. It is not listed as a named adapter: explicit author code
+permission, real frozen-VG OPQ4 identity, checkpoint-backed five-episode smoke,
+and the 250-episode diagnostic remain open.
+
 See `docs/GENERATOR_ADAPTER_CONFORMANCE.md` and
 `docs/reproducibility/generator_adapter_coverage.csv` for the typed status and
 next gate of each route.

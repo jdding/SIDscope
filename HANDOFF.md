@@ -17,6 +17,14 @@ token-set and graph item-node semantics. The other generator routes remain
 useful, typed partial integrations and must retain their documented gate
 labels.
 
+DiffGRM is now the publication-prioritized masked/diffusion candidate. Its The
+Web Conference 2026 DOI, official repository revision, OPQ4 identity,
+dataset-neutral prepared/selection contracts, native masked trace, positive
+fixture, ten typed negative fixtures, and non-executing staged preflight are
+bound. The official repository has no root license, so upstream code import,
+execution, redistribution, GPU work, and named-adapter promotion remain closed
+until explicit author permission is recorded.
+
 The submitted TOIS manuscript is a frozen, separate repository. Nothing in
 SIDScope 1.1 may be written back into that submission before an explicitly
 authorized revision phase.
@@ -191,6 +199,7 @@ The machine-readable authority is
 | RPG | G0--G5 pass on the pinned Beauty configuration | `named_adapter` | Maintain the bounded public smoke and rerun external training evidence only when the pinned source, cache, or configuration changes. |
 | TIGER / DACT | G1--G5 pass; G0 blocked by absent upstream code/asset license | `close_named_adapter` | Obtain explicit reuse permission; then rerun the 500-target primary with ancestry export before promotion. |
 | LLaDA-Rec | G2--G4 adaptive-unmasking fixture; G0 blocked and G1/trained evidence pending | `close_named_adapter` | Obtain an explicit source license plus fixed tokenizer/checkpoint assets; run real G1 and trained G4--G5. |
+| DiffGRM | WWW 2026/source identity and dataset-neutral native masked CPU contract pass; G0 permission and real VG G1--G5 evidence pending | `close_named_adapter` | Record explicit author code permission; freeze official OPQ4 over the same VG train-only catalog; run five-episode then 250-episode VG before Steam. |
 | Item-Supported Decoding | Fail-closed overlay contract and exact-function smoke; G0 blocked, G1 fixture, G5 partial | `close_named_adapter` | Obtain an immutable official revision and license; bind data/checkpoints and export a real overlay trace. |
 | ChronoSID | Official versioned source/assets unavailable | `watch_official_source` | Keep on source watch. |
 
@@ -198,13 +207,16 @@ RPG must retain unordered token-set identity and graph-valid completion; it
 must never be converted into a TIGER-style autoregressive prefix trace.
 LLaDA-Rec must retain diffusion/remasking state. ISD remains a decoder overlay,
 not a standalone generator.
+DiffGRM must retain forward noising and adaptive masked-position filling; RPG's
+32-position OPQ cache is not compatible with DiffGRM's four-position OPQ4
+identity and must never be cropped or silently converted.
 
 ## Last verified local release evidence
 
 The exact working tree containing the three implementation commits above
 passed:
 
-- full tests: `136 passed, 6 skipped`;
+- full tests: `145 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
@@ -212,8 +224,11 @@ passed:
 - RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
   positive fixture, typed duplicate-selection failure, and the hash-bound CPU
   runner/export smoke;
-- manifest after this handoff update: 192 rows, 189 public rows, 0 pending;
-- current public package surface: 272 files.
+- DiffGRM staged verifier: PASS, including non-executing source preflight,
+  dataset-neutral positive fixture, and ten typed expected failures; upstream
+  execution and GPU work remain closed;
+- manifest after this handoff update: 201 rows, 198 public rows, 0 pending;
+- current public package surface: 285 files.
 
 Because this document updates the public manifest, a resumed session must use
 the commands below to obtain the current archive counts and SHA-256. Treat the

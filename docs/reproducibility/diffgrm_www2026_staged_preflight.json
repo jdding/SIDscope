@@ -1,0 +1,24 @@
+{
+  "schema": "sidscope.diffgrm_staged_preflight.v1",
+  "status": "pass",
+  "route_id": "diffgrm_www2026",
+  "inspection_scope": "recorded_revision_audit",
+  "source_revision": "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c",
+  "source_sha256": {
+    "README.md": "a822a2461afae4428e41f8985486616a0f566434b92b5d44e77b533f22b48096",
+    "main.py": "02cf49c69e1b35e4a8442ccafcaeb78eb8924243d3667e35cafabc78ac477507",
+    "genrec/models/DIFF_GRM/model.py": "bf8de24f164fe2d7a765b5d4d443d5f10872cba40cc420c58875d3f6bb93c5a1",
+    "genrec/models/DIFF_GRM/tokenizer.py": "15c18ff56461662c20a7ec9571517a409d01a1e2a82e799ea1674415e0cf1a32",
+    "genrec/models/DIFF_GRM/beam.py": "ff0699d1dacd6a9c6f8b859d49ee6ba817119b10f8617d6f82bdd062e3cdf0b6"
+  },
+  "source_code_imported": false,
+  "source_code_executed": false,
+  "license_files_found": [],
+  "g0": {
+    "publication_and_revision_identity": "pass",
+    "redistribution_and_execution_permission": "pending_explicit_author_permission"
+  },
+  "execution_authorized": false,
+  "next_gate": "record explicit author code permission and re-audit before any import, execution, or redistribution",
+  "failures": []
+}

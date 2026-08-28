@@ -91,6 +91,7 @@ EXPECTED_GENERATOR_ROUTE_IDS = {
     "latte_psid",
     "rpg_kdd2025",
     "llada_rec",
+    "diffgrm_www2026",
     "isd",
     "chronosid",
 }

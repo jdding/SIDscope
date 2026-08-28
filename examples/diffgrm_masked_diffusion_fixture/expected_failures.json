@@ -1,0 +1,55 @@
+{
+  "schema": "sidscope.diffgrm_expected_failures.v1",
+  "cases": [
+    {
+      "case_id": "reject-rpg-32-digit-cache",
+      "mutation": "sid_n_digit_32",
+      "expected_failure_label": "incompatible_sid_contract"
+    },
+    {
+      "case_id": "reject-duplicate-selection",
+      "mutation": "duplicate_selection",
+      "expected_failure_label": "duplicate_episode_selection"
+    },
+    {
+      "case_id": "reject-missing-selection",
+      "mutation": "missing_selected_episode",
+      "expected_failure_label": "missing_selected_episode"
+    },
+    {
+      "case_id": "reject-out-of-split-selection",
+      "mutation": "selection_out_of_split",
+      "expected_failure_label": "selected_episode_out_of_split"
+    },
+    {
+      "case_id": "reject-target-mismatch",
+      "mutation": "selection_target_mismatch",
+      "expected_failure_label": "selection_target_mismatch"
+    },
+    {
+      "case_id": "reject-catalog-unreachable-target",
+      "mutation": "selection_catalog_unreachable",
+      "expected_failure_label": "selection_target_outside_catalog"
+    },
+    {
+      "case_id": "reject-ar-prefix-field",
+      "mutation": "add_prefix_depth",
+      "expected_failure_label": "autoregressive_field_forbidden"
+    },
+    {
+      "case_id": "reject-missing-parent",
+      "mutation": "replace_step2_parent",
+      "expected_failure_label": "unknown_parent_beam"
+    },
+    {
+      "case_id": "reject-invalid-raw-success",
+      "mutation": "invalid_raw_marked_success",
+      "expected_failure_label": "invalid_raw_marked_success"
+    },
+    {
+      "case_id": "reject-unsupported-exact-rank",
+      "mutation": "unsupported_exact_rank",
+      "expected_failure_label": "unsupported_exact_rank_claim"
+    }
+  ]
+}

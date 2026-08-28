@@ -1,0 +1,17 @@
+{
+  "schema": "sidscope.diffgrm_episode_selection.v1",
+  "route_id": "diffgrm_www2026",
+  "prepared_dataset_contract_sha256": "c72e2830c4b49f2c5946dc8450c9470c61ba29d93e477c2c3eeb456674c02ada",
+  "selection_policy": "explicit_ordered_fixture",
+  "first_n_fallback_allowed": false,
+  "episodes": [
+    {
+      "selection_ordinal": 1,
+      "episode_id": "episode-001",
+      "split": "test",
+      "target_normalized_item_id": "n1",
+      "gap_bucket": "31-90d",
+      "generator_input_contains_bucket_or_label": false
+    }
+  ]
+}

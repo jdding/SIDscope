@@ -76,6 +76,7 @@ __all__ = [
     "LATTE_TOKENIZER_OPTIONAL_DISTRIBUTIONS",
     "card",
     "dact",
+    "diffgrm",
     "grid",
     "isd",
     "latte",

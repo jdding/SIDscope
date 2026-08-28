@@ -11,6 +11,24 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.1.1.dev0: DiffGRM staged masked/diffusion adapter
+
+- Selected the The Web Conference 2026 DiffGRM route as the
+  publication-prioritized masked/diffusion family and bound its DOI, official
+  repository, immutable revision, and source hashes.
+- Added dataset-neutral prepared-data and explicit ordered episode-selection
+  contracts, strict four-position OPQ4 identity checks, and typed rejection of
+  the incompatible RPG 32-position cache.
+- Added a native masked trace contract for forward noising, adaptive
+  denoising, real beam ancestry, retained/pruned candidates, raw pre-filter
+  tuples, collision-aware exact resolution, compute counts, and right-censored
+  target rank.
+- Added positive and ten expected-failure fixtures, a non-importing staged
+  source preflight, verifier CLI, and focused tests.
+- Kept G0, upstream execution, GPU work, redistribution, and named-adapter
+  promotion closed until explicit author code permission is recorded; no
+  upstream code or assets are included.
+
 ## SIDScope v1.1.1.dev0: RPG dataset-neutral bridge
 
 - Added hash-bound `sidscope.rpg_prepared_dataset.v1` and explicit

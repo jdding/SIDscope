@@ -14,7 +14,7 @@ Generator integrations declare one of four kinds:
 - `parallel_generator`: unordered or jointly predicted SID components, such as
   RPG;
 - `diffusion_generator`: masked-state refinement and remasking, such as
-  LLaDA-Rec;
+  LLaDA-Rec, or confidence-guided adaptive position filling, such as DiffGRM;
 - `decoder_overlay`: an external item scorer that changes candidate survival or
   final ranking without replacing the SID generator, such as ISD.
 
@@ -90,6 +90,17 @@ filled positions. G0 is blocked because the code repository has no detected
 license, while real-data identity and trained trace gates remain open. The
 exact boundary is in `docs/LLADA_REC_DIFFUSION_ADAPTER.md` and
 `docs/reproducibility/llada_rec_adapter_status.json`.
+
+DiffGRM is staged as the publication-prioritized masked/diffusion route. Its
+The Web Conference 2026 paper, DOI, official repository, immutable revision,
+four-position OPQ identity, and non-vendoring boundary are bound. A
+dataset-neutral CPU contract preserves forward noising, adaptive reverse
+masked states, real beam ancestry, raw pre-filter tuples, exact collision-aware
+resolution, and typed rank censoring. The official repository has no detected
+root license, so upstream import/execution, GPU work, redistribution, and named
+adapter promotion remain closed pending explicit author permission. See
+`docs/DIFFGRM_GENERATOR_ADAPTER.md` and
+`docs/reproducibility/diffgrm_www2026_adapter_status.json`.
 
 DACT/TIGER now has a complete method-facing report: the released source-item
 mapping, Tools `0.6_cf` SID array, official preprocessing, checkpoint,
