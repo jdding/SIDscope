@@ -1,6 +1,6 @@
 # SIDScope 1.1 Development Roadmap
 
-Version: `1.1.0.dev0`
+Version: `1.1.0`
 Branch: `codex/sidscope-v1.1`
 Base: public `v1.0.2` at
 `6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`
@@ -48,6 +48,10 @@ configuration-bound and does not alter the submitted TOIS paper or promote the
 still-pending trained RPG route.
 
 ## Release Gate
+
+Status: local release-candidate tests, package verifier, archive smoke, and G8
+fresh-environment install pass; public tag and URL smoke require explicit
+release authorization.
 
 Before `v1.1.0`:
 

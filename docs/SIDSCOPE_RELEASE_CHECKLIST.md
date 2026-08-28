@@ -1,20 +1,16 @@
 # SIDScope Release Candidate Checklist
 
-Status: v1.0.2 public-smoke patch verified on the public main branch; immutable
-tag freeze pending
-Last updated: 2026-08-20
+Status: v1.1.0 local release-candidate gates pass; public tag and URL smoke
+pending explicit authorization
+Last updated: 2026-08-28
 
 This checklist defines what must be true before a SIDScope reviewer package is
-called release-ready. The current resource package is release-ready for the
-local resource-package layer: the local package verifier, release-clean archive
-builder, and archive smoke pass after the ReSOT/DIGER and worktree-cleanup
-refresh. The public `https://github.com/jdding/sidscope` repository is the
-approved official release surface. Version 1.0.2 repairs the no-login smoke so
-that a fresh environment installs all declared dependencies before executing
-the conformance and package verifiers. The corrected workflow passed from the
-public HTTPS `main` branch at commit
-`9c0893d32359195995ca5bffc9b6d805c04492a3`; the immutable tag is the final
-remaining release action.
+called release-ready. Version 1.1.0 adds the G0--G5 generator-adapter protocol,
+RPG/Latte/LLaDA-Rec/DACT/ISD contracts and evidence, and the first complete
+configuration-bound named generator adapter for Latte/PSID. The public
+`https://github.com/jdding/sidscope` repository remains the approved release
+surface. Local verification must close before any tag or push; the final public
+URL smoke is a separate post-publication gate.
 Paper submission readiness remains a separate writing and venue-decision gate.
 
 ## Release Candidate Inputs
@@ -40,9 +36,9 @@ Run from the repository root:
 
 ```bash
 python3 tools/verify_sidscope_resource_package.py
-python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1-release-candidate.zip
-python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1-release-candidate.zip
-python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1-release-candidate.zip
+python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
+python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
+python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1.1.0.zip
 python3 -m pytest -q
 ```
 
@@ -84,8 +80,8 @@ Minimum commands:
 python3 -m pip install --upgrade "pip>=21.3"
 python3 -m pip install -e .
 python3 tools/verify_sidscope_resource_package.py
-python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1-release-candidate.zip
-python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1-release-candidate.zip
+python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
+python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
 python3 tools/run_sidscope_sampled_regeneration.py --output-dir /tmp/sidscope_sampled_regeneration
 ```
 
@@ -97,7 +93,7 @@ For the final public/reviewer URL gate, run:
 ```bash
 python3 tools/run_sidscope_public_url_smoke.py \
   --repo-url https://github.com/jdding/sidscope.git \
-  --ref main \
+  --ref v1.1.0 \
   --result-json /tmp/sidscope_public_url_smoke.json
 ```
 
@@ -120,17 +116,15 @@ changes.
 ## Current Verdict
 
 ```text
-G5_G6_LOCAL_RELEASE_CANDIDATE: PASS_CURRENT after R768 verifier, R769 archive builder, and R770 archive smoke
-G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS via R603 and current archive smoke via R770
-SIDSCOPE_PUBLIC_REPOSITORY_ACCESS: PASS; HTTPS page and git refs are visible without login
-SIDSCOPE_PUBLIC_URL_SMOKE: PASS_ON_PUBLIC_MAIN via R835 at 9c0893d32359195995ca5bffc9b6d805c04492a3
-PUBLIC_REVIEWER_ACCESS: PASS; https://github.com/jdding/sidscope is public
-G7_LITE_CLAIM_PACKAGE_BOUNDARY: PASS
-G7_FULL_CLAIM_TABLE_FIGURE_LEDGER: PASS for current local artifact registry
-G9_G10_UTILITY_ANCHORS: PASS for current local artifact registry
-G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PASS_ON_PUBLIC_MAIN; archive SHA256 f85b830ad8813ec258d158da813f72a06ec5081d9f8474aa00e28be8f98932d7
-PREPARATION_TAG: sidscope-tois-m1m5-20260809-r2
-FINAL_RELEASE_TAG: v1.0.2_PENDING_SMOKE
-SUBMISSION_READY_RESOURCE_PACKAGE: PASS_PENDING_IMMUTABLE_TAG
-PAPER_SUBMISSION_READY: NOT_ASSESSED
+PACKAGE_VERSION: 1.1.0
+LATTE_PSID_NAMED_ADAPTER: PASS_G0_G5
+LOCAL_TESTS: PASS_CURRENT
+LOCAL_RESOURCE_PACKAGE_VERIFIER: PASS_CURRENT
+LOCAL_ARCHIVE_BUILD: PASS_CURRENT
+LOCAL_ARCHIVE_SMOKE: PASS_CURRENT
+G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT with isolated sidinspector==1.1.0 install
+TESTED_PRECOMMIT_ARCHIVE_SHA256: 1022abaaf47567b4cd1ab431ae5ec1fc9c69f9300846b202baadfef6747842be
+FINAL_RELEASE_TAG: NOT_CREATED
+G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_TAG_AND_PUBLICATION
+TOIS_FROZEN_SUBMISSION: OUT_OF_SCOPE_UNCHANGED
 ```

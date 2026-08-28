@@ -261,9 +261,9 @@ revision or root code license and ships no data, checkpoint, cache, or trace,
 so this is bounded interoperability evidence rather than a named adapter. See
 `docs/ISD_DECODER_OVERLAY_ADAPTER.md`.
 
-Post-submission development is tracked as `1.1.0.dev0` on
-`codex/sidscope-v1.1`; see `docs/V1_1_ROADMAP.md`. The TOIS submission remains
-frozen outside this software worktree until an editorial revision request.
+Version 1.1.0 is prepared on `codex/sidscope-v1.1`; see
+`docs/V1_1_ROADMAP.md`. The TOIS submission remains frozen outside this
+software worktree until an editorial revision request.
 
 Run the local reviewer-resource package verifier:
 
@@ -280,9 +280,9 @@ python3 tools/verify_sidscope_claim_ledger.py --result-json /tmp/sidscope_claim_
 Build a release-clean local archive from the manifest-approved package paths:
 
 ```bash
-python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1-release-candidate.zip
-python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1-release-candidate.zip
-python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1-release-candidate.zip
+python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
+python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
+python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1.1.0.zip
 ```
 
 These checks validate the reviewer quickstart, compact evidence snapshots,

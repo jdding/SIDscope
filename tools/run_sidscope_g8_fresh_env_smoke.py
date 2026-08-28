@@ -65,6 +65,22 @@ def ensure_archive(archive_path: Path) -> dict[str, Any]:
     )
 
 
+def fresh_env_install_commands(py: Path) -> list[list[str]]:
+    """Return the isolated install sequence used by the local G8 smoke.
+
+    Apple Command Line Tools Python 3.9 can seed a venv with pip 21.2, whose
+    editable-install fallback invokes ``setup.py develop`` and then loses pip
+    inside its PEP 517 subprocess. Upgrade pip before the editable install so
+    the same standards-based path is exercised locally and by the public URL
+    smoke.
+    """
+
+    return [
+        [str(py), "-m", "pip", "install", "--upgrade", "pip>=21.3"],
+        [str(py), "-m", "pip", "install", "-e", "."],
+    ]
+
+
 def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
     archive_result = ensure_archive(archive_path)
 
@@ -77,8 +93,9 @@ def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
 
         venv.EnvBuilder(with_pip=True, clear=True).create(venv_dir)
         py = venv_python(venv_dir)
-        commands = [
-            run([str(py), "-m", "pip", "install", "-e", "."], cwd=package_root),
+        commands = [run(command, cwd=package_root) for command in fresh_env_install_commands(py)]
+        commands.extend(
+            [
             run([str(py), "tools/verify_sidscope_resource_package.py"], cwd=package_root),
             run(
                 [
@@ -106,7 +123,8 @@ def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
                 ],
                 cwd=package_root,
             ),
-        ]
+            ]
+        )
 
     return {
         "schema": "sidscope.g8_fresh_env_smoke.v1",

@@ -11,9 +11,10 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
-## SIDScope v1.1.0-dev: Generator adapter maintenance
+## SIDScope v1.1.0: Generator adapter maintenance
 
-Development opened: 2026-08-27
+Release candidate: 2026-08-28
+Tag: pending explicit authorization
 Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
 
 - Replaced path-name model detection with an explicit SentenceTransformer
@@ -85,6 +86,10 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
 - Promoted the configuration-bound Latte/PSID route to SIDScope's first
   complete named generator adapter. This resource evidence is post-submission
   development and does not change the frozen TOIS manuscript or claims.
+- Fixed the local G8 fresh-environment runner to upgrade pip before editable
+  installation. This avoids Apple Command Line Tools Python 3.9 falling back
+  to `setup.py develop` and losing pip inside its PEP 517 subprocess; a focused
+  regression test now keeps the local and public URL install sequences aligned.
 - Pinned the official LLaDA-Rec source at `83dbcd6` and recorded that the code
   repository has no detected license, tag, release, checkpoint, semantic-ID
   cache, processed dataset, or training log.
