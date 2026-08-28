@@ -12,6 +12,8 @@
     "episode_selection_file_sha256": "6d7e72bc39bc5bd604140be925b42471e6bef0f2ee402e23831727d24a9cee73",
     "expected_failure_label": "duplicate_selection_row",
     "positive_bundle_file_sha256": "911be57327603dbb40b249c22aed01191ea5bc7c955d1263a12b029ba44e1347",
+    "rank_depth_claim_fixture_sha256": "c42c1d942be1227f47748fde713e8acd7d219aeb7b651d8b75b4854e02e4464d",
+    "rank_depth_expected_failure_label": "unsupported_exact_rank_claim",
     "prepared_dataset_canonical_sha256": "b1afc1a8d41ee9524b10194ea4b85eeae4d7a64468bafc18c69eb9b244aee1aa",
     "prepared_dataset_file_sha256": "488f69b6c90c0bea93aa276ee17341d2f164f0f2e89c55e782e1668d7a64467f",
     "status": "pass"
@@ -61,6 +63,27 @@
     "training_manifest_sha256": "4f2ddc05aa5b8da86bfcd52d8e9ca77be704e502b80d46d5f3cd3b8afd6dff07",
     "verifier_status": "pass"
   },
+  "rank_depth_runtime_smoke": {
+    "checkpoint_sha256": "2466639c5b2cd96605d7f531330d7f7953a8f9f59b9166548dac87caadbed66b",
+    "device": "cpu",
+    "evaluation_cutoff": 2,
+    "exact_target_rank_count": 0,
+    "gpu_required": false,
+    "handoff_sha256": "beee5e72008ea71d9abdde9edaa39a75ccff9d6da45496599681fbba4b9d78c3",
+    "ndcg_at_rank_cutoff": 0.0,
+    "prepared_dataset_contract_sha256": "4ab105cfcdbacb92e0d04e6292fb2f14c4e29778a4c602f5daa88744559315e0",
+    "publication_scope": "complete_resolved_final_frontier",
+    "published_rank_depth": 2,
+    "recall_at_rank_cutoff": 0.0,
+    "requested_published_rank_depth": 100,
+    "right_censored_target_rank_count": 1,
+    "schema": "sidscope.rpg_rank_depth_diagnostic.v1",
+    "status": "pass",
+    "target_rank_lower_bound": 3,
+    "target_rank_state": "target_not_in_published_depth",
+    "trace_sha256": "f5a550747162edc7b435b0bfa57f2fca2410fc49372aae2610872f45fe620622",
+    "verification_sha256": "c69205d70a01012e7e3b011d876addf103ef40a004cf2ac4117db388ddf4e13d"
+  },
   "schema": "sidscope.rpg_non_ar_bridge_smoke.v1",
   "source": {
     "license": "CC-BY-NC-4.0",
@@ -69,10 +92,10 @@
   },
   "status": "pass",
   "tools": {
-    "exporter_sha256": "36b6ce0bd97cfcf4ad350da92fb909f0f4c36af8bda3e33f471af87a4f9acf17",
+    "exporter_sha256": "fff320b1b50bf2c900090f76981f09f0b6912bfa4b35bccce1b43a2aef69a063",
     "finalizer_sha256": "26b767b105cf22cd5191d96cc1bd4775566f8c95f8cd2e7edf7add7639629fa2",
-    "prepared_bridge_sha256": "6e5331f598b6e01ab377b38b15bd13785959ce441bb03d73ffd1b4777dd8ff99",
+    "prepared_bridge_sha256": "7b8e8b328c0ebaddc636675a9d02df41808c31214df4b962bf838210b12d16e5",
     "runner_sha256": "5c5ded97cb0026d7a0e027d7bef3615ccb556995d7eedc30f1957cd218851fce",
-    "trained_trace_verifier_sha256": "76c40191814fa0e6df0904531dd493b2f05360adbe3bbc13e3a83c6a5f3071a2"
+    "trained_trace_verifier_sha256": "534cf806c529e1703141f92681bda702fbad957ddd072464f0f6026c9df23a50"
   }
 }

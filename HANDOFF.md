@@ -167,6 +167,17 @@ records plus the exact ledger. The final manifest preserves continuous epochs,
 global steps, and model-state hashes. Legacy checkpoints without embedded
 records require a matching continuous legacy manifest or fail closed.
 
+Prepared v2 traces may now add the backward-compatible
+`sidscope.rpg_rank_depth_diagnostic.v1` extension. It separates the frozen
+evaluation cutoff from ranked-item publication depth, preserves all existing
+training/prepared/selection/checkpoint and graph bindings, and requires exact
+target ranks to have an ordered supporting row. Missing targets are typed as
+right-censored beyond the published depth unless an in-depth SID collision
+proves a resolution failure. The frozen VG RPG configuration uses 20 beams, so
+its method-faithful complete ranking depth is 20 even when depth 100 is
+requested; ranks 21+ remain right-censored unless a separately authorized run
+changes the beam/graph experiment.
+
 See `docs/RPG_NON_AR_BRIDGE.md`.
 
 ## Generator-route gate status
@@ -193,7 +204,7 @@ not a standalone generator.
 The exact working tree containing the three implementation commits above
 passed:
 
-- full tests: `133 passed, 6 skipped`;
+- full tests: `136 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
@@ -201,8 +212,8 @@ passed:
 - RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
   positive fixture, typed duplicate-selection failure, and the hash-bound CPU
   runner/export smoke;
-- manifest after this handoff update: 190 rows, 187 public rows, 0 pending;
-- current public package surface: 270 files.
+- manifest after this handoff update: 192 rows, 189 public rows, 0 pending;
+- current public package surface: 272 files.
 
 Because this document updates the public manifest, a resumed session must use
 the commands below to obtain the current archive counts and SHA-256. Treat the

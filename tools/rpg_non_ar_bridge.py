@@ -470,6 +470,7 @@ def build_downstream_handoff(
     rows_by_id = {
         row["normalized_item_id"]: row for row in bundle["target_universe"]["rows"]
     }
+    ranking_diagnostic = bundle.get("ranking_diagnostic")
     output_rows = []
     for episode, selected in zip(bundle["episodes"], selection["rows"]):
         target = episode["target_normalized_item_id"]
@@ -483,8 +484,7 @@ def build_downstream_handoff(
         target_rank = episode["target_rank"]
         candidate_count = len(candidates)
         unique_candidates = len(set(candidates))
-        output_rows.append(
-            {
+        output_row = {
                 "episode_id": episode["episode_id"],
                 "selection_order": selected["order"],
                 "catalog_reachable": 0 <= target < prepared["catalog"]["row_count"],
@@ -501,7 +501,18 @@ def build_downstream_handoff(
                 "parallel_score_count": bundle["configuration"]["n_codebooks"] * bundle["configuration"]["codebook_size"],
                 "graph_candidate_score_count": candidate_count,
             }
-        )
+        if ranking_diagnostic is not None:
+            output_row.update(
+                {
+                    "evaluation_cutoff": ranking_diagnostic["evaluation_cutoff"],
+                    "published_rank_depth": ranking_diagnostic["published_rank_depth"],
+                    "target_rank_state": episode["target_rank_state"],
+                    "target_rank_lower_bound": episode["target_rank_lower_bound"],
+                    "target_rank_right_censored": episode["target_rank_state"]
+                    == "target_not_in_published_depth",
+                }
+            )
+        output_rows.append(output_row)
     return {
         "schema": HANDOFF_SCHEMA,
         "bundle_id": bundle.get("bundle_id"),

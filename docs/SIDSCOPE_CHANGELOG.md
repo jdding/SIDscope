@@ -28,6 +28,13 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
   epoch 1 to epoch 2 resume regression passes after removing the first
   invocation's final manifest; the resumed manifest preserves the continuous
   epoch, global-step, and model-state-hash chain.
+- Separated the frozen evaluation cutoff from diagnostic rank publication in
+  RPG v2 traces. The optional `sidscope.rpg_rank_depth_diagnostic.v1` extension
+  preserves Hit/NDCG at the prepared cutoff, publishes up to depth 100 or the
+  complete official final frontier, exports exact supported target ranks, and
+  types deeper absence as right-censored. Boundary fixtures cover ranks 10,
+  11, and 100, resolution failure, absence beyond depth, and rejection of an
+  unsupported exact-rank claim.
 
 ## SIDScope v1.1.1.dev0: RPG trained closure
 

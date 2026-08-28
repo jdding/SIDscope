@@ -18,12 +18,17 @@ from tools.rpg_non_ar_bridge import (  # noqa: E402
     sha256_file,
     validate_episode_selection,
 )
-from tools.verify_rpg_trained_trace_bundle import verify  # noqa: E402
+from tools.verify_rpg_trained_trace_bundle import (  # noqa: E402
+    Failure,
+    verify,
+    verify_target_rank_claim,
+)
 
 
 FIXTURE = ROOT / "examples/rpg_non_ar_bridge_fixture"
 EVIDENCE = ROOT / "docs/reproducibility/rpg_non_ar_bridge_smoke.json"
 BEAUTY = ROOT / "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json"
+RANK_DEPTH_FIXTURE = ROOT / "examples/rpg_rank_depth_fixture/target_rank_claims.json"
 
 
 def read(path: Path) -> dict:
@@ -39,6 +44,7 @@ def main() -> None:
     selection = read(FIXTURE / "episode_selection.json")
     bundle = read(FIXTURE / "trained_trace_v2.json")
     expected_failure = read(FIXTURE / "expected_failure_duplicate_selection.json")
+    rank_depth_fixture = read(RANK_DEPTH_FIXTURE)
     failures = []
 
     if evidence.get("schema") != "sidscope.rpg_non_ar_bridge_smoke.v1" or evidence.get("status") != "pass":
@@ -50,6 +56,7 @@ def main() -> None:
         "episode_selection_file_sha256": sha256_file(FIXTURE / "episode_selection.json"),
         "episode_selection_canonical_sha256": canonical_hash(selection),
         "positive_bundle_file_sha256": sha256_file(FIXTURE / "trained_trace_v2.json"),
+        "rank_depth_claim_fixture_sha256": sha256_file(RANK_DEPTH_FIXTURE),
     }
     for key, observed in checks.items():
         if fixture.get(key) != observed:
@@ -67,6 +74,26 @@ def main() -> None:
         observed_failure = str(exc).split(":", 1)[0]
     if observed_failure != fixture.get("expected_failure_label"):
         failures.append("typed expected failure mismatch")
+
+    rank_depth_cases = {}
+    observed_rank_failure = None
+    for case in rank_depth_fixture.get("cases", []):
+        try:
+            rank, state, _ = verify_target_rank_claim(
+                case["episode"],
+                case["ranked_rows"],
+                published_rank_depth=rank_depth_fixture["published_rank_depth"],
+                trace_id=case["case_id"],
+            )
+            rank_depth_cases[case["case_id"]] = {"rank": rank, "state": state}
+        except Failure as exc:
+            label = str(exc).split(":", 1)[0]
+            if case.get("expected_failure") == label:
+                observed_rank_failure = label
+            else:
+                failures.append(f"unexpected rank-depth fixture failure: {case['case_id']}:{label}")
+    if observed_rank_failure != fixture.get("rank_depth_expected_failure_label"):
+        failures.append("rank-depth expected failure mismatch")
 
     try:
         beauty = verify(read(BEAUTY))
@@ -94,6 +121,41 @@ def main() -> None:
         failures.append("runtime smoke status mismatch")
     if runtime.get("gpu_required") is not False or runtime.get("device") != "cpu":
         failures.append("runtime smoke must remain CPU-only")
+    rank_depth_runtime = evidence.get("rank_depth_runtime_smoke", {})
+    if (
+        rank_depth_runtime.get("status") != "pass"
+        or rank_depth_runtime.get("schema") != "sidscope.rpg_rank_depth_diagnostic.v1"
+    ):
+        failures.append("rank-depth runtime smoke status/schema mismatch")
+    if (
+        rank_depth_runtime.get("gpu_required") is not False
+        or rank_depth_runtime.get("device") != "cpu"
+    ):
+        failures.append("rank-depth runtime smoke must remain CPU-only")
+    if (
+        rank_depth_runtime.get("requested_published_rank_depth") != 100
+        or rank_depth_runtime.get("published_rank_depth") != 2
+        or rank_depth_runtime.get("evaluation_cutoff") != 2
+        or rank_depth_runtime.get("publication_scope")
+        != "complete_resolved_final_frontier"
+    ):
+        failures.append("rank-depth runtime publication contract mismatch")
+    if (
+        rank_depth_runtime.get("target_rank_state") != "target_not_in_published_depth"
+        or rank_depth_runtime.get("target_rank_lower_bound") != 3
+        or rank_depth_runtime.get("right_censored_target_rank_count") != 1
+    ):
+        failures.append("rank-depth runtime censoring mismatch")
+    for key in (
+        "checkpoint_sha256",
+        "prepared_dataset_contract_sha256",
+        "trace_sha256",
+        "verification_sha256",
+        "handoff_sha256",
+    ):
+        value = rank_depth_runtime.get(key)
+        if not isinstance(value, str) or len(value) != 64:
+            failures.append(f"rank-depth runtime hash invalid: {key}")
     recovery = evidence.get("interrupted_resume_smoke", {})
     if recovery.get("status") != "pass":
         failures.append("interrupted resume smoke status mismatch")
@@ -144,12 +206,17 @@ def main() -> None:
             "handoff_rows": positive.get("downstream_handoff", {}).get("episode_count"),
         },
         "expected_failure_label": observed_failure,
+        "rank_depth_fixture": {
+            "cases": rank_depth_cases,
+            "expected_failure_label": observed_rank_failure,
+        },
         "beauty_regression": {
             "status": beauty.get("status"),
             "episodes": beauty.get("episodes"),
             "target_universe_rows": beauty.get("target_universe_rows"),
         },
         "runtime_smoke": runtime,
+        "rank_depth_runtime_smoke": rank_depth_runtime,
         "interrupted_resume_smoke": {
             "status": recovery.get("status"),
             "completed_epochs": recovery.get("completed_epochs"),

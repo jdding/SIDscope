@@ -7,6 +7,7 @@ import argparse
 from collections import defaultdict
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 import time
@@ -20,6 +21,7 @@ from torch.utils.data import DataLoader, Subset
 
 SCHEMA = "sidscope.rpg_trained_trace_bundle.v1"
 SCHEMA_V2 = "sidscope.rpg_trained_trace_bundle.v2"
+RANK_DIAGNOSTIC_SCHEMA = "sidscope.rpg_rank_depth_diagnostic.v1"
 SOURCE_REVISION = "7dcf95ce9e08601810efdd1c850ed6dada5f97c2"
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -44,6 +46,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--episodes", type=int)
     parser.add_argument("--seed", type=int, default=2024)
     parser.add_argument("--rank-cutoff", type=int)
+    parser.add_argument(
+        "--published-rank-depth",
+        type=int,
+        help=(
+            "Prepared v2 only: diagnostic ranked-item publication depth. Defaults to 100, "
+            "capped only by the complete official final frontier."
+        ),
+    )
     parser.add_argument("--parallel-topk", type=int)
     parser.add_argument(
         "--target-universe-mode",
@@ -82,6 +92,8 @@ def main() -> None:
     args = parse_args()
     if args.episodes is not None and (args.episodes <= 0 or args.episodes > 256):
         raise SystemExit("episodes must be in [1, 256]")
+    if args.published_rank_depth is not None and args.published_rank_depth <= 0:
+        raise SystemExit("--published-rank-depth must be positive")
     source = args.rpg_source.resolve()
     sys.path.insert(0, str(source))
 
@@ -96,6 +108,8 @@ def main() -> None:
             raise SystemExit("Beauty v1 mode requires --cache-dir")
         episodes_requested = args.episodes or 5
         rank_cutoff = args.rank_cutoff or 10
+        if args.published_rank_depth is not None:
+            raise SystemExit("--published-rank-depth is available only in prepared v2 mode")
         parallel_topk = args.parallel_topk or 5
         from genrec.pipeline import Pipeline
 
@@ -182,6 +196,28 @@ def main() -> None:
     dataset = pipeline.raw_dataset
     if rank_cutoff > model.num_beams:
         raise RuntimeError("rank cutoff exceeds the official graph beam width")
+    requested_published_rank_depth = None
+    published_rank_depth = rank_cutoff
+    ranking_diagnostic = None
+    if prepared is not None:
+        requested_published_rank_depth = args.published_rank_depth or 100
+        if requested_published_rank_depth < rank_cutoff:
+            raise RuntimeError("published rank depth cannot be below the evaluation cutoff")
+        published_rank_depth = min(requested_published_rank_depth, model.num_beams)
+        ranking_diagnostic = {
+            "schema": RANK_DIAGNOSTIC_SCHEMA,
+            "evaluation_cutoff": rank_cutoff,
+            "requested_published_rank_depth": requested_published_rank_depth,
+            "published_rank_depth": published_rank_depth,
+            "available_resolved_rank_depth": model.num_beams,
+            "publication_scope": (
+                "complete_resolved_final_frontier"
+                if published_rank_depth == model.num_beams
+                else "fixed_depth"
+            ),
+            "absent_target_rank_state": "target_not_in_published_depth",
+            "censoring": "right",
+        }
 
     # Canonical target universe contains only normalized identity and SID rows.
     target_universe = []
@@ -222,6 +258,11 @@ def main() -> None:
     torch.cuda.manual_seed_all(args.seed)
     episodes: list[dict[str, Any]] = []
     hit_count = 0
+    ndcg_sum = 0.0
+    exact_rank_count = 0
+    deeper_rank_count = 0
+    right_censored_count = 0
+    resolution_failure_count = 0
     for episode_index, raw_batch in enumerate(loader):
         selected_episode = None if selection_rows is None else selection_rows[episode_index]
         batch = {key: value.to(device) for key, value in raw_batch.items()}
@@ -312,7 +353,11 @@ def main() -> None:
         assert final_scores is not None
         ranked = []
         for rank, (node, score) in enumerate(
-            zip(frontier[0][:rank_cutoff], final_scores[:rank_cutoff]), start=1
+            zip(
+                frontier[0][:published_rank_depth],
+                final_scores[:published_rank_depth],
+            ),
+            start=1,
         ):
             node_id = int(node)
             tokens_tensor = model.item_id2tokens[node_id]
@@ -346,8 +391,26 @@ def main() -> None:
         target_rank = next(
             (row["rank"] for row in ranked if row["normalized_item_id"] == target_normalized), None
         )
-        if target_rank is not None:
+        if target_rank is not None and target_rank <= rank_cutoff:
             hit_count += 1
+            ndcg_sum += 1.0 / math.log2(target_rank + 1)
+        target_rank_state = None
+        target_rank_lower_bound = None
+        if prepared is not None:
+            target_resolved_in_depth = any(
+                target_normalized in row["resolved_normalized_item_ids"] for row in ranked
+            )
+            if target_rank is not None:
+                target_rank_state = "observed_exact"
+                exact_rank_count += 1
+                deeper_rank_count += int(target_rank > rank_cutoff)
+            elif target_resolved_in_depth:
+                target_rank_state = "resolution_failure_within_published_depth"
+                resolution_failure_count += 1
+            else:
+                target_rank_state = "target_not_in_published_depth"
+                target_rank_lower_bound = published_rank_depth + 1
+                right_censored_count += 1
         seq_len = int(batch["seq_lens"][0].item())
         context = [int(value) - 1 for value in batch["input_ids"][0, :seq_len].detach().cpu().tolist()]
         episode_row = {
@@ -376,6 +439,13 @@ def main() -> None:
                 "target_rank": target_rank,
                 "termination_reason": "completed_configured_graph_propagation",
             }
+        if prepared is not None:
+            episode_row.update(
+                {
+                    "target_rank_state": target_rank_state,
+                    "target_rank_lower_bound": target_rank_lower_bound,
+                }
+            )
         if selected_episode is None:
             episode_row["split"] = "test_leave_one_out"
         else:
@@ -504,6 +574,16 @@ def main() -> None:
             raise RuntimeError("prepared target universe hash does not match official runtime rows")
         bundle["configuration"] = prepared["configuration"]
         bundle["source"] = prepared["source"]
+        bundle["ranking_diagnostic"] = ranking_diagnostic
+        bundle["summary"].update(
+            {
+                "ndcg_at_rank_cutoff": ndcg_sum / len(episodes),
+                "exact_target_rank_count": exact_rank_count,
+                "deeper_than_evaluation_cutoff_count": deeper_rank_count,
+                "right_censored_target_rank_count": right_censored_count,
+                "resolution_failure_within_published_depth_count": resolution_failure_count,
+            }
+        )
         bundle["evidence"].update(
             {
                 "prepared_dataset_contract_sha256": bridge_hash(prepared),

@@ -9,6 +9,7 @@ regression. The generic bridge uses these new schemas:
 - `sidscope.rpg_prepared_dataset.v1`;
 - `sidscope.rpg_episode_selection.v1`;
 - `sidscope.rpg_trained_trace_bundle.v2`;
+- `sidscope.rpg_rank_depth_diagnostic.v1` (optional v2 extension);
 - `sidscope.rpg_downstream_handoff.v1`.
 
 ## Why a loader bridge is required
@@ -133,9 +134,43 @@ python3 tools/export_rpg_trained_trace.py \
   --episode-selection <episode-selection.json> \
   --checkpoint <best-model-state> \
   --training-manifest <run-manifest.json> \
+  --published-rank-depth 100 \
   --target-universe-mode complete \
   --output <trained-trace-v2.json>
 ```
+
+### Evaluation cutoff versus diagnostic publication depth
+
+Prepared v2 export keeps `configuration.rank_cutoff` as the frozen evaluation
+cutoff. Hit and NDCG are computed only through that cutoff. The optional
+`sidscope.rpg_rank_depth_diagnostic.v1` contract independently requests a
+larger `published_rank_depth` without changing the prepared contract,
+checkpoint, training manifest, graph propagation, candidate scores or episode
+selection.
+
+The exporter defaults to requesting depth 100. It publishes
+`min(requested_published_rank_depth, num_beams)`: a fixed requested depth when
+the official final frontier is wider, or the complete resolved final frontier
+when it is not. The frozen VG configuration has `num_beams=20`; therefore its
+method-faithful extension can publish complete ranks 1--20, not fabricate ranks
+21--100. Increasing `num_beams` would change graph propagation and candidate
+scores and is a different experiment.
+
+Each extended episode uses one of three typed target-rank states:
+
+- `observed_exact`: the target normalized item has a supporting ordered row;
+- `resolution_failure_within_published_depth`: the target SID resolves in the
+  published depth but the ranked normalized item is a colliding alternative;
+- `target_not_in_published_depth`: no target or target-resolution row appears,
+  so `target_rank=null` and `target_rank_lower_bound=published_rank_depth+1`.
+
+The last state is explicitly right-censored. Graph reachability remains a
+separate trace fact and cannot turn a missing published rank into an exact
+rank, a ranking-conversion finding, or a verified post-reach generation loss.
+The verifier rejects an exact rank unless the ordered row at that rank is
+present. Legacy v2 bundles without `ranking_diagnostic` remain valid under the
+original rule that `ranked_items` has exactly `rank_cutoff` rows; adding any
+typed rank-depth fields without the contract fails closed.
 
 The exporter retains parallel per-codebook top-k scores, initial item nodes,
 each propagation candidate/frontier, visited nodes, unordered SID collisions,
@@ -154,7 +189,9 @@ python3 tools/verify_rpg_trained_trace_bundle.py <trained-trace-v2.json> \
 The handoff table reports catalog reachability, target SID generation, graph
 reachability, resolution loss, target rank, Hit@10, NDCG@10, valid/unique and
 duplicate candidates, visited nodes, parallel-score count and graph-candidate
-score count. It contains no dormant labels.
+score count. Extended bundles also report evaluation cutoff, publication depth,
+typed target-rank state, censoring lower bound and right-censoring flag. It
+contains no dormant labels.
 
 ## Downstream ownership and acceptance boundary
 

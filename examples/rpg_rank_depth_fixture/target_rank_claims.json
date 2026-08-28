@@ -1,0 +1,89 @@
+{
+  "schema": "sidscope.rpg_rank_depth_claim_fixture.v1",
+  "published_rank_depth": 100,
+  "cases": [
+    {
+      "case_id": "exact_rank_10",
+      "episode": {
+        "target_normalized_item_id": 42,
+        "target_rank": 10,
+        "target_rank_state": "observed_exact",
+        "target_rank_lower_bound": null
+      },
+      "ranked_rows": [
+        {"rank": 10, "normalized_item_id": 42, "resolved_normalized_item_ids": [42]}
+      ],
+      "expected_rank": 10,
+      "expected_state": "observed_exact"
+    },
+    {
+      "case_id": "exact_rank_11",
+      "episode": {
+        "target_normalized_item_id": 42,
+        "target_rank": 11,
+        "target_rank_state": "observed_exact",
+        "target_rank_lower_bound": null
+      },
+      "ranked_rows": [
+        {"rank": 11, "normalized_item_id": 42, "resolved_normalized_item_ids": [42]}
+      ],
+      "expected_rank": 11,
+      "expected_state": "observed_exact"
+    },
+    {
+      "case_id": "exact_rank_100",
+      "episode": {
+        "target_normalized_item_id": 42,
+        "target_rank": 100,
+        "target_rank_state": "observed_exact",
+        "target_rank_lower_bound": null
+      },
+      "ranked_rows": [
+        {"rank": 100, "normalized_item_id": 42, "resolved_normalized_item_ids": [42]}
+      ],
+      "expected_rank": 100,
+      "expected_state": "observed_exact"
+    },
+    {
+      "case_id": "absent_beyond_published_depth",
+      "episode": {
+        "target_normalized_item_id": 42,
+        "target_rank": null,
+        "target_rank_state": "target_not_in_published_depth",
+        "target_rank_lower_bound": 101
+      },
+      "ranked_rows": [
+        {"rank": 100, "normalized_item_id": 7, "resolved_normalized_item_ids": [7]}
+      ],
+      "expected_rank": null,
+      "expected_state": "target_not_in_published_depth"
+    },
+    {
+      "case_id": "resolution_failure_within_depth",
+      "episode": {
+        "target_normalized_item_id": 42,
+        "target_rank": null,
+        "target_rank_state": "resolution_failure_within_published_depth",
+        "target_rank_lower_bound": null
+      },
+      "ranked_rows": [
+        {"rank": 50, "normalized_item_id": 7, "resolved_normalized_item_ids": [7, 42]}
+      ],
+      "expected_rank": null,
+      "expected_state": "resolution_failure_within_published_depth"
+    },
+    {
+      "case_id": "unsupported_exact_rank_50",
+      "episode": {
+        "target_normalized_item_id": 42,
+        "target_rank": 50,
+        "target_rank_state": "observed_exact",
+        "target_rank_lower_bound": null
+      },
+      "ranked_rows": [
+        {"rank": 50, "normalized_item_id": 7, "resolved_normalized_item_ids": [7]}
+      ],
+      "expected_failure": "unsupported_exact_rank_claim"
+    }
+  ]
+}

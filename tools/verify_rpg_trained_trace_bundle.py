@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 SCHEMA = "sidscope.rpg_trained_trace_bundle.v1"
 SCHEMA_V2 = "sidscope.rpg_trained_trace_bundle.v2"
+RANK_DIAGNOSTIC_SCHEMA = "sidscope.rpg_rank_depth_diagnostic.v1"
 SOURCE_REVISION = "7dcf95ce9e08601810efdd1c850ed6dada5f97c2"
 FORBIDDEN_KEYS = {
     "source_item_id",
@@ -74,6 +75,48 @@ def finite_number(value: Any, location: str) -> float:
     if not math.isfinite(result):
         fail("nonfinite_score", location)
     return result
+
+
+def verify_target_rank_claim(
+    episode: dict[str, Any],
+    ranked: list[dict[str, Any]],
+    *,
+    published_rank_depth: int,
+    trace_id: str,
+) -> tuple[Optional[int], str, Optional[int]]:
+    target_id = episode.get("target_normalized_item_id")
+    observed_rank = next(
+        (row.get("rank") for row in ranked if row.get("normalized_item_id") == target_id),
+        None,
+    )
+    claimed_rank = episode.get("target_rank")
+    if claimed_rank is not None and (
+        not isinstance(claimed_rank, int)
+        or isinstance(claimed_rank, bool)
+        or not 1 <= claimed_rank <= published_rank_depth
+        or claimed_rank != observed_rank
+    ):
+        fail("unsupported_exact_rank_claim", trace_id)
+    if claimed_rank is None and observed_rank is not None:
+        fail("target_rank_mismatch", trace_id)
+
+    resolution_observed = any(
+        target_id in row.get("resolved_normalized_item_ids", []) for row in ranked
+    )
+    if observed_rank is not None:
+        expected_state = "observed_exact"
+        expected_lower_bound = None
+    elif resolution_observed:
+        expected_state = "resolution_failure_within_published_depth"
+        expected_lower_bound = None
+    else:
+        expected_state = "target_not_in_published_depth"
+        expected_lower_bound = published_rank_depth + 1
+    if episode.get("target_rank_state") != expected_state:
+        fail("target_rank_state_mismatch", trace_id)
+    if episode.get("target_rank_lower_bound") != expected_lower_bound:
+        fail("target_rank_censoring_mismatch", trace_id)
+    return observed_rank, expected_state, expected_lower_bound
 
 
 def _verify_v1(bundle: dict[str, Any]) -> dict[str, Any]:
@@ -393,6 +436,43 @@ def _verify_v2(
     propagation_steps = config["propagation_steps"]
     rank_cutoff = config["rank_cutoff"]
     catalog_rows = prepared["catalog"]["row_count"]
+    ranking_diagnostic = bundle.get("ranking_diagnostic")
+    if ranking_diagnostic is None:
+        published_rank_depth = rank_cutoff
+        rank_diagnostic_enabled = False
+    else:
+        rank_diagnostic_enabled = True
+        if (
+            not isinstance(ranking_diagnostic, dict)
+            or ranking_diagnostic.get("schema") != RANK_DIAGNOSTIC_SCHEMA
+            or ranking_diagnostic.get("evaluation_cutoff") != rank_cutoff
+            or ranking_diagnostic.get("available_resolved_rank_depth") != num_beams
+            or ranking_diagnostic.get("absent_target_rank_state")
+            != "target_not_in_published_depth"
+            or ranking_diagnostic.get("censoring") != "right"
+        ):
+            fail("invalid_rank_diagnostic_contract", str(ranking_diagnostic))
+        requested_depth = ranking_diagnostic.get("requested_published_rank_depth")
+        published_rank_depth = ranking_diagnostic.get("published_rank_depth")
+        if (
+            not isinstance(requested_depth, int)
+            or isinstance(requested_depth, bool)
+            or not isinstance(published_rank_depth, int)
+            or isinstance(published_rank_depth, bool)
+            or requested_depth < rank_cutoff
+            or published_rank_depth != min(requested_depth, num_beams)
+        ):
+            fail("invalid_published_rank_depth", str(published_rank_depth))
+        expected_scope = (
+            "complete_resolved_final_frontier"
+            if published_rank_depth == num_beams
+            else "fixed_depth"
+        )
+        if ranking_diagnostic.get("publication_scope") != expected_scope:
+            fail(
+                "rank_publication_scope_mismatch",
+                str(ranking_diagnostic.get("publication_scope")),
+            )
 
     evidence = bundle.get("evidence")
     if not isinstance(evidence, dict):
@@ -461,6 +541,11 @@ def _verify_v2(
     if not isinstance(episodes, list) or len(episodes) != len(selected_rows):
         fail("episode_selection_count_mismatch", str(len(episodes) if isinstance(episodes, list) else None))
     hits = 0
+    ndcg_sum = 0.0
+    exact_rank_count = 0
+    deeper_rank_count = 0
+    right_censored_count = 0
+    resolution_failure_count = 0
     seen_trace_ids: set[str] = set()
     for index, (episode, selected) in enumerate(zip(episodes, selected_rows)):
         location = f"episode[{index}]"
@@ -566,7 +651,7 @@ def _verify_v2(
             fail("visited_count_mismatch", trace_id)
 
         ranked = episode.get("ranked_items")
-        if not isinstance(ranked, list) or len(ranked) != rank_cutoff:
+        if not isinstance(ranked, list) or len(ranked) != published_rank_depth:
             fail("ranked_item_count", trace_id)
         for expected_rank, ranked_row in enumerate(ranked, start=1):
             item_id = ranked_row.get("normalized_item_id")
@@ -600,9 +685,27 @@ def _verify_v2(
             if ranked_row.get("resolution_status") != expected_status or ranked_row.get("graph_valid") is not True:
                 fail("ranked_resolution_or_graph_validity", f"{trace_id}:{expected_rank}")
         target_rank = next((row["rank"] for row in ranked if row["normalized_item_id"] == target_id), None)
-        if episode.get("target_rank") != target_rank:
-            fail("target_rank_mismatch", trace_id)
-        hits += int(target_rank is not None)
+        if rank_diagnostic_enabled:
+            target_rank, rank_state, _ = verify_target_rank_claim(
+                episode,
+                ranked,
+                published_rank_depth=published_rank_depth,
+                trace_id=trace_id,
+            )
+            exact_rank_count += int(target_rank is not None)
+            deeper_rank_count += int(target_rank is not None and target_rank > rank_cutoff)
+            right_censored_count += int(rank_state == "target_not_in_published_depth")
+            resolution_failure_count += int(
+                rank_state == "resolution_failure_within_published_depth"
+            )
+        else:
+            if "target_rank_state" in episode or "target_rank_lower_bound" in episode:
+                fail("rank_diagnostic_contract_missing", trace_id)
+            if episode.get("target_rank") != target_rank:
+                fail("target_rank_mismatch", trace_id)
+        if target_rank is not None and target_rank <= rank_cutoff:
+            hits += 1
+            ndcg_sum += 1.0 / math.log2(target_rank + 1)
         if episode.get("termination_reason") != "completed_configured_graph_propagation":
             fail("termination_reason", trace_id)
 
@@ -614,8 +717,22 @@ def _verify_v2(
     recall = finite_number(summary.get("recall_at_rank_cutoff"), "summary.recall")
     if abs(recall - hits / len(episodes)) > 1e-12:
         fail("summary_recall", str(recall))
+    ndcg = ndcg_sum / len(episodes)
+    if rank_diagnostic_enabled:
+        observed_ndcg = finite_number(summary.get("ndcg_at_rank_cutoff"), "summary.ndcg")
+        if abs(observed_ndcg - ndcg) > 1e-12:
+            fail("summary_ndcg", str(observed_ndcg))
+        expected_diagnostic_counts = {
+            "exact_target_rank_count": exact_rank_count,
+            "deeper_than_evaluation_cutoff_count": deeper_rank_count,
+            "right_censored_target_rank_count": right_censored_count,
+            "resolution_failure_within_published_depth_count": resolution_failure_count,
+        }
+        for key, expected in expected_diagnostic_counts.items():
+            if summary.get(key) != expected:
+                fail("summary_rank_partition", key)
     handoff = build_downstream_handoff(bundle, prepared, selection)
-    return {
+    result = {
         "schema": "sidscope.rpg_trained_trace_verification.v2",
         "status": "pass",
         "bundle_id": bundle.get("bundle_id"),
@@ -625,12 +742,24 @@ def _verify_v2(
         "target_universe_visibility": visibility,
         "hit_at_rank_cutoff": hits,
         "recall_at_rank_cutoff": recall,
+        "ndcg_at_rank_cutoff": ndcg,
         "checkpoint_sha256": evidence["checkpoint_sha256"],
         "target_universe_sha256": target["sha256"],
         "prepared_dataset_contract_sha256": evidence["prepared_dataset_contract_sha256"],
         "episode_selection_manifest_sha256": evidence["episode_selection_manifest_sha256"],
         "downstream_handoff": handoff,
     }
+    if rank_diagnostic_enabled:
+        result.update(
+            {
+                "ranking_diagnostic": ranking_diagnostic,
+                "exact_target_rank_count": exact_rank_count,
+                "deeper_than_evaluation_cutoff_count": deeper_rank_count,
+                "right_censored_target_rank_count": right_censored_count,
+                "resolution_failure_within_published_depth_count": resolution_failure_count,
+            }
+        )
+    return result
 
 
 def verify(
