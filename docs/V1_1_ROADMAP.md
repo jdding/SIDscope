@@ -26,7 +26,7 @@ retroactively change submitted claims or tables.
 | Priority | Route | Next closure |
 | --- | --- | --- |
 | P0 | RPG | Real official-code-derived Beauty cache now passes non-paper-counted C0--C5 and all-item G1 round-trip; next close trained parallel decoding G2--G5 with a checkpoint or fully recorded training output. |
-| P0 | Latte / PSID | Static closure complete: one real official-code-derived cache is hash-frozen and passes non-paper-counted C0--C5; next train or bind one checkpoint and close real G2--G5 inference traces. |
+| P0 | Latte / PSID | Complete named adapter: real static C0--C5/G1, PSID ordered-beam and Latte latent-retry G2--G4 traces, public checkpoint-backed five-episode smoke bundles, external 250-episode hash-bound diagnostics, expected failures, and G5 verifier all pass. |
 | P1 | LLaDA-Rec | Source audit and bounded adaptive-unmasking schema/fixture complete; next obtain an explicit code license plus fixed tokenizer/checkpoint assets before real G1 and trained G4--G5. |
 | P1 | TIGER / DACT | Method-facing report complete: G1--G5 pass; obtain an explicit upstream code/asset license and rerun the 500-target primary with ancestry export to unblock G0 and promotion. |
 | P2 | Item-Supported Decoding | Paper-linked anonymous source, exact-function smoke, and bounded overlay contract are complete; obtain an immutable official revision and code license, then bind data/checkpoints and a real trace. |
@@ -42,6 +42,10 @@ item round-trip, method-specific decode state, validity and resolution policy,
 trace and ranked-item exports, CPU fixture, bounded model smoke, hashes, and
 verifier pass. A successful training command or one-off cache remains evidence,
 not adapter closure.
+
+Latte/PSID is the first route promoted under this rule. Its promotion is
+configuration-bound and does not alter the submitted TOIS paper or promote the
+still-pending trained RPG route.
 
 ## Release Gate
 

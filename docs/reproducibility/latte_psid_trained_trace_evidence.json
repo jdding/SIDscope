@@ -1,0 +1,99 @@
+{
+  "schema": "sidscope.latte_psid_trained_trace_evidence.v1",
+  "status": "pass",
+  "audited_at": "2026-08-28",
+  "route_id": "latte_psid",
+  "source": {
+    "url": "https://github.com/hyp1231/Latte",
+    "revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
+    "license": "MIT",
+    "producer_commit": "aad01e2",
+    "sidscope_contract_commit": "b07c071842d9780f0458deb94b597608b4c943dd",
+    "training_boundary": "frozen 10000-update checkpoints; bounded inference-only replay"
+  },
+  "shared_inputs": {
+    "dataset_manifest_sha256": "c9bf076a2bacf6da877e2a810d5f83e1a46f635b05fa56a0b2adbc2a051843d4",
+    "sid_cache_sha256": "12797834aad2875a838e4de17971e2aeaecc2bd431818940677df0b707b6be0a",
+    "full_split_id": "amazon_vg/rigor_original_test/50_per_bucket/s2024",
+    "full_split_sha256": "2e2e0a4f4d06275db7c3224f4a62089ebc74eb3fe2b636dfbc51a98e7e120e02",
+    "natural_gap_buckets": [
+      "short",
+      "30-90d",
+      "90-180d",
+      "180-365d",
+      ">365d"
+    ],
+    "raw_identity_exported": false,
+    "target_or_label_exported": false
+  },
+  "methods": {
+    "PSID": {
+      "checkpoint_sha256": "409ec8ad0307fe2d7cf814a535d29e28ce2491be3851376708f30c669c8cade6",
+      "training_config_sha256": "0b2f9dc88ecb13ad3630a00717c105a41c8ae3755701e8b79b492279af06c134",
+      "target_universe_sha256": "171111d81585b77f2a2f26492cd690340113e2c6076a8a855f7e897fa41e4dc9",
+      "target_universe_rows": 17396,
+      "smoke": {
+        "path": "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+        "bundle_sha256": "04317202448a8d008e76c04a3920d7391c87b397d3e097b62282afd0aa658567",
+        "episodes": 5,
+        "beam_rows": 250,
+        "evaluation_slots": 50,
+        "verifier": "pass"
+      },
+      "full": {
+        "bundle_sha256": "fd3f5a0cfc80cd2972e2f5faad25be1adb2e463d42cad41e10a65a1e0fbff1d5",
+        "episodes": 250,
+        "episodes_per_bucket": 50,
+        "beam_rows": 12500,
+        "evaluation_slots": 2500,
+        "invalid_evaluation_slots": 4,
+        "verifier": "pass",
+        "redistributed": false
+      },
+      "expected_failures": {
+        "failure_label": "missing_beam_ancestry",
+        "smoke_sha256": "a5ae39d2082f955212827ad603d0dd1d4d5b1ffc1a86cdb1af94ca4092d47166",
+        "full_sha256": "5b5ce32f7b1563b7204fbb1aab56471dd4e9e75bef56835de3ec36b4ab05ef72"
+      }
+    },
+    "Latte": {
+      "checkpoint_sha256": "eded8a5fa06a7dd395303f11da37836978ec56e8115520a15b19bef32efaaded",
+      "training_config_sha256": "5ad18168cf893176225fbcafd2a46ee07dddd7dbf69b2713e03e10dfa4d08be2",
+      "target_universe_sha256": "8233136b17a19a987cf95309a5dc40eba7a42d150b2b4c4d8d8077ea6548418f",
+      "target_universe_rows": 17396,
+      "smoke": {
+        "path": "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+        "bundle_sha256": "57b4ee4a4f659aa05a8cb70a6e3620e20f31ef2ebdbffec57696ad38852cdaaa",
+        "episodes": 5,
+        "beam_rows": 750,
+        "retry_episodes": 5,
+        "ranked_item_rows": 50,
+        "verifier": "pass"
+      },
+      "full": {
+        "bundle_sha256": "f9f95a430ef259a1795544e416476071d094f1827373d751e2f1be0b0214a83d",
+        "episodes": 250,
+        "episodes_per_bucket": 50,
+        "beam_rows": 37500,
+        "retry_episodes": 250,
+        "ranked_item_rows": 2500,
+        "verifier": "pass",
+        "redistributed": false
+      },
+      "expected_failures": {
+        "failure_label": "missing_beam_ancestry",
+        "smoke_sha256": "164735eed322119f2564f1ee5f77783f3983be407fb4d8aa9750914d761beee6",
+        "full_sha256": "f530070b4208ceb8b9563532bd924dfda7cc7f7433c9e591babbbb421eb2e446"
+      }
+    }
+  },
+  "gates": {
+    "G0": "pass",
+    "G1": "pass",
+    "G2": "pass",
+    "G3": "pass",
+    "G4": "pass",
+    "G5": "pass"
+  },
+  "evidence_boundary": "The 250-episode balanced traces are adapter-conformance diagnostics, not full-population effectiveness estimates and not evidence for the frozen TOIS submission."
+}

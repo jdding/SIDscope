@@ -195,12 +195,28 @@ ancestry or step log-probabilities, raw identities, labels, private paths, and
 unbounded exports. Schema v2 preserves PAD/`-1` early-ended beams and PSID's
 raw invalid top-k rank slots, while Latte retains dense post-aggregation ranks.
 
+Two checkpoint-backed five-episode Amazon Video Games smoke bundles are
+included for direct CPU verification:
+
+```bash
+PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
+  --bundle examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json
+PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
+  --bundle examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json
+```
+
+Both methods also pass external 250-episode diagnostics whose hashes and
+verifier summaries are frozen in
+`docs/reproducibility/latte_psid_trained_trace_evidence.json`. This closes
+G0--G5 for the recorded configurations and promotes Latte/PSID to a named
+generator adapter.
+
 The Amazon raw data, metadata text, sentence embeddings, generated cache, and
 normalized tables are not redistributed because the audited dataset card does
 not declare an explicit license identifier. See
-`docs/LATTE_PSID_GENERATOR_ADAPTER.md`. This closes the static cache route but
-does not claim a complete Latte generator adapter: no released or locally
-trained checkpoint has yet passed bounded inference and real trace export.
+`docs/LATTE_PSID_GENERATOR_ADAPTER.md`. Raw data, generated caches, and
+checkpoints remain external; the public trained-trace fixtures contain only
+normalized item identities and bounded deidentified decode state.
 
 LLaDA-Rec now has a pinned source/license/asset audit, a masked-state adaptive
 unmasking trace contract, a deidentified deterministic CPU fixture with a

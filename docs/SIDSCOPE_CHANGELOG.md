@@ -72,6 +72,19 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   labels, and canonical normalized-item/SID target-universe hashing. It also
   preserves PSID's raw top-k invalid rank slots instead of densely backfilling
   valid items; Latte aggregation remains a dense ranked-item export.
+- Closed Latte/PSID G0--G5 with downstream-owned, hash-bound 10,000-update
+  checkpoints. Both methods pass one episode per natural gap bucket and a
+  250-episode diagnostic export; all four positive bundles pass the v2
+  verifier and all four missing-ancestry derivatives fail closed with the
+  expected typed label.
+- Added two public deidentified real smoke bundles. PSID preserves 250 returned
+  beams and 50 raw evaluation slots; Latte preserves 750 beams across both
+  attempts for five retry episodes and exports 50 dense aggregated ranks. The
+  250-episode bundles remain external with frozen checkpoint, cache, split,
+  target-universe, command, log, and output hashes.
+- Promoted the configuration-bound Latte/PSID route to SIDScope's first
+  complete named generator adapter. This resource evidence is post-submission
+  development and does not change the frozen TOIS manuscript or claims.
 - Pinned the official LLaDA-Rec source at `83dbcd6` and recorded that the code
   repository has no detected license, tag, release, checkpoint, semantic-ID
   cache, processed dataset, or training log.

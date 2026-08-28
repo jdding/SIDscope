@@ -149,6 +149,32 @@ ancestry and inject a raw identity field to prove fail-closed behavior. Passing
 the synthetic fixtures proves only the intake contract; gate status changes
 only after a real checkpoint-bound bundle passes.
 
+## Real Trained Closure
+
+Two downstream-owned 10,000-update checkpoints now close the real generator
+gates without redistributing checkpoint files. Each method first passed one
+episode from each of five frozen natural gap buckets and then a 250-episode
+diagnostic export with 50 episodes per bucket:
+
+| Method | Public smoke | Full diagnostic | Native rows retained | Ranking surface |
+| --- | ---: | ---: | ---: | --- |
+| PSID | 5 episodes | 250 episodes | 250 smoke beams; 12,500 full beams | raw first-10 evaluation slots; four invalid full slots remain unbackfilled |
+| Latte | 5 episodes | 250 episodes | 750 smoke beams; 37,500 full beams across both attempts | 10 dense ranked items after final-attempt latent-path aggregation |
+
+All four positive bundles pass the v2 verifier. Four derived negative bundles
+that remove beam ancestry are rejected as `missing_beam_ancestry`. The two
+deidentified smoke bundles are shipped under
+`examples/latte_psid_trained_trace_real_smoke/`; the full bundles remain
+external and are bound by
+`docs/reproducibility/latte_psid_trained_trace_evidence.json`.
+
+The evidence binds the dataset manifest, split, SID cache, training
+configuration, checkpoint, command, log summary, target universe, and bundle
+by SHA-256. It contains normalized item identities only. The balanced full
+traces are adapter-conformance diagnostics rather than full-population
+effectiveness estimates, and they are not evidence for the frozen TOIS
+submission.
+
 ### Migration from v1
 
 Version 1 accepted only complete positive-token beams and contiguous dense
@@ -210,8 +236,11 @@ python3 tools/run_latte_official_source_smoke.py \
 
 Static cache admission and generator admission remain separate. A real
 official-code-derived cache may pass C0--C5 without proving Latte generation.
-The route remains below complete named-adapter status until a trained,
-configuration-bound PSID/Latte checkpoint or fully recorded training output
-passes bounded inference, exports real latent-path traces and ranked items,
-and reproduces those outputs under G5. The authoritative status is
+That distinction remains enforced, but the verified PSID and Latte
+configurations now add real checkpoint-bound G2--G4 traces and G5 smoke/full
+evidence to the existing G0/G1 closure. The combined route therefore passes
+G0--G5 and is promoted to a complete named adapter. Promotion is limited to
+the hash-bound source, cache, configurations, and checkpoints recorded above;
+an arbitrary `.sem_ids` cache or incompatible checkpoint is not covered. The
+authoritative status is
 `docs/reproducibility/latte_psid_adapter_status.json`.

@@ -115,6 +115,17 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("docs/SIDSCOPE_RELEASE_CHECKLIST.md", expanded)
         self.assertIn("docs/SIDSCOPE_USAGE_DEMO.md", expanded)
         self.assertIn("docs/reproducibility/g14_usage_demo_decisions.csv", expanded)
+        self.assertIn(
+            "docs/reproducibility/latte_psid_trained_trace_evidence.json", expanded
+        )
+        self.assertIn(
+            "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+            expanded,
+        )
+        self.assertIn(
+            "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+            expanded,
+        )
         self.assertNotIn("experiments/v1_evidence_chain/autodl/payloads", expanded)
 
     def test_public_package_content_scan_is_clean(self) -> None:

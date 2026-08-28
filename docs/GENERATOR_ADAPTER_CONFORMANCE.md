@@ -70,10 +70,13 @@ real parallel decoding and ranked-item export. The exact boundary is in
 `docs/reproducibility/rpg_kdd2025_adapter_status.json`.
 
 Latte/PSID has a real official-code-derived static cache round-trip and a
-non-paper-counted C0--C5 report, plus a method-preserving latent-token fixture
-and official tokenizer/aggregation class-method smoke. It remains below named
-generator status because no trained checkpoint or recorded training output has
-passed bounded inference and real trace export. The exact boundary is in
+non-paper-counted C0--C5 report. Downstream-owned, hash-bound 10,000-update PSID
+and Latte checkpoints each pass a public five-episode real smoke and an
+external 250-episode diagnostic export. The v2 traces preserve every returned
+beam, PSID's unbackfilled raw rank slots, Latte's retry attempts and latent-path
+aggregation, per-step scores, item resolution, split identity, and typed
+failures. G0--G5 pass, making this the first complete SIDScope named generator
+adapter. The exact boundary is in
 `docs/LATTE_PSID_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/latte_psid_adapter_status.json`.
 

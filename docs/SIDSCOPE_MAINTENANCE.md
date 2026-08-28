@@ -103,6 +103,13 @@ and unbounded episode exports. This lets the canonical repository close real
 G2/G4/G5 evidence without absorbing a downstream training fork or private
 checkpoint.
 
+The first completed handoff retains two public five-episode checkpoint-backed
+smoke bundles and a compact hash-bound summary of two external 250-episode
+diagnostics. A named-adapter release must rerun both public smoke bundles in the
+release archive. Full traces and checkpoints remain external; their absence
+from the package is intentional and must be accompanied by immutable hashes,
+counts, split identity, training boundary, and verifier results.
+
 The v2 handoff preserves early-ended and invalid HF beams with explicit raw
 token slots, decoded/ancestry lengths, PAD or null tail slots, termination and
 failure labels. It also preserves PSID's raw top-k evaluation slots without

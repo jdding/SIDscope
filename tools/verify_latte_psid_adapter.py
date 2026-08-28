@@ -17,6 +17,7 @@ from sidinspector.adapters.latte import (
     normalize_latte_sem_ids,
     read_latte_item_mapping,
     read_sem_ids_cache,
+    validate_latte_psid_trained_trace_bundle,
 )
 from sidinspector.preflight import build_metric_smoke_summary
 
@@ -30,6 +31,13 @@ BUILD = ROOT / "docs/reproducibility/latte_psid_musical_cache_build.json"
 INTAKE = ROOT / "docs/reproducibility/latte_psid_musical_intake.json"
 CONFORMANCE = ROOT / "docs/reproducibility/conformance/latte_psid_musical_report.json"
 STATUS = ROOT / "docs/reproducibility/latte_psid_adapter_status.json"
+TRAINED_TRACE_EVIDENCE = ROOT / "docs/reproducibility/latte_psid_trained_trace_evidence.json"
+REAL_TRAINED_TRACE_SMOKES = {
+    "PSID": ROOT
+    / "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+    "Latte": ROOT
+    / "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+}
 PINNED_REVISION = "05e4e6d983225bcb7172f148a076890e80c524d1"
 DATASET_REVISION = "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e"
 MODEL_REVISION = "fc5d4628481afbbaaacd7af6bb07cf9d3865f781"
@@ -56,6 +64,7 @@ def verify() -> dict[str, object]:
     intake = load(INTAKE)
     conformance = load(CONFORMANCE)
     status = load(STATUS)
+    trained_trace_evidence = load(TRAINED_TRACE_EVIDENCE)
     config = fixture["configuration"]
     paths = {key: FIXTURE_DIR / value for key, value in fixture["inputs"].items()}
 
@@ -186,14 +195,70 @@ def verify() -> dict[str, object]:
     if conformance.get("status") != "pass" or conformance.get("failed_levels") != []:
         failures.append("real cache C0-C5 report does not pass")
 
+    if (
+        trained_trace_evidence.get("schema") != "sidscope.latte_psid_trained_trace_evidence.v1"
+        or trained_trace_evidence.get("status") != "pass"
+        or trained_trace_evidence.get("gates")
+        != {f"G{level}": "pass" for level in range(6)}
+    ):
+        failures.append("trained-trace evidence summary does not close G0-G5")
+    source = trained_trace_evidence.get("source", {})
+    if source.get("revision") != PINNED_REVISION or source.get("license") != "MIT":
+        failures.append("trained-trace source identity mismatch")
+    if source.get("sidscope_contract_commit") != "b07c071842d9780f0458deb94b597608b4c943dd":
+        failures.append("trained-trace contract revision mismatch")
+
+    trained_trace_results: dict[str, dict[str, object]] = {}
+    for method, path in REAL_TRAINED_TRACE_SMOKES.items():
+        try:
+            result = validate_latte_psid_trained_trace_bundle(load(path))
+            trained_trace_results[method] = result
+        except Exception as exc:
+            failures.append(f"real {method} trained-trace smoke failed: {type(exc).__name__}: {exc}")
+            continue
+        method_evidence = trained_trace_evidence.get("methods", {}).get(method, {})
+        smoke_evidence = method_evidence.get("smoke", {})
+        full_evidence = method_evidence.get("full", {})
+        expected_failure = method_evidence.get("expected_failures", {})
+        if sha256(path) != smoke_evidence.get("bundle_sha256"):
+            failures.append(f"real {method} smoke hash mismatch")
+        expected_smoke = {
+            "episode_count": smoke_evidence.get("episodes"),
+            "beam_row_count": smoke_evidence.get("beam_rows"),
+            "checkpoint_sha256": method_evidence.get("checkpoint_sha256"),
+            "target_universe_sha256": method_evidence.get("target_universe_sha256"),
+            "target_universe_row_count": method_evidence.get("target_universe_rows"),
+        }
+        if any(result.get(field) != value for field, value in expected_smoke.items()):
+            failures.append(f"real {method} smoke verification summary mismatch")
+        if method == "PSID":
+            if result.get("evaluation_slot_count") != smoke_evidence.get("evaluation_slots"):
+                failures.append("real PSID evaluation-slot count mismatch")
+            if full_evidence.get("invalid_evaluation_slots") != 4:
+                failures.append("full PSID invalid evaluation slots were not retained")
+        else:
+            if result.get("retry_episode_count") != smoke_evidence.get("retry_episodes"):
+                failures.append("real Latte retry count mismatch")
+            if result.get("ranked_item_row_count") != smoke_evidence.get("ranked_item_rows"):
+                failures.append("real Latte ranked-item count mismatch")
+        if (
+            full_evidence.get("verifier") != "pass"
+            or full_evidence.get("episodes") != 250
+            or full_evidence.get("episodes_per_bucket") != 50
+            or full_evidence.get("redistributed") is not False
+        ):
+            failures.append(f"full {method} diagnostic boundary mismatch")
+        if expected_failure.get("failure_label") != "missing_beam_ancestry":
+            failures.append(f"real {method} expected-failure label mismatch")
+
     gates = {
         "C0_C5": "pass_official_code_derived_cache_non_paper_counted_summary_only",
-        "G0": "pass_source_config_and_training_boundary_checkpoint_unreleased",
+        "G0": "pass_source_config_and_hash_bound_downstream_training_boundary",
         "G1": "pass_real_cache_item_sid_vocabulary_resolution_roundtrip",
-        "G2": "bounded_fixture_and_official_method_smoke_pass_trained_decode_pending",
+        "G2": "pass_real_psid_ordered_beams_and_latte_latent_retry_state",
         "G3": "pass_typed_validity_collision_and_resolution_contract",
-        "G4": "bounded_fixture_trace_and_ranked_export_pass_real_trained_trace_pending",
-        "G5": "partial_cache_build_cpu_fixture_and_official_aggregation_smoke_pass_trained_generator_pending",
+        "G4": "pass_real_deidentified_traces_psid_raw_slots_and_latte_dense_ranks",
+        "G5": "pass_cpu_fixture_real_five_episode_smokes_250_episode_diagnostics_expected_failures_hashes_and_verifier",
     }
     evidence_hashes = {
         "source_audit": sha256(AUDIT),
@@ -202,13 +267,16 @@ def verify() -> dict[str, object]:
         "cache_build_report": sha256(BUILD),
         "normalized_intake": sha256(INTAKE),
         "c0_c5_report": sha256(CONFORMANCE),
+        "trained_trace_evidence": sha256(TRAINED_TRACE_EVIDENCE),
+        "real_psid_smoke_bundle": sha256(REAL_TRAINED_TRACE_SMOKES["PSID"]),
+        "real_latte_smoke_bundle": sha256(REAL_TRAINED_TRACE_SMOKES["Latte"]),
     }
     if status.get("gates") != gates:
         failures.append("adapter status gates differ from verifier")
     if status.get("input_sha256") != evidence_hashes:
         failures.append("adapter status hashes differ from verifier")
     promotion = status.get("promotion", {})
-    if promotion.get("named_adapter") is not False or promotion.get("decision") != "close_named_adapter":
+    if promotion.get("named_adapter") is not True or promotion.get("decision") != "named_adapter":
         failures.append("named-adapter promotion boundary mismatch")
 
     return {
@@ -224,9 +292,10 @@ def verify() -> dict[str, object]:
             "expected_failure_label": observed_failure,
         },
         "promotion": {
-            "named_adapter": False,
-            "reason": "No trained checkpoint or real trained PSID/Latte inference trace has passed G2-G5.",
+            "named_adapter": True,
+            "reason": "Configuration-bound real PSID and Latte traces pass G0-G5 with public CPU smoke bundles.",
         },
+        "real_trained_trace_results": trained_trace_results,
         "input_sha256": evidence_hashes,
         "failures": failures,
     }

@@ -87,8 +87,11 @@ prefix and beam-ancestry contract, real checkpoint smoke, public deidentified
 labels, and an executable verifier. It is not a named adapter because G0 is
 blocked by the upstream repository's absent code and asset license; the frozen
 500-target primary also predates ancestry export and is not described otherwise.
-The verified Latte/PSID tokenizer cache likewise remains below full generator
-closure. RPG has a pinned non-commercial source audit, a real official-code-
+Latte/PSID now passes G0--G5 as a configuration-bound named generator adapter:
+the real static cache and vocabulary round-trip are joined to public
+deidentified PSID/Latte checkpoint-backed smoke bundles, external 250-episode
+hash-bound diagnostics, typed expected failures, and a passing CPU verifier.
+RPG has a pinned non-commercial source audit, a real official-code-
 derived Beauty cache with non-paper-counted C0--C5 and all-item G1 round-trip,
 a bounded parallel trace fixture, and an untrained official-source class smoke.
 Its trained parallel decoding and ranked-item G2--G5 evidence remains open, so

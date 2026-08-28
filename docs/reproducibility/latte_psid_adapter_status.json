@@ -2,15 +2,15 @@
   "schema": "sidscope.latte_psid_adapter_status.v1",
   "route_id": "latte_psid",
   "source_revision": "05e4e6d983225bcb7172f148a076890e80c524d1",
-  "audited_at": "2026-08-27",
+  "audited_at": "2026-08-28",
   "gates": {
     "C0_C5": "pass_official_code_derived_cache_non_paper_counted_summary_only",
-    "G0": "pass_source_config_and_training_boundary_checkpoint_unreleased",
+    "G0": "pass_source_config_and_hash_bound_downstream_training_boundary",
     "G1": "pass_real_cache_item_sid_vocabulary_resolution_roundtrip",
-    "G2": "bounded_fixture_and_official_method_smoke_pass_trained_decode_pending",
+    "G2": "pass_real_psid_ordered_beams_and_latte_latent_retry_state",
     "G3": "pass_typed_validity_collision_and_resolution_contract",
-    "G4": "bounded_fixture_trace_and_ranked_export_pass_real_trained_trace_pending",
-    "G5": "partial_cache_build_cpu_fixture_and_official_aggregation_smoke_pass_trained_generator_pending"
+    "G4": "pass_real_deidentified_traces_psid_raw_slots_and_latte_dense_ranks",
+    "G5": "pass_cpu_fixture_real_five_episode_smokes_250_episode_diagnostics_expected_failures_hashes_and_verifier"
   },
   "input_sha256": {
     "source_audit": "5f55bd41ba6c858f260b25045a1aae1105c9d864ff7955c5de76220fc3053b9c",
@@ -18,7 +18,10 @@
     "official_source_smoke": "931acd91b0b311dc5dfec7b66b01207603aba55c9a417e4194d048f743130c20",
     "cache_build_report": "23a9ee1174c37fbeae637f502b3da916cd956df2a54612739d973fa350b81462",
     "normalized_intake": "89674fb801b3e24f4b38be5cbd9e963cba1f1421d1074ee16fd884b9fdf2852c",
-    "c0_c5_report": "64ccccfa3635a7ac808122d2ab7420ef0f5dc6bc89da3c101b50b34dd0c9b716"
+    "c0_c5_report": "64ccccfa3635a7ac808122d2ab7420ef0f5dc6bc89da3c101b50b34dd0c9b716",
+    "trained_trace_evidence": "67fc7d56f4a841883660f63a208d80ab1a712ef3387de64ef35a10cc49f5bd53",
+    "real_psid_smoke_bundle": "04317202448a8d008e76c04a3920d7391c87b397d3e097b62282afd0aa658567",
+    "real_latte_smoke_bundle": "57b4ee4a4f659aa05a8cb70a6e3620e20f31ef2ebdbffec57696ad38852cdaaa"
   },
   "verified_outputs": {
     "cache_sha256": "1f32a88c74771915139a7906af17557d3fdfe7e4f3b739e88ded3682a66863b8",
@@ -34,17 +37,29 @@
       "fixture-asin-b"
     ],
     "expected_failure_label": "semantic_id_collision",
-    "official_source_smoke_status": "pass"
+    "official_source_smoke_status": "pass",
+    "trained_trace_schema": "sidscope.latte_psid_trained_trace_bundle.v2",
+    "trained_trace_contract_revision": "b07c071842d9780f0458deb94b597608b4c943dd",
+    "downstream_producer_commit": "aad01e2",
+    "psid_checkpoint_sha256": "409ec8ad0307fe2d7cf814a535d29e28ce2491be3851376708f30c669c8cade6",
+    "latte_checkpoint_sha256": "eded8a5fa06a7dd395303f11da37836978ec56e8115520a15b19bef32efaaded",
+    "trained_sid_cache_sha256": "12797834aad2875a838e4de17971e2aeaecc2bd431818940677df0b707b6be0a",
+    "real_smoke_status": "pass_for_psid_and_latte",
+    "real_full_diagnostic_status": "pass_for_psid_and_latte",
+    "full_diagnostic_episodes_per_method": 250,
+    "expected_failure_label": "missing_beam_ancestry"
   },
   "promotion": {
-    "named_adapter": false,
-    "decision": "close_named_adapter",
+    "named_adapter": true,
+    "decision": "named_adapter",
     "blockers": [
-      "No official trained checkpoint is released at the pinned source revision.",
-      "No real trained PSID or Latte decode trace has passed G2 and G4.",
-      "The official aggregation smoke and cache build do not substitute for a bounded trained-generator smoke at G5.",
-      "The trained-trace handoff verifier is available, but no real checkpoint-bound bundle has passed it.",
-      "The Amazon Reviews 2023 dataset card has no explicit license identifier, so the derived cache remains hash-and-summary only."
+      "The Amazon Reviews 2023 dataset card has no explicit license identifier, so raw histories, metadata, the generated cache, and normalized tables remain external.",
+      "The trained checkpoints are downstream-owned and are hash-bound rather than redistributed."
+    ],
+    "closure": [
+      "Both PSID and Latte have public deidentified five-episode real smoke bundles that pass the v2 verifier on CPU.",
+      "Both methods have external 250-episode balanced diagnostic bundles with frozen hashes and passing verifier summaries.",
+      "All four derived missing-ancestry bundles fail closed with the expected typed label."
     ]
   }
 }

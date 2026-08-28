@@ -48,6 +48,9 @@ REQUIRED_FILES = [
     "examples/latte_psid_trained_trace_fixture/manifest.json",
     "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
     "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
+    "examples/latte_psid_trained_trace_real_smoke/README.md",
+    "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+    "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
     "examples/llada_rec_diffusion_fixture/manifest.json",
     "examples/isd_decoder_overlay_fixture/manifest.json",
     "docs/ADAPTER_TEMPLATE.md",
@@ -73,6 +76,7 @@ REQUIRED_FILES = [
     "docs/reproducibility_matrix.csv",
     "docs/reproducibility/sidscope_sampled_regeneration_manifest.csv",
     "docs/reproducibility/sidscope_release_candidate_manifest.csv",
+    "docs/reproducibility/latte_psid_trained_trace_evidence.json",
     "docs/reproducibility/sidscope_paper_protocol_config.json",
     "docs/reproducibility/g14_usage_demo_decisions.csv",
     "docs/reproducibility/g14_usage_demo_summary.json",
@@ -494,6 +498,22 @@ def main() -> None:
                 "tools/verify_latte_psid_trained_trace_bundle.py",
                 "--bundle",
                 "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
+            ]
+        ),
+        run(
+            [
+                sys.executable,
+                "tools/verify_latte_psid_trained_trace_bundle.py",
+                "--bundle",
+                "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+            ]
+        ),
+        run(
+            [
+                sys.executable,
+                "tools/verify_latte_psid_trained_trace_bundle.py",
+                "--bundle",
+                "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
             ]
         ),
         run([sys.executable, "tools/verify_llada_rec_adapter.py"]),

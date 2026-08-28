@@ -46,6 +46,7 @@ PSID_EVALUATION_SLOT_FIXTURE = json.loads(
         / "psid_evaluation_slots.json"
     ).read_text(encoding="utf-8")
 )
+REAL_TRAINED_TRACE_DIR = ROOT / "examples" / "latte_psid_trained_trace_real_smoke"
 
 
 def _fixture_paths() -> dict[str, Path]:
@@ -164,6 +165,32 @@ def test_psid_evaluation_slots_preserve_invalid_rank_without_backfill() -> None:
     assert result["invalid_evaluation_slot_count"] == 1
     assert slots[0]["rank"] == 1 and slots[0]["normalized_item_id"] is None
     assert slots[1]["rank"] == 2 and slots[1]["normalized_item_id"] == 1
+
+
+def test_real_checkpoint_backed_psid_and_latte_smokes_pass() -> None:
+    psid = json.loads(
+        (REAL_TRAINED_TRACE_DIR / "psid_amazon_vg_1_per_bucket_s2024.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    latte = json.loads(
+        (REAL_TRAINED_TRACE_DIR / "latte_amazon_vg_1_per_bucket_s2024.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    psid_result = validate_latte_psid_trained_trace_bundle(psid)
+    latte_result = validate_latte_psid_trained_trace_bundle(latte)
+
+    assert psid_result["status"] == "pass"
+    assert psid_result["episode_count"] == 5
+    assert psid_result["beam_row_count"] == 250
+    assert psid_result["evaluation_slot_count"] == 50
+    assert latte_result["status"] == "pass"
+    assert latte_result["episode_count"] == 5
+    assert latte_result["beam_row_count"] == 750
+    assert latte_result["retry_episode_count"] == 5
+    assert latte_result["ranked_item_row_count"] == 50
 
 
 def test_psid_evaluation_slots_reject_dense_backfill() -> None:

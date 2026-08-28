@@ -22,10 +22,10 @@ class SIDScopeSourceInventoryTest(unittest.TestCase):
         self.assertEqual(result["status"], "pass", result["failures"])
         self.assertEqual(result["route_count"], 6)
         self.assertEqual(result["decision_counts"]["reference_trace_available"], 0)
-        self.assertEqual(result["decision_counts"]["close_named_adapter"], 5)
+        self.assertEqual(result["decision_counts"]["close_named_adapter"], 4)
         self.assertEqual(result["decision_counts"]["go_source_audit"], 0)
         self.assertEqual(result["decision_counts"]["watch_official_source"], 1)
-        self.assertEqual(result["decision_counts"]["named_adapter"], 0)
+        self.assertEqual(result["decision_counts"]["named_adapter"], 1)
 
     def test_repository_inventory_matches_paper_coverage(self) -> None:
         result = verify_inventory(DEFAULT_INVENTORY, DEFAULT_COVERAGE)
