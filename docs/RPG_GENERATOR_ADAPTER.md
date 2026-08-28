@@ -3,6 +3,12 @@
 Status: G0--G5 pass for the pinned Beauty configuration; complete
 configuration-bound named generator adapter.
 
+For dataset-neutral prepared training, explicit episode selection, v2 trace
+verification, and the compact downstream table, see
+`docs/RPG_NON_AR_BRIDGE.md`. This 1.1.1 bridge preserves the Beauty schema-v1
+bundle as a regression and does not broaden the configuration-bound Beauty
+named-adapter claim to an unrun dataset.
+
 ## Source Boundary
 
 The official implementation is

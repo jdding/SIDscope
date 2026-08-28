@@ -1,0 +1,114 @@
+{
+  "bundle_id": "rpg-generic-positive-fixture",
+  "configuration": {
+    "codebook_size": 4,
+    "model_seed": 2024,
+    "n_codebooks": 2,
+    "n_edges": 2,
+    "num_beams": 2,
+    "parallel_topk": 2,
+    "propagation_steps": 1,
+    "rank_cutoff": 2,
+    "temperature": 0.03
+  },
+  "dataset": {"category": "fixture", "name": "SyntheticRPG", "profile": "unit-test"},
+  "decode_state_kind": "unordered_token_set_graph_propagation",
+  "episodes": [
+    {
+      "context_normalized_item_ids": [0],
+      "decode_state_kind": "unordered_token_set_graph_propagation",
+      "episode_id": "test-b",
+      "initial_item_node_duplicates": 1,
+      "initial_item_nodes": [0, 0],
+      "parallel_token_scores": {
+        "float32_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "per_codebook_topk": [
+          {"codebook": 0, "top_tokens": [{"log_probability": -0.1, "model_vocabulary_token": 3}, {"log_probability": -0.3, "model_vocabulary_token": 2}]},
+          {"codebook": 1, "top_tokens": [{"log_probability": -0.2, "model_vocabulary_token": 7}, {"log_probability": -0.4, "model_vocabulary_token": 6}]}
+        ],
+        "shape": [2, 4]
+      },
+      "propagation": [
+        {
+          "candidate_count": 3,
+          "candidates": [
+            {"mean_log_probability": -0.5, "normalized_item_id": 0},
+            {"mean_log_probability": -0.35, "normalized_item_id": 1},
+            {"mean_log_probability": -0.15, "normalized_item_id": 2}
+          ],
+          "frontier": [2, 1],
+          "step": 1
+        }
+      ],
+      "ranked_items": [
+        {
+          "codebook_log_probabilities": [-0.1, -0.2],
+          "graph_valid": true,
+          "mean_log_probability": -0.15,
+          "normalized_item_id": 2,
+          "rank": 1,
+          "resolution_status": "ambiguous_item_nodes",
+          "resolved_normalized_item_ids": [2, 3],
+          "semantic_codes": [2, 2],
+          "sum_log_probability": -0.3,
+          "unordered_model_vocabulary_tokens": [3, 7]
+        },
+        {
+          "codebook_log_probabilities": [-0.3, -0.4],
+          "graph_valid": true,
+          "mean_log_probability": -0.35,
+          "normalized_item_id": 1,
+          "rank": 2,
+          "resolution_status": "unique_item_node",
+          "resolved_normalized_item_ids": [1],
+          "semantic_codes": [1, 1],
+          "sum_log_probability": -0.7,
+          "unordered_model_vocabulary_tokens": [2, 6]
+        }
+      ],
+      "selection_order": 0,
+      "split_id": "synthetic/frozen/test",
+      "split_row_index": 1,
+      "target_normalized_item_id": 2,
+      "target_rank": 1,
+      "termination_reason": "completed_configured_graph_propagation",
+      "trace_id": "rpg-fixture-test-b",
+      "visited_item_node_count": 3
+    }
+  ],
+  "evidence": {
+    "adjacency_int64_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "checkpoint_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "episode_selection_manifest_sha256": "f98346ab26cdc226617a98432ab281f41eb1ca84c65a7e61ddf437c268888fae",
+    "exporter_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "interaction_sequences_sha256": "eeeb064740a78b3c71ae509ce47d571a87b6e6f9f93a0e4601d1ee317dd465e0",
+    "item_mapping_sha256": "d7c89610dadfdf34c6f8d1c1c649f6386cebe6fc31dc525acf7807924cdf889d",
+    "prepared_dataset_contract_sha256": "b1afc1a8d41ee9524b10194ea4b85eeae4d7a64468bafc18c69eb9b244aee1aa",
+    "semantic_id_cache_sha256": "7f67e1b3795fd4800e6c5d29f601d4287b435d08cb5c0a1c8299907b263bdd59",
+    "source_model_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "split_id": "synthetic/frozen/test",
+    "split_sha256": "31ee0fb320ebcdd583997d2b097788b46a95e257b8eaebe45a80796f7a748cdb",
+    "training_manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "verifier_sha256": "9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "method": "RPG",
+  "schema": "sidscope.rpg_trained_trace_bundle.v2",
+  "source": {
+    "license": "CC-BY-NC-4.0",
+    "revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+    "url": "https://github.com/facebookresearch/RPG_KDD2025"
+  },
+  "summary": {"episode_count": 1, "hit_at_rank_cutoff": 1, "recall_at_rank_cutoff": 1.0},
+  "target_universe": {
+    "row_count": 4,
+    "rows": [
+      {"normalized_item_id": 0, "semantic_codes": [0, 0], "unordered_model_vocabulary_tokens": [1, 5]},
+      {"normalized_item_id": 1, "semantic_codes": [1, 1], "unordered_model_vocabulary_tokens": [2, 6]},
+      {"normalized_item_id": 2, "semantic_codes": [2, 2], "unordered_model_vocabulary_tokens": [3, 7]},
+      {"normalized_item_id": 3, "semantic_codes": [2, 2], "unordered_model_vocabulary_tokens": [3, 7]}
+    ],
+    "schema": "canonical_normalized_item_sid_rows.v1",
+    "sha256": "7417050d74a02afbaa5c46dce666daf57e6ea8f6b37a7d5f85c97bb187e06ff9",
+    "visibility": "external_complete"
+  }
+}

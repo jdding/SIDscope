@@ -1,0 +1,22 @@
+{
+  "policies": {
+    "catalog_unreachable": "reject",
+    "duplicate_row": "reject",
+    "missing_row": "reject",
+    "out_of_split": "reject",
+    "target_mismatch": "reject"
+  },
+  "prepared_dataset_contract_sha256": "b1afc1a8d41ee9524b10194ea4b85eeae4d7a64468bafc18c69eb9b244aee1aa",
+  "rows": [
+    {
+      "episode_id": "test-b",
+      "expected_target_normalized_item_id": 2,
+      "order": 0,
+      "split_row_index": 1
+    }
+  ],
+  "schema": "sidscope.rpg_episode_selection.v1",
+  "selection_id": "explicit-test-b-only",
+  "test_split_id": "synthetic/frozen/test",
+  "test_split_sha256": "31ee0fb320ebcdd583997d2b097788b46a95e257b8eaebe45a80796f7a748cdb"
+}

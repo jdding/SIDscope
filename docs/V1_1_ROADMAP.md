@@ -25,7 +25,7 @@ retroactively change submitted claims or tables.
 
 | Priority | Route | Next closure |
 | --- | --- | --- |
-| P0 | RPG | Closed: full Beauty training, real parallel/unordered G2--G4 traces, public five-episode smoke, external 250-episode primary, and G5 verifier pass; configuration-bound `named_adapter`. |
+| P0 | RPG | Closed: full Beauty training, real parallel/unordered G2--G4 traces, public five-episode smoke, external 250-episode primary, and G5 verifier pass; configuration-bound `named_adapter`. 1.1.1 also provides a dataset-neutral prepared-data/explicit-selection v2 bridge; each new dataset still requires its own trained verification. |
 | P0 | Latte / PSID | Complete named adapter: real static C0--C5/G1, PSID ordered-beam and Latte latent-retry G2--G4 traces, public checkpoint-backed five-episode smoke bundles, external 250-episode hash-bound diagnostics, expected failures, and G5 verifier all pass. |
 | P1 | LLaDA-Rec | Source audit and bounded adaptive-unmasking schema/fixture complete; next obtain an explicit code license plus fixed tokenizer/checkpoint assets before real G1 and trained G4--G5. |
 | P1 | TIGER / DACT | Method-facing report complete: G1--G5 pass; obtain an explicit upstream code/asset license and rerun the 500-target primary with ancestry export to unblock G0 and promotion. |

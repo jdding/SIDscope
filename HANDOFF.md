@@ -142,6 +142,24 @@ Relevant evidence and contracts:
 - `tools/export_rpg_trained_trace.py`
 - `tools/verify_rpg_trained_trace_bundle.py`
 
+### Dataset-neutral RPG bridge
+
+The post-P0 maintenance surface now includes a generic prepared-data bridge for
+frozen downstream protocols. It binds normalized split/catalog/SID artifacts,
+completed training hashes and an explicit ordered episode-selection manifest.
+The upstream `Pipeline` cannot accept a dataset instance as annotated because
+it calls the returned instance; SIDScope therefore constructs the unmodified
+official RPG tokenizer/model over a checked `AbstractDataset` implementation.
+
+The bridge schemas are `sidscope.rpg_prepared_dataset.v1`,
+`sidscope.rpg_episode_selection.v1`, `sidscope.rpg_trained_trace_bundle.v2`,
+and `sidscope.rpg_downstream_handoff.v1`. Synthetic positive and typed failure
+fixtures pass, as does a one-epoch CPU prepared runner/export/verifier smoke.
+Beauty's real schema-v1 five-episode bundle remains the regression authority.
+No unrun downstream dataset inherits Beauty's named-adapter evidence.
+
+See `docs/RPG_NON_AR_BRIDGE.md`.
+
 ## Generator-route gate status
 
 The machine-readable authority is
@@ -166,13 +184,16 @@ not a standalone generator.
 The exact working tree containing the three implementation commits above
 passed:
 
-- full tests: `123 passed, 6 skipped`;
+- full tests: `128 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
 - G8 isolated `sidinspector==1.1.1.dev0` install and verification: PASS;
-- manifest before this handoff update: 182 rows, 179 public rows, 0 pending;
-- archive contents before this handoff update: 252 public files.
+- RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
+  positive fixture, typed duplicate-selection failure, and the hash-bound CPU
+  runner/export smoke;
+- manifest before this handoff update: 189 rows, 186 public rows, 0 pending;
+- archive contents before this handoff update: 269 public files.
 
 Because this document updates the public manifest, a resumed session must use
 the commands below to obtain the current archive counts and SHA-256. Treat the

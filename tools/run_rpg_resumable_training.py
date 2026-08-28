@@ -28,13 +28,25 @@ from tqdm import tqdm
 from transformers.optimization import get_scheduler
 
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+
 SCHEMA = "sidscope.rpg_trained_closure_run.v1"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rpg-source", type=Path, required=True)
-    parser.add_argument("--cache-dir", type=Path, required=True)
+    parser.add_argument("--cache-dir", type=Path)
+    parser.add_argument("--prepared-dataset", type=Path)
+    parser.add_argument("--prepared-root", type=Path)
+    parser.add_argument(
+        "--preflight-only",
+        action="store_true",
+        help="Hash-check the prepared contract and exit before constructing RPG runtime state.",
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--resume-from", type=Path)
@@ -113,7 +125,47 @@ def main() -> None:
         raise SystemExit(f"invalid RPG source checkout: {source}")
     sys.path.insert(0, str(source))
 
-    from genrec.pipeline import Pipeline
+    prepared = None
+    prepared_root = None
+    if args.prepared_dataset is not None:
+        if args.cache_dir is not None:
+            raise SystemExit("--cache-dir and --prepared-dataset are mutually exclusive")
+        from tools.rpg_non_ar_bridge import (
+            canonical_hash as bridge_hash,
+            load_prepared_rows,
+            validate_prepared_dataset,
+            verify_source_checkout,
+        )
+
+        prepared = json.loads(args.prepared_dataset.read_text(encoding="utf-8"))
+        prepared_root = (args.prepared_root or args.prepared_dataset.parent).resolve()
+        prepared_result = validate_prepared_dataset(prepared)
+        verify_source_checkout(source)
+        if args.seed != prepared["configuration"]["model_seed"]:
+            raise SystemExit("--seed must equal prepared configuration.model_seed")
+        load_prepared_rows(prepared, prepared_root)
+        if args.preflight_only:
+            print(
+                json.dumps(
+                    {
+                        "schema": "sidscope.rpg_prepared_training_preflight.v1",
+                        "status": "pass",
+                        "gpu_required": False,
+                        "prepared_dataset_contract_sha256": bridge_hash(prepared),
+                        "catalog_rows": prepared_result["catalog_rows"],
+                        "test_split_id": prepared_result["test_split_id"],
+                        "training_binding_status": prepared["training"].get("status", "complete"),
+                    },
+                    indent=2,
+                    sort_keys=True,
+                )
+            )
+            return
+    elif args.preflight_only:
+        raise SystemExit("--preflight-only requires --prepared-dataset")
+    elif args.cache_dir is None:
+        raise SystemExit("Beauty mode requires --cache-dir")
+
     from genrec.evaluator import Evaluator
     from genrec.utils import get_total_steps
 
@@ -131,40 +183,78 @@ def main() -> None:
             raise RuntimeError("existing run manifest does not match the resume run")
         prior_epoch_records = list(prior_manifest.get("epoch_records", []))
 
-    config = {
-        "cache_dir": str(args.cache_dir.resolve()) + "/",
-        "log_dir": str(output_dir / "logs") + "/",
-        "tensorboard_log_dir": str(output_dir / "tensorboard") + "/",
-        "ckpt_dir": str(output_dir / "upstream_ckpt") + "/",
-        "run_id": args.run_id,
-        "rand_seed": args.seed,
-        "reproducibility": True,
-        "category": "Beauty",
-        "metadata": "sentence",
-        "sent_emb_model": "sentence-transformers/sentence-t5-base",
-        "sent_emb_dim": 768,
-        "sent_emb_pca": 128,
-        "n_codebook": 32,
-        "codebook_size": 256,
-        "train_batch_size": args.train_batch_size,
-        "eval_batch_size": args.eval_batch_size,
-        "lr": args.lr,
-        "temperature": 0.03,
-        "num_beams": 20,
-        "n_edges": 200,
-        "propagation_steps": 3,
-        "warmup_steps": args.warmup_steps,
-        "epochs": args.epochs,
-        "steps": None,
-        "patience": args.patience,
-    }
     started = time.time()
-    pipeline = Pipeline(
-        model_name="RPG",
-        dataset_name="AmazonReviews2014",
-        checkpoint_path=None,
-        config_dict=config,
-    )
+    if prepared is None:
+        from genrec.pipeline import Pipeline
+
+        config = {
+            "cache_dir": str(args.cache_dir.resolve()) + "/",
+            "log_dir": str(output_dir / "logs") + "/",
+            "tensorboard_log_dir": str(output_dir / "tensorboard") + "/",
+            "ckpt_dir": str(output_dir / "upstream_ckpt") + "/",
+            "run_id": args.run_id,
+            "rand_seed": args.seed,
+            "reproducibility": True,
+            "category": "Beauty",
+            "metadata": "sentence",
+            "sent_emb_model": "sentence-transformers/sentence-t5-base",
+            "sent_emb_dim": 768,
+            "sent_emb_pca": 128,
+            "n_codebook": 32,
+            "codebook_size": 256,
+            "train_batch_size": args.train_batch_size,
+            "eval_batch_size": args.eval_batch_size,
+            "lr": args.lr,
+            "temperature": 0.03,
+            "num_beams": 20,
+            "n_edges": 200,
+            "propagation_steps": 3,
+            "warmup_steps": args.warmup_steps,
+            "epochs": args.epochs,
+            "steps": None,
+            "patience": args.patience,
+        }
+        pipeline = Pipeline(
+            model_name="RPG",
+            dataset_name="AmazonReviews2014",
+            checkpoint_path=None,
+            config_dict=config,
+        )
+    else:
+        from tools.rpg_non_ar_bridge import build_official_runtime, canonical_hash as bridge_hash
+
+        pipeline = build_official_runtime(
+            rpg_source=source,
+            prepared=prepared,
+            prepared_root=prepared_root,
+            runtime_dir=output_dir / "prepared_runtime",
+        )
+        pipeline.config.update(
+            {
+                "train_batch_size": args.train_batch_size,
+                "eval_batch_size": args.eval_batch_size,
+                "lr": args.lr,
+                "warmup_steps": args.warmup_steps,
+                "epochs": args.epochs,
+                "steps": None,
+                "patience": args.patience,
+                "topk": [prepared["configuration"]["rank_cutoff"]],
+                "val_metric": f"ndcg@{prepared['configuration']['rank_cutoff']}",
+            }
+        )
+        config = {
+            "prepared_dataset_contract_sha256": bridge_hash(prepared),
+            "dataset": prepared["dataset"],
+            "configuration": prepared["configuration"],
+            "train_batch_size": args.train_batch_size,
+            "eval_batch_size": args.eval_batch_size,
+            "lr": args.lr,
+            "warmup_steps": args.warmup_steps,
+            "epochs": args.epochs,
+            "patience": args.patience,
+            "train_limit": args.train_limit,
+            "validation_limit": args.val_limit,
+        }
     accelerator = pipeline.accelerator
     evaluator = Evaluator(pipeline.config, pipeline.tokenizer)
 
@@ -328,6 +418,9 @@ def main() -> None:
         },
         "contract": config,
         "dataset_limits": {"train": args.train_limit, "val": args.val_limit},
+        "prepared_dataset_contract_sha256": (
+            None if prepared is None else bridge_hash(prepared)
+        ),
         "completed_epoch": epoch_records[-1]["epoch"] if epoch_records else start_epoch,
         "global_step": global_step,
         "best_epoch": best_epoch,

@@ -1,0 +1,54 @@
+{
+  "audited_at": "2026-08-28",
+  "beauty_v1_regression": {
+    "bundle_sha256": "51909c1ee933fefca74f0b989a586f8fdcb84099528d2ec325355e1fe5b06d94",
+    "episodes": 5,
+    "published_target_rows": 43,
+    "status": "pass",
+    "target_universe_rows": 12101
+  },
+  "fixture": {
+    "episode_selection_canonical_sha256": "f98346ab26cdc226617a98432ab281f41eb1ca84c65a7e61ddf437c268888fae",
+    "episode_selection_file_sha256": "6d7e72bc39bc5bd604140be925b42471e6bef0f2ee402e23831727d24a9cee73",
+    "expected_failure_label": "duplicate_selection_row",
+    "positive_bundle_file_sha256": "911be57327603dbb40b249c22aed01191ea5bc7c955d1263a12b029ba44e1347",
+    "prepared_dataset_canonical_sha256": "b1afc1a8d41ee9524b10194ea4b85eeae4d7a64468bafc18c69eb9b244aee1aa",
+    "prepared_dataset_file_sha256": "488f69b6c90c0bea93aa276ee17341d2f164f0f2e89c55e782e1668d7a64467f",
+    "status": "pass"
+  },
+  "interfaces": {
+    "downstream_handoff": "sidscope.rpg_downstream_handoff.v1",
+    "episode_selection": "sidscope.rpg_episode_selection.v1",
+    "prepared_dataset": "sidscope.rpg_prepared_dataset.v1",
+    "trained_trace": "sidscope.rpg_trained_trace_bundle.v2"
+  },
+  "runtime_smoke": {
+    "checkpoint_sha256": "2466639c5b2cd96605d7f531330d7f7953a8f9f59b9166548dac87caadbed66b",
+    "completed_epoch": 1,
+    "completed_prepared_dataset_canonical_sha256": "70d58d6e79273b54e7796d426a798225eceefc7b30d6d64a0dde627a4b61eb5b",
+    "device": "cpu",
+    "episode_count": 1,
+    "episode_selection_canonical_sha256": "de248b9a7f768ca348d468a082f88cb8ca655c3b5d0d7888bde2e545fc548f19",
+    "global_steps": 1,
+    "gpu_required": false,
+    "handoff_sha256": "520a68234b123bc86e9ff62900f78343cf524412c2fd24fb3598a0c047a9354c",
+    "status": "pass",
+    "trace_sha256": "ac8f57aa802407c2469090989350db124ee876803246d532ce28cb8475ab4ac7",
+    "training_manifest_sha256": "4f2ddc05aa5b8da86bfcd52d8e9ca77be704e502b80d46d5f3cd3b8afd6dff07",
+    "verifier_status": "pass"
+  },
+  "schema": "sidscope.rpg_non_ar_bridge_smoke.v1",
+  "source": {
+    "license": "CC-BY-NC-4.0",
+    "revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+    "url": "https://github.com/facebookresearch/RPG_KDD2025"
+  },
+  "status": "pass",
+  "tools": {
+    "exporter_sha256": "36b6ce0bd97cfcf4ad350da92fb909f0f4c36af8bda3e33f471af87a4f9acf17",
+    "finalizer_sha256": "26b767b105cf22cd5191d96cc1bd4775566f8c95f8cd2e7edf7add7639629fa2",
+    "prepared_bridge_sha256": "6e5331f598b6e01ab377b38b15bd13785959ce441bb03d73ffd1b4777dd8ff99",
+    "runner_sha256": "df2078717b9a6964d8e523f3c5d27c12eb6b23e3e23e420116a8d7815d9cc27d",
+    "verifier_sha256": "76c40191814fa0e6df0904531dd493b2f05360adbe3bbc13e3a83c6a5f3071a2"
+  }
+}

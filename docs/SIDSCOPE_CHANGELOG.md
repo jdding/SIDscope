@@ -11,6 +11,18 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.1.1.dev0: RPG dataset-neutral bridge
+
+- Added hash-bound `sidscope.rpg_prepared_dataset.v1` and explicit
+  `sidscope.rpg_episode_selection.v1` contracts with no first-N fallback.
+- Added an upstream-compatible prepared loader and resumable training/export
+  surface that retains RPG parallel unordered token-set graph semantics.
+- Added dataset-neutral `sidscope.rpg_trained_trace_bundle.v2` verification and
+  `sidscope.rpg_downstream_handoff.v1` evaluator-neutral episode rows.
+- Added positive and typed duplicate-selection failure fixtures. A complete
+  one-epoch CPU runner/export/verifier smoke passes, and the existing trained
+  Beauty schema-v1 public bundle remains PASS.
+
 ## SIDScope v1.1.1.dev0: RPG trained closure
 
 Status: unreleased post-1.1.0 maintenance

@@ -1,0 +1,9 @@
+{
+  "representation": "normalized_item_sequences",
+  "schema": "sidscope.rpg_interaction_sequences.v1",
+  "splits": {
+    "test": {"row_count": 2, "sha256": "31ee0fb320ebcdd583997d2b097788b46a95e257b8eaebe45a80796f7a748cdb"},
+    "train": {"row_count": 2, "sha256": "426e275aa3522ba9c46f38bd2d81876c812504b92dedfa37a65a8c41ea1fb5a7"},
+    "validation": {"row_count": 1, "sha256": "8f8cce93ad5249604ae6282b8db55bd04dae26186236d22d27b2a0183e624c27"}
+  }
+}
