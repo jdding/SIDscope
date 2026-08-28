@@ -34,6 +34,9 @@ if str(ROOT) not in sys.path:
 
 
 SCHEMA = "sidscope.rpg_trained_closure_run.v1"
+STATE_SCHEMA = "sidscope.rpg_resumable_state.v2"
+LEGACY_STATE_SCHEMA = SCHEMA
+LEDGER_SCHEMA = "sidscope.rpg_epoch_ledger.v1"
 
 
 def parse_args() -> argparse.Namespace:
@@ -110,6 +113,118 @@ def atomic_torch_save(payload: dict[str, Any], path: Path) -> None:
     os.replace(temporary, path)
 
 
+def atomic_json_write(payload: dict[str, Any], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def validate_epoch_records(
+    records: list[dict[str, Any]],
+    *,
+    completed_epoch: int,
+    global_step: int,
+    model_state_sha256: str,
+) -> None:
+    if len(records) != completed_epoch:
+        raise RuntimeError("epoch record count does not match completed epoch")
+    previous_step = 0
+    for expected_epoch, record in enumerate(records, start=1):
+        if record.get("epoch") != expected_epoch:
+            raise RuntimeError("epoch records are not continuous")
+        record_step = record.get("global_step")
+        train_batches = record.get("train_batches")
+        if not isinstance(record_step, int) or not isinstance(train_batches, int):
+            raise RuntimeError("epoch record step fields must be integers")
+        if train_batches <= 0 or record_step != previous_step + train_batches:
+            raise RuntimeError("epoch record global steps are not continuous")
+        record_hash = record.get("model_state_sha256")
+        if not isinstance(record_hash, str) or len(record_hash) != 64:
+            raise RuntimeError("epoch record model-state hash is invalid")
+        previous_step = record_step
+    if previous_step != global_step:
+        raise RuntimeError("epoch records do not reach the checkpoint global step")
+    if records and records[-1]["model_state_sha256"] != model_state_sha256:
+        raise RuntimeError("epoch records do not match the checkpoint model state")
+
+
+def recover_epoch_records(
+    checkpoint: dict[str, Any], prior_manifest: Optional[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], str]:
+    completed_epoch = int(checkpoint["completed_epoch"])
+    global_step = int(checkpoint["global_step"])
+    model_state_sha256 = sha256_state_dict(checkpoint["model"])
+    embedded = checkpoint.get("epoch_records")
+    if embedded is not None:
+        records = list(embedded)
+        source = "checkpoint_embedded"
+    elif prior_manifest is not None:
+        records = list(prior_manifest.get("epoch_records", []))
+        source = "legacy_run_manifest"
+    elif completed_epoch == 0:
+        records = []
+        source = "empty_checkpoint"
+    else:
+        raise RuntimeError(
+            "legacy resume checkpoint has no embedded epoch records and no matching run manifest"
+        )
+    validate_epoch_records(
+        records,
+        completed_epoch=completed_epoch,
+        global_step=global_step,
+        model_state_sha256=model_state_sha256,
+    )
+    return records, source
+
+
+def audit_epoch_record_sidecar(
+    *,
+    label: str,
+    sidecar: dict[str, Any],
+    expected_schema: str,
+    run_id: str,
+    checkpoint_sha256: str,
+    checkpoint_records: list[dict[str, Any]],
+) -> str:
+    if sidecar.get("schema") != expected_schema or sidecar.get("run_id") != run_id:
+        raise RuntimeError(f"{label} identity does not match the resume checkpoint")
+    records = list(sidecar.get("epoch_records", []))
+    if records == checkpoint_records:
+        if sidecar.get("last_state_sha256") != checkpoint_sha256:
+            raise RuntimeError(f"{label} state hash does not match the resume checkpoint")
+        return "exact"
+    if records and checkpoint_records[: len(records)] == records:
+        return "stale_prefix_recovered_from_checkpoint"
+    raise RuntimeError(f"{label} epoch records diverge from the resume checkpoint")
+
+
+def build_epoch_ledger(
+    *,
+    run_id: str,
+    state_path: Path,
+    state: dict[str, Any],
+) -> dict[str, Any]:
+    records = list(state["epoch_records"])
+    validate_epoch_records(
+        records,
+        completed_epoch=int(state["completed_epoch"]),
+        global_step=int(state["global_step"]),
+        model_state_sha256=sha256_state_dict(state["model"]),
+    )
+    return {
+        "schema": LEDGER_SCHEMA,
+        "status": "checkpointed",
+        "run_id": run_id,
+        "state_schema": state["schema"],
+        "completed_epoch": state["completed_epoch"],
+        "global_step": state["global_step"],
+        "model_state_sha256": records[-1]["model_state_sha256"] if records else None,
+        "last_state_sha256": sha256_file(state_path),
+        "epoch_records": records,
+    }
+
+
 def limit_dataset(dataset: Any, limit: Optional[int]) -> Any:
     if limit is None or limit >= len(dataset):
         return dataset
@@ -174,14 +289,15 @@ def main() -> None:
     state_path = output_dir / "last_state.pt"
     best_path = output_dir / "best_model_state.pt"
     manifest_path = output_dir / "run_manifest.json"
+    ledger_path = output_dir / "epoch_ledger.json"
     prior_epoch_records: list[dict[str, Any]] = []
     prior_manifest_sha256 = None
+    prior_manifest = None
     if args.resume_from and manifest_path.is_file():
         prior_manifest_sha256 = sha256_file(manifest_path)
         prior_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if prior_manifest.get("schema") != SCHEMA or prior_manifest.get("run_id") != args.run_id:
             raise RuntimeError("existing run manifest does not match the resume run")
-        prior_epoch_records = list(prior_manifest.get("epoch_records", []))
 
     started = time.time()
     if prepared is None:
@@ -293,13 +409,41 @@ def main() -> None:
     best_score = -1.0
     resumed = False
     resume_sha256 = None
+    resume_epoch_record_source = None
+    prior_manifest_record_status = None
+    prior_ledger_record_status = None
     if args.resume_from:
         resume_path = args.resume_from.resolve()
         checkpoint = torch.load(resume_path, map_location="cpu", weights_only=False)
-        if checkpoint.get("schema") != SCHEMA:
+        if checkpoint.get("schema") not in {STATE_SCHEMA, LEGACY_STATE_SCHEMA}:
             raise RuntimeError("resume checkpoint schema mismatch")
         if checkpoint.get("run_contract") != config:
             raise RuntimeError("resume checkpoint run contract mismatch")
+        if checkpoint.get("run_id") != args.run_id:
+            raise RuntimeError("resume checkpoint run id mismatch")
+        resume_sha256 = sha256_file(resume_path)
+        prior_epoch_records, resume_epoch_record_source = recover_epoch_records(
+            checkpoint, prior_manifest
+        )
+        if prior_manifest is not None:
+            prior_manifest_record_status = audit_epoch_record_sidecar(
+                label="run manifest",
+                sidecar=prior_manifest,
+                expected_schema=SCHEMA,
+                run_id=args.run_id,
+                checkpoint_sha256=resume_sha256,
+                checkpoint_records=prior_epoch_records,
+            )
+        if ledger_path.is_file():
+            prior_ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+            prior_ledger_record_status = audit_epoch_record_sidecar(
+                label="epoch ledger",
+                sidecar=prior_ledger,
+                expected_schema=LEDGER_SCHEMA,
+                run_id=args.run_id,
+                checkpoint_sha256=resume_sha256,
+                checkpoint_records=prior_epoch_records,
+            )
         accelerator.unwrap_model(model).load_state_dict(checkpoint["model"])
         optimizer.load_state_dict(checkpoint["optimizer"])
         scheduler.load_state_dict(checkpoint["scheduler"])
@@ -309,7 +453,6 @@ def main() -> None:
         best_score = float(checkpoint["best_val_score"])
         restore_rng_state(checkpoint["rng"])
         resumed = True
-        resume_sha256 = sha256_file(resume_path)
 
     n_epochs = math.ceil(total_steps / (len(train_loader) * accelerator.num_processes))
     stop_after = args.stop_after_epoch if args.stop_after_epoch is not None else n_epochs
@@ -364,8 +507,19 @@ def main() -> None:
         unwrapped_state = {
             key: value.detach().cpu() for key, value in accelerator.unwrap_model(model).state_dict().items()
         }
+        record = {
+            "epoch": epoch_index + 1,
+            "global_step": global_step,
+            "mean_train_loss": total_loss / observed_batches,
+            "train_batches": observed_batches,
+            "eval_batches": evaluated_batches,
+            "val_metrics": metrics,
+            "model_state_sha256": sha256_state_dict(unwrapped_state),
+            "elapsed_seconds": time.time() - epoch_started,
+        }
+        cumulative_epoch_records = prior_epoch_records + epoch_records + [record]
         state = {
-            "schema": SCHEMA,
+            "schema": STATE_SCHEMA,
             "run_id": args.run_id,
             "source_revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
             "run_contract": config,
@@ -377,18 +531,13 @@ def main() -> None:
             "optimizer": optimizer.state_dict(),
             "scheduler": scheduler.state_dict(),
             "rng": capture_rng_state(),
+            "epoch_records": cumulative_epoch_records,
         }
         atomic_torch_save(state, state_path)
-        record = {
-            "epoch": epoch_index + 1,
-            "global_step": global_step,
-            "mean_train_loss": total_loss / observed_batches,
-            "train_batches": observed_batches,
-            "eval_batches": evaluated_batches,
-            "val_metrics": metrics,
-            "model_state_sha256": sha256_state_dict(unwrapped_state),
-            "elapsed_seconds": time.time() - epoch_started,
-        }
+        atomic_json_write(
+            build_epoch_ledger(run_id=args.run_id, state_path=state_path, state=state),
+            ledger_path,
+        )
         epoch_records.append(record)
         print(json.dumps(record, sort_keys=True), flush=True)
         if epoch_index + 1 - best_epoch >= args.patience:
@@ -415,6 +564,9 @@ def main() -> None:
             "input_sha256": resume_sha256,
             "start_epoch": start_epoch,
             "prior_manifest_sha256": prior_manifest_sha256,
+            "epoch_record_source": resume_epoch_record_source,
+            "prior_manifest_record_status": prior_manifest_record_status,
+            "prior_epoch_ledger_status": prior_ledger_record_status,
         },
         "contract": config,
         "dataset_limits": {"train": args.train_limit, "val": args.val_limit},
@@ -427,12 +579,19 @@ def main() -> None:
         "best_val_score": best_score,
         "final_model_state_sha256": final_state_hash,
         "last_state_sha256": sha256_file(state_path) if state_path.exists() else None,
+        "epoch_ledger_sha256": sha256_file(ledger_path) if ledger_path.exists() else None,
         "best_model_sha256": sha256_file(best_path) if best_path.exists() else None,
         "epoch_records": prior_epoch_records + epoch_records,
         "invocation_epoch_records": epoch_records,
         "elapsed_seconds": time.time() - started,
     }
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    validate_epoch_records(
+        manifest["epoch_records"],
+        completed_epoch=manifest["completed_epoch"],
+        global_step=manifest["global_step"],
+        model_state_sha256=manifest["final_model_state_sha256"],
+    )
+    atomic_json_write(manifest, manifest_path)
     print(json.dumps(manifest, indent=2, sort_keys=True))
 
 

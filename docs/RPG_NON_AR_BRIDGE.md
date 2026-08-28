@@ -88,7 +88,32 @@ python3 tools/run_rpg_resumable_training.py \
 
 Remove `--preflight-only` and supply the desired signed training arguments for
 the actual run. The runner retains epoch-boundary model, optimizer, scheduler
-and RNG resumability. Then complete the contract:
+and RNG resumability. Each completed epoch is committed in this order:
+
+1. atomically replace `last_state.pt` using
+   `sidscope.rpg_resumable_state.v2`, including all continuous epoch records;
+2. atomically replace `epoch_ledger.json` using
+   `sidscope.rpg_epoch_ledger.v1`, binding the checkpoint hash and the same
+   epoch records;
+3. on normal invocation exit, atomically replace `run_manifest.json`.
+
+This order permits recovery if the container stops after an epoch checkpoint
+but before the invocation manifest is written. The v2 checkpoint is the
+authority; an exact ledger is cross-checked, and a ledger or prior manifest
+that is a strict continuous prefix is recorded as stale and recovered from the
+newer checkpoint. Divergent records or hashes fail closed. The final manifest
+retains the complete epoch/global-step/model-state-hash chain and identifies
+which source supplied pre-resume records.
+
+Legacy `sidscope.rpg_trained_closure_run.v1` checkpoint files remain readable
+only when a matching continuous legacy `run_manifest.json` supplies their
+epoch records. A legacy checkpoint with completed epochs but no matching
+manifest is intentionally rejected because its missing audit history cannot be
+reconstructed. Existing completed manifests and public Beauty evidence need no
+migration; new or resumed long runs should retain `last_state.pt`,
+`epoch_ledger.json`, and `run_manifest.json` together.
+
+Then complete the contract:
 
 ```bash
 python3 tools/finalize_rpg_prepared_dataset.py \

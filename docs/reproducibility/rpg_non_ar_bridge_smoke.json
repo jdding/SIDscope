@@ -22,6 +22,30 @@
     "prepared_dataset": "sidscope.rpg_prepared_dataset.v1",
     "trained_trace": "sidscope.rpg_trained_trace_bundle.v2"
   },
+  "interrupted_resume_smoke": {
+    "checkpoint_schema": "sidscope.rpg_resumable_state.v2",
+    "completed_epochs": [1, 2],
+    "device": "cpu",
+    "epoch_ledger_schema": "sidscope.rpg_epoch_ledger.v1",
+    "final_epoch_ledger_sha256": "1ef8994dfa61f3ead9b5ac33b1280a4da22f83aab0bba2061d2209710115899f",
+    "final_last_state_sha256": "940e25221323aca8e308d330619c892935242f87e72c9f71a68bb11a10998a24",
+    "final_manifest_sha256": "bb9f1e7567b334f1a77f42a66c01e63d78c75f2bad7bc906a447c3e8be1a87ac",
+    "final_manifest_schema": "sidscope.rpg_trained_closure_run.v1",
+    "global_steps": [1, 2],
+    "gpu_required": false,
+    "model_state_sha256": [
+      "114efa1fe7cd0700d38ed55e8ac46587462553a0d82630bb595dd1c4131fdc36",
+      "f43e173036e76faa4162ffa2756be6709ae75ce7eedee0a78cdd24ef220cb526"
+    ],
+    "resume_epoch_record_source": "checkpoint_embedded",
+    "resume_input_sha256": "53e049ad4b28977effe52adf53e0a0958c436a9a73ad2193f6e1b669e489bba9",
+    "resume_prior_epoch_ledger_status": "exact",
+    "resume_prior_manifest_sha256": null,
+    "source_model_sha256": "8d70fa9fde44279b3d0da9409e8e877b46ca4388d79442a2659d615336de6abc",
+    "stage1_invocation_manifest_removed_before_resume": true,
+    "stage1_invocation_manifest_sha256": "b8f7f9423369af123e86ce1b142e29fe9fc9b9b63ba788a508a271899723673b",
+    "status": "pass"
+  },
   "runtime_smoke": {
     "checkpoint_sha256": "2466639c5b2cd96605d7f531330d7f7953a8f9f59b9166548dac87caadbed66b",
     "completed_epoch": 1,
@@ -48,7 +72,7 @@
     "exporter_sha256": "36b6ce0bd97cfcf4ad350da92fb909f0f4c36af8bda3e33f471af87a4f9acf17",
     "finalizer_sha256": "26b767b105cf22cd5191d96cc1bd4775566f8c95f8cd2e7edf7add7639629fa2",
     "prepared_bridge_sha256": "6e5331f598b6e01ab377b38b15bd13785959ce441bb03d73ffd1b4777dd8ff99",
-    "runner_sha256": "df2078717b9a6964d8e523f3c5d27c12eb6b23e3e23e420116a8d7815d9cc27d",
-    "verifier_sha256": "76c40191814fa0e6df0904531dd493b2f05360adbe3bbc13e3a83c6a5f3071a2"
+    "runner_sha256": "5c5ded97cb0026d7a0e027d7bef3615ccb556995d7eedc30f1957cd218851fce",
+    "trained_trace_verifier_sha256": "76c40191814fa0e6df0904531dd493b2f05360adbe3bbc13e3a83c6a5f3071a2"
   }
 }

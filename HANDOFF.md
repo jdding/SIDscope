@@ -158,6 +158,15 @@ fixtures pass, as does a one-epoch CPU prepared runner/export/verifier smoke.
 Beauty's real schema-v1 five-episode bundle remains the regression authority.
 No unrun downstream dataset inherits Beauty's named-adapter evidence.
 
+The resumable runner now writes `sidscope.rpg_resumable_state.v2` atomically at
+every epoch with cumulative epoch records, then atomically updates the
+hash-bound `sidscope.rpg_epoch_ledger.v1`. A real two-stage CPU regression
+completed epoch 1, removed the normally written invocation manifest to model a
+post-checkpoint interruption, and resumed to epoch 2 using only the embedded
+records plus the exact ledger. The final manifest preserves continuous epochs,
+global steps, and model-state hashes. Legacy checkpoints without embedded
+records require a matching continuous legacy manifest or fail closed.
+
 See `docs/RPG_NON_AR_BRIDGE.md`.
 
 ## Generator-route gate status
@@ -184,7 +193,7 @@ not a standalone generator.
 The exact working tree containing the three implementation commits above
 passed:
 
-- full tests: `128 passed, 6 skipped`;
+- full tests: `133 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
@@ -192,8 +201,8 @@ passed:
 - RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
   positive fixture, typed duplicate-selection failure, and the hash-bound CPU
   runner/export smoke;
-- manifest before this handoff update: 189 rows, 186 public rows, 0 pending;
-- archive contents before this handoff update: 269 public files.
+- manifest after this handoff update: 190 rows, 187 public rows, 0 pending;
+- current public package surface: 270 files.
 
 Because this document updates the public manifest, a resumed session must use
 the commands below to obtain the current archive counts and SHA-256. Treat the

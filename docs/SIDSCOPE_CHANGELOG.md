@@ -22,6 +22,12 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
 - Added positive and typed duplicate-selection failure fixtures. A complete
   one-epoch CPU runner/export/verifier smoke passes, and the existing trained
   Beauty schema-v1 public bundle remains PASS.
+- Closed the Fudan epoch-boundary audit gap with atomic
+  `sidscope.rpg_resumable_state.v2` checkpoints that embed cumulative epoch
+  records plus a hash-bound `sidscope.rpg_epoch_ledger.v1` sidecar. A real CPU
+  epoch 1 to epoch 2 resume regression passes after removing the first
+  invocation's final manifest; the resumed manifest preserves the continuous
+  epoch, global-step, and model-state-hash chain.
 
 ## SIDScope v1.1.1.dev0: RPG trained closure
 

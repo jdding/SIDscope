@@ -84,7 +84,7 @@ def main() -> None:
         "runner_sha256": ROOT / "tools/run_rpg_resumable_training.py",
         "finalizer_sha256": ROOT / "tools/finalize_rpg_prepared_dataset.py",
         "exporter_sha256": ROOT / "tools/export_rpg_trained_trace.py",
-        "verifier_sha256": ROOT / "tools/verify_rpg_trained_trace_bundle.py",
+        "trained_trace_verifier_sha256": ROOT / "tools/verify_rpg_trained_trace_bundle.py",
     }
     for key, path in tool_paths.items():
         if evidence.get("tools", {}).get(key) != sha256_file(path):
@@ -94,6 +94,43 @@ def main() -> None:
         failures.append("runtime smoke status mismatch")
     if runtime.get("gpu_required") is not False or runtime.get("device") != "cpu":
         failures.append("runtime smoke must remain CPU-only")
+    recovery = evidence.get("interrupted_resume_smoke", {})
+    if recovery.get("status") != "pass":
+        failures.append("interrupted resume smoke status mismatch")
+    if recovery.get("gpu_required") is not False or recovery.get("device") != "cpu":
+        failures.append("interrupted resume smoke must remain CPU-only")
+    if recovery.get("checkpoint_schema") != "sidscope.rpg_resumable_state.v2":
+        failures.append("interrupted resume checkpoint schema mismatch")
+    if recovery.get("epoch_ledger_schema") != "sidscope.rpg_epoch_ledger.v1":
+        failures.append("interrupted resume ledger schema mismatch")
+    if recovery.get("final_manifest_schema") != "sidscope.rpg_trained_closure_run.v1":
+        failures.append("interrupted resume final manifest schema mismatch")
+    if recovery.get("completed_epochs") != [1, 2] or recovery.get("global_steps") != [1, 2]:
+        failures.append("interrupted resume continuity mismatch")
+    model_hashes = recovery.get("model_state_sha256", [])
+    if len(model_hashes) != 2 or any(
+        not isinstance(value, str) or len(value) != 64 for value in model_hashes
+    ):
+        failures.append("interrupted resume model-state hashes invalid")
+    if recovery.get("resume_epoch_record_source") != "checkpoint_embedded":
+        failures.append("interrupted resume did not recover checkpoint records")
+    if recovery.get("resume_prior_manifest_sha256") is not None:
+        failures.append("interrupted resume unexpectedly used a final manifest")
+    if recovery.get("resume_prior_epoch_ledger_status") != "exact":
+        failures.append("interrupted resume ledger was not checkpoint-bound")
+    if recovery.get("stage1_invocation_manifest_removed_before_resume") is not True:
+        failures.append("interrupted resume simulation boundary missing")
+    for key in (
+        "resume_input_sha256",
+        "stage1_invocation_manifest_sha256",
+        "final_manifest_sha256",
+        "final_epoch_ledger_sha256",
+        "final_last_state_sha256",
+        "source_model_sha256",
+    ):
+        value = recovery.get(key)
+        if not isinstance(value, str) or len(value) != 64:
+            failures.append(f"interrupted resume hash invalid: {key}")
 
     result = {
         "schema": "sidscope.rpg_non_ar_bridge_verification.v1",
@@ -113,6 +150,13 @@ def main() -> None:
             "target_universe_rows": beauty.get("target_universe_rows"),
         },
         "runtime_smoke": runtime,
+        "interrupted_resume_smoke": {
+            "status": recovery.get("status"),
+            "completed_epochs": recovery.get("completed_epochs"),
+            "global_steps": recovery.get("global_steps"),
+            "epoch_record_source": recovery.get("resume_epoch_record_source"),
+            "prior_manifest_sha256": recovery.get("resume_prior_manifest_sha256"),
+        },
         "failures": failures,
     }
     print(json.dumps(result, indent=2, sort_keys=True))
