@@ -1,6 +1,6 @@
 # SIDScope 1.1 Development Roadmap
 
-Version: `1.1.0`
+Version: `1.1.1.dev0` (post-1.1.0 maintenance)
 Branch: `codex/sidscope-v1.1`
 Base: TOIS-submission software/resource version, public `v1.0.2` at
 `6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`
@@ -25,7 +25,7 @@ retroactively change submitted claims or tables.
 
 | Priority | Route | Next closure |
 | --- | --- | --- |
-| P0 | RPG | Real official-code-derived Beauty cache now passes non-paper-counted C0--C5 and all-item G1 round-trip; next close trained parallel decoding G2--G5 with a checkpoint or fully recorded training output. |
+| P0 | RPG | Closed: full Beauty training, real parallel/unordered G2--G4 traces, public five-episode smoke, external 250-episode primary, and G5 verifier pass; configuration-bound `named_adapter`. |
 | P0 | Latte / PSID | Complete named adapter: real static C0--C5/G1, PSID ordered-beam and Latte latent-retry G2--G4 traces, public checkpoint-backed five-episode smoke bundles, external 250-episode hash-bound diagnostics, expected failures, and G5 verifier all pass. |
 | P1 | LLaDA-Rec | Source audit and bounded adaptive-unmasking schema/fixture complete; next obtain an explicit code license plus fixed tokenizer/checkpoint assets before real G1 and trained G4--G5. |
 | P1 | TIGER / DACT | Method-facing report complete: G1--G5 pass; obtain an explicit upstream code/asset license and rerun the 500-target primary with ancestry export to unblock G0 and promotion. |
@@ -43,15 +43,16 @@ trace and ranked-item exports, CPU fixture, bounded model smoke, hashes, and
 verifier pass. A successful training command or one-off cache remains evidence,
 not adapter closure.
 
-Latte/PSID is the first route promoted under this rule. Its promotion is
-configuration-bound and does not alter the submitted TOIS paper or promote the
-still-pending trained RPG route.
+Latte/PSID and RPG are promoted under this rule. Both promotions are
+configuration-bound and do not alter the submitted TOIS paper. RPG retains
+parallel unordered token sets and item-node graph propagation; it is not
+represented as a TIGER-style autoregressive prefix trace.
 
 ## Release Gate
 
-Status: local release-candidate tests, package verifier, archive smoke, G8
-fresh-environment install, annotated `v1.1.0` publication, and unauthenticated
-public URL smoke all pass.
+Status: annotated `v1.1.0` publication and unauthenticated public URL smoke
+pass. The post-release `1.1.1.dev0` maintenance tree closes RPG P0 and must pass
+its own tests, package verifier, archive smoke, and G8 before a future release.
 
 Before `v1.1.0`:
 

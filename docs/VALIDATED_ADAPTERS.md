@@ -91,11 +91,12 @@ Latte/PSID now passes G0--G5 as a configuration-bound named generator adapter:
 the real static cache and vocabulary round-trip are joined to public
 deidentified PSID/Latte checkpoint-backed smoke bundles, external 250-episode
 hash-bound diagnostics, typed expected failures, and a passing CPU verifier.
-RPG has a pinned non-commercial source audit, a real official-code-
-derived Beauty cache with non-paper-counted C0--C5 and all-item G1 round-trip,
-a bounded parallel trace fixture, and an untrained official-source class smoke.
-Its trained parallel decoding and ranked-item G2--G5 evidence remains open, so
-it is not a named adapter.
+RPG passes G0--G5 as a configuration-bound named generator adapter. Its pinned
+non-commercial source audit and real official-code-derived Beauty cache are
+bound to a fully recorded trained output, a public five-episode deidentified
+parallel graph trace, and an external 250-episode trace with complete target-
+universe hash/count evidence. The route retains unordered token sets and graph
+item nodes; it is not represented as an autoregressive prefix trace.
 LLaDA-Rec now has a pinned no-license source audit, bounded adaptive-unmasking
 trace fixture, and official class-method smoke. It remains below named-adapter
 status because G0 is blocked by the absent code license and no released cache,

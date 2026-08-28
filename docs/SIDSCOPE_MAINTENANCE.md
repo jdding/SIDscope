@@ -87,10 +87,19 @@ non-canonical until it is incorporated and tested in SIDScope.
 
 The RPG integration demonstrates the license boundary: its official source is
 CC BY-NC 4.0, so SIDScope ships only an independently implemented MIT contract,
-deidentified fixture, source hashes, and derived smoke/cache summaries. The
+deidentified fixtures, source hashes, and derived smoke/cache summaries. The
 official-code-derived Beauty cache can pass non-paper-counted C0--C5 and G1
 without redistributing official code, raw data, text, embeddings, `.sem_ids`,
 normalized tables, or checkpoints; those artifacts remain external.
+
+RPG's configuration-bound trained closure follows the same boundary. The
+public package contains a five-episode parallel graph trace and only the 43
+normalized-item/SID rows needed to verify its ranked-item collision
+resolution. The complete 12,101-row target universe and 250-episode trace stay
+external, while their hashes, counts, split, checkpoint, full training resume
+chain, and verifier result are public. A maintenance release must rerun the
+bounded public bundle and must not reinterpret RPG as an autoregressive prefix
+generator.
 
 The Latte/PSID integration demonstrates a data-license boundary. The upstream
 code is MIT and Sentence-T5 is Apache-2.0, but the audited Amazon Reviews 2023

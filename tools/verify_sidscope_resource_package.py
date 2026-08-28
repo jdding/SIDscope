@@ -43,6 +43,8 @@ REQUIRED_FILES = [
     "examples/reviewer_quickstart_data/item_metadata.csv",
     "examples/reviewer_quickstart_data/interactions.csv",
     "examples/rpg_generator_fixture/manifest.json",
+    "examples/rpg_generator_trained_trace_real_smoke/README.md",
+    "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
     "examples/dact_tiger_autoregressive_fixture/manifest.json",
     "examples/latte_psid_cache_fixture/manifest.json",
     "examples/latte_psid_trained_trace_fixture/manifest.json",
@@ -104,6 +106,7 @@ REQUIRED_FILES = [
     "docs/reproducibility/rpg_kdd2025_source_audit.json",
     "docs/reproducibility/rpg_kdd2025_official_source_smoke.json",
     "docs/reproducibility/rpg_kdd2025_adapter_status.json",
+    "docs/reproducibility/rpg_kdd2025_trained_trace_evidence.json",
     "docs/reproducibility/rpg_beauty_cache_build.json",
     "docs/reproducibility/rpg_beauty_intake.json",
     "docs/reproducibility/conformance/rpg_beauty_manifest.json",
@@ -145,6 +148,9 @@ REQUIRED_FILES = [
     "tools/verify_sidscope_source_inventory.py",
     "tools/verify_dact_tiger_adapter.py",
     "tools/verify_rpg_generator_adapter.py",
+    "tools/run_rpg_resumable_training.py",
+    "tools/export_rpg_trained_trace.py",
+    "tools/verify_rpg_trained_trace_bundle.py",
     "tools/run_rpg_official_source_smoke.py",
     "tools/build_rpg_opq_cache.py",
     "tools/generate_rpg_opq_from_embeddings.py",
@@ -168,6 +174,7 @@ REQUIRED_FILES = [
     "tests/local_test_bootstrap.py",
     "tests/test_dact_adapter.py",
     "tests/test_rpg_adapter.py",
+    "tests/test_rpg_trained_trace_bundle.py",
     "tests/test_latte_adapter.py",
     "tests/test_llada_rec_adapter.py",
     "tests/test_isd_adapter.py",
@@ -483,6 +490,13 @@ def main() -> None:
         run([sys.executable, "tools/verify_sidscope_source_inventory.py"]),
         run([sys.executable, "tools/verify_dact_tiger_adapter.py"]),
         run([sys.executable, "tools/verify_rpg_generator_adapter.py"]),
+        run(
+            [
+                sys.executable,
+                "tools/verify_rpg_trained_trace_bundle.py",
+                "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
+            ]
+        ),
         run([sys.executable, "tools/verify_latte_psid_adapter.py"]),
         run(
             [

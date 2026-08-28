@@ -11,6 +11,24 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.1.1.dev0: RPG trained closure
+
+Status: unreleased post-1.1.0 maintenance
+
+- Closed RPG G2--G5 with a fully recorded Beauty training output: 127 epochs,
+  12,827 updates, best epoch 107, and patience-20 early stopping.
+- Added resumable epoch-boundary training, trained parallel-trace export, and a
+  fail-closed verifier without vendoring the CC BY-NC upstream implementation
+  or any raw data, embedding, checkpoint, or `.sem_ids` cache.
+- Added a public five-episode deidentified smoke with 43 bounded target rows
+  and an external 250-episode primary with a shared 12,101-row target-universe
+  hash. The external primary records 8 Hit@10 episodes (`Recall@10=0.032`).
+- Promoted the pinned Beauty configuration to `named_adapter` after G0--G5
+  passed. RPG remains a parallel/unordered item-node graph generator and is not
+  represented with autoregressive prefix semantics.
+- Kept the immutable TOIS-bound `v1.0.2` and released post-submission `v1.1.0`
+  records unchanged.
+
 ## SIDScope v1.1.0: Generator adapter maintenance
 
 Release date: 2026-08-28

@@ -7,10 +7,10 @@
     "C0_C5": "pass_official_code_derived_beauty_cache_non_paper_counted_summary_only",
     "G0": "pass_with_noncommercial_reuse_restriction",
     "G1": "pass_real_official_beauty_item_sid_vocabulary_item_node_roundtrip",
-    "G2": "bounded_fixture_parallel_state_pass",
-    "G3": "bounded_fixture_validity_ambiguity_resolution_pass",
-    "G4": "bounded_fixture_trace_and_ranked_export_pass",
-    "G5": "partial_real_cache_cpu_fixture_and_official_source_untrained_smoke_pass_trained_asset_smoke_pending"
+    "G2": "pass_real_trained_parallel_unordered_state",
+    "G3": "pass_real_trained_graph_validity_collision_and_item_resolution",
+    "G4": "pass_public_5_episode_and_external_250_episode_traces",
+    "G5": "pass_full_beauty_training_resume_chain_public_smoke_external_primary_and_verifier"
   },
   "input_sha256": {
     "source_audit": "3484a1efba2fd689d643ab2c064a40fc94658d0eb1a17873052e2be13b07ef33",
@@ -18,7 +18,9 @@
     "official_source_smoke": "2b738dfec7360edea081210ce4baa5d13af0633cbfe4a603e75f7fff680c18df",
     "cache_build_report": "b6ccf550369cb33e4db3887e209454809c31b77e8895062b3ffb95814531be59",
     "normalized_intake": "6d8641be60e8ed794f64069d6912ae84c1377cdc838864c9a2a985a889181726",
-    "c0_c5_report": "45a02bdfe2eda2e21b01e299c2b77f1bb32b4dc11d5bfef0cbb789248cd9807e"
+    "c0_c5_report": "45a02bdfe2eda2e21b01e299c2b77f1bb32b4dc11d5bfef0cbb789248cd9807e",
+    "trained_trace_evidence": "1fe529ba3c84f6d1fe750beeac9c9c4f5fb52f485b64f1bc77facb829a45b357",
+    "trained_public_smoke": "51909c1ee933fefca74f0b989a586f8fdcb84099528d2ec325355e1fe5b06d94"
   },
   "verified_outputs": {
     "trace_schema": "sidscope.rpg_parallel_trace.v1",
@@ -34,14 +36,24 @@
     "real_cache_collision_count": 2,
     "real_cache_items_in_collision_groups": 4,
     "real_cache_deterministic_replay": "pass",
-    "real_cache_c0_c5": "pass_non_paper_counted"
+    "real_cache_c0_c5": "pass_non_paper_counted",
+    "trained_checkpoint_sha256": "d0f957cdccb21ffe3d387bbfbac2c2036f84c941ac28f6e578b3550912d8e458",
+    "trained_public_episodes": 5,
+    "trained_external_episodes": 250,
+    "trained_external_hits_at_10": 8,
+    "trained_external_recall_at_10": 0.032,
+    "trained_target_universe_rows": 12101,
+    "trained_target_universe_sha256": "fb9dbdf70ca3994b2f9e1284415c94510b0e09ebcd9ee34b0fbc13a897929536",
+    "trained_trace_verification": "pass"
   },
   "promotion": {
-    "named_adapter": false,
-    "decision": "close_named_adapter",
-    "blockers": [
-      "No official checkpoint or precomputed .sem_ids cache is released; the verified Beauty cache is locally official-code-derived and not redistributed.",
-      "No trained official checkpoint or fully recorded official training output has passed G5."
+    "named_adapter": true,
+    "decision": "named_adapter",
+    "configuration_bound": "AmazonReviews2014/Beauty official architecture and locally fully recorded training output",
+    "restrictions": [
+      "The upstream RPG source remains CC BY-NC 4.0.",
+      "SIDScope redistributes no upstream source, raw data, embeddings, checkpoint, or complete semantic-ID cache.",
+      "The public trained smoke is bounded; the complete 250-episode trace and target universe remain externally hash-bound."
     ]
   }
 }

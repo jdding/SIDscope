@@ -12,6 +12,8 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
@@ -20,6 +22,7 @@ from sidinspector.adapters.rpg import (  # noqa: E402
     canonical_unordered_token_set,
     run_deterministic_graph_fixture,
 )
+from tools.verify_rpg_trained_trace_bundle import verify as verify_trained_trace  # noqa: E402
 
 
 AUDIT = ROOT / "docs/reproducibility/rpg_kdd2025_source_audit.json"
@@ -29,6 +32,11 @@ STATUS = ROOT / "docs/reproducibility/rpg_kdd2025_adapter_status.json"
 BUILD = ROOT / "docs/reproducibility/rpg_beauty_cache_build.json"
 INTAKE = ROOT / "docs/reproducibility/rpg_beauty_intake.json"
 CONFORMANCE = ROOT / "docs/reproducibility/conformance/rpg_beauty_report.json"
+TRAINED_EVIDENCE = ROOT / "docs/reproducibility/rpg_kdd2025_trained_trace_evidence.json"
+TRAINED_SMOKE = (
+    ROOT
+    / "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json"
+)
 PINNED_REVISION = "7dcf95ce9e08601810efdd1c850ed6dada5f97c2"
 
 
@@ -52,6 +60,8 @@ def verify() -> dict[str, Any]:
     build = _read_json(BUILD)
     intake = _read_json(INTAKE)
     conformance = _read_json(CONFORMANCE)
+    trained_evidence = _read_json(TRAINED_EVIDENCE)
+    trained_smoke = _read_json(TRAINED_SMOKE)
 
     if audit.get("schema") != "sidscope.generator_source_audit.v1":
         failures.append("source audit schema mismatch")
@@ -172,14 +182,45 @@ def verify() -> dict[str, Any]:
     if conformance.get("status") != "pass" or conformance.get("failed_levels") != []:
         failures.append("real RPG cache C0-C5 report does not pass")
 
+    try:
+        trained_verification = verify_trained_trace(trained_smoke)
+    except Exception as exc:
+        trained_verification = {}
+        failures.append(f"trained RPG public smoke failed: {type(exc).__name__}: {exc}")
+    if (
+        trained_evidence.get("schema") != "sidscope.rpg_trained_trace_evidence.v1"
+        or trained_evidence.get("status") != "pass"
+    ):
+        failures.append("trained RPG evidence summary does not pass")
+    public_evidence = trained_evidence.get("public_smoke", {})
+    external_evidence = trained_evidence.get("external_primary", {})
+    if public_evidence.get("sha256") != _sha256(TRAINED_SMOKE):
+        failures.append("trained RPG public smoke hash mismatch")
+    if public_evidence.get("verification_status") != "pass" or public_evidence.get("episodes") != 5:
+        failures.append("trained RPG public smoke evidence mismatch")
+    if (
+        external_evidence.get("verification_status") != "pass"
+        or external_evidence.get("episodes") != 250
+        or external_evidence.get("target_universe_rows") != 12101
+    ):
+        failures.append("trained RPG external primary evidence mismatch")
+    if public_evidence.get("target_universe_sha256") != external_evidence.get(
+        "target_universe_sha256"
+    ):
+        failures.append("trained RPG public and external target universes differ")
+    if trained_verification.get("checkpoint_sha256") != trained_evidence.get("training", {}).get(
+        "hashes", {}
+    ).get("best_checkpoint_sha256"):
+        failures.append("trained RPG checkpoint binding mismatch")
+
     gates = {
         "C0_C5": "pass_official_code_derived_beauty_cache_non_paper_counted_summary_only",
         "G0": "pass_with_noncommercial_reuse_restriction",
         "G1": "pass_real_official_beauty_item_sid_vocabulary_item_node_roundtrip",
-        "G2": "bounded_fixture_parallel_state_pass",
-        "G3": "bounded_fixture_validity_ambiguity_resolution_pass",
-        "G4": "bounded_fixture_trace_and_ranked_export_pass",
-        "G5": "partial_real_cache_cpu_fixture_and_official_source_untrained_smoke_pass_trained_asset_smoke_pending",
+        "G2": "pass_real_trained_parallel_unordered_state",
+        "G3": "pass_real_trained_graph_validity_collision_and_item_resolution",
+        "G4": "pass_public_5_episode_and_external_250_episode_traces",
+        "G5": "pass_full_beauty_training_resume_chain_public_smoke_external_primary_and_verifier",
     }
     input_sha256 = {
         "source_audit": _sha256(AUDIT),
@@ -188,6 +229,8 @@ def verify() -> dict[str, Any]:
         "cache_build_report": _sha256(BUILD),
         "normalized_intake": _sha256(INTAKE),
         "c0_c5_report": _sha256(CONFORMANCE),
+        "trained_trace_evidence": _sha256(TRAINED_EVIDENCE),
+        "trained_public_smoke": _sha256(TRAINED_SMOKE),
     }
     if status.get("schema") != "sidscope.rpg_generator_adapter_status.v1":
         failures.append("adapter status schema mismatch")
@@ -196,7 +239,7 @@ def verify() -> dict[str, Any]:
     if status.get("input_sha256") != input_sha256:
         failures.append("adapter status input hashes differ from current evidence")
     promotion = status.get("promotion", {})
-    if promotion.get("named_adapter") is not False or promotion.get("decision") != "close_named_adapter":
+    if promotion.get("named_adapter") is not True or promotion.get("decision") != "named_adapter":
         failures.append("adapter status promotion boundary mismatch")
     if status.get("verified_outputs", {}).get("expected_failure_label") != observed_failure:
         failures.append("adapter status expected-failure label mismatch")
@@ -208,8 +251,8 @@ def verify() -> dict[str, Any]:
         "source_revision": PINNED_REVISION,
         "gates": gates,
         "promotion": {
-            "named_adapter": False,
-            "reason": "The real official-data static cache now passes C0-C5 and G1, but no trained checkpoint or fully recorded official training output has passed G2-G5.",
+            "named_adapter": True,
+            "reason": "The pinned source, real Beauty identity round-trip, fully recorded trained output, method-faithful parallel traces, public smoke, external primary, and fail-closed verifier pass G0-G5.",
         },
         "fixture": {
             "trace_schema": trace.get("schema"),
@@ -224,6 +267,7 @@ def verify() -> dict[str, Any]:
             "runtime": smoke.get("runtime"),
             "boundary": smoke.get("boundary"),
         },
+        "trained_trace": trained_verification,
         "input_sha256": input_sha256,
         "adapter_status_sha256": _sha256(STATUS),
         "failures": failures,

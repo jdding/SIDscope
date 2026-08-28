@@ -1,7 +1,7 @@
 # RPG Generator Adapter Contract
 
-Status: real static Beauty cache C0--C5/G1 plus bounded generator contract;
-not a complete named-method adapter.
+Status: G0--G5 pass for the pinned Beauty configuration; complete
+configuration-bound named generator adapter.
 
 ## Source Boundary
 
@@ -27,9 +27,10 @@ left-to-right generation order or an autoregressive prefix.
 
 Every decoding-graph node is an item, not a unique token set. If two items
 share the same set, both item nodes remain visible and the resolution status is
-`ambiguous_item_nodes`. A trace must retain source item ID, normalized item ID,
-raw semantic codes, model-vocabulary tokens, the canonical unordered token
-set, and all resolved item IDs.
+`ambiguous_item_nodes`. The external identity audit binds source item ID to
+normalized item ID, semantic codes, model-vocabulary tokens, and all resolved
+item IDs. Public traces omit source identity and retain only normalized
+identity, codes, tokens, and collision-aware resolution.
 
 The generic C0--C5 static diagnostic report serializes codebook positions into
 `sid_level_*` columns. Its reported `prefix_counts` describe only that stable
@@ -40,12 +41,12 @@ G2 parallel-generation evidence.
 
 | Gate | RPG field mapping | Current state |
 | --- | --- | --- |
-| G0 | source URL, revision, paper DOI, code/paper licenses, configuration, training/checkpoint boundary, source-file hashes | Pass with CC BY-NC reuse restriction; no released checkpoint/cache |
+| G0 | source URL, revision, paper DOI, code/paper licenses, configuration, training/checkpoint boundary, source-file hashes | Pass with CC BY-NC reuse restriction and a fully recorded local training boundary |
 | G1 | `source_item_id`, `normalized_item_id`, `semantic_codes`, `model_vocabulary_tokens`, `resolved_item_ids` | Passes on all 12,101 Beauty items from a real official-code-derived cache; 2 token-set collisions covering 4 item nodes are retained |
-| G2 | `decode_state_kind=unordered_token_set_graph_propagation`, parallel token log probabilities, explicit initial item nodes, propagation steps and frontiers | Bounded fixture passes without prefix semantics |
-| G3 | `graph_valid`, `resolution_status`, `ambiguity_count`, collision groups and typed failure labels | Positive ambiguity case and expected invalid-token-set case pass |
-| G4 | deidentified trace ID, split ID, target universe, per-step candidates, ranked items, sum/mean log-probability scores and visited item nodes | Stable bounded export passes |
-| G5 | CPU fixture, expected failure, pinned-input hashes, verifier, and optional official-source model smoke | Partial: real cache build, deterministic replay, CPU fixture, and official source class smoke pass; trained checkpoint inference remains open |
+| G2 | `decode_state_kind=unordered_token_set_graph_propagation`, parallel token log probabilities, explicit initial item nodes, propagation steps and frontiers | Real trained public and external traces pass without prefix semantics |
+| G3 | `graph_valid`, `resolution_status`, collision groups and typed failure labels | Real trained item-node resolution plus positive and negative fixtures pass |
+| G4 | deidentified trace ID, split ID, target universe, per-step candidates, ranked items, sum/mean log-probability scores and visited item nodes | Public 5-episode and external 250-episode exports pass |
+| G5 | CPU fixture, expected failure, pinned-input hashes, fully recorded training, public smoke, external primary, and verifier | Pass; 127 epochs and 12,827 updates are hash-bound, with best epoch 107 and patience-20 early stopping |
 
 ## Reproduction
 
@@ -74,14 +75,27 @@ PYTHONPATH=src python3 tools/run_rpg_official_source_smoke.py \
 
 The bundled smoke uses a four-item, three-codebook dummy catalog and fixed
 random seed. It verifies that the official `RPG` class performs parallel
-per-codebook scoring and graph-valid item-node export on CPU. It is not a
-trained recommendation result and cannot promote the route to a named adapter.
+per-codebook scoring and graph-valid item-node export on CPU.
 
-## Promotion Blockers
+The real trained smoke is verified with:
 
-- Run the adapter over a trained official checkpoint or a fully recorded
-  official training output.
-- Export real split-bound traces and ranked items, then rerun G1--G5 over those
-  assets.
+```bash
+python3 tools/verify_rpg_trained_trace_bundle.py \
+  examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json
+```
+
+The public bundle contains five episodes and only 43 target-universe rows
+needed for their collision resolution. It shares a complete 12,101-row target
+universe hash with an external 250-episode bundle. Training, checkpoint,
+runner, exporter, verifier, input, public bundle, external bundle, and target
+universe hashes are recorded in
+`docs/reproducibility/rpg_kdd2025_trained_trace_evidence.json`.
+
+## Maintenance Boundary
+
 - Preserve the CC BY-NC boundary; do not redistribute official code, raw data,
   `.sem_ids`, or checkpoints through the SIDScope MIT package.
+- Keep the complete target universe and 250-episode trace external; publish
+  only their hashes, counts, verifier result, and the bounded smoke.
+- Rerun training closure only when the pinned source, data hash, cache hash, or
+  Beauty configuration changes.

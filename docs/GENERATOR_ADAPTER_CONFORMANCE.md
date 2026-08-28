@@ -60,12 +60,14 @@ Project-local workarounds may be attached as issue evidence, but they remain
 non-canonical until the corresponding SIDScope adapter and verifier pass. This
 prevents downstream projects from silently maintaining incompatible forks.
 
-RPG now has a pinned G0 source audit, a real official-code-derived Beauty OPQ
-cache that passes non-paper-counted C0--C5 and a 12,101-item G1 round-trip, a
-method-preserving G2--G4 bounded fixture, and a G5 official-source class smoke
-over deterministic untrained weights. It remains below named-adapter status
-because no trained checkpoint or fully recorded training output has passed
-real parallel decoding and ranked-item export. The exact boundary is in
+RPG now passes G0--G5 as a configuration-bound named generator adapter. Its
+pinned CC BY-NC source, real official-code-derived Beauty OPQ cache,
+non-paper-counted C0--C5 report, and 12,101-item G1 round-trip are joined to a
+fully recorded 127-epoch trained output. A public five-episode smoke and an
+external 250-episode primary preserve parallel codebook scores, unordered
+item-node graph propagation, collisions, ranked items, and a shared complete
+target-universe hash without exposing source identities or forcing prefix
+semantics. The exact boundary is in
 `docs/RPG_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/rpg_kdd2025_adapter_status.json`.
 

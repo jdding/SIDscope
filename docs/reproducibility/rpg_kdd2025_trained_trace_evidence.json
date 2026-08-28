@@ -1,0 +1,128 @@
+{
+  "schema": "sidscope.rpg_trained_trace_evidence.v1",
+  "status": "pass",
+  "route_id": "rpg_kdd2025",
+  "audited_at": "2026-08-28",
+  "source": {
+    "url": "https://github.com/facebookresearch/RPG_KDD2025",
+    "revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+    "license": "CC-BY-NC-4.0",
+    "source_model_sha256": "8d70fa9fde44279b3d0da9409e8e877b46ca4388d79442a2659d615336de6abc"
+  },
+  "training": {
+    "dataset": "AmazonReviews2014/Beauty",
+    "split": "leave_one_out",
+    "seed": 2024,
+    "configured_epochs": 150,
+    "completed_epochs": 127,
+    "global_steps": 12827,
+    "early_stopping": {
+      "metric": "ndcg@10",
+      "patience": 20,
+      "best_epoch": 107,
+      "best_value": 0.05665608495473862,
+      "patience_exhausted": true
+    },
+    "recorded_epoch_seconds": 2007.4325921535492,
+    "runtime": {
+      "python": "3.13.11",
+      "torch": "2.7.1+cu118",
+      "cuda_available": true
+    },
+    "configuration": {
+      "n_codebooks": 32,
+      "codebook_size": 256,
+      "learning_rate": 0.01,
+      "temperature": 0.03,
+      "num_beams": 20,
+      "n_edges": 200,
+      "propagation_steps": 3,
+      "train_batch_size": 256,
+      "eval_batch_size": 32,
+      "warmup_steps": 10000
+    },
+    "hashes": {
+      "first_epoch_manifest_sha256": "817830bc6b7fb26f25518fc5bdce9303468f5f914f5281432fd7e6189da58f46",
+      "resume_invocation_manifest_sha256": "42fca4e5f713c0655be1364c3abd18ea76bbd8d91aee31dba04162ea5c12c010",
+      "complete_run_manifest_sha256": "eb429b4c80ed8f19ebffe5c0fa8cbee1d7ca33b775cac170e25734a0313a11e2",
+      "best_checkpoint_sha256": "d0f957cdccb21ffe3d387bbfbac2c2036f84c941ac28f6e578b3550912d8e458",
+      "last_resumable_state_sha256": "8e01aab5240091ca0759496d269a68ad8269063f3be7af66ee926a72052083e6",
+      "formal_invocation_runner_sha256": "ed99908d76bdc0e141da654776b7f360c56b8fa231142b665dbe21dc3d50130e",
+      "public_reproduction_runner_sha256": "5dd7608c7a37b4e193c91351d87087864ba3ee693af7d59f9b00f6ab3e4f7e0c"
+    },
+    "manifest_continuity": {
+      "epoch_records": 127,
+      "first_epoch": 1,
+      "last_epoch": 127,
+      "resume_chain_verified": true
+    }
+  },
+  "resume_exactness_canary": {
+    "train_rows": 512,
+    "validation_rows": 64,
+    "epochs": 2,
+    "steps_per_epoch": 2,
+    "epoch_1_model_state_sha256": "b0aaf3b6d1633e7e5c399bc1256a36a7991fa07b4ee6750a7eea49cb24d2c615",
+    "uninterrupted_final_model_state_sha256": "9ea1e42b873e1b0b7f6ea96e003ea89f7531324cfc51276291b395889870f8a8",
+    "resumed_final_model_state_sha256": "9ea1e42b873e1b0b7f6ea96e003ea89f7531324cfc51276291b395889870f8a8",
+    "status": "pass_exact_model_state_and_epoch_metrics"
+  },
+  "input_sha256": {
+    "beauty_reviews": "e5925ec99023f1dc9c7d3dff7ef34cfeacd40d1b981b5525e1e4ba9c8abc18fe",
+    "beauty_metadata": "c7977dc0e0ead14ac7df8c1c6de74da00e4bebfad87a0f0c5763d4c5bc9b53a0",
+    "semantic_id_cache": "37419441821b4ab1b8caada6e9a785d866e27a1d57e1cc17de3ff2b1064201f5",
+    "item_mapping": "4d88fede709699e3415962419728b07dc8600140ebc000484dd371c81f66a0be",
+    "interaction_sequences": "43476d3f941f103d32ae58eb87da79c8894d76e3fb64da57f8e2d18c0c51d1b1",
+    "adjacency_int64": "517ee7e27e22ded9514d892d67888da20a98602ec73db277eba74882ea285124"
+  },
+  "tools": {
+    "exporter_sha256": "0f7d00443e221635220666cd6e3c00f98cabc20d7a8c0ea6de986c578bc755da",
+    "verifier_sha256": "2664930b01c1584330aa25ffbc894cfac9aaaf1b3c6a5a482c58876a39f6149c"
+  },
+  "public_smoke": {
+    "path": "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
+    "sha256": "51909c1ee933fefca74f0b989a586f8fdcb84099528d2ec325355e1fe5b06d94",
+    "bytes": 6212349,
+    "episodes": 5,
+    "hits_at_10": 1,
+    "recall_at_10": 0.2,
+    "published_target_rows": 43,
+    "target_universe_rows": 12101,
+    "target_universe_sha256": "fb9dbdf70ca3994b2f9e1284415c94510b0e09ebcd9ee34b0fbc13a897929536",
+    "visibility": "bounded_rows_full_universe_hash_bound",
+    "verification_sha256": "fa9468517ef5442d45ead1bb6aebc489c3a4e1a9723d7e40a9986d8bedb20b0e",
+    "verification_status": "pass"
+  },
+  "external_primary": {
+    "artifact_name": "rpg_beauty_trained_primary_250.json",
+    "sha256": "549e9386fa97a695df5a9ef9bce9cf9f9da1daad99f5b08910005ac78516d647",
+    "bytes": 326842158,
+    "episodes": 250,
+    "hits_at_10": 8,
+    "recall_at_10": 0.032,
+    "published_target_rows": 12101,
+    "target_universe_rows": 12101,
+    "target_universe_sha256": "fb9dbdf70ca3994b2f9e1284415c94510b0e09ebcd9ee34b0fbc13a897929536",
+    "visibility": "external_complete",
+    "verification_sha256": "61225fe0f373e86f3d83d3ee0b775ebe868d37a6bc81a48ecf79d99c618fa90d",
+    "verification_status": "pass"
+  },
+  "method_contract": {
+    "decode_state_kind": "unordered_token_set_graph_propagation",
+    "prefix_semantics_forbidden": true,
+    "parallel_codebook_scores_exported": true,
+    "initial_item_nodes_exported": true,
+    "per_step_candidates_scores_and_frontiers_exported": true,
+    "collision_resolution_exported": true,
+    "ranked_item_score_accounting_exported": true
+  },
+  "redistribution": {
+    "upstream_source_vendored": false,
+    "raw_data_vendored": false,
+    "embeddings_vendored": false,
+    "checkpoint_vendored": false,
+    "semantic_id_cache_vendored": false,
+    "complete_target_universe_vendored": false,
+    "public_policy": "bounded_deidentified_trace_rows_plus_external_hashes_counts_and_verification"
+  }
+}
