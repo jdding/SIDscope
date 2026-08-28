@@ -4,15 +4,18 @@ Last updated: 2026-08-28
 
 ## Executive status
 
-SIDScope 1.1.0 is locally release-ready and publicly released. The package
-version is `1.1.0`; the local tests, resource-package verifier, deterministic
-archive smoke, G8 clean-environment installation, and unauthenticated public
-URL smoke have passed. Annotated tag `v1.1.0` resolves to
+SIDScope 1.1.0 is locally release-ready and publicly released. Post-release
+development is now `1.1.1.dev0`, where RPG's trained parallel-decoding P0 is
+closed and passes G0--G5. The 1.1.1.dev0 local tests, resource-package
+verifier, deterministic archive smoke, and G8 clean-environment installation
+pass. Annotated tag `v1.1.0` remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
-Latte/PSID is the first configuration-bound named generator adapter admitted
-under the complete G0--G5 protocol. The other generator routes remain useful,
-typed partial integrations and must retain their documented gate labels.
+Latte/PSID and RPG are the two configuration-bound named generator adapters
+admitted under the complete G0--G5 protocol. RPG retains parallel/unordered
+token-set and graph item-node semantics. The other generator routes remain
+useful, typed partial integrations and must retain their documented gate
+labels.
 
 The submitted TOIS manuscript is a frozen, separate repository. Nothing in
 SIDScope 1.1 may be written back into that submission before an explicitly
@@ -26,9 +29,9 @@ authorized revision phase.
 - Upstream tracking branch: `sidscope/main`.
 - TOIS-submission software/resource base, public `v1.0.2`:
   `6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`.
-- Last implementation commit before this handoff document:
-  `3f46f0371a5a85a05ce0ba93b7343998a7def888`.
-- Version: `1.1.0` in both `pyproject.toml` and `setup.py`.
+- RPG P0 implementation commit before this handoff update:
+  `60e421fb2736ceeead3cff0f7ac9e2cd23a04b95`.
+- Development version: `1.1.1.dev0` in both `pyproject.toml` and `setup.py`.
 - Public release tag: `v1.1.0` at
   `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`.
 - Deterministic tag archive SHA-256:
@@ -114,6 +117,31 @@ Important implementation commits:
 - `3de91eb` -- prepare SIDScope 1.1.0.
 - `3f46f03` -- make the release archive deterministic.
 
+## Completed 1.1.1.dev0 P0 work
+
+RPG now passes G0--G5 as a configuration-bound named adapter. The closure
+uses the pinned CC BY-NC source and real official-code-derived Beauty cache,
+without vendoring upstream code or assets. The formal run completed 127 epochs
+and 12,827 updates, selected epoch 107 by validation NDCG@10, and stopped after
+the configured patience of 20.
+
+The public package contains a five-episode deidentified trained smoke with 43
+bounded normalized-item/SID resolution rows. An external 250-episode primary
+contains the complete 12,101-row target universe; the public evidence binds it
+by SHA-256, counts, split, checkpoint, training manifests, resumable state,
+runner, exporter, verifier, and target-universe hash. The external primary has
+8 Hit@10 episodes (`Recall@10=0.032`).
+
+Relevant evidence and contracts:
+
+- `docs/RPG_GENERATOR_ADAPTER.md`
+- `docs/reproducibility/rpg_kdd2025_adapter_status.json`
+- `docs/reproducibility/rpg_kdd2025_trained_trace_evidence.json`
+- `examples/rpg_generator_trained_trace_real_smoke/`
+- `tools/run_rpg_resumable_training.py`
+- `tools/export_rpg_trained_trace.py`
+- `tools/verify_rpg_trained_trace_bundle.py`
+
 ## Generator-route gate status
 
 The machine-readable authority is
@@ -122,7 +150,7 @@ The machine-readable authority is
 | Route | Current gate state | Allowed description | Next closure |
 | --- | --- | --- | --- |
 | Latte / PSID | G0--G5 pass | `named_adapter` | Maintain v2 compatibility and rerun both public real smoke bundles for every release archive. |
-| RPG | Real G0/G1 pass; G2--G4 fixture; G5 partial | `close_named_adapter` | Run trained parallel/unordered decoding from a checkpoint or fully recorded training output and export real G2--G5 evidence. |
+| RPG | G0--G5 pass on the pinned Beauty configuration | `named_adapter` | Maintain the bounded public smoke and rerun external training evidence only when the pinned source, cache, or configuration changes. |
 | TIGER / DACT | G1--G5 pass; G0 blocked by absent upstream code/asset license | `close_named_adapter` | Obtain explicit reuse permission; then rerun the 500-target primary with ancestry export before promotion. |
 | LLaDA-Rec | G2--G4 adaptive-unmasking fixture; G0 blocked and G1/trained evidence pending | `close_named_adapter` | Obtain an explicit source license plus fixed tokenizer/checkpoint assets; run real G1 and trained G4--G5. |
 | Item-Supported Decoding | Fail-closed overlay contract and exact-function smoke; G0 blocked, G1 fixture, G5 partial | `close_named_adapter` | Obtain an immutable official revision and license; bind data/checkpoints and export a real overlay trace. |
@@ -138,13 +166,13 @@ not a standalone generator.
 The exact working tree containing the three implementation commits above
 passed:
 
-- full tests: `118 passed, 6 skipped`;
+- full tests: `123 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
-- G8 isolated `sidinspector==1.1.0` install and verification: PASS;
-- manifest before this handoff row: 175 rows, 172 public rows, 0 pending;
-- archive contents before this handoff row: 244 public files.
+- G8 isolated `sidinspector==1.1.1.dev0` install and verification: PASS;
+- manifest before this handoff update: 182 rows, 179 public rows, 0 pending;
+- archive contents before this handoff update: 252 public files.
 
 Because this document updates the public manifest, a resumed session must use
 the commands below to obtain the current archive counts and SHA-256. Treat the
@@ -162,16 +190,16 @@ git remote -v
 python3 -m pytest -q
 python3 tools/verify_sidscope_resource_package.py
 python3 tools/build_sidscope_release_candidate_archive.py \
-  --output /tmp/sidscope-v1.1.0.zip
+  --output /tmp/sidscope-v1.1.1.dev0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-v1.1.0.zip
+  /tmp/sidscope-v1.1.1.dev0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.1.0.zip
+  --archive /tmp/sidscope-v1.1.1.dev0.zip
 ```
 
-The checks are CPU-only. A new GPU run is not required to publish the already
-verified bounded trained evidence. A GPU is required only for a newly scoped
-trained-route closure such as RPG G2--G5.
+The release checks are CPU-only. A new GPU run is not required to reverify the
+already closed RPG evidence. GPU work is required only for a newly scoped
+trained route such as LLaDA-Rec.
 
 The separate public URL gate passed for `v1.1.0` and should be rerun after any
 future public release-surface change:
@@ -195,10 +223,10 @@ boundary. Publication is closed as follows:
 4. final tag, commit, URL, archive checksum, and transcript are recorded in
    `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
 
-RPG trained closure, TIGER/DACT license closure, LLaDA-Rec real trained
-evidence, ISD immutable-source closure, and ChronoSID source availability are
-post-1.1.0 maintenance items unless the user explicitly changes the release
-scope. They must not silently delay or inflate the 1.1.0 claim.
+RPG trained closure is complete in 1.1.1.dev0. TIGER/DACT license closure,
+LLaDA-Rec real trained evidence, ISD immutable-source closure, and ChronoSID
+source availability remain post-1.1.0 maintenance items. They must not
+silently change the immutable 1.1.0 claim.
 
 ## Resume protocol
 
@@ -215,11 +243,12 @@ scope. They must not silently delay or inflate the 1.1.0 claim.
 Expected status at this handoff:
 
 ```text
-LOCAL_RELEASE_READY: PASS
-PUBLIC_RELEASED: YES
-PUBLIC_RELEASE_TAG: v1.1.0
-PUBLIC_RELEASE_COMMIT: a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
+LOCAL_DEVELOPMENT_READY_1_1_1_DEV0: PASS
+PUBLIC_RELEASED_1_1_1: NO
+PUBLIC_RELEASED_1_1_0: YES
+PUBLIC_RELEASE_TAG_1_1_0: v1.1.0
+PUBLIC_RELEASE_COMMIT_1_1_0: a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
 LATTE_PSID_NAMED_ADAPTER: PASS_G0_G5
-RPG_TRAINED_G2_G5: OPEN_POST_1_1_0
+RPG_NAMED_ADAPTER: PASS_G0_G5
 TOIS_FROZEN_SUBMISSION: UNCHANGED_OUT_OF_SCOPE
 ```
