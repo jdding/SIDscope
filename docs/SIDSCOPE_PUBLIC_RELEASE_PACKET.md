@@ -1,7 +1,6 @@
 # SIDScope Public Release Packet
 
-Status: v1.1.0 local release-candidate gates pass; public tag and URL smoke
-pending explicit authorization
+Status: v1.1.0 publication authorized; public tag and URL smoke in progress
 Last updated: 2026-08-28
 
 This packet records the exact public/reviewer release surface for the SIDScope
@@ -11,6 +10,9 @@ reviewer-facing package changes.
 The public GitHub repository is a reviewer-visible and post-acceptance open
 source release surface, not the full private project workspace; local paper
 drafts, AutoDL payloads, large caches, and planning records stay out of it.
+Public `v1.0.2` remains the immutable SIDScope software/resource version bound
+to the submitted TOIS package. Version 1.1.0 is a post-submission maintenance
+release and does not modify that frozen paper or submission snapshot.
 
 ## Candidate Release Identity
 
@@ -22,8 +24,8 @@ candidate_public_url: https://github.com/jdding/sidscope
 candidate_release_ref: v1.1.0
 candidate_archive_name: sidscope-v1.1.0.zip
 local_archive_path: /tmp/sidscope-v1.1.0.zip
-candidate_commit: release commit containing this packet
-release_tag: not created
+candidate_commit: resolved by the v1.1.0 tag at publication
+release_tag: v1.1.0 authorized; create at the release commit
 final_tag_archive_sha256: record externally after the final tag to avoid a self-referential archive hash
 public_url_smoke: pending tag and publication
 ```
@@ -103,12 +105,11 @@ LOCAL_RELEASE_CANDIDATE: PASS_CURRENT
 LOCAL_TESTS_AND_RESOURCE_VERIFIER: PASS_CURRENT
 LOCAL_ARCHIVE_AND_EXTRACTED_SMOKE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT with isolated sidinspector==1.1.0 install
-RELEASE_REF: v1.1.0_NOT_CREATED
+RELEASE_REF: v1.1.0_AUTHORIZED_PENDING_PUBLICATION
 HOSTED_ARCHIVE_VERIFIED: NOT_USED
 G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_TAG_AND_PUBLICATION
 ```
 
-`jdding/sidscope` is the clean official release surface. No v1.1.0 tag or push
-is performed by local release verification. Rerun public URL smoke after the
-authorized tag is published and before using the URL in a submission or claim
-ledger.
+`jdding/sidscope` is the clean official release surface. Publication of
+`v1.1.0` has been authorized. Rerun public URL smoke after the tag is published
+and before using the URL in a submission or claim ledger.

@@ -23,7 +23,7 @@ authorized revision phase.
   `SIDInspector` workspace.
 - Branch: `codex/sidscope-v1.1`.
 - Upstream tracking branch: `sidscope/main`.
-- Public v1.0.2 base:
+- TOIS-submission software/resource base, public `v1.0.2`:
   `6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`.
 - Last implementation commit before this handoff document:
   `3f46f0371a5a85a05ce0ba93b7343998a7def888`.

@@ -13,9 +13,13 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
 
 ## SIDScope v1.1.0: Generator adapter maintenance
 
-Release candidate: 2026-08-28
-Tag: pending explicit authorization
+Release date: 2026-08-28
+Tag: `v1.1.0`
 Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
+
+`v1.0.2` is the immutable public SIDScope software/resource version bound to
+the submitted TOIS package. Version 1.1.0 is post-submission maintenance and
+does not revise the frozen paper, submission package, evidence, or claims.
 
 - Replaced path-name model detection with an explicit SentenceTransformer
   loader that accepts local Sentence-T5 checkpoints and registry identifiers.
@@ -122,7 +126,7 @@ Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
   exact-function source smoke, verifier, and package tests. ISD is no longer a
   source-watch route, but remains below named-adapter status.
 
-## SIDScope v1.0.2 public-smoke dependency fix
+## SIDScope v1.0.2 TOIS submission software/resource release
 
 Date: 2026-08-20
 Tag: `v1.0.2`
@@ -132,6 +136,9 @@ Tag: `v1.0.2`
   package verifiers.
 - Added a regression assertion that forbids the previous `--no-deps` path.
 - No diagnostic definition, evidence row, or manuscript result changes.
+- This tag is the immutable public SIDScope software/resource ref used by the
+  submitted TOIS package; the separately frozen paper repository remains the
+  authority for the submitted manuscript and submission files.
 
 ## SIDScope v1.0.0 reviewer release
 

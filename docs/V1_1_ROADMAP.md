@@ -2,7 +2,7 @@
 
 Version: `1.1.0`
 Branch: `codex/sidscope-v1.1`
-Base: public `v1.0.2` at
+Base: TOIS-submission software/resource version, public `v1.0.2` at
 `6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`
 
 ## Boundary

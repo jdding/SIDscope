@@ -20,6 +20,9 @@ Release refs:
 
 - `main`: current clean SIDScope public repository surface at
   `https://github.com/jdding/sidscope`.
+- `v1.0.2`: immutable public SIDScope software/resource version bound to the
+  submitted TOIS package; later maintenance releases do not revise that
+  submission snapshot or its claims.
 - `sidscope-v1-tois-submission`: frozen journal-submission package.
 - `sidscope-v1-tois-revision-N`: revised journal packages when requested by
   the editor; each tag must bind a verifier record and archive checksum.
