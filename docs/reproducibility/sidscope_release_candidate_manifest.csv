@@ -1,5 +1,6 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
 package_readme,README.md,entrypoint,documentation,yes,pass_local,Reviewer-facing repository entrypoint and quickstart.
+development_handoff,HANDOFF.md,maintenance_handoff,documentation,yes,pass_local,Current standalone repository state gate boundaries verification commands and post-release decisions for safe continuation.
 license,LICENSE,license,documentation,yes,pass_local,Repository license for code package.
 package_metadata,pyproject.toml,install,documentation,yes,pass_local,Editable install metadata.
 legacy_setup,setup.py,install,documentation,yes,pass_local,Compatibility shim for editable install on older reviewer pip/setuptools stacks.
