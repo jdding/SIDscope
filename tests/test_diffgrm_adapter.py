@@ -116,18 +116,20 @@ def test_duplicate_episode_selection_is_typed() -> None:
     assert raised.value.label == "duplicate_episode_selection"
 
 
-def test_staged_preflight_does_not_execute_or_authorize_source() -> None:
+def test_staged_preflight_does_not_execute_source_and_keeps_license_as_marker() -> None:
     result = inspect_source()
     assert result["status"] == "pass"
     assert result["source_code_imported"] is False
     assert result["source_code_executed"] is False
-    assert result["execution_authorized"] is False
+    assert result["execution_authorized"] is True
+    assert result["redistribution_authorized"] is False
 
 
-def test_full_adapter_verifier_passes_and_keeps_promotion_closed() -> None:
+def test_full_adapter_verifier_passes_and_keeps_promotion_evidence_bound() -> None:
     result = verify()
     assert result["status"] == "pass"
     assert result["promotion"]["named_adapter"] is False
+    assert result["promotion"]["execution_authorized"] is True
     assert result["upstream_source_executed"] is False
     assert result["gpu_used"] is False
     assert set(result["expected_failures"].values()) == {

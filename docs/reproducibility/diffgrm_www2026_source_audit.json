@@ -18,7 +18,7 @@
     "license_identifier": "NOASSERTION",
     "license_files_found": [],
     "redistribution_policy": "link_and_hash_only_no_upstream_source_redistribution",
-    "execution_policy": "staged_contract_only_pending_explicit_author_permission"
+    "execution_policy": "license_is_a_marker_not_an_experiment_gate_downstream_scope_still_required"
   },
   "source_sha256": {
     "README.md": "a822a2461afae4428e41f8985486616a0f566434b92b5d44e77b533f22b48096",
@@ -56,9 +56,11 @@
   },
   "promotion_boundary": {
     "publication_and_revision_identity": "pass",
-    "g0_permission": "pending_explicit_author_code_permission",
+    "g0_source_identity": "pass",
+    "license_marker": "NOASSERTION",
     "named_adapter": false,
-    "upstream_execution_allowed": false,
-    "gpu_work_allowed": false
+    "upstream_execution_allowed": true,
+    "gpu_work_allowed_when_separately_scoped": true,
+    "redistribution_allowed": false
   }
 }

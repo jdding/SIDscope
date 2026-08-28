@@ -184,6 +184,7 @@ REQUIRED_FILES = [
     "tools/verify_llada_rec_adapter.py",
     "tools/preflight_diffgrm_adapter.py",
     "tools/verify_diffgrm_adapter.py",
+    "tools/verify_diffgrm_trained_trace_bundle.py",
     "tools/run_isd_official_source_smoke.py",
     "tools/verify_isd_adapter.py",
     "tools/verify_sidscope_d7_labeled_trace_release.py",
@@ -201,6 +202,7 @@ REQUIRED_FILES = [
     "tests/test_latte_adapter.py",
     "tests/test_llada_rec_adapter.py",
     "tests/test_diffgrm_adapter.py",
+    "tests/test_diffgrm_trained_trace_bundle.py",
     "tests/test_isd_adapter.py",
 ]
 
@@ -569,6 +571,18 @@ def main() -> None:
         run([sys.executable, "tools/verify_llada_rec_adapter.py"]),
         run([sys.executable, "tools/preflight_diffgrm_adapter.py"]),
         run([sys.executable, "tools/verify_diffgrm_adapter.py"]),
+        run(
+            [
+                sys.executable,
+                "tools/verify_diffgrm_trained_trace_bundle.py",
+                "--prepared",
+                "examples/diffgrm_masked_diffusion_fixture/prepared_dataset.json",
+                "--selection",
+                "examples/diffgrm_masked_diffusion_fixture/episode_selection.json",
+                "--bundle",
+                "examples/diffgrm_masked_diffusion_fixture/trained_trace_fixture.json",
+            ]
+        ),
         run([sys.executable, "tools/verify_isd_adapter.py"]),
         run([sys.executable, "tools/verify_adapter_conformance_assets.py"]),
         run([sys.executable, "tools/verify_resot_resource_walkthrough.py"]),

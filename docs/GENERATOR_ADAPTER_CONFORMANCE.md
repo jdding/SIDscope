@@ -96,9 +96,13 @@ The Web Conference 2026 paper, DOI, official repository, immutable revision,
 four-position OPQ identity, and non-vendoring boundary are bound. A
 dataset-neutral CPU contract preserves forward noising, adaptive reverse
 masked states, real beam ancestry, raw pre-filter tuples, exact collision-aware
-resolution, and typed rank censoring. The official repository has no detected
-root license, so upstream import/execution, GPU work, redistribution, and named
-adapter promotion remain closed pending explicit author permission. See
+resolution, and typed rank censoring. Its missing root license is recorded as a
+`NOASSERTION` marker and does not block development, experiments, verification,
+or derived-evidence delivery; upstream redistribution remains outside the
+adapter. An independent three-file CLI now verifies real prepared, selection,
+and checkpoint-bound v2 trace bundles without replaying source/license audit.
+Named promotion remains open only because trained trace and diagnostic evidence
+are incomplete. See
 `docs/DIFFGRM_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/diffgrm_www2026_adapter_status.json`.
 

@@ -33,12 +33,12 @@ STAGED_PREFLIGHT = ROOT / "docs/reproducibility/diffgrm_www2026_staged_preflight
 STATUS = ROOT / "docs/reproducibility/diffgrm_www2026_adapter_status.json"
 PINNED_REVISION = "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c"
 GATES = {
-    "G0": "blocked_explicit_code_permission_pending_publication_and_revision_identity_pass",
-    "G1": "dataset_neutral_prepared_and_ordered_selection_fixture_pass_real_vg_roundtrip_pending",
+    "G0": "pass_publication_revision_source_identity_license_noassertion_marker_nonredistribution",
+    "G1": "dataset_neutral_fixture_pass_downstream_vg_opq4_roundtrip_and_five_bucket_selection_reported_pass",
     "G2": "native_masked_noising_and_adaptive_denoising_fixture_pass_trained_trace_pending",
     "G3": "raw_pre_filter_validity_collision_resolution_and_typed_failure_fixture_pass",
     "G4": "ranked_item_and_right_censoring_contract_pass_checkpoint_bound_export_pending",
-    "G5": "staged_cpu_contract_and_verifier_pass_upstream_execution_and_gpu_work_prohibited",
+    "G5": "staged_fixture_and_independent_real_bundle_verifiers_pass_checkpoint_bound_native_trace_pending",
 }
 
 
@@ -139,16 +139,20 @@ def verify() -> dict[str, Any]:
         failures.append("source audit must preserve the no-license boundary")
     if promotion.get("named_adapter") is not False:
         failures.append("source audit prematurely promotes a named adapter")
-    if promotion.get("upstream_execution_allowed") is not False:
-        failures.append("source audit prematurely authorizes upstream execution")
+    if promotion.get("upstream_execution_allowed") is not True:
+        failures.append("source audit must keep the license marker separate from execution")
+    if promotion.get("redistribution_allowed") is not False:
+        failures.append("source audit must retain the non-redistribution boundary")
 
     replayed_preflight = inspect_source()
     if staged != replayed_preflight:
         failures.append("staged preflight is not reproducible from the pinned audit")
-    if staged.get("execution_authorized") is not False or staged.get(
+    if staged.get("execution_authorized") is not True or staged.get(
         "source_code_executed"
     ) is not False:
-        failures.append("staged preflight must remain non-executing")
+        failures.append("staged preflight identity must pass without executing source")
+    if staged.get("redistribution_authorized") is not False:
+        failures.append("staged preflight must not authorize redistribution")
 
     try:
         positive = validate_trace_bundle(trace, prepared, selection)
@@ -189,7 +193,7 @@ def verify() -> dict[str, Any]:
         "expected_failures": FIXTURE / "expected_failures.json",
     }
     input_sha256 = {name: _sha256(path) for name, path in evidence_paths.items()}
-    if status.get("schema") != "sidscope.diffgrm_adapter_status.v1":
+    if status.get("schema") != "sidscope.diffgrm_adapter_status.v2":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != GATES:
         failures.append("adapter status gates differ from executable verifier")
@@ -199,8 +203,8 @@ def verify() -> dict[str, Any]:
     if (
         status_promotion.get("named_adapter") is not False
         or status_promotion.get("decision") != "close_named_adapter"
-        or status_promotion.get("execution_authorized") is not False
-        or status_promotion.get("gpu_work_authorized") is not False
+        or status_promotion.get("execution_authorized") is not True
+        or status_promotion.get("redistribution_authorized") is not False
     ):
         failures.append("adapter promotion boundary mismatch")
 
@@ -217,8 +221,9 @@ def verify() -> dict[str, Any]:
         "gpu_used": False,
         "promotion": {
             "named_adapter": False,
-            "execution_authorized": False,
-            "reason": "Explicit author code permission and real VG G1-G5 evidence remain pending.",
+            "execution_authorized": True,
+            "redistribution_authorized": False,
+            "reason": "License is recorded separately; checkpoint-bound native trace and trained G2-G5 evidence remain pending.",
         },
         "input_sha256": input_sha256,
         "failures": failures,

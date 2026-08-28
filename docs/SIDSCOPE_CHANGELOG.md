@@ -11,6 +11,17 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.1.1.dev0: DiffGRM external trained-trace verification
+
+- Added `sidscope.diffgrm_masked_trace_bundle.v2` checkpoint, training, source,
+  configuration, and SID-cache bindings while retaining schema-v1 fixture
+  compatibility.
+- Added a fail-closed three-file DiffGRM verifier that is independent of the
+  source/license audit and reports canonical hashes, five-bucket metrics, rank
+  censoring, resolution, duplication, and compute summaries.
+- Added positive and typed negative tests for prepared binding, native parent
+  ancestry, and canonical configuration hashes.
+
 ## SIDScope v1.1.1.dev0: DiffGRM staged masked/diffusion adapter
 
 - Selected the The Web Conference 2026 DiffGRM route as the

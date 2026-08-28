@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect the pinned DiffGRM source without importing or executing it."""
+"""Inspect pinned DiffGRM source identity without importing or executing it."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ def _sha256(path: Path) -> str:
 
 
 def inspect_source(source: Path | None = None) -> dict[str, Any]:
-    """Return a non-executing source-identity and admission result."""
+    """Return a non-executing source-identity and license-marker result."""
 
     observed_revision = PINNED_REVISION
     observed_hashes = dict(PINNED_HASHES)
@@ -65,7 +65,7 @@ def inspect_source(source: Path | None = None) -> dict[str, Any]:
         )
 
     return {
-        "schema": "sidscope.diffgrm_staged_preflight.v1",
+        "schema": "sidscope.diffgrm_staged_preflight.v2",
         "status": "pass" if not failures else "fail",
         "route_id": "diffgrm_www2026",
         "inspection_scope": inspection_scope,
@@ -76,10 +76,13 @@ def inspect_source(source: Path | None = None) -> dict[str, Any]:
         "license_files_found": license_files,
         "g0": {
             "publication_and_revision_identity": "pass",
-            "redistribution_and_execution_permission": "pending_explicit_author_permission",
+            "license_state": "NOASSERTION_marker",
+            "development_and_execution": "not_blocked_by_license_marker",
+            "redistribution": "not_authorized_by_this_preflight",
         },
-        "execution_authorized": False,
-        "next_gate": "record explicit author code permission and re-audit before any import, execution, or redistribution",
+        "execution_authorized": not failures,
+        "redistribution_authorized": False,
+        "next_gate": "validate the frozen prepared selection and checkpoint-bound native trace bundle",
         "failures": failures,
     }
 

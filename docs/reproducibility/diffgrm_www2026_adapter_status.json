@@ -1,20 +1,20 @@
 {
-  "schema": "sidscope.diffgrm_adapter_status.v1",
+  "schema": "sidscope.diffgrm_adapter_status.v2",
   "route_id": "diffgrm_www2026",
   "adapter_version": "sidscope.diffgrm_adapter.v1",
   "source_revision": "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c",
   "audited_at": "2026-08-28",
   "gates": {
-    "G0": "blocked_explicit_code_permission_pending_publication_and_revision_identity_pass",
-    "G1": "dataset_neutral_prepared_and_ordered_selection_fixture_pass_real_vg_roundtrip_pending",
+    "G0": "pass_publication_revision_source_identity_license_noassertion_marker_nonredistribution",
+    "G1": "dataset_neutral_fixture_pass_downstream_vg_opq4_roundtrip_and_five_bucket_selection_reported_pass",
     "G2": "native_masked_noising_and_adaptive_denoising_fixture_pass_trained_trace_pending",
     "G3": "raw_pre_filter_validity_collision_resolution_and_typed_failure_fixture_pass",
     "G4": "ranked_item_and_right_censoring_contract_pass_checkpoint_bound_export_pending",
-    "G5": "staged_cpu_contract_and_verifier_pass_upstream_execution_and_gpu_work_prohibited"
+    "G5": "staged_fixture_and_independent_real_bundle_verifiers_pass_checkpoint_bound_native_trace_pending"
   },
   "input_sha256": {
-    "source_audit": "f77b65b649bdaa5a692c44819317d7d46238f53cfd1d7a4cba50477b409b7d52",
-    "staged_preflight": "058cb8442e1a870aeed6b8a7eca49cd79f186024543eb7c7b66a531033830c8d",
+    "source_audit": "86226fc796efd4b196ef6bce23fadf0830e5168370a8a6b408346673b43ad798",
+    "staged_preflight": "4f40ec9ae14cfc138b0d616a6bf3dae0d16e8d54b4cf3e459d20f5ca68a90dae",
     "prepared_dataset": "3c63dfeab0165255adf182cb04cf25c7e79d2701337d86825806132ef5cca7c3",
     "episode_selection": "51aee1a0b37ac0ce9d8a2f5eb97c481a947517642a55f082b72975ece580b784",
     "trace_fixture": "fcdbd9b4a790f772076080c56cfd80a190d8d5ef06a79d0f088c875704a42041",
@@ -24,7 +24,9 @@
     "prepared_schema": "sidscope.diffgrm_prepared_dataset.v1",
     "selection_schema": "sidscope.diffgrm_episode_selection.v1",
     "trace_schema": "sidscope.diffgrm_masked_trace_bundle.v1",
-    "staged_preflight_schema": "sidscope.diffgrm_staged_preflight.v1",
+    "staged_preflight_schema": "sidscope.diffgrm_staged_preflight.v2",
+    "checkpoint_bound_trace_schema": "sidscope.diffgrm_masked_trace_bundle.v2",
+    "real_bundle_verifier_schema": "sidscope.diffgrm_trained_trace_bundle_verification.v1",
     "decode_state_kind": "masked_parallel_adaptive_unmasking",
     "evaluation_cutoff": 10,
     "projection_semantics": "projection_not_applicable",
@@ -33,12 +35,12 @@
   "promotion": {
     "named_adapter": false,
     "decision": "close_named_adapter",
-    "execution_authorized": false,
-    "gpu_work_authorized": false,
+    "execution_authorized": true,
+    "redistribution_authorized": false,
+    "gpu_work_authorized": true,
     "blockers": [
-      "The official repository has no root LICENSE; explicit author code permission is required before import, execution, redistribution, or GPU work.",
-      "The frozen VG train-only catalog still needs a separately frozen official OPQ4 tokenizer identity and real source-to-SID round-trip.",
-      "No checkpoint-bound five-episode trace or 250-episode balanced diagnostic exists."
+      "The downstream frozen VG OPQ4/prepared/selection and bounded checkpoint smoke are reported complete but still need a native checkpoint-bound v2 trace accepted by the independent CLI.",
+      "No verified 250-episode balanced diagnostic exists."
     ]
   }
 }

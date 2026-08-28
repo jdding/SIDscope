@@ -14,13 +14,17 @@ from dataclasses import dataclass
 import hashlib
 import json
 import math
+import re
 from typing import Any, Mapping, Sequence
 
 
 PREPARED_SCHEMA = "sidscope.diffgrm_prepared_dataset.v1"
 SELECTION_SCHEMA = "sidscope.diffgrm_episode_selection.v1"
 TRACE_SCHEMA = "sidscope.diffgrm_masked_trace_bundle.v1"
+TRACE_SCHEMA_V2 = "sidscope.diffgrm_masked_trace_bundle.v2"
 ADAPTER_VERSION = "sidscope.diffgrm_adapter.v1"
+SOURCE_REVISION = "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c"
+CANONICAL_GAP_BUCKETS = ("short", "30-90d", "90-180d", "180-365d", ">365d")
 N_DIGIT = 4
 CODEBOOK_SIZE = 256
 PAD_TOKEN = 0
@@ -28,6 +32,18 @@ BOS_TOKEN = 1
 EOS_TOKEN = 2
 SID_OFFSET = 3
 MASK_TOKEN = -1
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_FORBIDDEN_EXPORT_KEYS = {
+    "source_item_id",
+    "source_user_id",
+    "raw_item_id",
+    "raw_user_id",
+    "user_id",
+    "asin",
+    "checkpoint_path",
+    "source_path",
+    "private_path",
+}
 
 
 class DiffGRMContractError(ValueError):
@@ -58,9 +74,83 @@ def canonical_sha256(value: Any) -> str:
 
 def _require_sha256(value: Any, field: str) -> str:
     text = str(value)
-    if len(text) != 64 or any(character not in "0123456789abcdef" for character in text):
+    if not _SHA256.fullmatch(text):
         raise DiffGRMContractError("invalid_sha256", f"{field} must be lowercase SHA-256")
     return text
+
+
+def _reject_identity_and_private_path_leaks(value: Any, location: str = "bundle") -> None:
+    if isinstance(value, Mapping):
+        for key, child in value.items():
+            lowered = str(key).lower()
+            if lowered in _FORBIDDEN_EXPORT_KEYS:
+                raise DiffGRMContractError(
+                    "identity_or_private_path_leak", f"forbidden field {location}.{key}"
+                )
+            _reject_identity_and_private_path_leaks(child, f"{location}.{key}")
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            _reject_identity_and_private_path_leaks(child, f"{location}[{index}]")
+    elif isinstance(value, str) and value.startswith("/"):
+        raise DiffGRMContractError(
+            "identity_or_private_path_leak", f"absolute private path at {location}"
+        )
+
+
+def _validate_trained_bindings(bundle: Mapping[str, Any]) -> dict[str, Any]:
+    schema = bundle.get("schema")
+    source_revision = bundle.get("source_revision")
+    if source_revision != SOURCE_REVISION:
+        raise DiffGRMContractError(
+            "source_revision_mismatch", "trace is not bound to the pinned DiffGRM revision"
+        )
+    if schema == TRACE_SCHEMA:
+        return {
+            "binding_level": "legacy_v1_contract_fixture",
+            "source_revision": source_revision,
+        }
+    if schema != TRACE_SCHEMA_V2:
+        raise DiffGRMContractError("trace_schema_mismatch", "unexpected trace schema")
+    if bundle.get("evidence_kind") not in {
+        "checkpoint_bound_trained_smoke",
+        "checkpoint_bound_trained_diagnostic",
+    }:
+        raise DiffGRMContractError(
+            "trained_evidence_kind_required", "v2 requires checkpoint-bound trained evidence"
+        )
+    configuration = bundle.get("configuration")
+    if not isinstance(configuration, Mapping):
+        raise DiffGRMContractError("missing_configuration", "configuration must be an object")
+    seed = configuration.get("seed")
+    if not isinstance(seed, int) or isinstance(seed, bool):
+        raise DiffGRMContractError("missing_training_seed", "v2 configuration requires an integer seed")
+    evidence = bundle.get("evidence")
+    if not isinstance(evidence, Mapping):
+        raise DiffGRMContractError("missing_trained_bindings", "v2 evidence must be an object")
+    if evidence.get("source_revision") != source_revision:
+        raise DiffGRMContractError(
+            "source_binding_mismatch", "evidence source revision differs from trace identity"
+        )
+    required_hashes = (
+        "source_manifest_sha256",
+        "configuration_sha256",
+        "checkpoint_sha256",
+        "training_manifest_sha256",
+        "semantic_id_cache_sha256",
+    )
+    bindings = {"source_revision": source_revision, "seed": seed}
+    for field in required_hashes:
+        bindings[field] = _require_sha256(evidence.get(field), f"evidence.{field}")
+    expected_configuration_sha256 = canonical_sha256(configuration)
+    if bindings["configuration_sha256"] != expected_configuration_sha256:
+        raise DiffGRMContractError(
+            "configuration_binding_mismatch",
+            "evidence configuration hash differs from the canonical configuration",
+        )
+    for field, value in evidence.items():
+        if field.endswith("_sha256") and field not in required_hashes:
+            _require_sha256(value, f"evidence.{field}")
+    return {"binding_level": "checkpoint_bound_v2", **bindings}
 
 
 def model_vocabulary_tokens(
@@ -345,10 +435,12 @@ def validate_trace_bundle(
 
     prepared_result = validate_prepared_dataset(prepared)
     selection_result = validate_episode_selection(selection, prepared)
-    if bundle.get("schema") != TRACE_SCHEMA:
-        raise DiffGRMContractError("trace_schema_mismatch", "unexpected trace schema")
+    _reject_identity_and_private_path_leaks(bundle)
+    bindings = _validate_trained_bindings(bundle)
     if bundle.get("adapter_version") != ADAPTER_VERSION:
         raise DiffGRMContractError("adapter_version_mismatch", "unexpected adapter version")
+    if bundle.get("route_id") != "diffgrm_www2026":
+        raise DiffGRMContractError("route_mismatch", "trace route must be diffgrm_www2026")
     if bundle.get("prepared_dataset_contract_sha256") != canonical_sha256(prepared):
         raise DiffGRMContractError("prepared_binding_mismatch", "trace prepared binding mismatch")
     if bundle.get("episode_selection_manifest_sha256") != canonical_sha256(selection):
@@ -379,7 +471,37 @@ def validate_trace_bundle(
     censored_count = 0
     invalid_raw_count = 0
     duplicate_count = 0
-    for episode in episodes:
+    unique_candidate_count = 0
+    generation_search_miss_count = 0
+    resolution_loss_count = 0
+    ranking_conversion_miss_count = 0
+    nfe_total = 0
+    forward_calls_total = 0
+    logits_total = 0
+    expansion_total = 0
+    visited_total = 0
+    latency_total = 0.0
+    five_bucket_counts = {bucket: 0 for bucket in CANONICAL_GAP_BUCKETS}
+    bucket_hits = {bucket: 0 for bucket in CANONICAL_GAP_BUCKETS}
+    bucket_ndcg = {bucket: 0.0 for bucket in CANONICAL_GAP_BUCKETS}
+    for episode, selected in zip(episodes, selection["episodes"]):
+        if str(episode.get("target_normalized_item_id")) != str(
+            selected.get("target_normalized_item_id")
+        ):
+            raise DiffGRMContractError(
+                "episode_target_mismatch", "trace target differs from selected target"
+            )
+        gap_bucket = str(selected.get("gap_bucket"))
+        if str(episode.get("gap_bucket")) != gap_bucket:
+            raise DiffGRMContractError(
+                "episode_bucket_mismatch", "trace bucket differs from evaluator-side selection"
+            )
+        if bundle.get("schema") == TRACE_SCHEMA_V2 and gap_bucket not in five_bucket_counts:
+            raise DiffGRMContractError(
+                "unknown_gap_bucket", f"unsupported natural gap bucket {gap_bucket!r}"
+            )
+        if gap_bucket in five_bucket_counts:
+            five_bucket_counts[gap_bucket] += 1
         noising_views = episode.get("forward_noising_ocn", [])
         if len(noising_views) != N_DIGIT:
             raise DiffGRMContractError(
@@ -418,10 +540,12 @@ def validate_trace_bundle(
         attempts = episode.get("attempts", [])
         if not attempts:
             raise DiffGRMContractError("missing_attempt", "every episode needs an attempt")
+        target_generated_from_raw = False
         for attempt in attempts:
             active: dict[str, tuple[int, ...]] = {
                 "root": tuple([MASK_TOKEN] * N_DIGIT)
             }
+            previous_visited = 0
             for expected_step, step in enumerate(attempt.get("steps", []), start=1):
                 if int(step.get("denoising_step", -1)) != expected_step:
                     raise DiffGRMContractError(
@@ -430,6 +554,27 @@ def validate_trace_bundle(
                 if int(step.get("nfe", -1)) != 1:
                     raise DiffGRMContractError("invalid_nfe", "each fixture step must bind one NFE")
                 expansions = step.get("expanded_candidates", [])
+                if int(step.get("candidate_expansion_count", -1)) != len(expansions):
+                    raise DiffGRMContractError(
+                        "candidate_expansion_count_mismatch",
+                        "declared candidate expansion count differs from trace rows",
+                    )
+                forward_calls = int(step.get("forward_calls", -1))
+                logits_evaluated = int(step.get("logits_evaluated", -1))
+                visited_states = int(step.get("visited_state_count", -1))
+                if forward_calls < 1 or logits_evaluated < 0:
+                    raise DiffGRMContractError(
+                        "invalid_compute_count", "forward calls and logits must be nonnegative"
+                    )
+                if visited_states <= previous_visited:
+                    raise DiffGRMContractError(
+                        "nonmonotonic_visited_state_count", "visited state count must increase"
+                    )
+                previous_visited = visited_states
+                nfe_total += int(step["nfe"])
+                forward_calls_total += forward_calls
+                logits_total += logits_evaluated
+                expansion_total += len(expansions)
                 retained_ids = [str(value) for value in step.get("retained_beam_ids", [])]
                 observed_retained: list[str] = []
                 next_active: dict[str, tuple[int, ...]] = {}
@@ -527,6 +672,7 @@ def validate_trace_bundle(
             raw_beams = attempt.get("raw_final_beams", [])
             if not raw_beams:
                 raise DiffGRMContractError("missing_raw_frontier", "raw final frontier is required")
+            visited_total += previous_visited
             seen_codes: set[tuple[int, ...]] = set()
             for ordinal, raw in enumerate(raw_beams, start=1):
                 if int(raw.get("raw_rank", -1)) != ordinal:
@@ -551,6 +697,7 @@ def validate_trace_bundle(
                         "duplicate_claim_mismatch", f"raw duplicate claim mismatch for {beam_id!r}"
                     )
                 duplicate_count += int(is_duplicate)
+                unique_candidate_count += int(not is_duplicate)
                 seen_codes.add(codes)
                 if expected_resolution["raw_validity"] == "invalid_raw_tuple":
                     invalid_raw_count += 1
@@ -562,6 +709,10 @@ def validate_trace_bundle(
                     raise DiffGRMContractError(
                         "valid_raw_marked_failure", "catalog-exact raw tuple must be generation success"
                     )
+                if str(episode.get("target_normalized_item_id")) in expected_resolution[
+                    "resolved_normalized_item_ids"
+                ]:
+                    target_generated_from_raw = True
 
         ranked = episode.get("ranked_items", [])
         if len(ranked) > depth:
@@ -593,6 +744,31 @@ def validate_trace_bundle(
             if observed_rank <= cutoff:
                 hit_count += 1
                 ndcg_sum += 1.0 / math.log2(observed_rank + 1)
+                if gap_bucket in bucket_hits:
+                    bucket_hits[gap_bucket] += 1
+                    bucket_ndcg[gap_bucket] += 1.0 / math.log2(observed_rank + 1)
+
+        target_generated_claim = episode.get("target_generated_raw")
+        target_resolved_claim = episode.get("target_resolved")
+        if target_generated_claim is not target_generated_from_raw:
+            raise DiffGRMContractError(
+                "target_generation_claim_mismatch",
+                "target_generated_raw differs from raw frontier resolution",
+            )
+        if target_resolved_claim is not target_generated_from_raw:
+            raise DiffGRMContractError(
+                "target_resolution_claim_mismatch",
+                "exact SID lookup requires target_resolved to match raw target presence",
+            )
+        generation_search_miss_count += int(not target_generated_from_raw)
+        resolution_loss_count += int(target_generated_from_raw and not target_resolved_claim)
+        ranking_conversion_miss_count += int(
+            bool(target_resolved_claim) and (observed_rank is None or observed_rank > cutoff)
+        )
+        latency = float(episode.get("latency_ms"))
+        if not math.isfinite(latency) or latency < 0.0:
+            raise DiffGRMContractError("invalid_latency", "episode latency must be finite")
+        latency_total += latency
 
     episode_count = len(episodes)
     expected_hit = hit_count / episode_count
@@ -606,9 +782,37 @@ def validate_trace_bundle(
         raise DiffGRMContractError(
             "recall_alias_mismatch", "single-target Recall@10 must be labeled as Hit@10 alias"
         )
+    computed_summary = {
+        "target_support_count": episode_count,
+        "generation_search_miss_count": generation_search_miss_count,
+        "resolution_loss_count": resolution_loss_count,
+        "ranking_conversion_miss_count": ranking_conversion_miss_count,
+        "unique_candidate_count": unique_candidate_count,
+        "duplicate_candidate_count": duplicate_count,
+        "nfe": nfe_total,
+        "forward_calls": forward_calls_total,
+        "logits_evaluated": logits_total,
+        "candidate_expansion_count": expansion_total,
+        "visited_state_count": visited_total,
+    }
+    if bundle.get("schema") == TRACE_SCHEMA_V2:
+        for field, expected in computed_summary.items():
+            if summary.get(field) != expected:
+                raise DiffGRMContractError(
+                    "summary_count_mismatch", f"summary.{field} differs from trace rows"
+                )
+
+    per_bucket = {}
+    for bucket in CANONICAL_GAP_BUCKETS:
+        count = five_bucket_counts[bucket]
+        per_bucket[bucket] = {
+            "episode_count": count,
+            "hit_at_10": bucket_hits[bucket] / count if count else None,
+            "ndcg_at_10": bucket_ndcg[bucket] / count if count else None,
+        }
 
     return {
-        "schema": "sidscope.diffgrm_adapter_verification.v1",
+        "schema": "sidscope.diffgrm_trained_trace_verification.v1",
         "status": "pass",
         "route_id": "diffgrm_www2026",
         "adapter_version": ADAPTER_VERSION,
@@ -626,6 +830,26 @@ def validate_trace_bundle(
         "raw_duplicate_count": duplicate_count,
         "hit_at_10": expected_hit,
         "ndcg_at_10": expected_ndcg,
+        "five_bucket_counts": five_bucket_counts,
+        "per_bucket": per_bucket,
+        "bindings": bindings,
+        "resolution_summary": {
+            "catalog_collision_count": prepared_result["catalog_collision_count"],
+            "invalid_raw_tuple_count": invalid_raw_count,
+            "unique_raw_tuple_count": unique_candidate_count,
+            "duplicate_raw_tuple_count": duplicate_count,
+            "generation_search_miss_count": generation_search_miss_count,
+            "resolution_loss_count": resolution_loss_count,
+            "ranking_conversion_miss_count": ranking_conversion_miss_count,
+        },
+        "compute_summary": {
+            "nfe": nfe_total,
+            "forward_calls": forward_calls_total,
+            "logits_evaluated": logits_total,
+            "candidate_expansion_count": expansion_total,
+            "visited_state_count": visited_total,
+            "latency_ms": latency_total,
+        },
         "projection_semantics": "projection_not_applicable",
     }
 
@@ -644,6 +868,9 @@ __all__ = [
     "SELECTION_SCHEMA",
     "SID_OFFSET",
     "TRACE_SCHEMA",
+    "TRACE_SCHEMA_V2",
+    "SOURCE_REVISION",
+    "CANONICAL_GAP_BUCKETS",
     "canonical_sha256",
     "model_vocabulary_tokens",
     "validate_episode_selection",

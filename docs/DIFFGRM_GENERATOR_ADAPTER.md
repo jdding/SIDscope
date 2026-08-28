@@ -8,20 +8,26 @@ paper at The Web Conference 2026 (DOI `10.1145/3774904.3792156`) and is bound
 to the official repository revision
 `ad7b971c7e525e9fea6fb8e362a5c49dccb2473c`.
 
-The official repository currently has no root `LICENSE`. SIDScope therefore
-uses a revision-bound, non-vendoring contract and does not import, execute, or
-redistribute upstream code before explicit author permission is recorded and
-audited. Publication identity and source identity pass; G0 permission remains
-open. The route is not a named adapter yet.
+The official repository currently has no root `LICENSE`. SIDScope records that
+state as `NOASSERTION` and retains a revision-bound, non-vendoring contract.
+The license marker is independent of adapter development, downstream execution,
+experiment verification, and evidence delivery; it does not block those
+surfaces. SIDScope still does not vendor or redistribute upstream source,
+weights, data, or assets. The route is not a named adapter yet because real
+checkpoint-bound G2--G5 evidence remains incomplete, not because of the license
+marker.
 
 ## Versioned interfaces
 
 - adapter: `sidscope.diffgrm_adapter.v1`
 - prepared data: `sidscope.diffgrm_prepared_dataset.v1`
 - episode selection: `sidscope.diffgrm_episode_selection.v1`
-- masked trace: `sidscope.diffgrm_masked_trace_bundle.v1`
-- staged preflight: `sidscope.diffgrm_staged_preflight.v1`
+- masked trace fixture/legacy interface: `sidscope.diffgrm_masked_trace_bundle.v1`
+- checkpoint-bound masked trace: `sidscope.diffgrm_masked_trace_bundle.v2`
+- staged preflight: `sidscope.diffgrm_staged_preflight.v2`
 - verifier output: `sidscope.diffgrm_adapter_verification.v1`
+- real-bundle verifier output:
+  `sidscope.diffgrm_trained_trace_bundle_verification.v1`
 
 The prepared contract binds dataset, category, profile, train/validation/test
 hashes, a dense train-only catalog, target universe, pseudonymous normalized
@@ -74,30 +80,52 @@ Recall@10 is labeled only as a Hit@10 alias. A deeper published rank is valid
 only when the captured native frontier supports it; otherwise target rank is
 typed `right_censored_beyond_published_depth`.
 
+Schema v2 adds a mandatory `evidence` object with the pinned source revision
+and lowercase SHA-256 bindings for the source manifest, canonical
+configuration, checkpoint, training manifest, and Semantic-ID cache. The
+configuration contains the training/sampling seed, and
+`evidence.configuration_sha256` must equal the canonical hash of that exact
+configuration object. Optional evidence hashes such as command or run-log
+hashes are accepted only when they are valid SHA-256 values. Schema v1 remains
+accepted for the packaged deterministic contract fixture, but it is reported
+as `legacy_v1_contract_fixture` and cannot claim checkpoint-bound closure.
+
 ## Current gates
 
 | Gate | Current state |
 | --- | --- |
-| G0 | Publication and immutable source identity pass; explicit code permission pending. |
-| G1 | Dataset-neutral prepared/selection fixture passes; real frozen VG OPQ4 round-trip pending. |
+| G0 | Publication and immutable source identity pass; license is a `NOASSERTION` marker and non-redistribution boundary, not an experiment gate. |
+| G1 | Dataset-neutral prepared/selection fixture passes; downstream frozen VG OPQ4 round-trip and explicit five-bucket selection have passed, with public compact evidence intake pending. |
 | G2 | Native OCN/noising and adaptive masked-state trace fixture passes; trained trace pending. |
 | G3 | Raw validity, collision resolution, duplicate policy, and typed failures pass on CPU fixture. |
 | G4 | Ranked-item and right-censoring contract passes; checkpoint-bound export pending. |
-| G5 | Non-executing staged preflight and verifier pass; upstream runtime/GPU work is prohibited until G0 closes. |
+| G5 | Staged fixture verifier and independent real-bundle CLI pass; checkpoint-bound native trace export remains pending. |
 
 ## Commands
 
-The current allowed commands are CPU-only and do not load upstream code:
+The SIDScope verification commands are CPU-only and do not load upstream code:
 
 ```bash
 python3 tools/preflight_diffgrm_adapter.py
 python3 tools/verify_diffgrm_adapter.py
-python3 -m pytest -q tests/test_diffgrm_adapter.py
+python3 tools/verify_diffgrm_trained_trace_bundle.py \
+  --prepared <prepared_dataset.json> \
+  --selection <episode_selection.json> \
+  --bundle <trained_trace_bundle.json> \
+  --result-json <verification.json>
+python3 -m pytest -q \
+  tests/test_diffgrm_adapter.py \
+  tests/test_diffgrm_trained_trace_bundle.py
 ```
 
-`--source` on the staged preflight performs only Git revision, file-hash, and
-root-license inspection. `--require-execution-ready` exits nonzero while G0 is
-open.
+The real-bundle CLI calls the same `validate_trace_bundle` contract directly
+and deliberately does not run the source or license audit. Its result records
+canonical prepared/selection/bundle hashes, byte hashes, episode and five-bucket
+counts, trained bindings, overall and bucket metrics, exact/censored ranks,
+raw validity/duplication/resolution counts, and compute totals. The existing
+`unknown_parent_beam` fixture and real-CLI tests for
+`prepared_binding_mismatch` and `configuration_binding_mismatch` preserve typed
+fail-closed behavior.
 
 ## Migration and unlock sequence
 
@@ -105,9 +133,10 @@ Downstream consumers should generate the two manifest files first, then export
 the trace bundle with their canonical hashes. No raw user IDs, source item IDs,
 private paths, checkpoint bytes, embeddings, or source code enter the bundle.
 
-After explicit code permission is recorded, the sequence is:
+The downstream closure sequence is:
 
-1. re-audit G0 and run CPU import/config/prepared compatibility preflight;
+1. record source/revision identity and run CPU import/config/prepared
+   compatibility preflight; keep license state as a separate marker;
 2. freeze VG OPQ4 and a recoverable training manifest with atomic
    model/optimizer/scheduler/RNG/epoch/global-step/config/source hashes;
 3. run a checkpoint-bound five-episode VG smoke, one episode per natural gap

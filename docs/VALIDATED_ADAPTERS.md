@@ -109,10 +109,11 @@ ChronoSID remains on source watch.
 
 DiffGRM is the staged publication-prioritized masked/diffusion candidate. Its
 The Web Conference 2026 publication and immutable source revision are bound,
-and its independent dataset-neutral contract/verifier pass without executing
-upstream code. It is not listed as a named adapter: explicit author code
-permission, real frozen-VG OPQ4 identity, checkpoint-backed five-episode smoke,
-and the 250-episode diagnostic remain open.
+and its license state is retained as a `NOASSERTION` marker rather than an
+experiment blocker. Its independent dataset-neutral fixture verifier and
+external prepared/selection/checkpoint-bound-v2 verifier pass. It is not listed
+as a named adapter because the native checkpoint trace and 250-episode
+diagnostic have not yet been accepted by SIDScope.
 
 See `docs/GENERATOR_ADAPTER_CONFORMANCE.md` and
 `docs/reproducibility/generator_adapter_coverage.csv` for the typed status and

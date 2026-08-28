@@ -1,5 +1,5 @@
 {
-  "schema": "sidscope.diffgrm_staged_preflight.v1",
+  "schema": "sidscope.diffgrm_staged_preflight.v2",
   "status": "pass",
   "route_id": "diffgrm_www2026",
   "inspection_scope": "recorded_revision_audit",
@@ -16,9 +16,12 @@
   "license_files_found": [],
   "g0": {
     "publication_and_revision_identity": "pass",
-    "redistribution_and_execution_permission": "pending_explicit_author_permission"
+    "license_state": "NOASSERTION_marker",
+    "development_and_execution": "not_blocked_by_license_marker",
+    "redistribution": "not_authorized_by_this_preflight"
   },
-  "execution_authorized": false,
-  "next_gate": "record explicit author code permission and re-audit before any import, execution, or redistribution",
+  "execution_authorized": true,
+  "redistribution_authorized": false,
+  "next_gate": "validate the frozen prepared selection and checkpoint-bound native trace bundle",
   "failures": []
 }
