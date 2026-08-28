@@ -1,6 +1,6 @@
 # SIDScope Public Release Packet
 
-Status: v1.1.0 publication authorized; public tag and URL smoke in progress
+Status: v1.1.0 published; public tag and URL smoke pass
 Last updated: 2026-08-28
 
 This packet records the exact public/reviewer release surface for the SIDScope
@@ -24,10 +24,11 @@ candidate_public_url: https://github.com/jdding/sidscope
 candidate_release_ref: v1.1.0
 candidate_archive_name: sidscope-v1.1.0.zip
 local_archive_path: /tmp/sidscope-v1.1.0.zip
-candidate_commit: resolved by the v1.1.0 tag at publication
-release_tag: v1.1.0 authorized; create at the release commit
-final_tag_archive_sha256: record externally after the final tag to avoid a self-referential archive hash
-public_url_smoke: pending tag and publication
+release_commit: a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
+release_tag: v1.1.0
+release_tag_object: e4d5ae39125f95312efc88a7dc3341550d2edbfc
+final_tag_archive_sha256: 2b71bc8ad2128a2ce9d214b4fc13840e797e7c12bba6a7f063ff18d3abf2c65f
+public_url_smoke: pass
 ```
 
 The GitHub URL is the reviewer-facing release surface. It must be checked after
@@ -97,6 +98,38 @@ Record:
 - pass/fail verdict;
 - any environment differences.
 
+## Public Release Verification Record
+
+```text
+release_date: 2026-08-28
+public_url: https://github.com/jdding/sidscope
+clone_url: https://github.com/jdding/sidscope.git
+release_ref: v1.1.0
+tag_object: e4d5ae39125f95312efc88a7dc3341550d2edbfc
+release_commit: a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
+archive_sha256: 2b71bc8ad2128a2ce9d214b4fc13840e797e7c12bba6a7f063ff18d3abf2c65f
+public_url_smoke_result: /tmp/sidscope_public_url_smoke.json
+public_url_smoke_status: pass
+gpu_required: false
+```
+
+Executed transcript:
+
+```bash
+python3 tools/run_sidscope_public_url_smoke.py \
+  --repo-url https://github.com/jdding/sidscope.git \
+  --ref v1.1.0 \
+  --result-json /tmp/sidscope_public_url_smoke.json
+```
+
+The public smoke cloned the annotated tag without credentials, installed
+`sidinspector==1.1.0`, passed the resource-package verifier, rebuilt the
+deterministic archive, passed archive smoke, passed nested G8, and passed
+sampled regeneration. All eight recorded commands returned zero. The outer
+public-smoke environment intentionally permits system site packages; its nested
+G8 run created the separate isolated environment that verified a clean package
+and dependency installation.
+
 ## Current Verdict
 
 ```text
@@ -105,11 +138,13 @@ LOCAL_RELEASE_CANDIDATE: PASS_CURRENT
 LOCAL_TESTS_AND_RESOURCE_VERIFIER: PASS_CURRENT
 LOCAL_ARCHIVE_AND_EXTRACTED_SMOKE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT with isolated sidinspector==1.1.0 install
-RELEASE_REF: v1.1.0_AUTHORIZED_PENDING_PUBLICATION
+RELEASE_REF: v1.1.0 at a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
 HOSTED_ARCHIVE_VERIFIED: NOT_USED
-G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_TAG_AND_PUBLICATION
+G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PASS
+PUBLIC_RELEASED: YES
 ```
 
-`jdding/sidscope` is the clean official release surface. Publication of
-`v1.1.0` has been authorized. Rerun public URL smoke after the tag is published
-and before using the URL in a submission or claim ledger.
+`jdding/sidscope` is the clean official release surface. Annotated tag
+`v1.1.0` is publicly accessible and its URL smoke passes. Public `v1.0.2`
+remains the immutable software/resource version bound to the submitted TOIS
+package; `v1.1.0` remains post-submission maintenance.

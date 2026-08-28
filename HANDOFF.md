@@ -4,10 +4,11 @@ Last updated: 2026-08-28
 
 ## Executive status
 
-SIDScope 1.1.0 is locally release-ready but not publicly released. The package
+SIDScope 1.1.0 is locally release-ready and publicly released. The package
 version is `1.1.0`; the local tests, resource-package verifier, deterministic
-archive smoke, and G8 clean-environment installation have passed. No `v1.1.0`
-tag has been created and no release push is authorized by this handoff.
+archive smoke, G8 clean-environment installation, and unauthenticated public
+URL smoke have passed. Annotated tag `v1.1.0` resolves to
+`a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
 Latte/PSID is the first configuration-bound named generator adapter admitted
 under the complete G0--G5 protocol. The other generator routes remain useful,
@@ -28,6 +29,10 @@ authorized revision phase.
 - Last implementation commit before this handoff document:
   `3f46f0371a5a85a05ce0ba93b7343998a7def888`.
 - Version: `1.1.0` in both `pyproject.toml` and `setup.py`.
+- Public release tag: `v1.1.0` at
+  `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`.
+- Deterministic tag archive SHA-256:
+  `2b71bc8ad2128a2ce9d214b4fc13840e797e7c12bba6a7f063ff18d3abf2c65f`.
 
 Always begin a resumed session by verifying the live branch, HEAD, worktree,
 remotes, version, manifest, tests, and verifier. Do not assume the commit above
@@ -168,8 +173,8 @@ The checks are CPU-only. A new GPU run is not required to publish the already
 verified bounded trained evidence. A GPU is required only for a newly scoped
 trained-route closure such as RPG G2--G5.
 
-After an explicitly authorized tag and publication, run the separate public
-URL gate:
+The separate public URL gate passed for `v1.1.0` and should be rerun after any
+future public release-surface change:
 
 ```bash
 python3 tools/run_sidscope_public_url_smoke.py \
@@ -178,16 +183,17 @@ python3 tools/run_sidscope_public_url_smoke.py \
   --result-json /tmp/sidscope_public_url_smoke.json
 ```
 
-## Remaining decisions
+## Published release record
 
 No additional internal implementation is required for the agreed 1.1.0
-boundary. The remaining 1.1.0 actions are publication decisions:
+boundary. Publication is closed as follows:
 
-1. authorize or decline creation of tag `v1.1.0`;
-2. authorize or decline pushing the reviewed branch to the public `main`;
-3. after publication, run and record the unauthenticated public URL smoke;
-4. record the final tag, commit, hosted URL, archive checksum, and transcript
-   in `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
+1. annotated tag `v1.1.0` created and pushed;
+2. release commit `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`
+   published to `sidscope/main`;
+3. unauthenticated public URL smoke passed against the tag;
+4. final tag, commit, URL, archive checksum, and transcript are recorded in
+   `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
 
 RPG trained closure, TIGER/DACT license closure, LLaDA-Rec real trained
 evidence, ISD immutable-source closure, and ChronoSID source availability are
@@ -210,7 +216,9 @@ Expected status at this handoff:
 
 ```text
 LOCAL_RELEASE_READY: PASS
-PUBLIC_RELEASED: NO
+PUBLIC_RELEASED: YES
+PUBLIC_RELEASE_TAG: v1.1.0
+PUBLIC_RELEASE_COMMIT: a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
 LATTE_PSID_NAMED_ADAPTER: PASS_G0_G5
 RPG_TRAINED_G2_G5: OPEN_POST_1_1_0
 TOIS_FROZEN_SUBMISSION: UNCHANGED_OUT_OF_SCOPE

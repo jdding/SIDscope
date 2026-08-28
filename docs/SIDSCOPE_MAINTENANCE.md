@@ -27,10 +27,11 @@ Release refs:
 - `sidscope-v1-tois-revision-N`: revised journal packages when requested by
   the editor; each tag must bind a verifier record and archive checksum.
 
-Version 1.1.0 is prepared on `codex/sidscope-v1.1` as a local release
-candidate. Public tagging and publication remain separate explicitly
-authorized actions. This branch must not contain or edit the frozen TOIS
-manuscript.
+Version 1.1.0 was released from `codex/sidscope-v1.1` as annotated tag
+`v1.1.0` at `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`. The public URL smoke
+passed and rebuilt archive SHA-256
+`2b71bc8ad2128a2ce9d214b4fc13840e797e7c12bba6a7f063ff18d3abf2c65f`.
+This branch must not contain or edit the frozen TOIS manuscript.
 
 ## Maintenance Commitments
 

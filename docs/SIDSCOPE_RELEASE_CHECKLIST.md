@@ -1,7 +1,7 @@
 # SIDScope Release Candidate Checklist
 
-Status: v1.1.0 local release-candidate gates pass; public tag and URL smoke
-pending explicit authorization
+Status: v1.1.0 local release-candidate gates, public tag, and public URL smoke
+pass
 Last updated: 2026-08-28
 
 This checklist defines what must be true before a SIDScope reviewer package is
@@ -123,8 +123,8 @@ LOCAL_RESOURCE_PACKAGE_VERIFIER: PASS_CURRENT
 LOCAL_ARCHIVE_BUILD: PASS_CURRENT
 LOCAL_ARCHIVE_SMOKE: PASS_CURRENT
 G8_LOCAL_CLEAN_EXTRACT_SMOKE: PASS_CURRENT with isolated sidinspector==1.1.0 install
-DETERMINISTIC_ARCHIVE_REBUILD: PASS_CURRENT; exact final SHA256 is recorded externally after the release commit
-FINAL_RELEASE_TAG: NOT_CREATED
-G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PENDING_TAG_AND_PUBLICATION
+DETERMINISTIC_ARCHIVE_REBUILD: PASS_CURRENT; SHA256=2b71bc8ad2128a2ce9d214b4fc13840e797e7c12bba6a7f063ff18d3abf2c65f
+FINAL_RELEASE_TAG: v1.1.0 at a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
+G8_PUBLIC_URL_FRESH_ENVIRONMENT_SMOKE: PASS_V1_1_0
 TOIS_FROZEN_SUBMISSION: OUT_OF_SCOPE_UNCHANGED
 ```

@@ -16,6 +16,9 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
 Release date: 2026-08-28
 Tag: `v1.1.0`
 Base: public `v1.0.2` (`6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`)
+Release commit: `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`
+Archive SHA-256: `2b71bc8ad2128a2ce9d214b4fc13840e797e7c12bba6a7f063ff18d3abf2c65f`
+Public URL smoke: PASS at `https://github.com/jdding/sidscope`, ref `v1.1.0`
 
 `v1.0.2` is the immutable public SIDScope software/resource version bound to
 the submitted TOIS package. Version 1.1.0 is post-submission maintenance and

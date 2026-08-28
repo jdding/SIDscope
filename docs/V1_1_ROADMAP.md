@@ -49,9 +49,9 @@ still-pending trained RPG route.
 
 ## Release Gate
 
-Status: local release-candidate tests, package verifier, archive smoke, and G8
-fresh-environment install pass; public tag and URL smoke require explicit
-release authorization.
+Status: local release-candidate tests, package verifier, archive smoke, G8
+fresh-environment install, annotated `v1.1.0` publication, and unauthenticated
+public URL smoke all pass.
 
 Before `v1.1.0`:
 
