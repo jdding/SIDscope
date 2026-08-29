@@ -1,0 +1,61 @@
+{
+  "schema": "sidscope.diffgrm_steam_bridge_preflight_evidence.v1",
+  "status": "pass",
+  "scientific_result": false,
+  "source_revision": "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c",
+  "domain": "steam",
+  "protocol_sha256": "475fb9e9be96ce9c8c6f44cef5be279db68867e47fe2e5cb4146b5976fb9726f",
+  "vocabulary_sha256": "7288cfb2b78a258a19f48df9025ee1e6c4588fd3e4afdc4fcd29b9fc417809d8",
+  "metadata_sha256": "20aaed0cbbb35a8a7e481b6941c18ad515c5808b5cf32767c163bcb36e3c7e0a",
+  "train_only_surface_sha256": "2fac65812dfad92d6c1154777b2ed3845445ea2ec500134c031dd47d52e0d1b5",
+  "runtime_manifest_sha256": "752c67f8d13f9c267de954e6177a142048c483c980b25a36643dd2b4692adb15",
+  "evaluator_join_sha256": "9159c04166f66dc858e12be970eaf846809c0d4c9533799f2ea3e4a6ed08100a",
+  "prepared_dataset_file_sha256": "4069c73c989bdae327cba0ae96fcfc27526956b97d8f0b883cba0414ee3ea282",
+  "prepared_dataset_canonical_sha256": "1b7a8b5366439f8ba4c50eea729e2f6108dc79b006d176fdcbea032b6cdd8660",
+  "semantic_id_cache_sha256": "19a5cea21a2e04fc106d71ecb7747454a8062610f456bb54c2fba0552f223340",
+  "processed_cache_manifest_sha256": "a541c1eda3dca59784d1550bf07321461ba05ef95fd1e714f73f4590e8607b8f",
+  "one_per_bucket_selection_file_sha256": "9f3351334ebecc92a3a1165c3314034fe1847a831e8e53bb173ec6d097ae9235",
+  "one_per_bucket_selection_canonical_sha256": "a1cf258919f064094a30b17d9681af54a3b4d826b204e50e4a27b93ae9d8dd58",
+  "balanced_250_selection_file_sha256": "16ff22be11ae5e00e4424cc168a955bf63c920d8d87d2de0a106029af17ee64a",
+  "balanced_250_selection_canonical_sha256": "5cc3adb004fc9d08aebe4e2916f69542a4bbcfae18122d7949d549ee68f002da",
+  "counts": {
+    "source_train_rows": 1977183,
+    "consumer_train_rows": 260302,
+    "prepared_train_rows": 195680,
+    "validation_rows": 260302,
+    "test_rows": 260302,
+    "catalog_rows": 11580,
+    "catalog_unreachable_test_targets": 0,
+    "one_per_bucket_episodes": 5,
+    "balanced_diagnostic_episodes": 250
+  },
+  "test_bucket_counts": {
+    "short": 90523,
+    "30-90d": 50636,
+    "90-180d": 42686,
+    "180-365d": 42789,
+    ">365d": 33668
+  },
+  "bounded_checkpoint_smoke": {
+    "status": "pass",
+    "seed": 2024,
+    "train_rows": 512,
+    "completed_steps": 8,
+    "episodes": 5,
+    "checkpoint_reloaded_strict": true,
+    "checkpoint_sha256": "3c74cb60b2bd8b728413345eb0632d330880526d0b4e30fa514aa86365beb4b3",
+    "initial_loss": 5.594246864318848,
+    "final_loss": 5.2646613121032715,
+    "hit_at_10": 0.0,
+    "ndcg_at_10": 0.0,
+    "boundary": "runtime_checkpoint_selection_smoke_not_scientific_result"
+  },
+  "privacy": {
+    "raw_user_ids": 0,
+    "raw_source_item_ids": 0,
+    "absolute_private_paths": 0,
+    "checkpoint_bytes": 0,
+    "embedding_bytes": 0
+  },
+  "next_gate": "recoverable formal training then checkpoint-bound native trace verification"
+}

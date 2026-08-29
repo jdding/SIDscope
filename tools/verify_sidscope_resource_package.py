@@ -117,6 +117,7 @@ REQUIRED_FILES = [
     "docs/reproducibility/diffgrm_www2026_staged_preflight.json",
     "docs/reproducibility/diffgrm_www2026_adapter_status.json",
     "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json",
+    "docs/reproducibility/diffgrm_steam_bridge_preflight_evidence.json",
     "docs/reproducibility/isd_source_audit.json",
     "docs/reproducibility/isd_official_source_smoke.json",
     "docs/reproducibility/isd_adapter_status.json",
@@ -188,6 +189,12 @@ REQUIRED_FILES = [
     "tools/preflight_diffgrm_adapter.py",
     "tools/verify_diffgrm_adapter.py",
     "tools/verify_diffgrm_trained_trace_bundle.py",
+    "tools/materialize_diffgrm_protocol_train_surface.py",
+    "tools/prepare_diffgrm_protocol.py",
+    "tools/finalize_diffgrm_prepared_contract.py",
+    "tools/diffgrm_prepared_dataset.py",
+    "tools/run_diffgrm_runtime.py",
+    "tools/run_diffgrm_resumable_training.py",
     "tools/run_isd_official_source_smoke.py",
     "tools/verify_isd_adapter.py",
     "tools/verify_sidscope_d7_labeled_trace_release.py",
@@ -206,6 +213,7 @@ REQUIRED_FILES = [
     "tests/test_llada_rec_adapter.py",
     "tests/test_diffgrm_adapter.py",
     "tests/test_diffgrm_trained_trace_bundle.py",
+    "tests/test_diffgrm_dataset_bridge.py",
     "tests/test_isd_adapter.py",
 ]
 

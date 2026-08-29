@@ -27,6 +27,8 @@ G0--G5 and is a configuration-bound named adapter.
 - verifier output: `sidscope.diffgrm_adapter_verification.v1`
 - real-bundle verifier output:
   `sidscope.diffgrm_trained_trace_bundle_verification.v1`
+- processed-cache manifest: `sidscope.diffgrm_processed_cache_manifest.v1`
+- recoverable training state: `genrec_dormant.diffgrm_recoverable_state.v1`
 
 The prepared contract binds dataset, category, profile, train/validation/test
 hashes, a dense train-only catalog, target universe, pseudonymous normalized
@@ -117,9 +119,15 @@ python3 tools/verify_diffgrm_trained_trace_bundle.py \
   --selection <episode_selection.json> \
   --bundle <trained_trace_bundle.json> \
   --result-json <verification.json>
+python3 tools/materialize_diffgrm_protocol_train_surface.py --help
+python3 tools/prepare_diffgrm_protocol.py --help
+python3 tools/finalize_diffgrm_prepared_contract.py --help
+python3 tools/run_diffgrm_runtime.py --help
+python3 tools/run_diffgrm_resumable_training.py --help
 python3 -m pytest -q \
   tests/test_diffgrm_adapter.py \
-  tests/test_diffgrm_trained_trace_bundle.py
+  tests/test_diffgrm_trained_trace_bundle.py \
+  tests/test_diffgrm_dataset_bridge.py
 ```
 
 The real-bundle CLI calls the same `validate_trace_bundle` contract directly
@@ -148,7 +156,12 @@ The VG closure sequence completed as follows:
 4. run the 250-episode balanced VG diagnostic, 50 episodes per bucket;
 5. unlock Steam only after VG identity, trace, metrics, and verifier all pass.
 
-VG now satisfies that unlock rule. Steam remains a separately trained and
-verified configuration and does not inherit VG evidence automatically.
+VG now satisfies that unlock rule. Steam does not inherit VG evidence. Its
+dataset-neutral train-only materialization, prepared contract, official OPQ4
+round-trip, explicit 5/250 selections, and 8-update five-bucket checkpoint
+smoke pass. Compact pre-training evidence is recorded in
+`docs/reproducibility/diffgrm_steam_bridge_preflight_evidence.json`; formal
+recoverable training and native trace verification remain configuration-local
+gates.
 
 No current RPG or other live run needs to be modified or interrupted.

@@ -123,6 +123,8 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
             "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json",
             expanded,
         )
+        self.assertIn("tools/run_diffgrm_resumable_training.py", expanded)
+        self.assertIn("tests/test_diffgrm_dataset_bridge.py", expanded)
         self.assertIn(
             "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
             expanded,
