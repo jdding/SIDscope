@@ -107,13 +107,41 @@ record is `docs/reproducibility/llada_rec_vg_tokenizer_smoke.json`. This result
 tests the data shape, official tokenizer path, atomic state, and export; it is
 not the frozen formal tokenizer asset and is not a generator result.
 
+The formal tokenizer run is now frozen separately: the same 17,396-item
+train-only VG catalog completed 10,000 epochs with an actual interrupted/resume
+boundary, strict checkpoint reload, and four 256-entry position-specific
+codebooks. Collision resolution retained all items and produced 17,344 unique
+semantic tuples (52 collision excess; 48 collision groups; maximum group size
+four). The path-free hash/count record is
+`docs/reproducibility/llada_rec_vg_tokenizer_formal_evidence.json`; embeddings,
+the semantic-ID cache, checkpoint payload, raw IDs, and private paths remain
+external and are not distributed.
+
+The dataset-neutral prepared-data, recoverable generator, trained-trace export,
+and independent verifier entry points are:
+
+```bash
+python3 tools/finalize_llada_rec_prepared_contract.py --help
+python3 tools/run_llada_rec_resumable_training.py --help
+python3 tools/export_llada_rec_trained_trace.py --help
+python3 tools/verify_llada_rec_trained_trace_bundle.py --help
+```
+
+The v2 trained trace records native confidence-guided adaptive unmasking: every
+one-position action retains the pre/post mask state, position-specific token
+top-k and log probabilities, parent beam, retained/pruned frontier, raw ordered
+tuple, collision-aware resolution, dense published rank, right-censoring, and
+compute. It does not synthesize autoregressive prefix ancestry and it does not
+claim remasking for the pinned implementation. A deidentified positive fixture
+and verifier-injected binding/ancestry failures are provided under
+`examples/llada_rec_trained_trace_fixture/`.
+
 ## Promotion boundary
 
-The route is not a named adapter. Source and method identity pass G0 with
-`NOASSERTION` retained as a non-redistribution marker; the project tokenizer
-engineering smoke passes, but formal G1 still requires a frozen item-to-SID-to-
-model-vocabulary round-trip. G2--G4 have bounded contract evidence only, and G5
-lacks a generator checkpoint or fully recorded generator output. A future
-promotion requires a fixed formal artifact/checkpoint boundary, real source-
-item resolution, trained trace export, and a passing end-to-end verifier.
-Missing license does not block that work or compact evidence delivery.
+Source and method identity pass G0 with `NOASSERTION` retained solely as a
+non-redistribution marker. The formal tokenizer and prepared item-to-SID-to-
+model-vocabulary round-trip close the tokenizer side of G1. Promotion to a
+configuration-bound named adapter still requires the in-progress formal
+generator checkpoint plus final five-episode and 250-episode trained v2 traces
+to pass the independent verifier. Missing license does not block that work or
+compact derived-evidence delivery.

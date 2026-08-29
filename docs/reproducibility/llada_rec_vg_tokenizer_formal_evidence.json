@@ -1,0 +1,52 @@
+{
+  "schema": "sidscope.llada_rec_project_tokenizer_evidence.v1",
+  "route_id": "llada_rec",
+  "dataset_profile": "amazon_vg_frozen_train_only_catalog",
+  "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+  "status": "pass",
+  "scope": "formal_project_bound_tokenizer_asset_not_generator_result",
+  "configuration": {
+    "catalog_rows": 17396,
+    "embedding_dim": 768,
+    "pca_dim": 128,
+    "pca_whiten": true,
+    "semantic_positions": 4,
+    "codebook_size_per_position": 256,
+    "batch_size": 2048,
+    "target_epochs": 10000,
+    "seed": 2024
+  },
+  "bindings": {
+    "source_manifest_sha256": "7abb4ba3fb8ca321c538ebe60ee13e47de342ec6e4c3a79afc2beb5084e971e1",
+    "source_tokenizer_sha256": "377cc774bba53feb36f19f82fad69291d1c7f1890acaf9f2bd36cb9732b3b73a",
+    "source_config_sha256": "e0850bcd283525200d7a6cc174b01c4b1f4d69f0c79b1bbfb11f83b847b74092",
+    "runtime_manifest_sha256": "20e9851295502ea42c6e3502ad5a5e42f2e578789d953282d5e739cf42a9bac4",
+    "sentence_embeddings_sha256": "9bc9af0069852fe26fb94c7a6ff9e7b2a00c4e16049d3e762367dbc6ab8d386a",
+    "runner_sha256": "9fa09341c81a6351133e8483c9b98558e10d04c8fa47016f606c2931c4248670"
+  },
+  "recoverability": {
+    "stage_one_completed_epochs": 1,
+    "resumed": true,
+    "continuous_epoch_ledger": true,
+    "checkpoint_reloaded_strict": true
+  },
+  "outputs": {
+    "completed_epochs": 10000,
+    "best_epoch": 9550,
+    "best_collision_rate_before_collision_resolution": 0.07973097263738793,
+    "unique_semantic_ids_after_collision_resolution": 17344,
+    "collision_excess_after_collision_resolution": 52,
+    "best_checkpoint_sha256": "bededda514cbe4cc670cee51d0871e80490551c5aa1c361a4326623514774515",
+    "last_state_sha256": "a464e36ab3fcaf40ef8abbf452746989a8e4cc5c3bef952922a614d85b03613b",
+    "model_state_sha256": "9805583a5e548db5e59e0a7b1c3c9430835efe29255d4d96f96989a209c8fbe8",
+    "semantic_ids_sha256": "5c4a33d3a7014abc2001843969087dd05947a3542c55969f5fd2718c45fd6b40",
+    "training_manifest_sha256": "82ffb038186bf255b8afb90230abbe9454e185a80ada2bcf4f1b1a701e991c89"
+  },
+  "privacy": {
+    "contains_source_item_ids": false,
+    "contains_embeddings": false,
+    "contains_checkpoint": false,
+    "contains_private_paths": false
+  },
+  "next_gate": "official_item_sid_position_offset_roundtrip_and_checkpoint_bound_generator_smoke"
+}

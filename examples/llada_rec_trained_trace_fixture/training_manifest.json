@@ -1,0 +1,8 @@
+{
+  "schema": "sidscope.llada_rec_generator_training.v1",
+  "status": "pass",
+  "bindings": {
+    "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+    "prepared_dataset_sha256": "82040713a55dd5bccfd15e598e97a32cb1e110bb8cdf086b44f1ddb659525c42"
+  }
+}

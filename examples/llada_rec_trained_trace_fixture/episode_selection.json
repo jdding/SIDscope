@@ -1,0 +1,17 @@
+{
+  "schema": "sidscope.llada_rec_episode_selection.v1",
+  "route_id": "llada_rec",
+  "prepared_dataset_contract_sha256": "36ab01b29faf37d12b4cd2b6f5f7f2d03f66e77cf7c33cfff4c804e9678075e2",
+  "selection_policy": "explicit_ordered_fixture",
+  "first_n_fallback_allowed": false,
+  "episodes": [
+    {
+      "selection_ordinal": 1,
+      "episode_id": "episode-001",
+      "split": "test",
+      "target_normalized_item_id": "n1",
+      "gap_bucket": "short",
+      "generator_input_contains_bucket_or_label": false
+    }
+  ]
+}

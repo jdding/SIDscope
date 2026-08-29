@@ -1,0 +1,47 @@
+{
+  "schema": "sidscope.llada_rec_prepared_dataset.v1",
+  "route_id": "llada_rec",
+  "dataset": "fixture",
+  "category": "deidentified",
+  "profile": "ordered_fixture",
+  "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+  "split_sha256": {
+    "train": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "validation": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "test": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "train_observed_catalog_count": 1,
+  "train_observed_catalog_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "canonical_target_universe_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "source_item_ids_exported": false,
+  "dormancy_fields_in_generator_input": false,
+  "tokenizer_training_manifest_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "semantic_ids_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "sid_contract": {
+    "n_digit": 4,
+    "codebook_sizes": [256, 256, 256, 256],
+    "pad_token": 0,
+    "eos_token": 1025,
+    "mask_token": 1026,
+    "position_offsets_plus_padding": [1, 257, 513, 769],
+    "position_disjoint_vocabulary": true,
+    "quantizer": "official_multihead_vqvae_pca128_whitened",
+    "dedup_semantics": "preserve_all_item_collisions",
+    "tokenizer_factor": "official_llada_rec_project_bound_separately_frozen"
+  },
+  "episode_index": [
+    {
+      "episode_id": "episode-001",
+      "split": "test",
+      "target_normalized_item_id": "n1",
+      "catalog_reachable": true
+    }
+  ],
+  "catalog": [
+    {
+      "normalized_item_id": "n1",
+      "semantic_codes": [0, 0, 0, 0],
+      "model_vocabulary_tokens": [1, 257, 513, 769]
+    }
+  ]
+}
