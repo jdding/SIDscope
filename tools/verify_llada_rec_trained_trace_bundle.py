@@ -11,11 +11,11 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from tools.export_llada_rec_trained_trace import BUCKETS, canonical_hash
+    from tools.export_llada_rec_trained_trace import BUCKETS, canonical_hash, summarize_rows
     from tools.run_diffgrm_resumable_training import sha256_file
     from tools.run_llada_rec_resumable_training import SOURCE_REVISION
 except ModuleNotFoundError:
-    from export_llada_rec_trained_trace import BUCKETS, canonical_hash
+    from export_llada_rec_trained_trace import BUCKETS, canonical_hash, summarize_rows
     from run_diffgrm_resumable_training import sha256_file
     from run_llada_rec_resumable_training import SOURCE_REVISION
 
@@ -191,6 +191,14 @@ def verify(
         )
         if episode.get("target_rank") != observed_rank:
             fail("target_rank_mismatch", "declared target rank differs from dense ranking")
+        if episode.get("catalog_reachable") is not True:
+            fail("catalog_reachability_mismatch", "selected target must be in the frozen catalog")
+        if bool(episode.get("target_in_raw_valid_tuples")) != (observed_rank is not None):
+            fail("raw_target_presence_mismatch", "raw valid tuple target presence is inconsistent")
+        if episode.get("target_only_after_projection") is not False:
+            fail("unsupported_projection_claim", "LLaDA exact SID resolution does not project")
+        if episode.get("projection_semantics") != "not_applicable_exact_sid_resolution":
+            fail("projection_semantics_mismatch", "unexpected LLaDA resolution semantics")
         if observed_rank is None:
             censored += 1
             if episode.get("target_rank_state") != "right_censored_beyond_beam_frontier":
@@ -201,6 +209,16 @@ def verify(
                 fail("exact_rank_state_mismatch", "observed target rank must be exact")
         expected_hit = observed_rank is not None and observed_rank <= 10
         expected_ndcg = 1.0 / math.log2(observed_rank + 1) if expected_hit else 0.0
+        if bool(episode.get("generation_search_miss")) != (observed_rank is None):
+            fail("generation_search_miss_mismatch", "generation-search label is inconsistent")
+        if episode.get("resolution_loss") is not False:
+            fail("resolution_loss_mismatch", "exact SID resolution cannot claim projection loss")
+        if bool(episode.get("ranking_conversion_miss")) != (
+            observed_rank is not None and observed_rank > 10
+        ):
+            fail("ranking_conversion_miss_mismatch", "ranking conversion label is inconsistent")
+        if bool(episode.get("success")) != expected_hit:
+            fail("success_mismatch", "success must equal Hit@10 for one relevant target")
         if bool(episode.get("hit_at_10")) != expected_hit:
             fail("hit_at_10_mismatch", "episode Hit@10 is inconsistent")
         if not math.isclose(float(episode.get("ndcg_at_10")), expected_ndcg, abs_tol=1e-12):
@@ -224,6 +242,16 @@ def verify(
     five_bucket = {bucket: sum(row["gap_bucket"] == bucket for row in episodes) for bucket in BUCKETS}
     if summary.get("five_bucket_counts") != five_bucket:
         fail("summary_bucket_mismatch", "summary bucket counts differ")
+    expected_overall = summarize_rows(episodes)
+    for field, expected_value in expected_overall.items():
+        if summary.get(field) != expected_value:
+            fail("summary_downstream_handoff_mismatch", f"summary field {field} differs")
+    expected_per_bucket = {
+        bucket: summarize_rows([row for row in episodes if row["gap_bucket"] == bucket])
+        for bucket in BUCKETS
+    }
+    if summary.get("per_bucket") != expected_per_bucket:
+        fail("summary_per_bucket_mismatch", "per-bucket downstream handoff differs")
     return {
         "schema": "sidscope.llada_rec_trained_trace_verification.v1",
         "status": "pass",
@@ -248,6 +276,7 @@ def verify(
         "right_censored_target_rank_count": censored,
         "invalid_raw_tuple_count": invalid,
         "duplicate_raw_tuple_count": duplicates,
+        "per_bucket": expected_per_bucket,
         "compute": summary.get("compute"),
     }
 

@@ -311,6 +311,10 @@ def trace_episode(
         "ranked_items": ranked,
         "target_rank": target_rank,
         "target_rank_state": "exact" if target_rank is not None else "right_censored_beyond_beam_frontier",
+        "catalog_reachable": True,
+        "target_in_raw_valid_tuples": target_rank is not None,
+        "target_only_after_projection": False,
+        "projection_semantics": "not_applicable_exact_sid_resolution",
         "hit_at_10": target_rank is not None and target_rank <= 10,
         "ndcg_at_10": (
             1.0 / math.log2(target_rank + 1)
@@ -320,6 +324,7 @@ def trace_episode(
         "generation_search_miss": target_rank is None,
         "resolution_loss": False,
         "ranking_conversion_miss": target_rank is not None and target_rank > 10,
+        "success": target_rank is not None and target_rank <= 10,
         "candidate_summary": counts,
         "compute": {
             "nfe": model.gen_steps,
@@ -328,6 +333,56 @@ def trace_episode(
             "candidate_expansion_count": candidate_expansions,
             "visited_state_count": 1 + beam_size * model.gen_steps,
             "latency_ms": (time.perf_counter() - started) * 1000.0,
+        },
+    }
+
+
+def summarize_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    count = len(rows)
+    compute_fields = (
+        "nfe", "forward_calls", "logits_evaluated",
+        "candidate_expansion_count", "visited_state_count", "latency_ms",
+    )
+    return {
+        "episode_count": count,
+        "catalog_reachable_count": sum(bool(row["catalog_reachable"]) for row in rows),
+        "target_in_raw_valid_tuples_count": sum(
+            bool(row["target_in_raw_valid_tuples"]) for row in rows
+        ),
+        "target_only_after_projection_count": sum(
+            bool(row["target_only_after_projection"]) for row in rows
+        ),
+        "generation_search_miss_count": sum(
+            bool(row["generation_search_miss"]) for row in rows
+        ),
+        "resolution_loss_count": sum(bool(row["resolution_loss"]) for row in rows),
+        "ranking_conversion_miss_count": sum(
+            bool(row["ranking_conversion_miss"]) for row in rows
+        ),
+        "success_count": sum(bool(row["success"]) for row in rows),
+        "hit_at_10": (
+            sum(bool(row["hit_at_10"]) for row in rows) / count if count else None
+        ),
+        "ndcg_at_10": (
+            sum(float(row["ndcg_at_10"]) for row in rows) / count if count else None
+        ),
+        "exact_target_rank_count": sum(row["target_rank"] is not None for row in rows),
+        "right_censored_target_rank_count": sum(row["target_rank"] is None for row in rows),
+        "raw_candidate_count": sum(
+            row["candidate_summary"]["raw_candidate_count"] for row in rows
+        ),
+        "unique_raw_tuple_count": sum(
+            row["candidate_summary"]["unique_raw_tuple_count"] for row in rows
+        ),
+        "invalid_raw_tuple_count": sum(
+            row["candidate_summary"]["invalid_raw_tuple_count"] for row in rows
+        ),
+        "duplicate_raw_tuple_count": sum(
+            row["candidate_summary"]["duplicate_raw_tuple_count"] for row in rows
+        ),
+        "compute": {
+            field: sum(row["compute"][field] for row in rows)
+            for field in compute_fields
         },
     }
 
@@ -416,6 +471,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 token_to_items=token_to_items,
             ))
     count = len(episodes)
+    overall = summarize_rows(episodes)
     bundle = {
         "schema": "sidscope.llada_rec_trained_trace.v2",
         "route_id": "llada_rec",
@@ -432,23 +488,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "semantic_ids_sha256": sha256_file(args.semantic_ids),
         "episodes": episodes,
         "summary": {
-            "episode_count": count,
+            **overall,
             "five_bucket_counts": {
                 bucket: sum(row["gap_bucket"] == bucket for row in episodes)
                 for bucket in BUCKETS
             },
-            "hit_at_10": sum(bool(row["hit_at_10"]) for row in episodes) / count,
-            "ndcg_at_10": sum(float(row["ndcg_at_10"]) for row in episodes) / count,
-            "exact_target_rank_count": sum(row["target_rank"] is not None for row in episodes),
-            "right_censored_target_rank_count": sum(row["target_rank"] is None for row in episodes),
-            "invalid_raw_tuple_count": sum(row["candidate_summary"]["invalid_raw_tuple_count"] for row in episodes),
-            "duplicate_raw_tuple_count": sum(row["candidate_summary"]["duplicate_raw_tuple_count"] for row in episodes),
-            "compute": {
-                field: sum(row["compute"][field] for row in episodes)
-                for field in (
-                    "nfe", "forward_calls", "logits_evaluated",
-                    "candidate_expansion_count", "visited_state_count", "latency_ms",
-                )
+            "per_bucket": {
+                bucket: summarize_rows([
+                    row for row in episodes if row["gap_bucket"] == bucket
+                ])
+                for bucket in BUCKETS
             },
         },
     }
