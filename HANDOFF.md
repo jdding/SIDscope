@@ -11,7 +11,7 @@ verifier, deterministic archive smoke, and G8 clean-environment installation
 pass. Annotated tag `v1.1.0` remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
-Latte/PSID, RPG, DiffGRM VG, and DACT/TIGER Tools are the four configuration-bound named generator adapters
+Latte/PSID, RPG, DiffGRM, and DACT/TIGER Tools are the four configuration-bound named generator adapters
 admitted under the complete G0--G5 protocol. RPG retains parallel/unordered
 token-set and graph item-node semantics. The other generator routes remain
 useful, typed partial integrations and must retain their documented gate
@@ -25,8 +25,8 @@ The missing root license is recorded as a `NOASSERTION` marker and no longer
 blocks development, downstream execution, verification, or evidence delivery;
 upstream redistribution remains excluded. Downstream VG OPQ4/prepared/
 selection, CPU runtime, recoverable 10,000-step training, a five-bucket
-checkpoint smoke with typed failure, and a native v2 external 250-episode
-diagnostic pass. SIDScope accepts the configuration as a third
+checkpoint smoke with typed failure, and native v2 external 250-episode
+diagnostics pass independently on VG and Steam. SIDScope accepts the route as a
 configuration-bound named adapter through compact hash/count/metric evidence;
 the full traces and upstream assets remain external.
 
@@ -217,8 +217,8 @@ The machine-readable authority is
 | Latte / PSID | G0--G5 pass | `named_adapter` | Maintain v2 compatibility and rerun both public real smoke bundles for every release archive. |
 | RPG | G0--G5 pass on the pinned Beauty configuration | `named_adapter` | Maintain the bounded public smoke and rerun external training evidence only when the pinned source, cache, or configuration changes. |
 | TIGER / DACT | G0--G5 pass on released Tools configuration, including refreshed 500-target dual-mode ancestry export | `named_adapter` | Maintain compact external-trace evidence; rerun only when pinned inputs or configuration change. |
-| LLaDA-Rec | Source-identity G0 and G2--G4 adaptive-unmasking fixture pass; G1/trained evidence pending | `close_named_adapter` | Freeze project-bound tokenizer/checkpoint assets; run real G1 and trained G4--G5. |
-| DiffGRM | G0--G5 pass on frozen VG OPQ4/10,000-step configuration, including five-bucket native v2 smoke and external 250 diagnostic | `named_adapter` | Maintain compact evidence; verify Steam independently if run. |
+| LLaDA-Rec | Source-identity G0 and G2--G4 adaptive-unmasking fixture pass; pinned recoverable MultiHeadVQVAE runner and real two-epoch VG engineering smoke pass, formal G1/trained generator evidence pending | `close_named_adapter` | Complete the formal VG tokenizer asset, then bind the real round-trip and run generator training plus trained G4--G5. |
+| DiffGRM | G0--G5 pass independently on frozen VG and Steam OPQ4/10,000-step configurations, including five-bucket native v2 smokes and external 250 diagnostics | `named_adapter` | Maintain both compact configuration records; rerun only when pinned inputs change. |
 | Item-Supported Decoding | Content-addressed snapshot, fail-closed overlay contract, and exact-function smoke; G0 revision identity partial, G1 fixture, G5 partial | `close_named_adapter` | Obtain an immutable official revision; bind data/checkpoints and export a real overlay trace. |
 
 RPG must retain unordered token-set identity and graph-valid completion; it
@@ -297,7 +297,7 @@ boundary. Publication is closed as follows:
 4. final tag, commit, URL, archive checksum, and transcript are recorded in
    `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
 
-RPG, DiffGRM VG, and TIGER/DACT trained/released-checkpoint closure are complete
+RPG, DiffGRM VG/Steam, and TIGER/DACT trained/released-checkpoint closure are complete
 in 1.1.1.dev0. LLaDA-Rec real trained evidence and ISD immutable-source closure remain
 post-1.1.0 maintenance items. They must not silently change the immutable
 1.1.0 claim.
@@ -325,6 +325,7 @@ PUBLIC_RELEASE_COMMIT_1_1_0: a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
 LATTE_PSID_NAMED_ADAPTER: PASS_G0_G5
 RPG_NAMED_ADAPTER: PASS_G0_G5
 DIFFGRM_VG_NAMED_ADAPTER: PASS_G0_G5
+DIFFGRM_STEAM_NAMED_ADAPTER: PASS_G0_G5
 DACT_TIGER_NAMED_ADAPTER: PASS_G0_G5
 TOIS_FROZEN_SUBMISSION: UNCHANGED_OUT_OF_SCOPE
 ```

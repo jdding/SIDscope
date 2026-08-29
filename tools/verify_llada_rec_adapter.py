@@ -25,6 +25,7 @@ from sidinspector.adapters.llada_rec import (  # noqa: E402
 AUDIT = ROOT / "docs/reproducibility/llada_rec_source_audit.json"
 FIXTURE = ROOT / "examples/llada_rec_diffusion_fixture/manifest.json"
 OFFICIAL_SMOKE = ROOT / "docs/reproducibility/llada_rec_official_source_smoke.json"
+TOKENIZER_SMOKE = ROOT / "docs/reproducibility/llada_rec_vg_tokenizer_smoke.json"
 STATUS = ROOT / "docs/reproducibility/llada_rec_adapter_status.json"
 PINNED_REVISION = "83dbcd6061da9266adcd8f68b16d1de7cc2612f3"
 PINNED_MODEL_SHA256 = "280b0332e1bef6ee3ae40011a9e481102f158a55e02118a492e8f1087f681133"
@@ -46,6 +47,7 @@ def verify() -> dict[str, Any]:
     audit = _read_json(AUDIT)
     fixture = _read_json(FIXTURE)
     smoke = _read_json(OFFICIAL_SMOKE)
+    tokenizer_smoke = _read_json(TOKENIZER_SMOKE)
     status = _read_json(STATUS)
 
     source = audit.get("source", {})
@@ -130,20 +132,59 @@ def verify() -> dict[str, Any]:
     if semantics.get("filled_positions_remasked") is not False:
         failures.append("official-source smoke incorrectly claims remasking")
 
+    if tokenizer_smoke.get("schema") != "sidscope.llada_rec_project_tokenizer_smoke.v1":
+        failures.append("project tokenizer smoke schema mismatch")
+    if tokenizer_smoke.get("status") != "pass":
+        failures.append("project tokenizer smoke status mismatch")
+    if tokenizer_smoke.get("source_revision") != PINNED_REVISION:
+        failures.append("project tokenizer smoke revision mismatch")
+    if tokenizer_smoke.get("scope") != (
+        "two_epoch_engineering_smoke_not_formal_tokenizer_or_generator_evidence"
+    ):
+        failures.append("project tokenizer smoke promotion boundary mismatch")
+    tokenizer_config = tokenizer_smoke.get("configuration", {})
+    if tokenizer_config.get("catalog_rows") != 17396:
+        failures.append("project tokenizer smoke catalog-row mismatch")
+    if tokenizer_config.get("semantic_positions") != 4:
+        failures.append("project tokenizer smoke semantic-position mismatch")
+    if tokenizer_config.get("codebook_size_per_position") != 256:
+        failures.append("project tokenizer smoke codebook-size mismatch")
+    tokenizer_outputs = tokenizer_smoke.get("outputs", {})
+    if tokenizer_outputs.get("completed_epochs") != 2:
+        failures.append("project tokenizer smoke epoch-count mismatch")
+    if tokenizer_outputs.get("checkpoint_reloaded_strict") is not True:
+        failures.append("project tokenizer smoke did not strictly reload checkpoint")
+    if tokenizer_outputs.get("unique_semantic_ids") != 17345:
+        failures.append("project tokenizer smoke unique-SID count mismatch")
+    if tokenizer_outputs.get("collision_excess") != 51:
+        failures.append("project tokenizer smoke collision count mismatch")
+    privacy = tokenizer_smoke.get("privacy", {})
+    if any(
+        privacy.get(field) is not False
+        for field in (
+            "contains_source_item_ids",
+            "contains_embeddings",
+            "contains_checkpoint",
+            "contains_private_paths",
+        )
+    ):
+        failures.append("project tokenizer smoke violates compact-evidence privacy boundary")
+
     gates = {
         "G0": "pass_source_revision_method_identity_license_noassertion_marker",
-        "G1": "bounded_fixture_only_official_data_roundtrip_pending",
+        "G1": "real_project_tokenizer_smoke_pass_formal_item_sid_roundtrip_pending",
         "G2": "bounded_masked_adaptive_unmasking_state_and_official_method_smoke_pass",
         "G3": "bounded_validity_ambiguity_resolution_and_remasking_failure_contract_pass",
         "G4": "bounded_trace_and_ranked_item_export_pass_real_trained_trace_pending",
-        "G5": "partial_cpu_fixture_and_official_class_method_smoke_pass_checkpoint_pending",
+        "G5": "partial_real_tokenizer_checkpoint_smoke_pass_generator_checkpoint_pending",
     }
     input_sha256 = {
         "source_audit": _sha256(AUDIT),
         "fixture_manifest": _sha256(FIXTURE),
         "official_source_smoke": _sha256(OFFICIAL_SMOKE),
+        "project_tokenizer_smoke": _sha256(TOKENIZER_SMOKE),
     }
-    if status.get("schema") != "sidscope.llada_rec_adapter_status.v2":
+    if status.get("schema") != "sidscope.llada_rec_adapter_status.v3":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != gates:
         failures.append("adapter status G0-G5 fields differ from the executable verifier")
@@ -180,9 +221,19 @@ def verify() -> dict[str, Any]:
             "runtime": smoke.get("runtime"),
             "boundary": smoke.get("boundary"),
         },
+        "project_tokenizer_smoke": {
+            "status": tokenizer_smoke.get("status"),
+            "scope": tokenizer_smoke.get("scope"),
+            "catalog_rows": tokenizer_config.get("catalog_rows"),
+            "unique_semantic_ids": tokenizer_outputs.get("unique_semantic_ids"),
+            "collision_excess": tokenizer_outputs.get("collision_excess"),
+            "checkpoint_reloaded_strict": tokenizer_outputs.get(
+                "checkpoint_reloaded_strict"
+            ),
+        },
         "promotion": {
             "named_adapter": False,
-            "reason": "The license is a non-redistribution marker; real G1 identity, fixed project-bound assets, trained G4-G5 trace, and checkpoint smoke remain technically open.",
+            "reason": "The license is a non-redistribution marker; the real two-epoch project tokenizer smoke passes, while formal G1 identity, trained G4-G5 trace, and a generator checkpoint smoke remain technically open.",
         },
         "input_sha256": input_sha256,
         "failures": failures,

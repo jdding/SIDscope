@@ -32,16 +32,17 @@ SOURCE_AUDIT = ROOT / "docs/reproducibility/diffgrm_www2026_source_audit.json"
 STAGED_PREFLIGHT = ROOT / "docs/reproducibility/diffgrm_www2026_staged_preflight.json"
 STATUS = ROOT / "docs/reproducibility/diffgrm_www2026_adapter_status.json"
 TRAINED_EVIDENCE = ROOT / "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json"
+STEAM_TRAINED_EVIDENCE = ROOT / "docs/reproducibility/diffgrm_steam_trained_trace_evidence.json"
 REAL_BUNDLE_VERIFIER = ROOT / "tools/verify_diffgrm_trained_trace_bundle.py"
 ADAPTER_CORE = ROOT / "src/sidinspector/adapters/diffgrm.py"
 PINNED_REVISION = "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c"
 GATES = {
     "G0": "pass_publication_revision_source_identity_license_noassertion_marker_nonredistribution",
-    "G1": "pass_real_vg_opq4_item_sid_vocabulary_roundtrip_and_explicit_five_bucket_selection",
+    "G1": "pass_real_vg_and_steam_opq4_item_sid_vocabulary_roundtrip_and_explicit_five_bucket_selection",
     "G2": "pass_real_checkpoint_bound_native_noising_adaptive_denoising_and_beam_ancestry",
     "G3": "pass_real_raw_validity_duplicate_collision_resolution_and_typed_failure",
-    "G4": "pass_real_five_episode_and_external_250_episode_ranked_item_and_censoring_exports",
-    "G5": "pass_recoverable_training_checkpoint_smoke_typed_failure_external_diagnostic_and_verifiers",
+    "G4": "pass_real_vg_and_steam_five_episode_and_external_250_episode_ranked_item_and_censoring_exports",
+    "G5": "pass_vg_and_steam_recoverable_training_checkpoint_smoke_typed_failure_external_diagnostic_and_verifiers",
 }
 
 
@@ -128,6 +129,7 @@ def verify() -> dict[str, Any]:
     staged = _read(STAGED_PREFLIGHT)
     status = _read(STATUS)
     trained_evidence = _read(TRAINED_EVIDENCE)
+    steam_evidence = _read(STEAM_TRAINED_EVIDENCE)
     prepared = _read(FIXTURE / "prepared_dataset.json")
     selection = _read(FIXTURE / "episode_selection.json")
     trace = _read(FIXTURE / "trained_trace_fixture.json")
@@ -198,7 +200,8 @@ def verify() -> dict[str, Any]:
     }
     input_sha256 = {name: _sha256(path) for name, path in evidence_paths.items()}
     input_sha256["trained_trace_evidence"] = _sha256(TRAINED_EVIDENCE)
-    if status.get("schema") != "sidscope.diffgrm_adapter_status.v3":
+    input_sha256["steam_trained_trace_evidence"] = _sha256(STEAM_TRAINED_EVIDENCE)
+    if status.get("schema") != "sidscope.diffgrm_adapter_status.v4":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != GATES:
         failures.append("adapter status gates differ from executable verifier")
@@ -246,6 +249,18 @@ def verify() -> dict[str, Any]:
         REAL_BUNDLE_VERIFIER
     ):
         failures.append("trained evidence real-bundle verifier hash mismatch")
+    steam_diagnostic = steam_evidence.get("balanced_diagnostic", {})
+    if (
+        steam_evidence.get("status") != "pass"
+        or steam_evidence.get("source_revision") != PINNED_REVISION
+        or steam_diagnostic.get("episodes") != 250
+        or steam_diagnostic.get("five_bucket_counts") != {
+            "short": 50, "30-90d": 50, "90-180d": 50,
+            "180-365d": 50, ">365d": 50,
+        }
+        or steam_diagnostic.get("official_top10_equivalence") is not True
+    ):
+        failures.append("Steam trained diagnostic evidence boundary mismatch")
 
     return {
         "schema": "sidscope.diffgrm_adapter_verification.v1",
@@ -262,7 +277,7 @@ def verify() -> dict[str, Any]:
             "named_adapter": True,
             "execution_authorized": True,
             "redistribution_authorized": False,
-            "reason": "The configuration-bound VG checkpoint smoke and external 250-episode native v2 diagnostic pass; the license remains a non-redistribution marker.",
+            "reason": "The configuration-bound VG and Steam checkpoint smokes and external 250-episode native v2 diagnostics pass; the license remains a non-redistribution marker.",
         },
         "input_sha256": input_sha256,
         "failures": failures,

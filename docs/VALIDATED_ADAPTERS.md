@@ -113,22 +113,25 @@ parallel graph trace, and an external 250-episode trace with complete target-
 universe hash/count evidence. The route retains unordered token sets and graph
 item nodes; it is not represented as an autoregressive prefix trace.
 LLaDA-Rec now has a pinned source audit with a `NOASSERTION` license marker,
-bounded adaptive-unmasking trace fixture, and official class-method smoke. It
-remains below named-adapter status because no released cache, checkpoint,
-official-data round-trip, or trained trace exists. ISD has moved
+bounded adaptive-unmasking trace fixture, official class-method smoke, and a
+real two-epoch project tokenizer engineering smoke with strict checkpoint
+reload. It remains below named-adapter status because the formal frozen
+tokenizer asset, complete item/SID/vocabulary round-trip, generator checkpoint,
+and trained trace do not yet exist. ISD has moved
 off source watch: its paper-linked anonymous artifact now supports an exact-
 function smoke and bounded decoder-overlay contract. It remains below named-
 adapter status because the snapshot lacks an immutable revision, released
 assets, official-data round-trip, and real model-backed trace. Its license is
 also retained only as a redistribution marker.
 
-DiffGRM passes G0--G5 as a configuration-bound VG named adapter. Its The Web
+DiffGRM passes G0--G5 independently as configuration-bound VG and Steam named
+adapters. Its The Web
 Conference 2026 publication and immutable source revision are bound, while its
 license state remains a `NOASSERTION` redistribution marker. The independent
 dataset-neutral fixture verifier, real five-bucket checkpoint trace, typed
 negative bundle, recoverable-training provenance, and external 250-episode
 diagnostic are accepted by compact hashes and counts without redistributing the
-upstream source, checkpoint, prepared data, or full trace.
+upstream source, checkpoints, prepared data, or full traces.
 
 See `docs/GENERATOR_ADAPTER_CONFORMANCE.md` and
 `docs/reproducibility/generator_adapter_coverage.csv` for the typed status and

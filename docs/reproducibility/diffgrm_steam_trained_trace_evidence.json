@@ -1,0 +1,82 @@
+{
+  "schema": "sidscope.diffgrm_steam_trained_trace_evidence.v1",
+  "status": "pass",
+  "route_id": "diffgrm_www2026",
+  "configuration_id": "steam_opq4_s2024_10000_steps",
+  "audited_at": "2026-08-29",
+  "source_revision": "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c",
+  "license_marker": "NOASSERTION_nonredistribution_only",
+  "training": {
+    "completed_steps": 10000,
+    "completed_epochs": 14,
+    "resumed": true,
+    "continuous_epoch_records": true,
+    "checkpoint_reloaded_strict": true,
+    "checkpoint_sha256": "cf7370b8e4df61868053b857d2b732b4e87fda6107f4878bf7df5a17a4039e5b",
+    "last_state_sha256": "f706dcc3dd8644b7d8c56a11df0df8cde5df08b975118721a07f301c3814632f",
+    "model_state_sha256": "9559cc9e2a16886a655343352228cdc3bd88f916b1a7bf1bb961b0c65199fecb",
+    "training_manifest_sha256": "401d7310cccb236c9727e087b3df90d57202b854159612e365e10246101e8e99",
+    "semantic_id_cache_sha256": "19a5cea21a2e04fc106d71ecb7747454a8062610f456bb54c2fba0552f223340"
+  },
+  "five_episode_smoke": {
+    "episodes": 5,
+    "five_bucket_counts": {
+      "short": 1,
+      "30-90d": 1,
+      "90-180d": 1,
+      "180-365d": 1,
+      ">365d": 1
+    },
+    "bundle_sha256": "d06f4270dd893420748d44cb8c770f2ce373af68053e51767fd9586dd24d7c3e",
+    "verification_sha256": "f0b99f89ee475598732aa308d59f71171e54bff2b7cb815b6ef9beaf874a9df0",
+    "typed_expected_failure": "unknown_parent_beam",
+    "official_top10_equivalence": true
+  },
+  "balanced_diagnostic": {
+    "episodes": 250,
+    "five_bucket_counts": {
+      "short": 50,
+      "30-90d": 50,
+      "90-180d": 50,
+      "180-365d": 50,
+      ">365d": 50
+    },
+    "bundle_sha256": "67fbda07010a9d969a421efbbe4f89b65faedf1bc023e7969d497beb8d03bdac",
+    "canonical_bundle_sha256": "c101bfe1edc4fce218294ff48c95365b2ec3d197275f15a62b3cca9a4df3cdcc",
+    "trace_export_manifest_sha256": "ba6438fcffd5091b54e2a809457dedc8cefbcb36fab88d130243dd55b3f9ae64",
+    "verification_sha256": "6c430e482645ff78e6a586a01c701b6b3c5eb8e6dc5964146fa7630581f45e71",
+    "official_top10_equivalence": true,
+    "sample_boundary": "target-independent balanced diagnostic subset; not a population estimate",
+    "metrics": {
+      "hit_at_10": 0.092,
+      "ndcg_at_10": 0.04288754891370982,
+      "generation_search_miss_count": 188,
+      "ranking_conversion_miss_count": 39,
+      "resolution_loss_count": 0
+    },
+    "rank_summary": {
+      "exact_target_rank_count": 62,
+      "right_censored_target_rank_count": 188
+    },
+    "resolution_summary": {
+      "catalog_collision_count": 216,
+      "duplicate_raw_tuple_count": 40011,
+      "invalid_raw_tuple_count": 9543,
+      "unique_raw_tuple_count": 23989
+    },
+    "compute_summary": {
+      "candidate_expansion_count": 323967,
+      "forward_calls": 1000,
+      "logits_evaluated": 196864000,
+      "nfe": 1000,
+      "visited_state_count": 256250,
+      "latency_ms": 120762.37852708437
+    }
+  },
+  "redistribution": {
+    "upstream_source_vendored": false,
+    "checkpoint_vendored": false,
+    "semantic_id_cache_vendored": false,
+    "full_trace_bundle_vendored": false
+  }
+}

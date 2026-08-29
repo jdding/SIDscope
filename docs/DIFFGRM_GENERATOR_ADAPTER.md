@@ -159,10 +159,14 @@ The VG closure sequence completed as follows:
 
 VG now satisfies that unlock rule. Steam does not inherit VG evidence. Its
 dataset-neutral train-only materialization, prepared contract, official OPQ4
-round-trip, explicit 5/250 selections, and 8-update five-bucket checkpoint
-smoke pass. Compact pre-training evidence is recorded in
-`docs/reproducibility/diffgrm_steam_bridge_preflight_evidence.json`; formal
-recoverable training and native trace verification remain configuration-local
-gates.
+round-trip, explicit 5/250 selections, 8-update checkpoint smoke, recoverable
+10,000-step formal training, five-bucket native v2 smoke, typed negative, and
+external 250-row diagnostic all pass. The 250-row diagnostic preserves exact
+official top-10 equivalence, reports Hit@10 `0.092` and NDCG@10
+`0.04288754891370982`, and separates 188 generation-search misses from 39
+ranking-conversion misses with zero resolution loss. Compact evidence is in
+`docs/reproducibility/diffgrm_steam_bridge_preflight_evidence.json` and
+`docs/reproducibility/diffgrm_steam_trained_trace_evidence.json`; private
+prepared data, checkpoints, caches, and full traces remain external.
 
 No current RPG or other live run needs to be modified or interrupted.

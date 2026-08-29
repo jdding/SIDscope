@@ -90,10 +90,13 @@ adapter. The exact boundary is in
 LLaDA-Rec has a pinned source audit, an independent masked-state trace schema,
 a deterministic CPU fixture, and an official class-method smoke for all-mask
 initialization, confidence-selected position transfer, and position-valid beam
-expansion. The pinned source monotonically unmasks positions and never remasks
-filled positions. Its source-identity G0 passes with `NOASSERTION` recorded as
-a non-redistribution marker, while real-data identity, fixed project-bound
-assets, and trained trace gates remain open. The
+expansion. A recoverable official MultiHeadVQVAE wrapper also passes a real
+two-epoch engineering smoke on the frozen VG train-only catalog, with strict
+checkpoint reload and collision-aware SID export. The pinned source
+monotonically unmasks positions and never remasks filled positions. Its
+source-identity G0 passes with `NOASSERTION` recorded as a non-redistribution
+marker, while the formal item/SID/vocabulary identity, frozen project-bound
+tokenizer asset, and trained generator trace gates remain open. The
 exact boundary is in `docs/LLADA_REC_DIFFUSION_ADAPTER.md` and
 `docs/reproducibility/llada_rec_adapter_status.json`.
 
@@ -107,10 +110,12 @@ resolution, and typed rank censoring. Its missing root license is recorded as a
 or derived-evidence delivery; upstream redistribution remains outside the
 adapter. An independent three-file CLI now verifies real prepared, selection,
 and checkpoint-bound v2 trace bundles without replaying source/license audit.
-The real frozen-VG OPQ4 round-trip, 10,000-step checkpoint, five-bucket native
-v2 smoke, typed failure, and external 250-episode balanced diagnostic now pass.
-DiffGRM is therefore a configuration-bound named adapter; the full traces stay
-external and are bound by compact hashes, counts, metrics, and verifier output.
+The real frozen-VG and Steam OPQ4 round-trips, independent 10,000-step
+checkpoints, five-bucket native v2 smokes, typed failures, and external
+250-episode balanced diagnostics now pass. DiffGRM is therefore a
+configuration-bound named adapter for both frozen configurations; the full
+traces stay external and are bound by compact hashes, counts, metrics, and
+verifier output.
 See
 `docs/DIFFGRM_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/diffgrm_www2026_adapter_status.json`.

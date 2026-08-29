@@ -1,16 +1,16 @@
 {
-  "schema": "sidscope.diffgrm_adapter_status.v3",
+  "schema": "sidscope.diffgrm_adapter_status.v4",
   "route_id": "diffgrm_www2026",
   "adapter_version": "sidscope.diffgrm_adapter.v1",
   "source_revision": "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c",
   "audited_at": "2026-08-29",
   "gates": {
     "G0": "pass_publication_revision_source_identity_license_noassertion_marker_nonredistribution",
-    "G1": "pass_real_vg_opq4_item_sid_vocabulary_roundtrip_and_explicit_five_bucket_selection",
+    "G1": "pass_real_vg_and_steam_opq4_item_sid_vocabulary_roundtrip_and_explicit_five_bucket_selection",
     "G2": "pass_real_checkpoint_bound_native_noising_adaptive_denoising_and_beam_ancestry",
     "G3": "pass_real_raw_validity_duplicate_collision_resolution_and_typed_failure",
-    "G4": "pass_real_five_episode_and_external_250_episode_ranked_item_and_censoring_exports",
-    "G5": "pass_recoverable_training_checkpoint_smoke_typed_failure_external_diagnostic_and_verifiers"
+    "G4": "pass_real_vg_and_steam_five_episode_and_external_250_episode_ranked_item_and_censoring_exports",
+    "G5": "pass_vg_and_steam_recoverable_training_checkpoint_smoke_typed_failure_external_diagnostic_and_verifiers"
   },
   "input_sha256": {
     "source_audit": "86226fc796efd4b196ef6bce23fadf0830e5168370a8a6b408346673b43ad798",
@@ -19,7 +19,8 @@
     "episode_selection": "51aee1a0b37ac0ce9d8a2f5eb97c481a947517642a55f082b72975ece580b784",
     "trace_fixture": "fcdbd9b4a790f772076080c56cfd80a190d8d5ef06a79d0f088c875704a42041",
     "expected_failures": "30c888ed67eeb5dc14fe1cf9377edd09386fec5919fb2f22468201655084e530",
-    "trained_trace_evidence": "3f63cd08b90490a3fdef128436bdafd8589290a31d3cf552a9590946ae9d5c5d"
+    "trained_trace_evidence": "3f63cd08b90490a3fdef128436bdafd8589290a31d3cf552a9590946ae9d5c5d",
+    "steam_trained_trace_evidence": "8af110e0c327fd5c475e5005cf43249e600138641330d2f1f0a568dc273e6233"
   },
   "verified_contract": {
     "prepared_schema": "sidscope.diffgrm_prepared_dataset.v1",
@@ -39,7 +40,10 @@
     "execution_authorized": true,
     "redistribution_authorized": false,
     "gpu_work_authorized": true,
-    "configuration_bound": "AmazonReviews2023/Video_Games frozen dormant protocol with a separately frozen official DiffGRM OPQ4 tokenizer and 10000-step checkpoint",
+    "configuration_bound": [
+      "AmazonReviews2023/Video_Games frozen dormant protocol with a separately frozen official DiffGRM OPQ4 tokenizer and 10000-step checkpoint",
+      "Steam frozen dormant protocol with a separately frozen official DiffGRM OPQ4 tokenizer and 10000-step checkpoint"
+    ],
     "restrictions": [
       "The upstream root license remains a NOASSERTION marker and SIDScope redistributes no upstream source or assets.",
       "The full five-episode and 250-episode native traces remain external and are bound by hashes counts metrics and verifier results.",

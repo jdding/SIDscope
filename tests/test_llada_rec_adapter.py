@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 import json
+from argparse import Namespace
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -14,6 +16,7 @@ from sidinspector.adapters.llada_rec import (
     resolve_model_tokens,
     run_deterministic_diffusion_fixture,
 )
+from tools.run_llada_rec_resumable_tokenizer import bindings, validate_state
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,6 +78,39 @@ class LLaDARecAdapterTest(unittest.TestCase):
         with self.assertRaises(LLaDARecContractError) as raised:
             run_deterministic_diffusion_fixture(invalid)
         self.assertEqual(raised.exception.label, "selected_position_not_masked")
+
+    def test_tokenizer_resume_is_bound_and_contiguous(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            runtime = root / "runtime.json"
+            embeddings = root / "embeddings.bin"
+            source = root / "source.json"
+            runtime.write_text("runtime", encoding="utf-8")
+            embeddings.write_bytes(b"embeddings")
+            source.write_text("source", encoding="utf-8")
+            expected = bindings(Namespace(
+                runtime_manifest=runtime,
+                sentence_embeddings=embeddings,
+                source_manifest=source,
+                domain="amazon_vg",
+                seed=2024,
+                expected_catalog_rows=3,
+                learning_rate=0.001,
+                weight_decay=1e-4,
+                batch_size=2,
+                target_epochs=2,
+            ))
+            state = {
+                "schema": "sidscope.llada_rec_tokenizer_state.v1",
+                "bindings": expected,
+                "completed_epochs": 2,
+                "epoch_records": [{"epoch": 1}, {"epoch": 2}],
+                "model": {}, "optimizer": {}, "rng_state": {},
+            }
+            validate_state(state, expected)
+            state["epoch_records"][1]["epoch"] = 3
+            with self.assertRaisesRegex(ValueError, "not contiguous"):
+                validate_state(state, expected)
 
 
 if __name__ == "__main__":

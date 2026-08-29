@@ -92,12 +92,28 @@ The fixture is deidentified and deterministic. The source smoke uses
 handcrafted logits to verify confidence selection, all-mask initialization,
 and position-valid beam expansion. Neither is a trained recommendation result.
 
+SIDScope also ships a recoverable, revision-bound wrapper for the official
+MultiHeadVQVAE tokenizer:
+
+```bash
+python3 tools/run_llada_rec_resumable_tokenizer.py --help
+```
+
+A real two-epoch engineering smoke on the frozen VG train-only catalog passed
+for 17,396 normalized items using PCA128 whitening and four 256-entry
+position-specific codebooks. It strictly reloaded the checkpoint and exported
+17,345 unique semantic tuples (51 collision excess). The compact, path-free
+record is `docs/reproducibility/llada_rec_vg_tokenizer_smoke.json`. This result
+tests the data shape, official tokenizer path, atomic state, and export; it is
+not the frozen formal tokenizer asset and is not a generator result.
+
 ## Promotion boundary
 
 The route is not a named adapter. Source and method identity pass G0 with
-`NOASSERTION` retained as a non-redistribution marker; G1 lacks a real
-official-code project-bound semantic-ID round-trip; G2--G4 have bounded
-contract evidence only; and G5 lacks a checkpoint or fully recorded training
-output. A future promotion requires a fixed artifact/checkpoint boundary, real
-source-item resolution, trained trace export, and a passing end-to-end
-verifier. Missing license does not block that work or compact evidence delivery.
+`NOASSERTION` retained as a non-redistribution marker; the project tokenizer
+engineering smoke passes, but formal G1 still requires a frozen item-to-SID-to-
+model-vocabulary round-trip. G2--G4 have bounded contract evidence only, and G5
+lacks a generator checkpoint or fully recorded generator output. A future
+promotion requires a fixed formal artifact/checkpoint boundary, real source-
+item resolution, trained trace export, and a passing end-to-end verifier.
+Missing license does not block that work or compact evidence delivery.

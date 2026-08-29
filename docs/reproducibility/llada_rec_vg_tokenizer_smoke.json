@@ -1,0 +1,47 @@
+{
+  "schema": "sidscope.llada_rec_project_tokenizer_smoke.v1",
+  "route_id": "llada_rec",
+  "dataset_profile": "amazon_vg_frozen_train_only_catalog",
+  "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+  "status": "pass",
+  "scope": "two_epoch_engineering_smoke_not_formal_tokenizer_or_generator_evidence",
+  "configuration": {
+    "catalog_rows": 17396,
+    "embedding_dim": 768,
+    "pca_dim": 128,
+    "pca_whiten": true,
+    "semantic_positions": 4,
+    "codebook_size_per_position": 256,
+    "batch_size": 2048,
+    "target_epochs": 2,
+    "seed": 2024
+  },
+  "bindings": {
+    "source_manifest_sha256": "7abb4ba3fb8ca321c538ebe60ee13e47de342ec6e4c3a79afc2beb5084e971e1",
+    "source_tokenizer_sha256": "377cc774bba53feb36f19f82fad69291d1c7f1890acaf9f2bd36cb9732b3b73a",
+    "source_config_sha256": "e0850bcd283525200d7a6cc174b01c4b1f4d69f0c79b1bbfb11f83b847b74092",
+    "runtime_manifest_sha256": "20e9851295502ea42c6e3502ad5a5e42f2e578789d953282d5e739cf42a9bac4",
+    "sentence_embeddings_sha256": "9bc9af0069852fe26fb94c7a6ff9e7b2a00c4e16049d3e762367dbc6ab8d386a",
+    "runner_sha256": "dfe4493a7f4bf06d6548f3db3b8d3d684fd1af314dbc6911e8805b306bfa4809"
+  },
+  "outputs": {
+    "completed_epochs": 2,
+    "best_epoch": 2,
+    "best_collision_rate": 0.04995401241664754,
+    "unique_semantic_ids": 17345,
+    "collision_excess": 51,
+    "checkpoint_reloaded_strict": true,
+    "best_checkpoint_sha256": "7e692afaffca98ffcc82cea6c154e9f90a2e0667ecdecb743ca8d552f886d541",
+    "last_state_sha256": "d875ae488e791cecb64c5044a4b766462da45261f36a9282a2ded57ab2c1e08b",
+    "model_state_sha256": "3485714ffddba314c4e78b8bd26e3f45a26792968aaec549c2ec5e9a9bbd7984",
+    "semantic_ids_sha256": "61f6c7ad71e7c685199af03e1d4f35733223ec0b724e7a48477cec1c2f498916",
+    "training_manifest_sha256": "049503003b559e69cecaca95f23bab11ea563774a06025cb8d8d5a51aeaa634b"
+  },
+  "privacy": {
+    "contains_source_item_ids": false,
+    "contains_embeddings": false,
+    "contains_checkpoint": false,
+    "contains_private_paths": false
+  },
+  "next_gate": "complete_formal_tokenizer_then_bind_real_item_sid_vocabulary_roundtrip_and_generator_checkpoint_trace"
+}
