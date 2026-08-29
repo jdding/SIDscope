@@ -18,9 +18,6 @@ Generator integrations declare one of four kinds:
 - `decoder_overlay`: an external item scorer that changes candidate survival or
   final ranking without replacing the SID generator, such as ISD.
 
-Temporal augmentation is recorded as `temporal_protocol` until an official
-implementation binds both the tokenizer and generator stages.
-
 ## G0--G5 Protocol
 
 | Level | Question | Required evidence |
@@ -54,7 +51,7 @@ typed rather than being flattened into an autoregressive prefix:
 The machine-readable status ledger is
 `docs/reproducibility/generator_adapter_coverage.csv`. It distinguishes released
 reference evidence from complete named-method adapters and records the next
-gate for TIGER/DACT, Latte/PSID, RPG, LLaDA-Rec, ISD, and ChronoSID.
+gate for TIGER/DACT, Latte/PSID, RPG, LLaDA-Rec, DiffGRM, and ISD.
 
 Project-local workarounds may be attached as issue evidence, but they remain
 non-canonical until the corresponding SIDScope adapter and verifier pass. This

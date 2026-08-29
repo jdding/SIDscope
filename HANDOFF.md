@@ -204,7 +204,6 @@ The machine-readable authority is
 | LLaDA-Rec | G2--G4 adaptive-unmasking fixture; G0 blocked and G1/trained evidence pending | `close_named_adapter` | Obtain an explicit source license plus fixed tokenizer/checkpoint assets; run real G1 and trained G4--G5. |
 | DiffGRM | G0 source identity pass with `NOASSERTION` marker; downstream VG OPQ4/prepared/selection and bounded checkpoint smoke reported pass; native v2 trace pending | `close_named_adapter` | Export and accept the five-bucket checkpoint-bound v2 trace with the independent CLI; then run the VG 250 diagnostic before Steam. |
 | Item-Supported Decoding | Fail-closed overlay contract and exact-function smoke; G0 blocked, G1 fixture, G5 partial | `close_named_adapter` | Obtain an immutable official revision and license; bind data/checkpoints and export a real overlay trace. |
-| ChronoSID | Official versioned source/assets unavailable | `watch_official_source` | Keep on source watch. |
 
 RPG must retain unordered token-set identity and graph-valid completion; it
 must never be converted into a TIGER-style autoregressive prefix trace.
@@ -283,9 +282,9 @@ boundary. Publication is closed as follows:
    `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
 
 RPG trained closure is complete in 1.1.1.dev0. TIGER/DACT license closure,
-LLaDA-Rec real trained evidence, ISD immutable-source closure, and ChronoSID
-source availability remain post-1.1.0 maintenance items. They must not
-silently change the immutable 1.1.0 claim.
+LLaDA-Rec real trained evidence, and ISD immutable-source closure remain
+post-1.1.0 maintenance items. They must not silently change the immutable
+1.1.0 claim.
 
 ## Resume protocol
 

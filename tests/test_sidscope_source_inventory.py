@@ -20,12 +20,31 @@ class SIDScopeSourceInventoryTest(unittest.TestCase):
         result = verify_generator_coverage(DEFAULT_GENERATOR_COVERAGE)
 
         self.assertEqual(result["status"], "pass", result["failures"])
-        self.assertEqual(result["route_count"], 7)
+        self.assertEqual(result["route_count"], 6)
         self.assertEqual(result["decision_counts"]["reference_trace_available"], 0)
         self.assertEqual(result["decision_counts"]["close_named_adapter"], 4)
         self.assertEqual(result["decision_counts"]["go_source_audit"], 0)
-        self.assertEqual(result["decision_counts"]["watch_official_source"], 1)
         self.assertEqual(result["decision_counts"]["named_adapter"], 2)
+        self.assertNotIn("watch_official_source", result["decision_counts"])
+
+    def test_code_less_route_cannot_enter_generator_coverage(self) -> None:
+        with DEFAULT_GENERATOR_COVERAGE.open(newline="", encoding="utf-8") as handle:
+            rows = list(csv.DictReader(handle))
+            fieldnames = list(rows[0])
+        rows[0]["source_state"] = "no_official_code_found"
+
+        with tempfile.TemporaryDirectory() as tmp:
+            coverage = Path(tmp) / "generator_adapter_coverage.csv"
+            with coverage.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(handle, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(rows)
+            result = verify_generator_coverage(coverage)
+
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(
+            any("without official code" in item for item in result["failures"])
+        )
 
     def test_repository_inventory_matches_paper_coverage(self) -> None:
         result = verify_inventory(DEFAULT_INVENTORY, DEFAULT_COVERAGE)

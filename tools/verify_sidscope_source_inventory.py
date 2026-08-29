@@ -93,7 +93,6 @@ EXPECTED_GENERATOR_ROUTE_IDS = {
     "llada_rec",
     "diffgrm_www2026",
     "isd",
-    "chronosid",
 }
 GENERATOR_REQUIRED_COLUMNS = {
     "route_id",
@@ -115,13 +114,11 @@ ALLOWED_GENERATOR_ADAPTER_KINDS = {
     "parallel_generator",
     "diffusion_generator",
     "decoder_overlay",
-    "temporal_protocol",
 }
 ALLOWED_GENERATOR_DECISIONS = {
     "reference_trace_available",
     "close_named_adapter",
     "go_source_audit",
-    "watch_official_source",
     "named_adapter",
 }
 
@@ -400,11 +397,9 @@ def verify_generator_coverage(path: Path) -> dict[str, Any]:
             )
         if not row.get("source_url", "").startswith("https://"):
             failures.append(f"generator row {row_number} source_url must use https")
-        if row.get("source_state") == "no_official_code_found" and row.get(
-            "current_decision"
-        ) != "watch_official_source":
+        if row.get("source_state") == "no_official_code_found":
             failures.append(
-                f"generator row {row_number} without official code must remain source watch"
+                f"generator row {row_number} without official code cannot enter adapter coverage"
             )
         if row.get("current_decision") == "named_adapter" and row.get(
             "contract_state"

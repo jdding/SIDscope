@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -10,6 +10,12 @@ release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
+
+## SIDScope v1.1.1.dev0: formal adapter coverage cleanup
+
+- Removed the code-less ChronoSID source-watch row from the formal generator
+  adapter ledger. Literature-only candidates without official source are not
+  represented as adapters or product states.
 
 ## SIDScope v1.1.1.dev0: DiffGRM external trained-trace verification
 
@@ -105,9 +111,9 @@ does not revise the frozen paper, submission package, evidence, or claims.
   in their own environments.
 - No diagnostic definition, evidence snapshot, or manuscript/PDF change.
 - Added a G0--G5 generator-adapter protocol and a verified coverage ledger for
-  TIGER/DACT, Latte/PSID, RPG, LLaDA-Rec, ISD, and ChronoSID. The ledger keeps
-  released reference evidence, named-adapter closure, source-audit candidates,
-  and source-watch routes distinct.
+  TIGER/DACT, Latte/PSID, RPG, LLaDA-Rec, and ISD. The ledger keeps
+  released reference evidence, named-adapter closure, and source-audit
+  candidates distinct.
 - Pinned RPG's official source at `7dcf95c`, recorded its CC BY-NC 4.0 code
   boundary and absence of released checkpoints/caches, and added an independent
   unordered token-set plus per-item graph-node adapter contract.

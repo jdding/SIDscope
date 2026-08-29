@@ -31,7 +31,6 @@ retroactively change submitted claims or tables.
 | P1 | DiffGRM | WWW 2026 source identity and `NOASSERTION` marker are bound without making license an experiment gate. Downstream VG OPQ4/prepared/selection, CPU runtime, and bounded five-bucket checkpoint smoke are reported pass. The independent v2 real-bundle CLI is ready; next accept the checkpoint-bound native trace, then run the VG 250 diagnostic before Steam. |
 | P1 | TIGER / DACT | Method-facing report complete: G1--G5 pass; obtain an explicit upstream code/asset license and rerun the 500-target primary with ancestry export to unblock G0 and promotion. |
 | P2 | Item-Supported Decoding | Paper-linked anonymous source, exact-function smoke, and bounded overlay contract are complete; obtain an immutable official revision and code license, then bind data/checkpoints and a real trace. |
-| P2 | ChronoSID | Keep on source watch until official tokenizer and generator assets are available. |
 
 The machine-readable state is
 `docs/reproducibility/generator_adapter_coverage.csv`.

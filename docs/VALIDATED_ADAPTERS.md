@@ -105,7 +105,6 @@ off source watch: its paper-linked anonymous artifact now supports an exact-
 function smoke and bounded decoder-overlay contract. It remains below named-
 adapter status because the snapshot lacks an immutable revision, code license,
 released assets, official-data round-trip, and real model-backed trace.
-ChronoSID remains on source watch.
 
 DiffGRM is the staged publication-prioritized masked/diffusion candidate. Its
 The Web Conference 2026 publication and immutable source revision are bound,
