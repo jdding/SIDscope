@@ -1,7 +1,7 @@
 # SIDScope Limitations
 
 Status: current TOIS manuscript and package limitation policy
-Last updated: 2026-08-19
+Last updated: 2026-08-29
 
 ## Scope Limits
 
@@ -72,14 +72,19 @@ claims.
   intake row. It uses completed item-to-code JSON files from the public
   `data.zip` archive and must not be described as a trained-generator result or
   as full coverage of every ReSOT branch. No GitHub license was detected in the
-  audited source route, so reuse wording must remain conservative.
+  audited source route. A 2026-08-29 author clarification permits the released
+  resources for noncommercial academic research with KDD 2026 citation, but
+  SIDScope retains conservative non-redistribution wording until repository
+  terms explicitly cover redistribution.
 - DIGER is counted through official-code-derived Beauty (R763/R764) and Yelp
   (R828/R829) RQ-VAE rows. They are produced from public Hugging Face embeddings,
   interaction JSONL, and checkpoint files through the official
   `RQVAE.get_indices(...)` route. They must not be described as author-released item-to-SID tables, a
   trained-generator result, or full coverage of DIGER's differentiable
   assignment dynamics. No GitHub license was detected in the audited source
-  route, so reuse wording must remain conservative. Yelp is the only
+  route. A 2026-08-29 author clarification identifies the code as MIT and the
+  Hugging Face artifacts as available for research under the same terms, with
+  a repository LICENSE still pending. Yelp is the only
   non-Amazon route; it supports contract portability, not broad cross-ecosystem
   generalization or a causal domain comparison.
 

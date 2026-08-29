@@ -8,7 +8,7 @@
     "url": "https://github.com/junchen-fu/DIGER",
     "revision": "fccf1229581440645a18563ece9c65bf72f1aa01",
     "license_status": "no_license_detected",
-    "license_identifier": "NOASSERTION for GitHub code and audited Hugging Face dataset/model cards",
+    "license_identifier": "NOASSERTION in repository; author-confirmed MIT code with repository LICENSE pending and Hugging Face artifacts available for research under the same terms (2026-08-29)",
     "derivation": "official_code_derived",
     "artifact_name": "DIGER Beauty RQ-VAE checkpoint export",
     "redistribution_policy": "summary_only"

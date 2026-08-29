@@ -1,6 +1,6 @@
 # SIDScope 1.1 Development Handoff
 
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 ## Executive status
 
@@ -31,6 +31,20 @@ checkpoint-bound trace and 250-episode diagnostic remain open.
 The submitted TOIS manuscript is a frozen, separate repository. Nothing in
 SIDScope 1.1 may be written back into that submission before an explicitly
 authorized revision phase.
+
+On 2026-08-29, the first authors of DIGER, LETTER, and ReSOT supplied direct
+email clarifications for research use. DIGER's author states that the code is
+MIT and that its Hugging Face artifacts may be used for research under the
+same terms; the repository LICENSE is pending. LETTER's author permits use of
+the code, datasets, and SID indexes for SIDScope research with citation and
+acknowledgment of the CIKM 2024 paper; a repository license is planned.
+ReSOT's author permits the released code, datasets, checkpoints, and SID
+indexes for noncommercial academic research with citation of the KDD 2026
+paper. All three repositories still return no detected LICENSE file, so the
+inventory retains `no_license_detected` while recording these author
+clarifications in `license_identifier`. Raw correspondence is private and is
+not part of the public resource package. Existing non-redistribution policies
+remain unchanged until repository-level terms make redistribution explicit.
 
 ## Canonical development surface
 

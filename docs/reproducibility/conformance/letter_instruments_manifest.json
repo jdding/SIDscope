@@ -8,7 +8,7 @@
     "url": "https://github.com/HonghuiBao2000/LETTER",
     "revision": "8d0154e28de37dbb6e24871c508ad8ddb1921cda",
     "license_status": "no_license_detected",
-    "license_identifier": "NOASSERTION",
+    "license_identifier": "NOASSERTION in repository; author permits SIDScope research use of code datasets and SID indexes with CIKM 2024 citation and acknowledgment; repository LICENSE planned (2026-08-29)",
     "derivation": "released_index",
     "artifact_name": "data/Instruments/Instruments.index.json",
     "redistribution_policy": "summary_only_no_upstream_artifact_redistribution"

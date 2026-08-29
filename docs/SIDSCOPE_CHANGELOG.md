@@ -11,6 +11,24 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.1.1.dev0: upstream tokenizer license clarifications
+
+- Recorded direct 2026-08-29 author clarifications for DIGER, LETTER, and
+  ReSOT without publishing private correspondence.
+- DIGER's author identifies the code as MIT and permits research use of the
+  Hugging Face artifacts under the same terms; the repository LICENSE file is
+  still pending.
+- LETTER's author permits SIDScope research use of the code, datasets, and SID
+  indexes with citation and acknowledgment of the CIKM 2024 paper; a
+  repository license is planned.
+- ReSOT's author permits the released code, datasets, checkpoints, and SID
+  indexes for noncommercial academic research with citation of the KDD 2026
+  paper.
+- Kept `no_license_detected` and the existing non-redistribution policies until
+  explicit repository license files or redistribution terms are published.
+- Left the immutable TOIS submission and its `v1.0.2` evidence unchanged;
+  these papers become candidates for an explicitly authorized future revision.
+
 ## SIDScope v1.1.1.dev0: formal adapter coverage cleanup
 
 - Removed the code-less ChronoSID source-watch row from the formal generator

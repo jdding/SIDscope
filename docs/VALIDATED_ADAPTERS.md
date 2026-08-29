@@ -12,6 +12,11 @@ metadata or interactions, and the normalized tables pass preflight plus D1-D5.
 - Artifact shape: JSON item-index mapping plus item metadata and interactions.
 - SIDInspector entry point: `python3 -m sidinspector.adapters.letter`.
 - Validation status: preflight and D1-D5 pass on official Instruments artifact.
+- Boundary: the repository still has no detected LICENSE file. On 2026-08-29,
+  the first author permitted SIDScope research use of the code, datasets, and
+  SID index files with citation and acknowledgment of the CIKM 2024 paper and
+  stated that a repository license would be added later. SIDScope retains its
+  non-redistribution policy until that file is published.
 
 ### LC-Rec
 
@@ -31,7 +36,11 @@ metadata or interactions, and the normalized tables pass preflight plus D1-D5.
   conformance report also passes source, schema, join, metric, provenance, and
   promotion checks with three pinned normalized-input hashes.
 - Boundary: this is released-archive text-index intake, not a trained-generator
-  result; preserve the no-license-detected reuse caveat.
+  result. The repository still has no detected LICENSE file. On 2026-08-29,
+  the first author permitted the released resources for noncommercial academic
+  research with citation of the KDD 2026 paper. SIDScope preserves the existing
+  no-archive-redistribution policy because redistribution was not separately
+  granted in a repository license.
 
 ### DIGER RQ-VAE
 
@@ -45,9 +54,13 @@ metadata or interactions, and the normalized tables pass preflight plus D1-D5.
   and promote Yelp after independent review, C0--C5, and G2/G3/G4 refresh.
 - Boundary: this is tokenizer-stage official-code-derived intake, not an
   author-released item-to-SID table, not a trained-generator result, and not
-  full coverage of DIGER's differentiable assignment dynamics; preserve the
-  no-license-detected reuse caveat. Beauty and Yelp are separate checkpoints
-  and configurations, so their diagnostic contrast is descriptive.
+  full coverage of DIGER's differentiable assignment dynamics. On 2026-08-29,
+  the first author identified the code as MIT, stated that the Hugging Face
+  artifacts may be used for research under the same terms, and said the
+  repository LICENSE would be added shortly. Until that file is published,
+  the inventory retains `no_license_detected` and summary-only redistribution.
+  Beauty and Yelp are separate checkpoints and configurations, so their
+  diagnostic contrast is descriptive.
 
 Example:
 

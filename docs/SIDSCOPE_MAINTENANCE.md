@@ -1,7 +1,7 @@
 # SIDScope Maintenance And Versioning
 
 Status: current maintenance plan for standalone SIDScope public repository
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 ## Release Policy
 
@@ -159,6 +159,28 @@ must not be represented as an immutable source revision.
 The code package uses the repository `LICENSE`. If an upstream artifact has a
 different license or redistribution restriction, SIDScope should link to the
 upstream source and ship only lightweight derived summaries when allowed.
+
+Direct author clarification is useful evidence but is not represented as a
+repository license file. Until a LICENSE is published, keep
+`license_status=no_license_detected`, record the dated clarification in
+`license_identifier`, and retain the existing conservative redistribution
+policy. Do not publish raw correspondence in the resource package.
+
+Clarifications received on 2026-08-29:
+
+- DIGER: the author states that the code is MIT and that the Hugging Face
+  artifacts may be used for research under the same terms; the repository
+  LICENSE is pending.
+- LETTER: the author permits SIDScope research use of the code, datasets, and
+  SID indexes, requiring citation and acknowledgment of the CIKM 2024 paper;
+  a repository license is planned.
+- ReSOT: the author permits released code, datasets, checkpoints, and SID
+  indexes for noncommercial academic research, requiring citation of the KDD
+  2026 paper.
+
+These citations should be added only in a separately authorized future paper
+revision. They do not modify the frozen TOIS submission or the immutable
+`v1.0.2` evidence boundary.
 
 A CITATION file can be added after the paper venue branch is final. Before
 acceptance, cite the preprint or repository title:

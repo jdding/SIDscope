@@ -8,7 +8,7 @@
     "url": "https://github.com/grw-zju/ReSOT",
     "revision": "4531f4d31ae4a9a954995593eb8912289139c063",
     "license_status": "no_license_detected",
-    "license_identifier": "NOASSERTION",
+    "license_identifier": "NOASSERTION in repository; author permits released code datasets checkpoints and SID indexes for noncommercial academic research with KDD 2026 citation (2026-08-29)",
     "derivation": "released_archive",
     "artifact_name": "data/Instruments/Instruments.index_lemb.json",
     "redistribution_policy": "summary_only_no_archive_redistribution"
