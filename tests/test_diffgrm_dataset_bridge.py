@@ -12,7 +12,12 @@ from tests import local_test_bootstrap  # noqa: F401
 from tools.materialize_diffgrm_protocol_train_surface import materialize
 from tools.prepare_diffgrm_protocol import _metadata_rows, load_test_protocol
 from tools.run_diffgrm_runtime import verify_processed_cache
-from tools.run_diffgrm_resumable_training import expected_bindings, validate_resume_payload
+from tools.run_diffgrm_resumable_training import (
+    expected_bindings,
+    restore_rng_state,
+    validate_resume_payload,
+)
+from tools.export_diffgrm_masked_trace import validate_training_binding
 
 
 def _write_protocol(path: Path, users: list[int]) -> None:
@@ -155,3 +160,77 @@ def test_recoverable_training_binds_domain_and_processed_cache(tmp_path: Path) -
     divergent = dict(bindings, domain="amazon_vg")
     with pytest.raises(ValueError, match="frozen bindings mismatch"):
         validate_resume_payload(payload, divergent, verify_model_hash=False)
+
+
+def test_trace_exporter_binds_training_domain_and_cache(tmp_path: Path) -> None:
+    from tools.export_diffgrm_masked_trace import sha256_file
+
+    checkpoint = tmp_path / "checkpoint.pt"
+    checkpoint.write_bytes(b"checkpoint")
+    manifest = {
+        "status": "pass",
+        "completed_steps": 10000,
+        "formal_checkpoint_sha256": sha256_file(checkpoint),
+        "bindings": {
+            "domain": "steam",
+            "processed_cache_manifest_sha256": "c" * 64,
+        },
+    }
+    validate_training_binding(
+        manifest,
+        checkpoint,
+        10000,
+        domain="steam",
+        processed_cache_manifest_sha256="c" * 64,
+    )
+    with pytest.raises(ValueError, match="domain binding mismatch"):
+        validate_training_binding(
+            manifest,
+            checkpoint,
+            10000,
+            domain="amazon_vg",
+            processed_cache_manifest_sha256="c" * 64,
+        )
+
+
+def test_rng_restore_normalizes_map_location_tensors_to_cpu() -> None:
+    class State:
+        def __init__(self) -> None:
+            self.cpu_calls = 0
+
+        def cpu(self) -> "State":
+            self.cpu_calls += 1
+            return self
+
+    class Cuda:
+        def __init__(self) -> None:
+            self.value = None
+
+        @staticmethod
+        def is_available() -> bool:
+            return True
+
+        def set_rng_state_all(self, value: object) -> None:
+            self.value = value
+
+    class Torch:
+        def __init__(self) -> None:
+            self.cuda = Cuda()
+            self.value = None
+
+        def set_rng_state(self, value: object) -> None:
+            self.value = value
+
+    cpu_state = State()
+    cuda_state = State()
+    torch = Torch()
+    restore_rng_state(torch, {
+        "python": __import__("random").getstate(),
+        "numpy": np.random.get_state(),
+        "torch_cpu": cpu_state,
+        "torch_cuda": [cuda_state],
+    })
+    assert torch.value is cpu_state
+    assert torch.cuda.value == [cuda_state]
+    assert cpu_state.cpu_calls == 1
+    assert cuda_state.cpu_calls == 1

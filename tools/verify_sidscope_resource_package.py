@@ -195,6 +195,7 @@ REQUIRED_FILES = [
     "tools/diffgrm_prepared_dataset.py",
     "tools/run_diffgrm_runtime.py",
     "tools/run_diffgrm_resumable_training.py",
+    "tools/export_diffgrm_masked_trace.py",
     "tools/run_isd_official_source_smoke.py",
     "tools/verify_isd_adapter.py",
     "tools/verify_sidscope_d7_labeled_trace_release.py",

@@ -124,6 +124,7 @@ python3 tools/prepare_diffgrm_protocol.py --help
 python3 tools/finalize_diffgrm_prepared_contract.py --help
 python3 tools/run_diffgrm_runtime.py --help
 python3 tools/run_diffgrm_resumable_training.py --help
+python3 tools/export_diffgrm_masked_trace.py --help
 python3 -m pytest -q \
   tests/test_diffgrm_adapter.py \
   tests/test_diffgrm_trained_trace_bundle.py \

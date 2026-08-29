@@ -82,9 +82,14 @@ def capture_rng_state(torch_module: Any) -> dict[str, Any]:
 def restore_rng_state(torch_module: Any, value: dict[str, Any]) -> None:
     random.setstate(value["python"])
     np.random.set_state(value["numpy"])
-    torch_module.set_rng_state(value["torch_cpu"])
+    # A CUDA map_location is correct for model and optimizer tensors but also
+    # moves the serialized CPU RNG ByteTensor. PyTorch requires RNG state
+    # tensors on CPU even when training on CUDA.
+    torch_module.set_rng_state(value["torch_cpu"].cpu())
     if torch_module.cuda.is_available() and "torch_cuda" in value:
-        torch_module.cuda.set_rng_state_all(value["torch_cuda"])
+        torch_module.cuda.set_rng_state_all(
+            [state.cpu() for state in value["torch_cuda"]]
+        )
 
 
 def expected_bindings(args: argparse.Namespace) -> dict[str, Any]:
