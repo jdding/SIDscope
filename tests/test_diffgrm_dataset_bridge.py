@@ -17,7 +17,7 @@ from tools.run_diffgrm_resumable_training import (
     restore_rng_state,
     validate_resume_payload,
 )
-from tools.export_diffgrm_masked_trace import validate_training_binding
+from tools.export_diffgrm_masked_trace import resolve_frontier, validate_training_binding
 
 
 def _write_protocol(path: Path, users: list[int]) -> None:
@@ -191,6 +191,19 @@ def test_trace_exporter_binds_training_domain_and_cache(tmp_path: Path) -> None:
             domain="amazon_vg",
             processed_cache_manifest_sha256="c" * 64,
         )
+
+
+def test_all_invalid_frontier_preserves_upstream_unsorted_fallback() -> None:
+    traced = {
+        "final_states": [[9, 9, 9, 9], [1, 1, 1, 1]],
+        "final_scores": [-1.0, -2.0],
+        "final_ids": ["sorted-best", "sorted-second"],
+        "all_invalid_fallback_state": [7, 7, 7, 7],
+    }
+    raw_rows, ranked_items, official_rows = resolve_frontier(traced, {})
+    assert len(raw_rows) == 2
+    assert ranked_items == []
+    assert official_rows == [[7, 7, 7, 7]] * 10
 
 
 def test_rng_restore_normalizes_map_location_tensors_to_cpu() -> None:

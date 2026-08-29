@@ -8,6 +8,7 @@ import copy
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import sys
 import time
@@ -442,6 +443,10 @@ def trace_confidence_decode(model: Any, encoder_hidden: Any, tokenizer: Any, tor
         "final_states": final_states[order].detach().cpu().tolist(),
         "final_scores": final_scores[order].detach().cpu().tolist(),
         "final_ids": [final_ids[int(index)] for index in order.detach().cpu()],
+        # The pinned upstream decoder falls back to active_beam_ids[0] when
+        # every final tuple is illegal.  That is the original beam-tensor row,
+        # not the highest-scoring row after argsort.
+        "all_invalid_fallback_state": final_states[0].detach().cpu().tolist(),
         "beam_act": beam_act,
     }
 
@@ -491,11 +496,16 @@ def resolve_frontier(
         while len(official_unique) < 10:
             official_unique.append(list(official_unique[-1]))
     else:
-        official_unique = [list(traced["final_states"][0])] * 10
+        official_unique = [list(traced["all_invalid_fallback_state"])] * 10
     return raw_rows, ranked_items[:256], official_unique[:10]
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    # CUDA GEMM determinism must be configured before torch initializes CUDA.
+    # The trace is compared with a second execution of the pinned upstream
+    # decoder, so an unset CUBLAS workspace can turn near-tied legal frontiers
+    # into false method-equivalence failures.
+    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
     sys.path.insert(0, str(args.upstream_source.resolve()))
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from accelerate import Accelerator
@@ -506,6 +516,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     from genrec.models.DIFF_GRM.model import DIFF_GRM
     from diffgrm_prepared_dataset import DormantPreparedDataset
     from run_diffgrm_runtime import verify_processed_cache
+
+    torch.use_deterministic_algorithms(True)
 
     if (args.upstream_source / ".pinned-revision").read_text().strip() != REVISION:
         raise ValueError("DiffGRM source revision mismatch")
@@ -559,17 +571,44 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     total_logits = 0
     total_candidates = 0
     total_visited = 0
-    for selected_row, batch in zip(selection["episodes"], loader):
+    from genrec.models.DIFF_GRM.beam import fast_beam_search_for_eval
+
+    for episode_ordinal, (selected_row, batch) in enumerate(
+        zip(selection["episodes"], loader), start=1
+    ):
         started = time.perf_counter()
         batch = {key: value.to(config["device"]) for key, value in batch.items()}
         with torch.no_grad():
             encoder_hidden = model.forward(batch, return_loss=False).hidden_states
             noising = guided_noising_views(model, encoder_hidden, batch["labels"], torch)
             traced = trace_confidence_decode(model, encoder_hidden, tokenizer, torch)
-            official = model.generate(batch, n_return_sequences=10, mode="confidence")
+            # Compare against the pinned upstream decoder on the exact same encoder
+            # state. Calling model.generate here would run the encoder a second time;
+            # near-tied CUDA scores can then change ordering even though the traced
+            # decoder is method-faithful. The shared-state comparison isolates the
+            # audited surface: native parallel denoising, legality filtering, and
+            # ordered de-duplication.
+            official = fast_beam_search_for_eval(
+                model=model,
+                encoder_hidden=encoder_hidden,
+                beam_size=10,
+                max_len=model.n_digit,
+                tokenizer=tokenizer,
+                mode="confidence",
+                rand_cfg=model.config.get("random_beam", {}),
+            )
         raw_rows, ranked_items, expected_official = resolve_frontier(traced, resolution)
         observed_official = official[0].detach().cpu().tolist()
         if observed_official != expected_official:
+            write_json(args.output_dir / "official_equivalence_failure.json", {
+                "schema": "sidscope.diffgrm_official_equivalence_failure.v1",
+                "episode_ordinal": episode_ordinal,
+                "episode_id": str(selected_row["episode_id"]),
+                "expected_from_native_trace": expected_official,
+                "observed_from_pinned_upstream_decoder": observed_official,
+                "checkpoint_sha256": sha256_file(args.checkpoint),
+                "selection_sha256": sha256_file(args.selection),
+            })
             raise ValueError("native traced frontier does not reproduce official filtered top-10")
         target = str(selected_row["target_normalized_item_id"])
         target_rank = next(
@@ -608,6 +647,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         total_logits += sum(int(step["logits_evaluated"]) for step in traced["steps"])
         total_candidates += sum(int(step["candidate_expansion_count"]) for step in traced["steps"])
         total_visited += int(traced["steps"][-1]["visited_state_count"])
+        print(
+            f"[DIFFGRM_TRACE] episode={episode_ordinal}/{len(selection['episodes'])} "
+            f"id={selected_row['episode_id']} official_top10=PASS",
+            flush=True,
+        )
 
     hit_count = sum(
         int(episode["target_rank"] is not None and episode["target_rank"] <= 10)
