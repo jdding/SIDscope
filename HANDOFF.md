@@ -11,11 +11,12 @@ verifier, deterministic archive smoke, and G8 clean-environment installation
 pass. Annotated tag `v1.1.0` remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
-Latte/PSID, RPG, DiffGRM, and DACT/TIGER Tools are the four configuration-bound named generator adapters
-admitted under the complete G0--G5 protocol. RPG retains parallel/unordered
-token-set and graph item-node semantics. The other generator routes remain
-useful, typed partial integrations and must retain their documented gate
-labels.
+Latte/PSID, RPG, DiffGRM, DACT/TIGER Tools, and LLaDA-Rec VG are the five
+configuration-bound named generator adapters admitted under the complete
+G0--G5 protocol. RPG retains parallel/unordered token-set and graph item-node
+semantics; LLaDA-Rec retains native confidence-guided adaptive unmasking and
+never masquerades as autoregressive prefix decoding. The remaining route is a
+typed partial integration and must retain its documented gate label.
 
 DiffGRM is now the publication-prioritized masked/diffusion candidate. Its The
 Web Conference 2026 DOI, official repository revision, OPQ4 identity,
@@ -217,7 +218,7 @@ The machine-readable authority is
 | Latte / PSID | G0--G5 pass | `named_adapter` | Maintain v2 compatibility and rerun both public real smoke bundles for every release archive. |
 | RPG | G0--G5 pass on the pinned Beauty configuration | `named_adapter` | Maintain the bounded public smoke and rerun external training evidence only when the pinned source, cache, or configuration changes. |
 | TIGER / DACT | G0--G5 pass on released Tools configuration, including refreshed 500-target dual-mode ancestry export | `named_adapter` | Maintain compact external-trace evidence; rerun only when pinned inputs or configuration change. |
-| LLaDA-Rec | Source-identity G0 and G2--G4 adaptive-unmasking fixture pass; pinned recoverable MultiHeadVQVAE runner and real two-epoch VG engineering smoke pass, formal G1/trained generator evidence pending | `close_named_adapter` | Complete the formal VG tokenizer asset, then bind the real round-trip and run generator training plus trained G4--G5. |
+| LLaDA-Rec | G0--G5 pass on frozen VG: formal 10,000-epoch official tokenizer, prepared round-trip, recoverable 10,000-step generator, native five-bucket trace, typed failure, and external 250 diagnostic | `named_adapter` | Maintain compact external evidence and rerun only when the tokenizer, generator, data, or configuration changes. |
 | DiffGRM | G0--G5 pass independently on frozen VG and Steam OPQ4/10,000-step configurations, including five-bucket native v2 smokes and external 250 diagnostics | `named_adapter` | Maintain both compact configuration records; rerun only when pinned inputs change. |
 | Item-Supported Decoding | Content-addressed snapshot, fail-closed overlay contract, and exact-function smoke; G0 revision identity partial, G1 fixture, G5 partial | `close_named_adapter` | Obtain an immutable official revision; bind data/checkpoints and export a real overlay trace. |
 
@@ -234,7 +235,7 @@ identity and must never be cropped or silently converted.
 The exact working tree containing the three implementation commits above
 passed:
 
-- full tests: `150 passed, 6 skipped`;
+- full tests: `168 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
@@ -245,8 +246,11 @@ passed:
 - DiffGRM staged verifier: PASS, including source-identity preflight,
   dataset-neutral positive fixture, and ten typed expected failures; the
   independent external-bundle CLI and its v2 binding/negative tests also pass;
-- manifest after this handoff update: 203 rows, 200 public rows, 0 pending;
-- current public package surface: 287 files.
+- LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
+  10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
+  and external 250-episode native v2 diagnostic;
+- manifest after this handoff update: 226 rows, 223 public rows, 0 pending;
+- current public package surface: 313 files.
 
 Because this document updates the public manifest, a resumed session must use
 the commands below to obtain the current archive counts and SHA-256. Treat the
@@ -297,10 +301,10 @@ boundary. Publication is closed as follows:
 4. final tag, commit, URL, archive checksum, and transcript are recorded in
    `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
 
-RPG, DiffGRM VG/Steam, and TIGER/DACT trained/released-checkpoint closure are complete
-in 1.1.1.dev0. LLaDA-Rec real trained evidence and ISD immutable-source closure remain
-post-1.1.0 maintenance items. They must not silently change the immutable
-1.1.0 claim.
+RPG, DiffGRM VG/Steam, TIGER/DACT, and LLaDA-Rec VG trained/released-checkpoint
+closure are complete in 1.1.1.dev0. ISD immutable-source/data/checkpoint closure
+remains a post-1.1.0 maintenance item. These changes must not silently alter the
+immutable 1.1.0 claim.
 
 ## Resume protocol
 

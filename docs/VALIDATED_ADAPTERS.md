@@ -112,12 +112,14 @@ bound to a fully recorded trained output, a public five-episode deidentified
 parallel graph trace, and an external 250-episode trace with complete target-
 universe hash/count evidence. The route retains unordered token sets and graph
 item nodes; it is not represented as an autoregressive prefix trace.
-LLaDA-Rec now has a pinned source audit with a `NOASSERTION` license marker,
-bounded adaptive-unmasking trace fixture, official class-method smoke, and a
-real two-epoch project tokenizer engineering smoke with strict checkpoint
-reload. It remains below named-adapter status because the formal frozen
-tokenizer asset, complete item/SID/vocabulary round-trip, generator checkpoint,
-and trained trace do not yet exist. ISD has moved
+LLaDA-Rec passes G0--G5 as a frozen-VG configuration-bound named adapter. It
+binds a formal 10,000-epoch official MultiHeadVQVAE tokenizer, exact item/SID/
+position-vocabulary round-trip, recoverable 10,000-step generator checkpoint,
+native five-episode adaptive-unmasking smoke, typed failure, and external
+250-episode balanced diagnostic. Full caches, checkpoints, and traces remain
+external; the public package carries compact hashes, counts, metrics, and
+verifier results. Its `NOASSERTION` license state remains a non-redistribution
+marker. ISD has moved
 off source watch: its paper-linked anonymous artifact now supports an exact-
 function smoke and bounded decoder-overlay contract. It remains below named-
 adapter status because the snapshot lacks an immutable revision, released

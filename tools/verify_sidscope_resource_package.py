@@ -98,6 +98,7 @@ REQUIRED_FILES = [
     "docs/reproducibility/latte_psid_trained_trace_evidence.json",
     "docs/reproducibility/llada_rec_vg_tokenizer_smoke.json",
     "docs/reproducibility/llada_rec_vg_tokenizer_formal_evidence.json",
+    "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json",
     "docs/reproducibility/sidscope_paper_protocol_config.json",
     "docs/reproducibility/g14_usage_demo_decisions.csv",
     "docs/reproducibility/g14_usage_demo_summary.json",

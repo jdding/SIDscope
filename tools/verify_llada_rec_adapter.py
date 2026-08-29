@@ -26,6 +26,8 @@ AUDIT = ROOT / "docs/reproducibility/llada_rec_source_audit.json"
 FIXTURE = ROOT / "examples/llada_rec_diffusion_fixture/manifest.json"
 OFFICIAL_SMOKE = ROOT / "docs/reproducibility/llada_rec_official_source_smoke.json"
 TOKENIZER_SMOKE = ROOT / "docs/reproducibility/llada_rec_vg_tokenizer_smoke.json"
+FORMAL_TOKENIZER = ROOT / "docs/reproducibility/llada_rec_vg_tokenizer_formal_evidence.json"
+TRAINED_EVIDENCE = ROOT / "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json"
 STATUS = ROOT / "docs/reproducibility/llada_rec_adapter_status.json"
 PINNED_REVISION = "83dbcd6061da9266adcd8f68b16d1de7cc2612f3"
 PINNED_MODEL_SHA256 = "280b0332e1bef6ee3ae40011a9e481102f158a55e02118a492e8f1087f681133"
@@ -48,6 +50,8 @@ def verify() -> dict[str, Any]:
     fixture = _read_json(FIXTURE)
     smoke = _read_json(OFFICIAL_SMOKE)
     tokenizer_smoke = _read_json(TOKENIZER_SMOKE)
+    formal_tokenizer = _read_json(FORMAL_TOKENIZER)
+    trained_evidence = _read_json(TRAINED_EVIDENCE)
     status = _read_json(STATUS)
 
     source = audit.get("source", {})
@@ -170,28 +174,76 @@ def verify() -> dict[str, Any]:
     ):
         failures.append("project tokenizer smoke violates compact-evidence privacy boundary")
 
+    if (
+        formal_tokenizer.get("schema")
+        != "sidscope.llada_rec_project_tokenizer_evidence.v1"
+        or formal_tokenizer.get("status") != "pass"
+        or formal_tokenizer.get("source_revision") != PINNED_REVISION
+        or formal_tokenizer.get("configuration", {}).get("target_epochs") != 10000
+        or formal_tokenizer.get("outputs", {}).get("unique_semantic_ids_after_collision_resolution") != 17344
+        or formal_tokenizer.get("recoverability", {}).get("resumed") is not True
+        or formal_tokenizer.get("recoverability", {}).get("checkpoint_reloaded_strict") is not True
+    ):
+        failures.append("formal tokenizer evidence boundary mismatch")
+
+    diagnostic = trained_evidence.get("balanced_diagnostic", {})
+    checkpoint_smoke = trained_evidence.get("checkpoint_smoke", {})
+    training = trained_evidence.get("training", {})
+    verification = trained_evidence.get("verification", {})
+    if (
+        trained_evidence.get("schema")
+        != "sidscope.llada_rec_vg_trained_trace_evidence.v1"
+        or trained_evidence.get("status") != "pass"
+        or trained_evidence.get("source_revision") != PINNED_REVISION
+        or training.get("completed_steps") != 10000
+        or training.get("resumed") is not True
+        or training.get("checkpoint_reloaded_strict") is not True
+        or checkpoint_smoke.get("episodes") != 5
+        or checkpoint_smoke.get("verification_status") != "pass"
+        or checkpoint_smoke.get("expected_failure_label") != "unknown_parent_beam"
+        or checkpoint_smoke.get("typed_negative_status") != "pass"
+        or diagnostic.get("episodes") != 250
+        or diagnostic.get("five_bucket_counts") != {
+            "short": 50, "30-90d": 50, "90-180d": 50,
+            "180-365d": 50, ">365d": 50,
+        }
+        or diagnostic.get("verification_status") != "pass"
+        or verification.get("trace_exporter_sha256")
+        != _sha256(ROOT / "tools/export_llada_rec_trained_trace.py")
+        or verification.get("real_bundle_verifier_sha256")
+        != _sha256(ROOT / "tools/verify_llada_rec_trained_trace_bundle.py")
+    ):
+        failures.append("formal trained trace evidence boundary mismatch")
+
     gates = {
-        "G0": "pass_source_revision_method_identity_license_noassertion_marker",
-        "G1": "real_project_tokenizer_smoke_pass_formal_item_sid_roundtrip_pending",
-        "G2": "bounded_masked_adaptive_unmasking_state_and_official_method_smoke_pass",
-        "G3": "bounded_validity_ambiguity_resolution_and_remasking_failure_contract_pass",
-        "G4": "bounded_trace_and_ranked_item_export_pass_real_trained_trace_pending",
-        "G5": "partial_real_tokenizer_checkpoint_smoke_pass_generator_checkpoint_pending",
+        "G0": "pass_source_revision_method_identity_license_noassertion_marker_nonredistribution",
+        "G1": "pass_formal_vg_tokenizer_item_sid_position_vocabulary_roundtrip_and_explicit_selection",
+        "G2": "pass_checkpoint_bound_native_four_action_adaptive_unmasking_and_beam_ancestry",
+        "G3": "pass_raw_tuple_validity_collision_preserving_resolution_and_typed_failure",
+        "G4": "pass_five_episode_and_external_250_episode_dense_rank_censoring_and_per_bucket_handoff",
+        "G5": "pass_recoverable_10000_step_training_strict_checkpoint_reload_smoke_diagnostic_and_verifiers",
     }
     input_sha256 = {
         "source_audit": _sha256(AUDIT),
         "fixture_manifest": _sha256(FIXTURE),
         "official_source_smoke": _sha256(OFFICIAL_SMOKE),
         "project_tokenizer_smoke": _sha256(TOKENIZER_SMOKE),
+        "formal_tokenizer_evidence": _sha256(FORMAL_TOKENIZER),
+        "trained_trace_evidence": _sha256(TRAINED_EVIDENCE),
     }
-    if status.get("schema") != "sidscope.llada_rec_adapter_status.v3":
+    if status.get("schema") != "sidscope.llada_rec_adapter_status.v4":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != gates:
         failures.append("adapter status G0-G5 fields differ from the executable verifier")
     if status.get("input_sha256") != input_sha256:
         failures.append("adapter status hashes differ from current evidence")
     promotion = status.get("promotion", {})
-    if promotion.get("named_adapter") is not False or promotion.get("decision") != "close_named_adapter":
+    if (
+        promotion.get("named_adapter") is not True
+        or promotion.get("decision") != "named_adapter"
+        or promotion.get("execution_authorized") is not True
+        or promotion.get("redistribution_authorized") is not False
+    ):
         failures.append("adapter promotion boundary mismatch")
 
     return {
@@ -231,9 +283,25 @@ def verify() -> dict[str, Any]:
                 "checkpoint_reloaded_strict"
             ),
         },
+        "formal_tokenizer": {
+            "status": formal_tokenizer.get("status"),
+            "completed_epochs": formal_tokenizer.get("configuration", {}).get("target_epochs"),
+            "unique_semantic_ids": formal_tokenizer.get("outputs", {}).get(
+                "unique_semantic_ids_after_collision_resolution"
+            ),
+        },
+        "trained_trace": {
+            "status": trained_evidence.get("status"),
+            "completed_steps": training.get("completed_steps"),
+            "checkpoint_smoke_episodes": checkpoint_smoke.get("episodes"),
+            "balanced_diagnostic_episodes": diagnostic.get("episodes"),
+            "hit_at_10": diagnostic.get("metrics", {}).get("hit_at_10"),
+            "ndcg_at_10": diagnostic.get("metrics", {}).get("ndcg_at_10"),
+        },
         "promotion": {
-            "named_adapter": False,
-            "reason": "The license is a non-redistribution marker; the real two-epoch project tokenizer smoke passes, while formal G1 identity, trained G4-G5 trace, and a generator checkpoint smoke remain technically open.",
+            "named_adapter": True,
+            "redistribution_authorized": False,
+            "reason": "The configuration-bound frozen VG tokenizer, recoverable 10000-step generator, native five-episode smoke, external 250 diagnostic, typed failure, and verifiers pass G0-G5; the license remains a non-redistribution marker.",
         },
         "input_sha256": input_sha256,
         "failures": failures,

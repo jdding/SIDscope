@@ -138,10 +138,12 @@ and verifier-injected binding/ancestry failures are provided under
 
 ## Promotion boundary
 
-Source and method identity pass G0 with `NOASSERTION` retained solely as a
-non-redistribution marker. The formal tokenizer and prepared item-to-SID-to-
-model-vocabulary round-trip close the tokenizer side of G1. Promotion to a
-configuration-bound named adapter still requires the in-progress formal
-generator checkpoint plus final five-episode and 250-episode trained v2 traces
-to pass the independent verifier. Missing license does not block that work or
-compact derived-evidence delivery.
+The frozen VG configuration passes G0--G5 and is a configuration-bound named
+adapter. Source and method identity retain `NOASSERTION` solely as a non-
+redistribution marker. The formal tokenizer and prepared item-to-SID-to-model-
+vocabulary round-trip close G1; the recoverable 10,000-step generator, strict
+checkpoint reload, native five-episode v2 smoke, typed ancestry failure, and
+external 250-episode diagnostic close G2--G5. The compact evidence is
+`docs/reproducibility/llada_rec_vg_trained_trace_evidence.json`. This is a
+single-seed fixed-update family screen, not an official-convergence claim, and
+full caches, checkpoints, data, and traces remain external.

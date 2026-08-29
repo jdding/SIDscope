@@ -1,64 +1,48 @@
 {
-  "schema": "sidscope.llada_rec_adapter_status.v3",
+  "schema": "sidscope.llada_rec_adapter_status.v4",
   "route_id": "llada_rec",
+  "adapter_version": "sidscope.llada_rec_adapter.v2",
   "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
-  "audited_at": "2026-08-27",
+  "audited_at": "2026-08-29",
   "gates": {
-    "G0": "pass_source_revision_method_identity_license_noassertion_marker",
-    "G1": "real_project_tokenizer_smoke_pass_formal_item_sid_roundtrip_pending",
-    "G2": "bounded_masked_adaptive_unmasking_state_and_official_method_smoke_pass",
-    "G3": "bounded_validity_ambiguity_resolution_and_remasking_failure_contract_pass",
-    "G4": "bounded_trace_and_ranked_item_export_pass_real_trained_trace_pending",
-    "G5": "partial_real_tokenizer_checkpoint_smoke_pass_generator_checkpoint_pending"
+    "G0": "pass_source_revision_method_identity_license_noassertion_marker_nonredistribution",
+    "G1": "pass_formal_vg_tokenizer_item_sid_position_vocabulary_roundtrip_and_explicit_selection",
+    "G2": "pass_checkpoint_bound_native_four_action_adaptive_unmasking_and_beam_ancestry",
+    "G3": "pass_raw_tuple_validity_collision_preserving_resolution_and_typed_failure",
+    "G4": "pass_five_episode_and_external_250_episode_dense_rank_censoring_and_per_bucket_handoff",
+    "G5": "pass_recoverable_10000_step_training_strict_checkpoint_reload_smoke_diagnostic_and_verifiers"
   },
   "input_sha256": {
     "source_audit": "7abb4ba3fb8ca321c538ebe60ee13e47de342ec6e4c3a79afc2beb5084e971e1",
     "fixture_manifest": "84d11f874473672e00c243fcea30e952b29adf766a2cd56a2f3bb999825663bf",
     "official_source_smoke": "6882f62ecb16860b3ed7c82d245920427f870c403f7a5468218367430b8c0568",
-    "project_tokenizer_smoke": "351726908e8b95e0fae9efaa7feca6a58f42b94e95be9e7cf45679034313bd86"
+    "project_tokenizer_smoke": "351726908e8b95e0fae9efaa7feca6a58f42b94e95be9e7cf45679034313bd86",
+    "formal_tokenizer_evidence": "e086d43c43673ac2ebfcab8c0348cbb7a408bb88f5fd6d7d21400008c07ad331",
+    "trained_trace_evidence": "be66d579069e10fc1b58cdf6206ca9a9471e7855476f53a689dacbe143ea143f"
   },
-  "verified_outputs": {
-    "trace_schema": "sidscope.llada_rec_diffusion_trace.v1",
+  "verified_contract": {
+    "fixture_trace_schema": "sidscope.llada_rec_diffusion_trace.v1",
+    "checkpoint_trace_schema": "sidscope.llada_rec_trained_trace.v2",
+    "real_bundle_verifier_schema": "sidscope.llada_rec_trained_trace_verification.v1",
     "decode_state_kind": "masked_parallel_adaptive_unmasking",
-    "ranked_item_ids": [
-      "1",
-      "2"
-    ],
-    "generation_orders": [
-      [
-        2,
-        0,
-        3,
-        1
-      ],
-      [
-        2,
-        3,
-        0,
-        1
-      ]
-    ],
-    "catalog_collision_count": 1,
-    "remasking_transition_count": 0,
-    "expected_failure_label": "unsupported_remasking_transition",
-    "official_source_smoke_status": "pass",
-    "project_tokenizer_smoke": {
-      "status": "pass",
-      "scope": "two_epoch_engineering_smoke_not_formal_tokenizer_or_generator_evidence",
-      "catalog_rows": 17396,
-      "unique_semantic_ids": 17345,
-      "collision_excess": 51,
-      "checkpoint_reloaded_strict": true
-    }
+    "remasking_supported_by_pinned_source": false,
+    "evaluation_cutoff": 10,
+    "published_rank_depth": 50,
+    "projection_semantics": "not_applicable_exact_sid_resolution"
   },
   "promotion": {
-    "named_adapter": false,
-    "decision": "close_named_adapter",
-    "license_policy": "NOASSERTION is a non-redistribution marker and does not block execution verification or derived-evidence delivery.",
-    "blockers": [
-      "No tag, release, checkpoint, semantic-ID cache, processed dataset, or training log is published.",
-      "The two-epoch VG tokenizer run is an engineering smoke, not the frozen formal tokenizer asset or a completed G1 item-to-vocabulary round-trip.",
-      "No trained generator trace or end-to-end generator checkpoint smoke has passed G4-G5."
+    "named_adapter": true,
+    "decision": "named_adapter",
+    "execution_authorized": true,
+    "redistribution_authorized": false,
+    "configuration_bound": [
+      "AmazonReviews2023/Video_Games frozen dormant protocol with a separately frozen official MultiHeadVQVAE tokenizer and 10000-step checkpoint"
+    ],
+    "restrictions": [
+      "The upstream root license remains a NOASSERTION marker and SIDScope redistributes no upstream source or assets.",
+      "The formal tokenizer cache checkpoint and full trained traces remain external and are bound by compact hashes counts metrics and verifier results.",
+      "The separately frozen LLaDA-Rec tokenizer is a declared second factor and is not interchangeable with RPG OPQ32 or DiffGRM OPQ4.",
+      "The 250-episode balanced diagnostic is not a population performance estimate or an official-convergence claim."
     ]
   }
 }

@@ -87,17 +87,18 @@ adapter. The exact boundary is in
 `docs/LATTE_PSID_GENERATOR_ADAPTER.md` and
 `docs/reproducibility/latte_psid_adapter_status.json`.
 
-LLaDA-Rec has a pinned source audit, an independent masked-state trace schema,
-a deterministic CPU fixture, and an official class-method smoke for all-mask
-initialization, confidence-selected position transfer, and position-valid beam
-expansion. A recoverable official MultiHeadVQVAE wrapper also passes a real
-two-epoch engineering smoke on the frozen VG train-only catalog, with strict
-checkpoint reload and collision-aware SID export. The pinned source
-monotonically unmasks positions and never remasks filled positions. Its
-source-identity G0 passes with `NOASSERTION` recorded as a non-redistribution
-marker, while the formal item/SID/vocabulary identity, frozen project-bound
-tokenizer asset, and trained generator trace gates remain open. The
-exact boundary is in `docs/LLADA_REC_DIFFUSION_ADAPTER.md` and
+LLaDA-Rec passes G0--G5 as a frozen-VG configuration-bound named adapter. Its
+pinned source, formal 10,000-epoch official MultiHeadVQVAE tokenizer,
+item/SID/position-vocabulary round-trip, recoverable 10,000-step generator,
+native four-action adaptive-unmasking trace, five-bucket checkpoint smoke,
+typed ancestry failure, and external 250-episode balanced diagnostic are bound.
+The trace preserves real beam ancestry, raw ordered tuples, exact collision-
+aware resolution, dense item ranks through the native beam-50 frontier,
+right-censoring, and overall/per-bucket downstream summaries. The pinned source
+monotonically unmasks and never remasks filled positions; it is not represented
+as autoregressive prefix decoding. `NOASSERTION` remains a non-redistribution
+marker, not an execution gate. The exact boundary is in
+`docs/LLADA_REC_DIFFUSION_ADAPTER.md` and
 `docs/reproducibility/llada_rec_adapter_status.json`.
 
 DiffGRM is staged as the publication-prioritized masked/diffusion route. Its

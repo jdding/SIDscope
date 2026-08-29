@@ -1,0 +1,149 @@
+{
+  "schema": "sidscope.llada_rec_vg_trained_trace_evidence.v1",
+  "status": "pass",
+  "route_id": "llada_rec",
+  "adapter_version": "sidscope.llada_rec_adapter.v2",
+  "audited_at": "2026-08-29",
+  "source_revision": "83dbcd6061da9266adcd8f68b16d1de7cc2612f3",
+  "license_marker": "NOASSERTION",
+  "redistribution_authorized": false,
+  "configuration": {
+    "dataset": "AmazonReviews2023/Video_Games",
+    "protocol": "frozen_dormant_first_return_train_only_catalog",
+    "seed": 2024,
+    "catalog_rows": 17396,
+    "tokenized_train_rows": 199921,
+    "semantic_positions": 4,
+    "codebook_size_per_position": 256,
+    "generation_steps": 4,
+    "beam_size": 50,
+    "published_rank_depth": 50,
+    "evaluation_cutoff": 10,
+    "scientific_scope": "single_seed_fixed_update_family_screen_not_convergence_study"
+  },
+  "bindings": {
+    "prepared_file_sha256": "5fc1c44dcd43f7197bc9bbf2d3145c52c39f07e9b01b9fdba71db02a38b1db76",
+    "prepared_canonical_sha256": "2e0776e36aafb087e07c1b22db17517a4ad56497d331e13b6ad1ce0ea87e5816",
+    "smoke_selection_file_sha256": "d306a9d3f7b2c8407c7c7155339cc13cdf18f421f400b3dba4f28282573fff70",
+    "smoke_selection_canonical_sha256": "2482bb6c59dd20edb773f34fbfa05fb9cb82e952a020b18290e776606324a619",
+    "diagnostic_selection_file_sha256": "31d029869d6c165462aec17e4690a5d9d3720b999f2004ec6c80f491ea9caba6",
+    "diagnostic_selection_canonical_sha256": "a32b0b48e143bab5b9a0b1cced32a2c9da10154b200fc2d28208a310d6e50981",
+    "semantic_ids_sha256": "5c4a33d3a7014abc2001843969087dd05947a3542c55969f5fd2718c45fd6b40",
+    "tokenizer_training_manifest_sha256": "82ffb038186bf255b8afb90230abbe9454e185a80ada2bcf4f1b1a701e991c89",
+    "formal_tokenizer_evidence_sha256": "e086d43c43673ac2ebfcab8c0348cbb7a408bb88f5fd6d7d21400008c07ad331",
+    "generator_training_manifest_sha256": "821a78a5c2cff98ca479777790b43c43f18040f8a22532e7c0106d3924824e70"
+  },
+  "training": {
+    "completed_steps": 10000,
+    "completed_epochs": 26,
+    "resumed": true,
+    "continuous_epoch_records": true,
+    "checkpoint_reloaded_strict": true,
+    "checkpoint_sha256": "cf32f72a41fd0942556e794cf0e8bda3ba69fb8c215425b41cadaf25697f26d0",
+    "last_state_sha256": "6d7dbb009b1ffc2323c16dcfc3416d8795528a8c62e0d1c4cba3955f9f799a6d",
+    "model_state_sha256": "0cb8ca1ff138ae38c58fe0960a5e3204289d9cc3a6766d549fbaf9fcfb83bdc3",
+    "final_mean_loss": 5.436663076612684,
+    "final_loss": 5.391995429992676,
+    "final_learning_rate": 0.0
+  },
+  "checkpoint_smoke": {
+    "episodes": 5,
+    "five_bucket_counts": {
+      "short": 1,
+      "30-90d": 1,
+      "90-180d": 1,
+      "180-365d": 1,
+      ">365d": 1
+    },
+    "bundle_file_sha256": "ed26f6c8c358768b64d779d8c338c7102c3ea26edaa3128fea2466ea992f84b6",
+    "bundle_canonical_sha256": "53956210f7afc35d3bd28a67cda91f63f368c57636b540d4273bee6ec037e58d",
+    "bundle_bytes": 1941366,
+    "verification_sha256": "e3df72342dfe2ec9cd3fada5d42ac5f6f2b83578a1fae46b4a81f4df68ee6551",
+    "expected_failure_sha256": "d173e36021b50398e21fb9f10b911bcaa7d3e6510572278644b1ad01df776aa7",
+    "expected_failure_label": "unknown_parent_beam",
+    "hit_at_10": 0.0,
+    "ndcg_at_10": 0.0,
+    "exact_target_rank_count": 1,
+    "right_censored_target_rank_count": 4,
+    "verification_status": "pass",
+    "typed_negative_status": "pass"
+  },
+  "balanced_diagnostic": {
+    "episodes": 250,
+    "five_bucket_counts": {
+      "short": 50,
+      "30-90d": 50,
+      "90-180d": 50,
+      "180-365d": 50,
+      ">365d": 50
+    },
+    "sample_boundary": "target-independent balanced diagnostic subset; not a population estimate",
+    "bundle_file_sha256": "8f284fb7809ea7108ed4c8849a9333cbbd8ba84343003740b71daa471840c4a1",
+    "bundle_canonical_sha256": "177887d39ee5838960e6f4871d763cc4d47a7bb855e1e452631ae0bf81ff4ba2",
+    "bundle_bytes": 96743149,
+    "verification_sha256": "4a790d4ecb07e2445eb7913b7d8286e82041095d849f6717065c56b434a27f23",
+    "verification_status": "pass",
+    "metrics": {
+      "hit_at_10": 0.06,
+      "ndcg_at_10": 0.024244838978815617,
+      "catalog_reachable_count": 250,
+      "target_in_raw_valid_tuples_count": 43,
+      "generation_search_miss_count": 207,
+      "resolution_loss_count": 0,
+      "ranking_conversion_miss_count": 28,
+      "success_count": 15,
+      "exact_target_rank_count": 43,
+      "right_censored_target_rank_count": 207,
+      "raw_candidate_count": 12500,
+      "unique_raw_tuple_count": 12500,
+      "duplicate_raw_tuple_count": 0,
+      "invalid_raw_tuple_count": 91
+    },
+    "per_bucket": {
+      "short": {"hit_at_10": 0.06, "ndcg_at_10": 0.039285261738095816, "exact_target_rank_count": 10, "generation_search_miss_count": 40, "ranking_conversion_miss_count": 7, "success_count": 3, "invalid_raw_tuple_count": 29},
+      "30-90d": {"hit_at_10": 0.06, "ndcg_at_10": 0.025280197828134527, "exact_target_rank_count": 7, "generation_search_miss_count": 43, "ranking_conversion_miss_count": 4, "success_count": 3, "invalid_raw_tuple_count": 8},
+      "90-180d": {"hit_at_10": 0.08, "ndcg_at_10": 0.024996034330590534, "exact_target_rank_count": 10, "generation_search_miss_count": 40, "ranking_conversion_miss_count": 6, "success_count": 4, "invalid_raw_tuple_count": 11},
+      "180-365d": {"hit_at_10": 0.06, "ndcg_at_10": 0.01822925971938218, "exact_target_rank_count": 12, "generation_search_miss_count": 38, "ranking_conversion_miss_count": 9, "success_count": 3, "invalid_raw_tuple_count": 12},
+      ">365d": {"hit_at_10": 0.04, "ndcg_at_10": 0.01343344127787502, "exact_target_rank_count": 4, "generation_search_miss_count": 46, "ranking_conversion_miss_count": 2, "success_count": 2, "invalid_raw_tuple_count": 31}
+    },
+    "compute": {
+      "nfe": 1000,
+      "forward_calls": 1000,
+      "logits_evaluated": 4313400000,
+      "candidate_expansion_count": 12800000,
+      "visited_state_count": 50250,
+      "latency_ms": 24517.537723120768
+    }
+  },
+  "method_contract": {
+    "decode_state_kind": "masked_parallel_adaptive_unmasking",
+    "autoregressive_prefix_semantics_forbidden": true,
+    "remasking_supported_by_pinned_source": false,
+    "real_parent_ancestry_exported": true,
+    "raw_ordered_sid_tuples_exported": true,
+    "collision_preserving_exact_sid_resolution": true,
+    "projection_applied": false,
+    "exact_and_right_censored_rank_states_exported": true,
+    "official_top10_equivalence_claimed": false,
+    "metric_semantics": "SIDScope collision-preserving dense normalized-item ranking"
+  },
+  "verification": {
+    "trace_schema": "sidscope.llada_rec_trained_trace.v2",
+    "verification_schema": "sidscope.llada_rec_trained_trace_verification.v1",
+    "sidscope_commit": "37f3599eaf21bf159be2ce8a4b60792b32f5ce7d",
+    "runner_sha256": "f89605533900a0e5b4ee5fca5edb4f748426d076e5b3d1483f7adc6156444fd0",
+    "prepared_bridge_sha256": "b1ef5a3a22ea265d1f9049ae0cdd4fe9224ac6d2015fd899efdfce3afbbf0303",
+    "prepared_finalizer_sha256": "8914c1d3e6935559a1e8fba52e35f6657ca8d8b71a8cdcebdc3a95b733578763",
+    "trace_exporter_sha256": "18d2d7b059f3ef7a1d6a53369bebdc168ca431accf3d29cf52004a14586442b6",
+    "real_bundle_verifier_sha256": "52c73d9335ed8e6fd48d3bff6f231a99ebee60088fbe6cf68d3595cf48500315"
+  },
+  "redistribution": {
+    "upstream_source_vendored": false,
+    "raw_data_vendored": false,
+    "checkpoint_vendored": false,
+    "semantic_id_cache_vendored": false,
+    "full_trace_bundle_vendored": false,
+    "private_paths_exported": false,
+    "public_policy": "compact_hash_count_metric_and_verification_summary"
+  }
+}
