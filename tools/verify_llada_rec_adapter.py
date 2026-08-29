@@ -131,7 +131,7 @@ def verify() -> dict[str, Any]:
         failures.append("official-source smoke incorrectly claims remasking")
 
     gates = {
-        "G0": "blocked_no_source_license_and_no_released_assets",
+        "G0": "pass_source_revision_method_identity_license_noassertion_marker",
         "G1": "bounded_fixture_only_official_data_roundtrip_pending",
         "G2": "bounded_masked_adaptive_unmasking_state_and_official_method_smoke_pass",
         "G3": "bounded_validity_ambiguity_resolution_and_remasking_failure_contract_pass",
@@ -143,7 +143,7 @@ def verify() -> dict[str, Any]:
         "fixture_manifest": _sha256(FIXTURE),
         "official_source_smoke": _sha256(OFFICIAL_SMOKE),
     }
-    if status.get("schema") != "sidscope.llada_rec_adapter_status.v1":
+    if status.get("schema") != "sidscope.llada_rec_adapter_status.v2":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != gates:
         failures.append("adapter status G0-G5 fields differ from the executable verifier")
@@ -182,7 +182,7 @@ def verify() -> dict[str, Any]:
         },
         "promotion": {
             "named_adapter": False,
-            "reason": "The source has no detected code license or released assets, and no real trained trace has passed G1-G5.",
+            "reason": "The license is a non-redistribution marker; real G1 identity, fixed project-bound assets, trained G4-G5 trace, and checkpoint smoke remain technically open.",
         },
         "input_sha256": input_sha256,
         "failures": failures,

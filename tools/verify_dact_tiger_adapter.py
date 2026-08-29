@@ -33,6 +33,8 @@ TRACE_MANIFEST = ROOT / "docs/reproducibility/d7_labeled_trace_release.json"
 TRACE_ROWS = ROOT / "docs/reproducibility/d7_labeled_trace_rows.csv.gz"
 RUNNER = ROOT / "tools/run_v1_gate21_tiger_d7_trace.py"
 STATUS = ROOT / "docs/reproducibility/dact_tiger_adapter_status.json"
+ANCESTRY_EXPECTED = ROOT / "docs/reproducibility/dact_tiger_ancestry_refresh_expected_inputs.json"
+ANCESTRY_EVIDENCE = ROOT / "docs/reproducibility/dact_tiger_ancestry_refresh_evidence.json"
 PINNED_REVISION = "0b8d8cec88fee83b2384dd236628c2802f337d26"
 
 
@@ -163,9 +165,9 @@ def verify() -> dict[str, Any]:
         failures.append(f"public deidentified DACT row counts mismatch: {case_counts}")
 
     gates = {
-        "G0": "blocked_no_source_or_asset_license",
+        "G0": "pass_source_revision_configuration_checkpoint_identity_license_noassertion_marker",
         "G1": "pass_released_source_normalized_sid_vocabulary_resolved_item_round_trip",
-        "G2": "pass_ordered_prefix_beam_ancestry_and_step_logprob_contract",
+        "G2": "pass_full_500_target_ordered_prefix_beam_ancestry_and_step_logprob_export",
         "G3": "pass_validity_ambiguity_collision_resolution_and_failure_labels",
         "G4": "pass_deidentified_trace_ranked_item_score_and_split_export",
         "G5": "pass_cpu_fixture_released_checkpoint_smoke_expected_failure_hashes_and_verifier",
@@ -179,16 +181,38 @@ def verify() -> dict[str, Any]:
         "deidentified_trace_manifest": _sha256(TRACE_MANIFEST),
         "deidentified_trace_rows": _sha256(TRACE_ROWS),
         "released_trace_runner": _sha256(RUNNER),
+        "ancestry_refresh_expected_inputs": _sha256(ANCESTRY_EXPECTED),
+        "ancestry_refresh_evidence": _sha256(ANCESTRY_EVIDENCE),
     }
-    if status.get("schema") != "sidscope.dact_tiger_adapter_status.v1":
+    if status.get("schema") != "sidscope.dact_tiger_adapter_status.v3":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != gates:
         failures.append("adapter status G0-G5 fields differ from the executable verifier")
     if status.get("input_sha256") != input_sha256:
         failures.append("adapter status hashes differ from current evidence")
     promotion = status.get("promotion", {})
-    if promotion.get("named_adapter") is not False or promotion.get("decision") != "close_named_adapter":
+    if promotion.get("named_adapter") is not True or promotion.get("decision") != "named_adapter":
         failures.append("adapter promotion boundary mismatch")
+
+    ancestry = _read_json(ANCESTRY_EVIDENCE)
+    primary = ancestry.get("external_primary", {})
+    if ancestry.get("status") != "pass" or ancestry.get("source", {}).get(
+        "revision"
+    ) != PINNED_REVISION:
+        failures.append("ancestry refresh source or status mismatch")
+    if (
+        primary.get("status") != "PASS_G21_PRIMARY"
+        or primary.get("targets") != 500
+        or primary.get("beam_width") != 50
+        or primary.get("ordered_prefixes_present") is not True
+        or primary.get("beam_ancestry_present") is not True
+        or primary.get("step_logprob_present") is not True
+    ):
+        failures.append("ancestry refresh primary boundary mismatch")
+    if primary.get("constrained", {}).get("beam_rows") != 25000 or primary.get(
+        "unconstrained", {}
+    ).get("beam_rows") != 25000:
+        failures.append("ancestry refresh beam-row count mismatch")
 
     return {
         "schema": "sidscope.dact_tiger_adapter_verification.v1",
@@ -211,8 +235,8 @@ def verify() -> dict[str, Any]:
         },
         "public_deidentified_trace_rows": sum(case_counts.values()),
         "promotion": {
-            "named_adapter": False,
-            "reason": "G1-G5 pass, but G0 is blocked because the official source and assets have no explicit license.",
+            "named_adapter": True,
+            "reason": "The released Tools configuration passes G0-G5 including a full 500-target ancestry-bearing primary; license remains a non-redistribution marker.",
         },
         "input_sha256": input_sha256,
         "failures": failures,

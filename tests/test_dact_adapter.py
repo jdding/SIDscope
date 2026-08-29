@@ -13,6 +13,7 @@ from sidinspector.adapters.dact import (
     resolve_model_tokens,
     run_deterministic_autoregressive_fixture,
 )
+from tools.verify_dact_tiger_adapter import verify
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -70,6 +71,11 @@ class DACTAdapterTest(unittest.TestCase):
         with self.assertRaises(DACTContractError) as raised:
             run_deterministic_autoregressive_fixture(invalid)
         self.assertEqual(raised.exception.label, "prefix_parent_mismatch")
+
+    def test_full_ancestry_refresh_promotes_configuration_bound_adapter(self) -> None:
+        result = verify()
+        self.assertEqual(result["status"], "pass")
+        self.assertTrue(result["promotion"]["named_adapter"])
 
 
 if __name__ == "__main__":

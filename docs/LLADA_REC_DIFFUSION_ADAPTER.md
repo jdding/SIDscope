@@ -94,9 +94,10 @@ and position-valid beam expansion. Neither is a trained recommendation result.
 
 ## Promotion boundary
 
-The route is not a named adapter. G0 is blocked by the absent source license;
-G1 lacks a released official-data semantic-ID round-trip; G2--G4 have bounded
+The route is not a named adapter. Source and method identity pass G0 with
+`NOASSERTION` retained as a non-redistribution marker; G1 lacks a real
+official-code project-bound semantic-ID round-trip; G2--G4 have bounded
 contract evidence only; and G5 lacks a checkpoint or fully recorded training
-output. A future promotion requires an explicit reusable code license, a fixed
-artifact/checkpoint boundary, real source-item resolution, trained trace
-export, and a passing end-to-end verifier.
+output. A future promotion requires a fixed artifact/checkpoint boundary, real
+source-item resolution, trained trace export, and a passing end-to-end
+verifier. Missing license does not block that work or compact evidence delivery.

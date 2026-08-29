@@ -228,9 +228,10 @@ PYTHONPATH=src python3 tools/verify_llada_rec_adapter.py
 
 The audit found that the pinned inference implementation monotonically fills
 confidence-selected masked positions; it does not remask filled positions.
-The official repository also has no detected code license or released model,
-tokenizer cache, or training output. SIDScope therefore ships only its
-independent contract and compact evidence and does not label this route a
+The official repository has no released model, tokenizer cache, or training
+output. Its `NOASSERTION` license state is retained as a non-redistribution
+marker rather than an experiment gate. SIDScope therefore ships only its
+independent contract and compact evidence and does not yet label this route a
 complete named adapter. See `docs/LLADA_REC_DIFFUSION_ADAPTER.md`.
 
 DACT/TIGER now has a released-asset G0--G5 report, an ordered-prefix and
@@ -241,10 +242,12 @@ checkpoint:
 PYTHONPATH=src python3 tools/verify_dact_tiger_adapter.py
 ```
 
-G1--G5 pass. G0 remains blocked because the official DACT repository contains
-no explicit code or asset license, so SIDScope redistributes only hashes,
-derived/deidentified evidence, and its independent fixture. See
-`docs/DACT_TIGER_GENERATOR_ADAPTER.md`.
+G0--G5 pass. A refreshed 500-target, beam-50 constrained/unconstrained primary
+retains ordered prefixes, parent ancestry, and step log-probabilities for all
+25,000 rows per mode, promoting the released Tools configuration to a named
+adapter. The absent explicit code/asset license remains a non-redistribution
+marker, so SIDScope ships only hashes, compact/deidentified evidence, and its
+independent fixture. See `docs/DACT_TIGER_GENERATOR_ADAPTER.md`.
 
 ISD now has a paper-linked anonymous-source audit, a deterministic
 decoder-overlay fixture, and an exact-function smoke over the official
@@ -256,9 +259,10 @@ PYTHONPATH=src python3 tools/verify_isd_adapter.py
 
 The contract retains base candidate scores and parents, best item-support
 ranks, RRF pruning survival, collision-aware resolution, and final reranking
-without inserting provider-only items. The anonymous artifact exposes no Git
-revision or root code license and ships no data, checkpoint, cache, or trace,
-so this is bounded interoperability evidence rather than a named adapter. See
+without inserting provider-only items. The anonymous artifact exposes no
+immutable repository revision and ships no data, checkpoint, cache, or trace,
+so this is bounded interoperability evidence rather than a named adapter. Its
+`NOASSERTION` state is only a non-redistribution marker. See
 `docs/ISD_DECODER_OVERLAY_ADAPTER.md`.
 
 Version 1.1.0 is prepared on `codex/sidscope-v1.1`; see

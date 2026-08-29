@@ -128,8 +128,9 @@ def test_staged_preflight_does_not_execute_source_and_keeps_license_as_marker() 
 def test_full_adapter_verifier_passes_and_keeps_promotion_evidence_bound() -> None:
     result = verify()
     assert result["status"] == "pass"
-    assert result["promotion"]["named_adapter"] is False
+    assert result["promotion"]["named_adapter"] is True
     assert result["promotion"]["execution_authorized"] is True
+    assert result["promotion"]["redistribution_authorized"] is False
     assert result["upstream_source_executed"] is False
     assert result["gpu_used"] is False
     assert set(result["expected_failures"].values()) == {

@@ -109,7 +109,7 @@ recommendation results.
 
 | Gate | Status | Evidence boundary |
 | --- | --- | --- |
-| G0 | Blocked | Paper-linked anonymous source exists, but no Git revision, root code license, or released assets are available. |
+| G0 | Partial | Paper-linked, content-addressed anonymous source exists, but no immutable repository revision or coherent root method identity is available. `NOASSERTION` is a non-redistribution marker. |
 | G1 | Bounded only | Deidentified source item to model-token SID to resolved-item round-trip passes; official-data identity remains absent. |
 | G2 | Bounded pass | Base candidates, prefix support, native ranks, RRF scores, and survival are preserved; exact official pure-function smoke passes. |
 | G3 | Bounded pass | Validity, collision ambiguity, support, pruning, resolution, and provider-only insertion failure are typed. |
@@ -118,5 +118,5 @@ recommendation results.
 
 ISD is now an active `close_named_adapter` route rather than source watch, but
 it is not a named adapter. Promotion requires an immutable official revision,
-an explicit reusable code license, fixed data/checkpoint/configuration assets,
+fixed data/checkpoint/configuration assets,
 an official-data item round-trip, and a real model-backed overlay trace.

@@ -139,7 +139,7 @@ def verify() -> dict[str, Any]:
         failures.append("official final RRF output mismatch")
 
     gates = {
-        "G0": "blocked_anonymous_snapshot_no_revision_no_code_license_or_released_assets",
+        "G0": "partial_content_addressed_anonymous_snapshot_no_immutable_repository_revision",
         "G1": "bounded_fixture_only_official_item_roundtrip_pending",
         "G2": "bounded_overlay_state_and_exact_official_function_smoke_pass",
         "G3": "bounded_support_validity_ambiguity_pruning_and_noninsertion_failure_pass",
@@ -152,7 +152,7 @@ def verify() -> dict[str, Any]:
         "official_source_smoke": _sha256(OFFICIAL_SMOKE),
     }
     trace_sha256 = _trace_sha256(trace) if trace else None
-    if status.get("schema") != "sidscope.isd_adapter_status.v1":
+    if status.get("schema") != "sidscope.isd_adapter_status.v2":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != gates:
         failures.append("adapter status G0-G5 fields differ from executable verifier")
@@ -190,8 +190,9 @@ def verify() -> dict[str, Any]:
         "promotion": {
             "named_adapter": False,
             "reason": (
-                "The anonymous official snapshot has no exposed Git revision, root code "
-                "license, released assets, official-data round-trip, or real model-backed trace."
+                "The content-addressed anonymous snapshot has no immutable repository revision, "
+                "released assets, official-data round-trip, or real model-backed trace. The "
+                "license remains a non-redistribution marker rather than a technical gate."
             ),
         },
         "input_sha256": input_sha256,

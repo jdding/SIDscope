@@ -108,7 +108,7 @@
   },
   "risks_and_blocks": [
     "The anonymous snapshot does not expose a Git commit, tag, or other immutable repository revision through its public metadata endpoint.",
-    "No root code license is present; the arXiv manuscript license does not license the source snapshot.",
+    "No root code license is present; retain NOASSERTION as a non-redistribution marker rather than an experiment gate.",
     "The root README title and main workflow do not identify ISD even though exact ISD scripts and tests are present.",
     "No checkpoint, semantic-ID cache, processed dataset, trace output, or training log is distributed.",
     "The audited evaluator resolves complete SIDs through a one-item map; SIDScope must preserve collisions explicitly instead of silently overwriting an item."

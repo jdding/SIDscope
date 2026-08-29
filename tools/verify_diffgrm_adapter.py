@@ -31,14 +31,17 @@ FIXTURE = ROOT / "examples/diffgrm_masked_diffusion_fixture"
 SOURCE_AUDIT = ROOT / "docs/reproducibility/diffgrm_www2026_source_audit.json"
 STAGED_PREFLIGHT = ROOT / "docs/reproducibility/diffgrm_www2026_staged_preflight.json"
 STATUS = ROOT / "docs/reproducibility/diffgrm_www2026_adapter_status.json"
+TRAINED_EVIDENCE = ROOT / "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json"
+REAL_BUNDLE_VERIFIER = ROOT / "tools/verify_diffgrm_trained_trace_bundle.py"
+ADAPTER_CORE = ROOT / "src/sidinspector/adapters/diffgrm.py"
 PINNED_REVISION = "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c"
 GATES = {
     "G0": "pass_publication_revision_source_identity_license_noassertion_marker_nonredistribution",
-    "G1": "dataset_neutral_fixture_pass_downstream_vg_opq4_roundtrip_and_five_bucket_selection_reported_pass",
-    "G2": "native_masked_noising_and_adaptive_denoising_fixture_pass_trained_trace_pending",
-    "G3": "raw_pre_filter_validity_collision_resolution_and_typed_failure_fixture_pass",
-    "G4": "ranked_item_and_right_censoring_contract_pass_checkpoint_bound_export_pending",
-    "G5": "staged_fixture_and_independent_real_bundle_verifiers_pass_checkpoint_bound_native_trace_pending",
+    "G1": "pass_real_vg_opq4_item_sid_vocabulary_roundtrip_and_explicit_five_bucket_selection",
+    "G2": "pass_real_checkpoint_bound_native_noising_adaptive_denoising_and_beam_ancestry",
+    "G3": "pass_real_raw_validity_duplicate_collision_resolution_and_typed_failure",
+    "G4": "pass_real_five_episode_and_external_250_episode_ranked_item_and_censoring_exports",
+    "G5": "pass_recoverable_training_checkpoint_smoke_typed_failure_external_diagnostic_and_verifiers",
 }
 
 
@@ -124,6 +127,7 @@ def verify() -> dict[str, Any]:
     source_audit = _read(SOURCE_AUDIT)
     staged = _read(STAGED_PREFLIGHT)
     status = _read(STATUS)
+    trained_evidence = _read(TRAINED_EVIDENCE)
     prepared = _read(FIXTURE / "prepared_dataset.json")
     selection = _read(FIXTURE / "episode_selection.json")
     trace = _read(FIXTURE / "trained_trace_fixture.json")
@@ -193,7 +197,8 @@ def verify() -> dict[str, Any]:
         "expected_failures": FIXTURE / "expected_failures.json",
     }
     input_sha256 = {name: _sha256(path) for name, path in evidence_paths.items()}
-    if status.get("schema") != "sidscope.diffgrm_adapter_status.v2":
+    input_sha256["trained_trace_evidence"] = _sha256(TRAINED_EVIDENCE)
+    if status.get("schema") != "sidscope.diffgrm_adapter_status.v3":
         failures.append("adapter status schema mismatch")
     if status.get("gates") != GATES:
         failures.append("adapter status gates differ from executable verifier")
@@ -201,12 +206,46 @@ def verify() -> dict[str, Any]:
         failures.append("adapter status hashes differ from current evidence")
     status_promotion = status.get("promotion", {})
     if (
-        status_promotion.get("named_adapter") is not False
-        or status_promotion.get("decision") != "close_named_adapter"
+        status_promotion.get("named_adapter") is not True
+        or status_promotion.get("decision") != "named_adapter"
         or status_promotion.get("execution_authorized") is not True
         or status_promotion.get("redistribution_authorized") is not False
     ):
         failures.append("adapter promotion boundary mismatch")
+
+    if trained_evidence.get("schema") != "sidscope.diffgrm_trained_trace_evidence.v1":
+        failures.append("trained trace evidence schema mismatch")
+    if trained_evidence.get("status") != "pass":
+        failures.append("trained trace evidence status mismatch")
+    if trained_evidence.get("source", {}).get("revision") != PINNED_REVISION:
+        failures.append("trained trace source revision mismatch")
+    diagnostic = trained_evidence.get("external_balanced_diagnostic", {})
+    if diagnostic.get("episodes") != 250 or diagnostic.get("five_bucket_counts") != {
+        "short": 50,
+        "30-90d": 50,
+        "90-180d": 50,
+        "180-365d": 50,
+        ">365d": 50,
+    }:
+        failures.append("trained diagnostic episode boundary mismatch")
+    if diagnostic.get("verification_status") != "pass":
+        failures.append("trained diagnostic verification status mismatch")
+    smoke = trained_evidence.get("external_checkpoint_smoke", {})
+    if (
+        smoke.get("episodes") != 5
+        or smoke.get("expected_failure_label") != "unknown_parent_beam"
+        or smoke.get("positive_verification_status") != "pass"
+        or smoke.get("negative_verification_status")
+        != "typed_unknown_parent_beam_rejected"
+    ):
+        failures.append("trained checkpoint smoke boundary mismatch")
+    verification = trained_evidence.get("verification", {})
+    if verification.get("adapter_core_sha256") != _sha256(ADAPTER_CORE):
+        failures.append("trained evidence adapter core hash mismatch")
+    if verification.get("real_bundle_verifier_sha256") != _sha256(
+        REAL_BUNDLE_VERIFIER
+    ):
+        failures.append("trained evidence real-bundle verifier hash mismatch")
 
     return {
         "schema": "sidscope.diffgrm_adapter_verification.v1",
@@ -220,10 +259,10 @@ def verify() -> dict[str, Any]:
         "upstream_source_executed": False,
         "gpu_used": False,
         "promotion": {
-            "named_adapter": False,
+            "named_adapter": True,
             "execution_authorized": True,
             "redistribution_authorized": False,
-            "reason": "License is recorded separately; checkpoint-bound native trace and trained G2-G5 evidence remain pending.",
+            "reason": "The configuration-bound VG checkpoint smoke and external 250-episode native v2 diagnostic pass; the license remains a non-redistribution marker.",
         },
         "input_sha256": input_sha256,
         "failures": failures,

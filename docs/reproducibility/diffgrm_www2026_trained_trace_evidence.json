@@ -1,0 +1,127 @@
+{
+  "schema": "sidscope.diffgrm_trained_trace_evidence.v1",
+  "status": "pass",
+  "route_id": "diffgrm_www2026",
+  "audited_at": "2026-08-29",
+  "source": {
+    "url": "https://github.com/liuzhao09/DiffGRM",
+    "revision": "ad7b971c7e525e9fea6fb8e362a5c49dccb2473c",
+    "paper_doi": "10.1145/3774904.3792156",
+    "license_marker": "NOASSERTION",
+    "redistribution_authorized": false
+  },
+  "training": {
+    "dataset": "AmazonReviews2023/Video_Games",
+    "protocol": "frozen_dormant_first_return_train_only_catalog",
+    "seed": 2024,
+    "completed_steps": 10000,
+    "completed_epochs": 68,
+    "checkpoint_reloaded_strict": true,
+    "continuous_epoch_records": true,
+    "configuration_sha256": "d98e3bd638dbd1fe50e6f3c0442c3876f63f0e57418ed24c652967d9d1e3b761",
+    "checkpoint_sha256": "096493cb9a249bbc9f4408653b7c8cc54892a5f98191edb45dee56a9be1e1a58",
+    "training_manifest_sha256": "1797ec39769263464eebc859878b0f1e24827ff0c2eb302ce3d286422bb7dd44",
+    "semantic_id_cache_sha256": "202842cfa4f6e7df1119a57dde8915f7d4ab540bbe2fdfd60e30596c2219b7fc",
+    "source_manifest_sha256": "d71f8108977c709165c3a7633b4fda8d1b254f650e5d2719ba7d72c49a8516ab",
+    "sid_contract": "OPQ4_IVF1_PQ4x8_256_per_position",
+    "tokenizer_factor_boundary": "separate_from_RPG_OPQ32"
+  },
+  "external_checkpoint_smoke": {
+    "artifact_name": "diffgrm_vg_formal_trace_1pb_s2024",
+    "bundle_sha256": "8a094a876df6cf1d493133955c89194050d08d5b9af8f6b8c0cbc49cd87478ea",
+    "bundle_bytes": 16861982,
+    "expected_failure_sha256": "a2f90f873cb63fc4f972fb71378cb922559df87785e1e301071e36e4e2b49083",
+    "episodes": 5,
+    "five_bucket_counts": {
+      "short": 1,
+      "30-90d": 1,
+      "90-180d": 1,
+      "180-365d": 1,
+      ">365d": 1
+    },
+    "expected_failure_label": "unknown_parent_beam",
+    "positive_verification_status": "pass",
+    "negative_verification_status": "typed_unknown_parent_beam_rejected"
+  },
+  "external_balanced_diagnostic": {
+    "artifact_name": "diffgrm_vg_formal_diagnostic_250_s2024",
+    "bundle_sha256": "18fe0ac7f1535c7f9f0610d79a189f0abb34897805dc713d74564f3b8e1b7994",
+    "bundle_bytes": 845428753,
+    "prepared_file_sha256": "ac9462c98e755716605ac5a0eac4215ec4b4e8f048cd6af623e83b7d30e4af4f",
+    "selection_file_sha256": "0b902578c7f0853a857b456e8871c29845ad76e4c36983bbe07ab6a0ea6a6c93",
+    "canonical_prepared_sha256": "9dedf665d3047db938bf80036d62327bfad7647b28728d5d5f50a57c94824f92",
+    "canonical_selection_sha256": "eb55aa685b525cd553779f429a1ab2b266fc4190bc3d8afc9e5752afb6cec990",
+    "canonical_bundle_sha256": "99a6720cc9ea306d6849f18fa9c5539850a68f56929b627d4de3f43c659f2374",
+    "episodes": 250,
+    "five_bucket_counts": {
+      "short": 50,
+      "30-90d": 50,
+      "90-180d": 50,
+      "180-365d": 50,
+      ">365d": 50
+    },
+    "sample_boundary": "target-independent balanced diagnostic subset; not a population estimate",
+    "official_top10_equivalence": true,
+    "metrics": {
+      "hit_at_10": 0.008,
+      "ndcg_at_10": 0.003333333333333333,
+      "target_in_final_frontier_count": 23,
+      "target_in_final_frontier_rate": 0.092,
+      "generation_search_miss_count": 227,
+      "generation_search_miss_rate": 0.908,
+      "ranking_conversion_miss_count": 21,
+      "ranking_conversion_miss_rate": 0.084,
+      "resolution_loss_count": 0,
+      "resolution_loss_rate": 0.0,
+      "duplicate_raw_tuple_fraction": 0.7818125,
+      "invalid_raw_tuple_fraction": 0.283
+    },
+    "rank_summary": {
+      "exact_target_rank_count": 23,
+      "right_censored_target_rank_count": 227
+    },
+    "resolution_summary": {
+      "catalog_collision_count": 1695,
+      "duplicate_raw_tuple_count": 50036,
+      "invalid_raw_tuple_count": 18112,
+      "unique_raw_tuple_count": 13964
+    },
+    "compute_summary": {
+      "candidate_expansion_count": 336033,
+      "forward_calls": 1000,
+      "logits_evaluated": 196864000,
+      "nfe": 1000,
+      "visited_state_count": 256250,
+      "latency_ms": 120433.84229984076
+    },
+    "verification_status": "pass"
+  },
+  "verification": {
+    "trace_schema": "sidscope.diffgrm_masked_trace_bundle.v2",
+    "verification_schema": "sidscope.diffgrm_trained_trace_bundle_verification.v1",
+    "sidscope_core_commit": "70707280ee419980df520f8a94f4e48ba7520d36",
+    "adapter_core_sha256": "edec5f366084e08e39ce7f3818d00ac630de46715d9b0cc0cd137a5f64856471",
+    "real_bundle_verifier_sha256": "eac7ddbd39066b96cc6fb0117a0f087994431c37caf7f5d0146909318ad85445",
+    "source_audit_checked_by_bundle_cli": false,
+    "license_audit_checked_by_bundle_cli": false
+  },
+  "method_contract": {
+    "decode_state_kind": "masked_parallel_adaptive_unmasking",
+    "autoregressive_prefix_semantics_forbidden": true,
+    "forward_noising_exported": true,
+    "adaptive_unmasking_exported": true,
+    "real_parent_ancestry_exported": true,
+    "raw_pre_filter_frontier_exported": true,
+    "invalid_and_duplicate_candidates_exported": true,
+    "collision_preserving_resolution_exported": true,
+    "exact_and_right_censored_rank_states_exported": true
+  },
+  "redistribution": {
+    "upstream_source_vendored": false,
+    "raw_data_vendored": false,
+    "checkpoint_vendored": false,
+    "semantic_id_cache_vendored": false,
+    "full_trace_bundle_vendored": false,
+    "public_policy": "compact_hash_count_metric_and_verification_summary"
+  }
+}

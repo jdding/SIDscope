@@ -95,11 +95,13 @@ adapter catalog so they are not mistaken for named-method evidence.
 ## Generator Coverage
 
 Generator evidence uses a separate G0--G5 contract. DACT/TIGER now passes
-G1--G5 with a released source-item/mapping/checkpoint round-trip, an ordered
-prefix and beam-ancestry contract, real checkpoint smoke, public deidentified
-labels, and an executable verifier. It is not a named adapter because G0 is
-blocked by the upstream repository's absent code and asset license; the frozen
-500-target primary also predates ancestry export and is not described otherwise.
+G0--G5 as a configuration-bound named adapter. Its released
+source-item/mapping/checkpoint round-trip, ordered prefix and beam-ancestry
+contract, real checkpoint smoke, public deidentified labels, and executable
+verifier are joined to a refreshed 500-target, beam-50 primary whose full
+external traces contain ordered prefixes, parent ancestry, and step log
+probabilities. The upstream `NOASSERTION` license state is a redistribution
+marker, not an experiment or evidence blocker.
 Latte/PSID now passes G0--G5 as a configuration-bound named generator adapter:
 the real static cache and vocabulary round-trip are joined to public
 deidentified PSID/Latte checkpoint-backed smoke bundles, external 250-episode
@@ -110,22 +112,23 @@ bound to a fully recorded trained output, a public five-episode deidentified
 parallel graph trace, and an external 250-episode trace with complete target-
 universe hash/count evidence. The route retains unordered token sets and graph
 item nodes; it is not represented as an autoregressive prefix trace.
-LLaDA-Rec now has a pinned no-license source audit, bounded adaptive-unmasking
-trace fixture, and official class-method smoke. It remains below named-adapter
-status because G0 is blocked by the absent code license and no released cache,
-checkpoint, official-data round-trip, or trained trace exists. ISD has moved
+LLaDA-Rec now has a pinned source audit with a `NOASSERTION` license marker,
+bounded adaptive-unmasking trace fixture, and official class-method smoke. It
+remains below named-adapter status because no released cache, checkpoint,
+official-data round-trip, or trained trace exists. ISD has moved
 off source watch: its paper-linked anonymous artifact now supports an exact-
 function smoke and bounded decoder-overlay contract. It remains below named-
-adapter status because the snapshot lacks an immutable revision, code license,
-released assets, official-data round-trip, and real model-backed trace.
+adapter status because the snapshot lacks an immutable revision, released
+assets, official-data round-trip, and real model-backed trace. Its license is
+also retained only as a redistribution marker.
 
-DiffGRM is the staged publication-prioritized masked/diffusion candidate. Its
-The Web Conference 2026 publication and immutable source revision are bound,
-and its license state is retained as a `NOASSERTION` marker rather than an
-experiment blocker. Its independent dataset-neutral fixture verifier and
-external prepared/selection/checkpoint-bound-v2 verifier pass. It is not listed
-as a named adapter because the native checkpoint trace and 250-episode
-diagnostic have not yet been accepted by SIDScope.
+DiffGRM passes G0--G5 as a configuration-bound VG named adapter. Its The Web
+Conference 2026 publication and immutable source revision are bound, while its
+license state remains a `NOASSERTION` redistribution marker. The independent
+dataset-neutral fixture verifier, real five-bucket checkpoint trace, typed
+negative bundle, recoverable-training provenance, and external 250-episode
+diagnostic are accepted by compact hashes and counts without redistributing the
+upstream source, checkpoint, prepared data, or full trace.
 
 See `docs/GENERATOR_ADAPTER_CONFORMANCE.md` and
 `docs/reproducibility/generator_adapter_coverage.csv` for the typed status and

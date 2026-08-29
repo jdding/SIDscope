@@ -11,7 +11,7 @@ verifier, deterministic archive smoke, and G8 clean-environment installation
 pass. Annotated tag `v1.1.0` remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
-Latte/PSID and RPG are the two configuration-bound named generator adapters
+Latte/PSID, RPG, DiffGRM VG, and DACT/TIGER Tools are the four configuration-bound named generator adapters
 admitted under the complete G0--G5 protocol. RPG retains parallel/unordered
 token-set and graph item-node semantics. The other generator routes remain
 useful, typed partial integrations and must retain their documented gate
@@ -24,9 +24,11 @@ fixture, ten typed negative fixtures, and source-identity preflight are bound.
 The missing root license is recorded as a `NOASSERTION` marker and no longer
 blocks development, downstream execution, verification, or evidence delivery;
 upstream redistribution remains excluded. Downstream VG OPQ4/prepared/
-selection, CPU runtime, and a bounded five-bucket checkpoint smoke are reported
-pass. SIDScope now provides an independent real-bundle CLI; the native
-checkpoint-bound trace and 250-episode diagnostic remain open.
+selection, CPU runtime, recoverable 10,000-step training, a five-bucket
+checkpoint smoke with typed failure, and a native v2 external 250-episode
+diagnostic pass. SIDScope accepts the configuration as a third
+configuration-bound named adapter through compact hash/count/metric evidence;
+the full traces and upstream assets remain external.
 
 The submitted TOIS manuscript is a frozen, separate repository. Nothing in
 SIDScope 1.1 may be written back into that submission before an explicitly
@@ -214,10 +216,10 @@ The machine-readable authority is
 | --- | --- | --- | --- |
 | Latte / PSID | G0--G5 pass | `named_adapter` | Maintain v2 compatibility and rerun both public real smoke bundles for every release archive. |
 | RPG | G0--G5 pass on the pinned Beauty configuration | `named_adapter` | Maintain the bounded public smoke and rerun external training evidence only when the pinned source, cache, or configuration changes. |
-| TIGER / DACT | G1--G5 pass; G0 blocked by absent upstream code/asset license | `close_named_adapter` | Obtain explicit reuse permission; then rerun the 500-target primary with ancestry export before promotion. |
-| LLaDA-Rec | G2--G4 adaptive-unmasking fixture; G0 blocked and G1/trained evidence pending | `close_named_adapter` | Obtain an explicit source license plus fixed tokenizer/checkpoint assets; run real G1 and trained G4--G5. |
-| DiffGRM | G0 source identity pass with `NOASSERTION` marker; downstream VG OPQ4/prepared/selection and bounded checkpoint smoke reported pass; native v2 trace pending | `close_named_adapter` | Export and accept the five-bucket checkpoint-bound v2 trace with the independent CLI; then run the VG 250 diagnostic before Steam. |
-| Item-Supported Decoding | Fail-closed overlay contract and exact-function smoke; G0 blocked, G1 fixture, G5 partial | `close_named_adapter` | Obtain an immutable official revision and license; bind data/checkpoints and export a real overlay trace. |
+| TIGER / DACT | G0--G5 pass on released Tools configuration, including refreshed 500-target dual-mode ancestry export | `named_adapter` | Maintain compact external-trace evidence; rerun only when pinned inputs or configuration change. |
+| LLaDA-Rec | Source-identity G0 and G2--G4 adaptive-unmasking fixture pass; G1/trained evidence pending | `close_named_adapter` | Freeze project-bound tokenizer/checkpoint assets; run real G1 and trained G4--G5. |
+| DiffGRM | G0--G5 pass on frozen VG OPQ4/10,000-step configuration, including five-bucket native v2 smoke and external 250 diagnostic | `named_adapter` | Maintain compact evidence; verify Steam independently if run. |
+| Item-Supported Decoding | Content-addressed snapshot, fail-closed overlay contract, and exact-function smoke; G0 revision identity partial, G1 fixture, G5 partial | `close_named_adapter` | Obtain an immutable official revision; bind data/checkpoints and export a real overlay trace. |
 
 RPG must retain unordered token-set identity and graph-valid completion; it
 must never be converted into a TIGER-style autoregressive prefix trace.
@@ -295,8 +297,8 @@ boundary. Publication is closed as follows:
 4. final tag, commit, URL, archive checksum, and transcript are recorded in
    `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
 
-RPG trained closure is complete in 1.1.1.dev0. TIGER/DACT license closure,
-LLaDA-Rec real trained evidence, and ISD immutable-source closure remain
+RPG, DiffGRM VG, and TIGER/DACT trained/released-checkpoint closure are complete
+in 1.1.1.dev0. LLaDA-Rec real trained evidence and ISD immutable-source closure remain
 post-1.1.0 maintenance items. They must not silently change the immutable
 1.1.0 claim.
 
@@ -322,5 +324,7 @@ PUBLIC_RELEASE_TAG_1_1_0: v1.1.0
 PUBLIC_RELEASE_COMMIT_1_1_0: a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3
 LATTE_PSID_NAMED_ADAPTER: PASS_G0_G5
 RPG_NAMED_ADAPTER: PASS_G0_G5
+DIFFGRM_VG_NAMED_ADAPTER: PASS_G0_G5
+DACT_TIGER_NAMED_ADAPTER: PASS_G0_G5
 TOIS_FROZEN_SUBMISSION: UNCHANGED_OUT_OF_SCOPE
 ```

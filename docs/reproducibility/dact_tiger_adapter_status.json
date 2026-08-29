@@ -1,12 +1,12 @@
 {
-  "schema": "sidscope.dact_tiger_adapter_status.v1",
+  "schema": "sidscope.dact_tiger_adapter_status.v3",
   "route_id": "dact_tiger",
   "source_revision": "0b8d8cec88fee83b2384dd236628c2802f337d26",
   "audited_at": "2026-08-28",
   "gates": {
-    "G0": "blocked_no_source_or_asset_license",
+    "G0": "pass_source_revision_configuration_checkpoint_identity_license_noassertion_marker",
     "G1": "pass_released_source_normalized_sid_vocabulary_resolved_item_round_trip",
-    "G2": "pass_ordered_prefix_beam_ancestry_and_step_logprob_contract",
+    "G2": "pass_full_500_target_ordered_prefix_beam_ancestry_and_step_logprob_export",
     "G3": "pass_validity_ambiguity_collision_resolution_and_failure_labels",
     "G4": "pass_deidentified_trace_ranked_item_score_and_split_export",
     "G5": "pass_cpu_fixture_released_checkpoint_smoke_expected_failure_hashes_and_verifier"
@@ -19,7 +19,9 @@
     "g22_handoff_summary": "e8a183277dd4f8e333b877d939201a828023f2127bf03d58b722b1c9d792e3ce",
     "deidentified_trace_manifest": "6d3aa42aa96d24de5bd911b3b8122297b3c49c3eaf975eded43cd8c2c3aa6f72",
     "deidentified_trace_rows": "5efb77ba6144c6312dce11415dc34c2828419ea6c3003ef2695e14c0e89016e0",
-    "released_trace_runner": "ed41d65face12256fd714c012f9b591df186b8cf4e46db759814b63afcf11aae"
+    "released_trace_runner": "ed41d65face12256fd714c012f9b591df186b8cf4e46db759814b63afcf11aae",
+    "ancestry_refresh_expected_inputs": "98eccfd0715fd48007c3c6eae32ad458f6a09a8eedd0924aba65919d2327d577",
+    "ancestry_refresh_evidence": "843c8ad20aa6b8d5a0a879473326c92a0cfe33081922873e085b6277f87fd04d"
   },
   "verified_outputs": {
     "trace_schema": "sidscope.dact_tiger_autoregressive_trace.v1",
@@ -31,15 +33,23 @@
     "primary_target_traces": 500,
     "primary_beam_rows_per_mode": 25000,
     "public_deidentified_rows": 50000,
-    "primary_prefix_entropy_available": false
+    "primary_prefix_entropy_available": false,
+    "ancestry_refresh_status": "PASS_G21_PRIMARY",
+    "ancestry_refresh_target_traces": 500,
+    "ancestry_refresh_beam_rows_per_mode": 25000,
+    "ancestry_refresh_ordered_prefixes_present": true,
+    "ancestry_refresh_beam_ancestry_present": true
   },
   "promotion": {
-    "named_adapter": false,
-    "decision": "close_named_adapter",
-    "blockers": [
-      "The pinned official repository contains no explicit code or asset license, so reuse and redistribution permission is not established.",
-      "The historical 500-target primary predates ancestry export; its aggregate and label evidence remains valid, but a full-size ancestry refresh is not claimed."
+    "named_adapter": true,
+    "decision": "named_adapter",
+    "license_policy": "NOASSERTION is a non-redistribution marker and does not block execution verification or derived-evidence delivery.",
+    "configuration_bound": "DACT Tools 0.6_cf released TIGER/T5 checkpoint and 500-target test protocol",
+    "restrictions": [
+      "The upstream repository and assets remain NOASSERTION and are not redistributed.",
+      "The full ancestry-bearing trace rows remain external and are bound by hashes counts metrics and verifier evidence.",
+      "Prefix entropy is unavailable rather than zero."
     ],
-    "next_gate": "Obtain an explicit upstream code and asset license; then rerun the 500-target primary with ordered_prefixes and beam_ancestry before promotion."
+    "next_gate": "Maintain compact ancestry evidence and rerun only when the pinned source checkpoint mapping split or configuration changes."
   }
 }

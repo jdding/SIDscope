@@ -11,11 +11,10 @@ to the official repository revision
 The official repository currently has no root `LICENSE`. SIDScope records that
 state as `NOASSERTION` and retains a revision-bound, non-vendoring contract.
 The license marker is independent of adapter development, downstream execution,
-experiment verification, and evidence delivery; it does not block those
-surfaces. SIDScope still does not vendor or redistribute upstream source,
-weights, data, or assets. The route is not a named adapter yet because real
-checkpoint-bound G2--G5 evidence remains incomplete, not because of the license
-marker.
+experiment verification, evidence delivery, and named promotion; it does not
+block those surfaces. SIDScope still does not vendor or redistribute upstream
+source, weights, data, or assets. The frozen VG configuration now passes
+G0--G5 and is a configuration-bound named adapter.
 
 ## Versioned interfaces
 
@@ -49,7 +48,7 @@ For code `c` at position `p`, the model-facing token is
 
 The existing frozen RPG VG cache uses 32 positions and is therefore
 incompatible. SIDScope rejects it rather than cropping, padding, offsetting,
-or reordering. The future VG run must freeze a separate official DiffGRM OPQ4
+or reordering. The accepted VG run freezes a separate official DiffGRM OPQ4
 cache over the same frozen train-only catalog. This preserves the data and
 target universe but makes tokenizer identity a declared second factor; the
 comparison is not described as a pure generator-only intervention.
@@ -95,11 +94,16 @@ as `legacy_v1_contract_fixture` and cannot claim checkpoint-bound closure.
 | Gate | Current state |
 | --- | --- |
 | G0 | Publication and immutable source identity pass; license is a `NOASSERTION` marker and non-redistribution boundary, not an experiment gate. |
-| G1 | Dataset-neutral prepared/selection fixture passes; downstream frozen VG OPQ4 round-trip and explicit five-bucket selection have passed, with public compact evidence intake pending. |
-| G2 | Native OCN/noising and adaptive masked-state trace fixture passes; trained trace pending. |
-| G3 | Raw validity, collision resolution, duplicate policy, and typed failures pass on CPU fixture. |
-| G4 | Ranked-item and right-censoring contract passes; checkpoint-bound export pending. |
-| G5 | Staged fixture verifier and independent real-bundle CLI pass; checkpoint-bound native trace export remains pending. |
+| G1 | Real frozen-VG OPQ4 item/SID/model-vocabulary round-trip and explicit five-bucket selections pass. |
+| G2 | Real checkpoint-bound OCN/noising, adaptive masked-state transitions, beam ancestry, expansion, and pruning pass. |
+| G3 | Real pre-filter validity, duplicate handling, collision-preserving resolution, and typed failure pass. |
+| G4 | Five-episode smoke and external 250-episode ranked-item, exact-rank, and right-censoring exports pass. |
+| G5 | Recoverable 10,000-step training, checkpoint smoke, typed negative, external diagnostic, compact evidence, and both verifiers pass. |
+
+The compact authority is
+`docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json`. The full
+five-episode and 250-episode bundles remain external and are bound by byte and
+canonical hashes, counts, metrics, compute totals, and verifier output.
 
 ## Commands
 
@@ -133,7 +137,7 @@ Downstream consumers should generate the two manifest files first, then export
 the trace bundle with their canonical hashes. No raw user IDs, source item IDs,
 private paths, checkpoint bytes, embeddings, or source code enter the bundle.
 
-The downstream closure sequence is:
+The VG closure sequence completed as follows:
 
 1. record source/revision identity and run CPU import/config/prepared
    compatibility preflight; keep license state as a separate marker;
@@ -143,5 +147,8 @@ The downstream closure sequence is:
    bucket, plus typed expected failure;
 4. run the 250-episode balanced VG diagnostic, 50 episodes per bucket;
 5. unlock Steam only after VG identity, trace, metrics, and verifier all pass.
+
+VG now satisfies that unlock rule. Steam remains a separately trained and
+verified configuration and does not inherit VG evidence automatically.
 
 No current RPG or other live run needs to be modified or interrupted.

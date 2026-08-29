@@ -120,6 +120,10 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
             "docs/reproducibility/latte_psid_trained_trace_evidence.json", expanded
         )
         self.assertIn(
+            "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json",
+            expanded,
+        )
+        self.assertIn(
             "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
             expanded,
         )

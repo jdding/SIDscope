@@ -1,11 +1,12 @@
 # DACT / TIGER Generator Adapter
 
-Status: G1--G5 pass; G0 blocked by absent upstream code and asset license.
+Status: G0--G5 pass; configuration-bound named adapter.
 
 This route binds the official DACT Tools `0.6_cf` SID mapping and released
-TIGER/T5 checkpoint to SIDScope's autoregressive generator contract. It is not
-a complete named adapter because the pinned repository contains no LICENSE or
-COPYING file and GitHub reports no license. SIDScope therefore ships links,
+TIGER/T5 checkpoint to SIDScope's autoregressive generator contract. The
+pinned repository contains no LICENSE or COPYING file and GitHub reports no
+license; SIDScope records that state as `NOASSERTION`, not as a technical gate.
+SIDScope ships links,
 hashes, derived summaries, and an independently written deidentified fixture;
 it does not vendor the upstream source, arrays, parquet data, or weights.
 
@@ -28,7 +29,7 @@ distribution license does not license the repository code or its assets.
 
 | Gate | DACT/TIGER field mapping | Status |
 | --- | --- | --- |
-| G0 | Official repository, immutable commit/tree, paper/DOI, model configuration, released checkpoint/mapping/test hashes, and no-license finding. | **Blocked**: identity and assets are fixed, but reuse permission is not established. |
+| G0 | Official repository, immutable commit/tree, paper/DOI, model configuration, released checkpoint/mapping/test hashes, and no-license finding. | **Pass**: source, method, configuration, and asset identity are fixed; `NOASSERTION` remains a non-redistribution marker. |
 | G1 | Raw item key in `item_mapping.npy` -> one-based normalized ID -> row in `Tools_0.6_cf.npy` -> `raw_code + position * 256 + 1` -> reverse-resolved item. Official `GenRecDataset` preprocessing parity also passes. | **Pass** |
 | G2 | `ordered_autoregressive_prefix_beam`; each transition records prefix depth, parent beam, appended token, ordered prefix, token log-probability, and cumulative/sequence score. The revised G21 exporter also records Hugging Face `beam_indices`. | **Pass** on the fixture and a four-target released-checkpoint CPU replay. The historical 500-target primary predates ancestry export. |
 | G3 | A full path is valid iff it resolves in the snapshot catalog. Unresolved paths are `invalid_path`; multiple items for one full SID are `ambiguous_path`; resolution returns every matching item. Constrained and unconstrained G21 modes retain separate accounting. | **Pass** |
@@ -58,8 +59,10 @@ large or unlicensed files implicit dependencies.
 
 ## Promotion Boundary
 
-The route remains `close_named_adapter`, not `named_adapter`. Promotion needs
-an explicit upstream code and asset license, followed by a full 500-target
-primary replay with the revised ordered-prefix and beam-ancestry export. The
-existing primary aggregates and labels remain valid evidence, but they are not
-retroactively represented as ancestry-bearing traces.
+The released Tools `0.6_cf` configuration is a `named_adapter`. A 2026-08-29
+refresh reran the 500-target, beam-50 constrained and unconstrained primary and
+exported ordered prefixes, parent ancestry, step log-probabilities, validity,
+and item resolution for all 25,000 rows per mode. Full rows remain external;
+`docs/reproducibility/dact_tiger_ancestry_refresh_evidence.json` binds their
+hashes, counts, metrics, runtime, and frozen inputs. Historical aggregates are
+retained as regression evidence rather than being relabeled retroactively.

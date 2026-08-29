@@ -11,6 +11,28 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.1.1.dev0: DiffGRM VG trained closure and G0 license policy
+
+- Accepted the frozen-VG 10,000-step DiffGRM checkpoint, one-per-bucket native
+  v2 smoke, typed `unknown_parent_beam` failure, and external 250-episode
+  balanced diagnostic through the unchanged independent real-bundle verifier.
+- Added compact, non-redistributing evidence with checkpoint/training/config/
+  SID-cache hashes, exact five-bucket counts, metrics, rank censoring,
+  resolution, duplication, invalidity, and compute accounting.
+- Promoted the frozen VG configuration to `named_adapter`; its OPQ4 tokenizer
+  remains an explicit second factor and does not inherit RPG OPQ32 identity.
+- Defined license state as metadata and a redistribution boundary rather than
+  an experiment or evidence-delivery gate. `NOASSERTION` no longer fails G0 by
+  itself; missing immutable identity, assets, round-trip, checkpoint, or real
+  trace remains independently fail-closed.
+- Reran the DACT/TIGER Tools primary on 500 targets with beam width 50 in both
+  constrained and unconstrained modes. All 25,000 rows per mode now retain
+  ordered prefixes, parent ancestry, and step log-probabilities; historical
+  Recall@20 and invalid-path accounting reproduce exactly.
+- Added compact hashes/counts/metrics for the external DACT traces and promoted
+  the released Tools configuration to `named_adapter` without redistributing
+  upstream source, checkpoint, mappings, splits, or full trace rows.
+
 ## SIDScope v1.1.1.dev0: upstream tokenizer license clarifications
 
 - Recorded direct 2026-08-29 author clarifications for DIGER, LETTER, and

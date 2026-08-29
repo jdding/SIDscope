@@ -27,10 +27,10 @@ retroactively change submitted claims or tables.
 | --- | --- | --- |
 | P0 | RPG | Closed: full Beauty training, real parallel/unordered G2--G4 traces, public five-episode smoke, external 250-episode primary, and G5 verifier pass; configuration-bound `named_adapter`. 1.1.1 also provides a dataset-neutral prepared-data/explicit-selection v2 bridge; each new dataset still requires its own trained verification. |
 | P0 | Latte / PSID | Complete named adapter: real static C0--C5/G1, PSID ordered-beam and Latte latent-retry G2--G4 traces, public checkpoint-backed five-episode smoke bundles, external 250-episode hash-bound diagnostics, expected failures, and G5 verifier all pass. |
-| P1 | LLaDA-Rec | Source audit and bounded adaptive-unmasking schema/fixture complete; next obtain an explicit code license plus fixed tokenizer/checkpoint assets before real G1 and trained G4--G5. |
-| P1 | DiffGRM | WWW 2026 source identity and `NOASSERTION` marker are bound without making license an experiment gate. Downstream VG OPQ4/prepared/selection, CPU runtime, and bounded five-bucket checkpoint smoke are reported pass. The independent v2 real-bundle CLI is ready; next accept the checkpoint-bound native trace, then run the VG 250 diagnostic before Steam. |
-| P1 | TIGER / DACT | Method-facing report complete: G1--G5 pass; obtain an explicit upstream code/asset license and rerun the 500-target primary with ancestry export to unblock G0 and promotion. |
-| P2 | Item-Supported Decoding | Paper-linked anonymous source, exact-function smoke, and bounded overlay contract are complete; obtain an immutable official revision and code license, then bind data/checkpoints and a real trace. |
+| P1 | LLaDA-Rec | Source identity G0 and bounded adaptive-unmasking schema/fixture pass with `NOASSERTION` as a non-redistribution marker; next freeze project-bound tokenizer/checkpoint assets, real G1, and trained G4--G5. |
+| P1 | DiffGRM | Closed for the frozen VG configuration: source identity, real OPQ4 round-trip, recoverable 10,000-step training, five-bucket checkpoint smoke, typed failure, native v2 trace, external 250 diagnostic, and compact verifier evidence pass; configuration-bound `named_adapter`. Steam is separately unlocked. |
+| P1 | TIGER / DACT | Closed for the released Tools configuration: G0--G5, full 500-target beam-50 constrained/unconstrained ancestry export, compact external evidence, and verifier pass; configuration-bound `named_adapter`. |
+| P2 | Item-Supported Decoding | Paper-linked content-addressed anonymous source, exact-function smoke, and bounded overlay contract are complete; obtain an immutable official revision, then bind data/checkpoints and a real trace. |
 
 The machine-readable state is
 `docs/reproducibility/generator_adapter_coverage.csv`.

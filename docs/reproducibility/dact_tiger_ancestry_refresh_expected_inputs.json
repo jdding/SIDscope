@@ -1,0 +1,28 @@
+{
+  "schema": "sidscope.dact_tiger_ancestry_refresh_expected_inputs.v1",
+  "source_revision": "0b8d8cec88fee83b2384dd236628c2802f337d26",
+  "checkpoint_sha256": "2e13d9e31788fe4471bd70e6a480aa27e144dbd84bc21337f54808d99e077f01",
+  "mapping_sha256": "90aed7df52a559d4ad6b77aa1bde5484fb596da5436feeb1eed8bb85c61371e9",
+  "test_split_sha256": "989b9203013351be3c4bd3ed9c47552f4867fe82db2dcbaaaf54056527733f0d",
+  "allowed_runtime_profiles": [
+    {
+      "name": "fudan_sidscope_rpg_isolated_env",
+      "python": "3.13.11",
+      "torch": "2.7.1+cu118",
+      "transformers": "4.56.1"
+    }
+  ],
+  "protocol": {
+    "canary_targets": 100,
+    "canary_beam_width": 20,
+    "primary_targets": 500,
+    "primary_beam_width": 50,
+    "batch_size": 16,
+    "modes": [
+      "constrained",
+      "unconstrained"
+    ],
+    "seed": 20260809
+  },
+  "license_policy": "NOASSERTION non-redistribution marker; execution and compact derived evidence authorized"
+}

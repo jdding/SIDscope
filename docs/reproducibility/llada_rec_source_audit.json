@@ -93,7 +93,8 @@
     "checkpoint_boundary": "training is required because no checkpoint or recorded training output is released"
   },
   "promotion_boundary": {
-    "g0_blocker": "the public code repository has no detected source license",
+    "g0_status": "pass_source_revision_method_identity_license_noassertion_marker",
+    "license_boundary": "NOASSERTION does not block execution or derived evidence; do not redistribute upstream source or assets without explicit terms",
     "g1_blocker": "no released semantic-ID cache or official-data normalized round-trip",
     "g5_blocker": "no checkpoint or fully recorded training output",
     "named_adapter": false

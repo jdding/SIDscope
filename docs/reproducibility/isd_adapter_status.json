@@ -1,11 +1,11 @@
 {
-  "schema": "sidscope.isd_adapter_status.v1",
+  "schema": "sidscope.isd_adapter_status.v2",
   "route_id": "isd",
   "source_snapshot_id": "ISD-CF7C",
   "source_revision": null,
   "audited_at": "2026-08-28",
   "gates": {
-    "G0": "blocked_anonymous_snapshot_no_revision_no_code_license_or_released_assets",
+    "G0": "partial_content_addressed_anonymous_snapshot_no_immutable_repository_revision",
     "G1": "bounded_fixture_only_official_item_roundtrip_pending",
     "G2": "bounded_overlay_state_and_exact_official_function_smoke_pass",
     "G3": "bounded_support_validity_ambiguity_pruning_and_noninsertion_failure_pass",
@@ -13,7 +13,7 @@
     "G5": "partial_cpu_fixture_and_official_pure_function_smoke_pass_checkpoint_data_pending"
   },
   "input_sha256": {
-    "source_audit": "c8525c5578e7f9a3ca8fcc35d400a8311a94c2a771ec5652e7bf5ba9b811e062",
+    "source_audit": "3f39f0b8da6ae602dd3990bef6882b58b0c30890ed445bd5ae5eefcf218cb2d2",
     "fixture_manifest": "4e33ed783e79befbbba3aa52beb68e9bf14bf0202c02c37151b55b81ac8a05c7",
     "official_source_smoke": "7decebc5de3ecacc30b802d6fbaeea24a085810ae5a5d1ac311a081496e35cbc"
   },
@@ -47,9 +47,9 @@
   "promotion": {
     "named_adapter": false,
     "decision": "close_named_adapter",
+    "license_policy": "NOASSERTION is a non-redistribution marker and does not block execution verification or derived-evidence delivery.",
     "blockers": [
       "The official anonymous snapshot exposes no Git revision or other immutable repository revision metadata.",
-      "No root code license is present; the manuscript license does not license the code snapshot.",
       "The root README identifies a different review snapshot even though exact ISD method files are present.",
       "No checkpoint, semantic-ID cache, processed data, generated trace, or training log is released.",
       "No official-data item round-trip or real model-backed overlay trace has passed G1 and G4-G5."
