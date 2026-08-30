@@ -15,6 +15,7 @@ earlier ADR rather than editing its rationale or consequences in place.
 | [0008](0008-plugin-and-native-trace-ecosystem.md) | Add lazy adapter plugins and registered native trace families | Accepted | 2026-08-30 |
 | [0009](0009-content-addressed-evidence-and-derived-registry.md) | Make immutable evidence objects authoritative and SQLite derived | Accepted | 2026-08-30 |
 | [0010](0010-separate-hardening-from-2-0-stability.md) | Separate 1.6 hardening from the 2.0 stability declaration | Accepted; partially supersedes ADR-0004 timing | 2026-08-30 |
+| [0011](0011-profile-governed-submission-admission.md) | Govern evidence admission through versioned profiles and reports | Accepted | 2026-08-30 |
 
 New ADRs must include context, decision drivers, viable options, the decision,
 positive and negative consequences, migration, validation and rollback. Accepted

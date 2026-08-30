@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,7 +27,55 @@ jobs:
       - run: python tools/verify_sidscope_1_3_plugin_ecosystem.py
       - run: python tools/verify_sidscope_1_4_evidence_system.py
       - run: python tools/verify_sidscope_1_4_cli_baseline.py
+      - run: python tools/verify_sidscope_1_5_conformance_ecosystem.py
       - run: python tools/verify_sidscope_release_metadata.py
+
+  compatibility-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gate: [schemas, profiles, plugins, backward-compatibility]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e . pytest
+      - name: Run contract-surface gate
+        run: |
+          case "${{ matrix.gate }}" in
+            schemas)
+              python tools/verify_sidscope_contract_registry.py
+              ;;
+            profiles)
+              python tools/verify_sidscope_1_5_conformance_ecosystem.py --gate profiles
+              ;;
+            plugins)
+              python tools/verify_sidscope_1_3_plugin_ecosystem.py
+              ;;
+            backward-compatibility)
+              python tools/verify_sidscope_1_2_legacy_migration_matrix.py
+              python tools/verify_sidscope_1_4_evidence_system.py
+              ;;
+          esac
+
+  archive-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e .
+      - run: python tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-ci.zip
+      - run: python tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-ci.zip
 
   resource-package:
     runs-on: ubuntu-latest

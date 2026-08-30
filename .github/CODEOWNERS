@@ -1,0 +1,27 @@
+# Default repository and release authority
+* @jdding
+
+# Stable contracts and schemas
+/src/sidinspector/contracts/ @jdding
+/src/sidinspector/schemas/ @jdding
+/docs/reproducibility/sidscope_module_dependencies.json @jdding
+
+# Profiles and shared verification
+/src/sidinspector/conformance_core/ @jdding
+/docs/CONFORMANCE_PROFILE_GOVERNANCE.md @jdding
+
+# Adapter integration surfaces
+/src/sidinspector/adapters_core/ @jdding
+/src/sidinspector/adapters/ @jdding
+/examples/reference_adapter_plugin/ @jdding
+
+# Evidence, submissions and generated views
+/src/sidinspector/evidence/ @jdding
+/src/sidinspector/submission/ @jdding
+
+# Release authority
+/.github/workflows/ @jdding
+/docs/reproducibility/sidscope_release_candidate_manifest.csv @jdding
+/docs/SIDSCOPE_RELEASE_CHECKLIST.md @jdding
+/tools/build_sidscope_release_candidate_archive.py @jdding
+/tools/verify_sidscope_resource_package.py @jdding

@@ -1,0 +1,30 @@
+{
+  "schema": "sidscope.dataset_profile_descriptor.v1",
+  "schema_revision": "1.0.0",
+  "descriptor_id": "vg-dormant-profile-v1",
+  "producer": {"name": "sidinspector.fixture", "version": "1.5.0.dev0"},
+  "dataset_identity_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "split_bindings": [
+    {"role": "train", "content_sha256": "1212121212121212121212121212121212121212121212121212121212121212", "row_count": 100},
+    {"role": "validation", "content_sha256": "1313131313131313131313131313131313131313131313131313131313131313", "row_count": 20},
+    {"role": "test", "content_sha256": "1414141414141414141414141414141414141414141414141414141414141414", "row_count": 25}
+  ],
+  "catalog": {"scope": "train_only", "item_count": 80, "content_sha256": "1515151515151515151515151515151515151515151515151515151515151515"},
+  "target_universe": {"scope": "train_only_catalog", "item_count": 80, "content_sha256": "1616161616161616161616161616161616161616161616161616161616161616"},
+  "evaluation": {
+    "cutoff": 10,
+    "publication_depth": 100,
+    "slices": [
+      {"slice_id": "gap_0_7d", "definition_sha256": "1717171717171717171717171717171717171717171717171717171717171717"},
+      {"slice_id": "gap_gt_365d", "definition_sha256": "1818181818181818181818181818181818181818181818181818181818181818"},
+      {"slice_id": "overall", "definition_sha256": "1919191919191919191919191919191919191919191919191919191919191919"}
+    ]
+  },
+  "privacy": {
+    "policy_sha256": "1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+    "source_user_ids_exported": false,
+    "source_item_ids_exported": false,
+    "absolute_private_paths_exported": false
+  },
+  "content_sha256": "cbb48327e6623d435b59f2f2eabcc8e695e7ae700261bd4738a4a2e2b65dfb5a"
+}

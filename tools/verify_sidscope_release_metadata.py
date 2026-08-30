@@ -14,6 +14,7 @@ if str(Path(__file__).resolve().parents[1] / "src") not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from sidinspector.contracts import load_contract_registry
+from sidinspector.conformance_core import load_profile_catalog
 from sidinspector.sdk import ADAPTER_SDK_VERSION
 
 
@@ -64,6 +65,21 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         ],
         "docs/SIDSCOPE_RELEASE_TEMPLATE.md": ["Adapter SDK version:", "archive SHA-256:"],
         "docs/SIDSCOPE_RELEASE_CHECKLIST.md": ["docs/SIDSCOPE_RELEASE_TEMPLATE.md"],
+        "docs/CONFORMANCE_AND_SUBMISSION_ECOSYSTEM.md": [
+            "sidscope.dataset_profile_descriptor.v1",
+            "sidscope.profile_conformance_report.v1",
+            "sidscope.evidence_submission.v1",
+            "sidscope submission check",
+        ],
+        "docs/CONFORMANCE_PROFILE_GOVERNANCE.md": [
+            "Semantic Versioning",
+            "Status Derivation",
+        ],
+        "docs/CODE_OWNERSHIP.md": [
+            "Canonical contracts and schemas",
+            "Conformance profiles and reports",
+            "Release manifests",
+        ],
     }
     for rel_path, tokens in required_docs.items():
         text = (root / rel_path).read_text(encoding="utf-8")
@@ -74,6 +90,14 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
     registry = load_contract_registry(repository_root=root)
     if len(registry.contracts) != 11:
         raise ValueError("SIDScope 1.2 requires eleven canonical contracts")
+    profiles = load_profile_catalog()
+    if [profile.profile_id for profile in profiles] != [
+        "generator_g0_g5",
+        "overlay_g0_g5",
+        "release_local",
+        "static_mapping_c0_c5",
+    ]:
+        raise ValueError("SIDScope 1.5 governed profile catalog mismatch")
     return {
         "schema": REPORT_SCHEMA,
         "status": "pass",
@@ -86,6 +110,7 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             f"{item.schema_id}@{item.schema_revision}" for item in registry.contracts
         ],
         "contract_registry": "sidscope.contract_registry.v1@1.0.0",
+        "governed_profile_count": len(profiles),
         "governance_documents_checked": len(required_docs),
     }
 

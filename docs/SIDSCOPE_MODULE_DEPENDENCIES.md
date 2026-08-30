@@ -15,6 +15,7 @@ trace            -> contracts
 evaluation       -> contracts + trace
 conformance_core -> contracts + trace + evaluation
 evidence         -> contracts + evaluation + conformance_core
+submission       -> contracts + conformance_core + evidence
 adapters_core    -> contracts + sdk + trace
 cli              -> all target-module public APIs
 ```
@@ -29,7 +30,10 @@ are grandfathered only until their inventory entries migrate or become archived.
 - `contracts` never imports legacy verifiers, adapters, GPU libraries, or
   optional upstream runtimes.
 - Target modules never import `cli`.
-- Core bundle verification never imports `adapters_core` or an external plugin.
+- Core bundle verification never imports `submission`, `adapters_core` or an
+  external plugin. The submission application service orchestrates public
+  contract, profile and evidence APIs; it owns no canonical identity, profile
+  decision or bundle semantics.
 - Cross-module imports use public module APIs; reaching into another module's
   private implementation is forbidden.
 - A new target module or dependency edge requires an update to the

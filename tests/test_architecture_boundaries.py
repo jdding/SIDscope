@@ -65,6 +65,7 @@ class ArchitectureBoundaryTest(unittest.TestCase):
             "evaluation",
             "conformance_core",
             "evidence",
+            "submission",
             "adapters_core",
             "cli",
         }

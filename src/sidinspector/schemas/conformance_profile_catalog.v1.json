@@ -1,0 +1,119 @@
+{
+  "schema": "sidscope.conformance_profile_catalog.v1",
+  "schema_revision": "1.0.0",
+  "profiles": [
+    {
+      "profile_id": "generator_g0_g5",
+      "revision": "1.0.0",
+      "profile_kind": "generator",
+      "owner": "core:profiles",
+      "gates": [
+        {"gate_id": "G0", "owner": "core:source", "depends_on": [], "failure_code": "source_identity_failure"},
+        {"gate_id": "G1", "owner": "core:data", "depends_on": ["G0"], "failure_code": "prepared_contract_failure"},
+        {"gate_id": "G2", "owner": "core:trace", "depends_on": ["G1"], "failure_code": "native_trace_failure"},
+        {"gate_id": "G3", "owner": "core:trace", "depends_on": ["G2"], "failure_code": "native_search_failure"},
+        {"gate_id": "G4", "owner": "core:evaluation", "depends_on": ["G3"], "failure_code": "resolution_ranking_failure"},
+        {"gate_id": "G5", "owner": "core:evidence", "depends_on": ["G4"], "failure_code": "downstream_handoff_failure"}
+      ],
+      "fixture": {
+        "positive": "examples/conformance_ecosystem_fixture/profile/generator_report.json",
+        "negatives": ["examples/conformance_ecosystem_fixture/profile/expected_failures.json"]
+      },
+      "lifecycle": {
+        "status": "active",
+        "migration_policy": "Publish a new semantic revision and replay the registered fixture set.",
+        "deprecation_policy": "Keep the prior revision readable until its compatibility interval closes."
+      },
+      "status_label_policy": {
+        "pass": "named_adapter",
+        "partial": "close_named_adapter",
+        "fail": "generator_rejected"
+      }
+    },
+    {
+      "profile_id": "overlay_g0_g5",
+      "revision": "1.0.0",
+      "profile_kind": "overlay",
+      "owner": "core:profiles",
+      "gates": [
+        {"gate_id": "G0", "owner": "core:source", "depends_on": [], "failure_code": "source_identity_failure"},
+        {"gate_id": "G1", "owner": "core:data", "depends_on": ["G0"], "failure_code": "prepared_contract_failure"},
+        {"gate_id": "G2", "owner": "core:trace", "depends_on": ["G1"], "failure_code": "overlay_trace_failure"},
+        {"gate_id": "G3", "owner": "core:trace", "depends_on": ["G2"], "failure_code": "fusion_integrity_failure"},
+        {"gate_id": "G4", "owner": "core:evaluation", "depends_on": ["G3"], "failure_code": "noninsertion_ranking_failure"},
+        {"gate_id": "G5", "owner": "core:evidence", "depends_on": ["G4"], "failure_code": "downstream_handoff_failure"}
+      ],
+      "fixture": {
+        "positive": "examples/conformance_ecosystem_fixture/profile/overlay_report.json",
+        "negatives": ["examples/conformance_ecosystem_fixture/profile/expected_failures.json"]
+      },
+      "lifecycle": {
+        "status": "active",
+        "migration_policy": "Publish a new semantic revision and replay the registered fixture set.",
+        "deprecation_policy": "Keep the prior revision readable until its compatibility interval closes."
+      },
+      "status_label_policy": {
+        "pass": "named_overlay_adapter",
+        "partial": "close_named_adapter",
+        "fail": "overlay_rejected"
+      }
+    },
+    {
+      "profile_id": "release_local",
+      "revision": "1.0.0",
+      "profile_kind": "release",
+      "owner": "core:release",
+      "gates": [
+        {"gate_id": "L0", "owner": "core:release", "depends_on": [], "failure_code": "version_consistency_failure"},
+        {"gate_id": "L1", "owner": "core:test", "depends_on": ["L0"], "failure_code": "test_suite_failure"},
+        {"gate_id": "L2", "owner": "core:release", "depends_on": ["L1"], "failure_code": "resource_package_failure"},
+        {"gate_id": "L3", "owner": "core:release", "depends_on": ["L2"], "failure_code": "archive_smoke_failure"},
+        {"gate_id": "L4", "owner": "core:release", "depends_on": ["L3"], "failure_code": "fresh_environment_failure"},
+        {"gate_id": "L5", "owner": "core:release", "depends_on": ["L4"], "failure_code": "release_packet_failure"}
+      ],
+      "fixture": {
+        "positive": "examples/conformance_ecosystem_fixture/profile/release_report.json",
+        "negatives": ["examples/conformance_ecosystem_fixture/profile/expected_failures.json"]
+      },
+      "lifecycle": {
+        "status": "active",
+        "migration_policy": "Publish a new semantic revision and replay archive and fresh-environment fixtures.",
+        "deprecation_policy": "Retain the last passing local-release revision for rollback."
+      },
+      "status_label_policy": {
+        "pass": "local_release_ready",
+        "partial": "local_release_partial",
+        "fail": "local_release_rejected"
+      }
+    },
+    {
+      "profile_id": "static_mapping_c0_c5",
+      "revision": "1.0.0",
+      "profile_kind": "static_mapping",
+      "owner": "core:profiles",
+      "gates": [
+        {"gate_id": "C0", "owner": "core:source", "depends_on": [], "failure_code": "source_identity_failure"},
+        {"gate_id": "C1", "owner": "core:data", "depends_on": ["C0"], "failure_code": "dataset_identity_failure"},
+        {"gate_id": "C2", "owner": "core:contracts", "depends_on": ["C1"], "failure_code": "sid_space_failure"},
+        {"gate_id": "C3", "owner": "core:contracts", "depends_on": ["C2"], "failure_code": "mapping_roundtrip_failure"},
+        {"gate_id": "C4", "owner": "core:evaluation", "depends_on": ["C3"], "failure_code": "collision_semantics_failure"},
+        {"gate_id": "C5", "owner": "core:evidence", "depends_on": ["C4"], "failure_code": "conformance_evidence_failure"}
+      ],
+      "fixture": {
+        "positive": "examples/conformance_ecosystem_fixture/profile/static_mapping_report.json",
+        "negatives": ["examples/conformance_ecosystem_fixture/profile/expected_failures.json"]
+      },
+      "lifecycle": {
+        "status": "active",
+        "migration_policy": "Publish a new semantic revision and replay the registered fixture set.",
+        "deprecation_policy": "Keep the prior revision readable until its compatibility interval closes."
+      },
+      "status_label_policy": {
+        "pass": "c0_c5_pass",
+        "partial": "auditable_snapshot_not_fully_regenerable",
+        "fail": "static_mapping_rejected"
+      }
+    }
+  ],
+  "content_sha256": "7f90a7407fb65a5dc5a74df093149f598f7dce92bc45bde04a3a640c74d8c404"
+}

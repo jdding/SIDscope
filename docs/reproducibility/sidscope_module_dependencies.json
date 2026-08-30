@@ -27,6 +27,7 @@
         "evaluation",
         "evidence",
         "sdk",
+        "submission",
         "trace"
       ],
       "status": "active"
@@ -67,6 +68,15 @@
       "allowed_internal_imports": [
         "contracts",
         "sdk"
+      ],
+      "status": "active"
+    },
+    "submission": {
+      "allowed_internal_imports": [
+        "conformance_core",
+        "contracts",
+        "evidence",
+        "submission"
       ],
       "status": "active"
     },

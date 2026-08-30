@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: SIDScope 1.4 development closure baseline
+Status: SIDScope 1.5 development closure baseline
 
 ## Product and Entry Points
 
@@ -12,6 +12,7 @@ Status: SIDScope 1.4 development closure baseline
 | 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Sprint 1--4 development closed; public release not implied |
 | 1.3.0.dev0 | `sidinspector` | `sidinspector` | facade plus lazy `sidscope.adapters` plugins | Adapter/native-trace ecosystem development closed; public release not implied |
 | 1.4.0.dev0 | `sidinspector` | `sidinspector` | facade plus evidence bundle and registry commands | Immutable evidence-system development closed; public release not implied |
+| 1.5.0.dev0 | `sidinspector` | `sidinspector` | facade plus profile, submission and generated-view commands | Conformance/submission ecosystem development closed locally; public release not implied |
 
 No import or distribution rename is planned during 1.x. The facade validates
 all eleven canonical 1.2 contracts and provides adapter preflight, trace
@@ -23,11 +24,12 @@ during migration.
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `1.4.0.dev0` | PEP 440 development version; not a public 1.4.0 release. |
+| Product/package | `1.5.0.dev0` | PEP 440 development version; not a public 1.5.0 release. |
 | Adapter SDK | `0.2.0-alpha` | Versioned capability descriptors and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
-| Conformance profiles | legacy C0--C5/G0--G5 plus `common.generator.v1` and five family profiles | Existing route verifiers remain authoritative until exact parity migration. |
+| Conformance profiles | governed `static_mapping_c0_c5`, `generator_g0_g5`, `overlay_g0_g5`, `release_local` at `1.0.0`; legacy `common.generator.v1` and five family profiles remain supported | Profile reports bind the exact catalog hash; legacy-only routes retain read-only authority until migration. |
 | Evidence bundle | `sidscope.evidence_bundle.v1@1.0.0` | Immutable canonical JSON; SHA-256 object directory authoritative; SQLite and static views are derived. |
+| Submission | `sidscope.evidence_submission.v1@1.0.0` and `sidscope.submission_check_report.v1@1.0.0` | Root-relative canonical package; unknown roles revisions bindings or claims fail closed. |
 
 The canonical schema IDs are `sidscope.source_identity.v1`,
 `sidscope.dataset_identity.v1`, `sidscope.sid_space_identity.v1`,
@@ -159,3 +161,23 @@ remain unchanged. A correction creates a new bundle with a supersession edge;
 it never changes the old bundle. Comparison produces metric deltas only when
 profile revision, dataset, target universe, evaluation cutoff, publication
 depth, and rank semantics match. Otherwise it returns typed incompatibility.
+
+## Profile and Submission Compatibility
+
+DatasetProfileDescriptor v1 and ProfileConformanceReport v1 are additive to the
+eleven canonical 1.2 contracts. They govern 1.5 admission and do not silently
+reinterpret the older ConformanceReport v1 or 1.3 family-composition registry.
+A report binds `sidscope.conformance_profile_catalog.v1` by content hash and
+uses only its profile's gate order failure codes and derived status-label
+policy.
+
+EvidenceSubmission v1 binds root-relative canonical files by exact-byte SHA-256.
+The checker accepts passing and registered partial/close profile decisions and
+rejects failing decisions. It validates DatasetProfileDescriptor,
+ProfileConformanceReport and EvidenceBundle through their public owners rather
+than duplicating their semantics. Status and result indexes are deterministic
+derived views; they are neither a schema authority nor an admission write API.
+
+Rollback pins the prior profile/catalog and CLI combination and rebuilds the
+views. Existing reports submissions bundles family profiles and legacy ledgers
+remain immutable and independently addressable.

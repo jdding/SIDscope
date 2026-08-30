@@ -1,0 +1,51 @@
+{
+  "schema": "sidscope.submission_negative_inventory.v1",
+  "schema_revision": "1.0.0",
+  "cases": [
+    {
+      "case_id": "dataset_binding_mismatch",
+      "mutation": "dataset_binding_mismatch",
+      "expected_failure": "dataset_binding_mismatch"
+    },
+    {
+      "case_id": "duplicate_artifact",
+      "mutation": "duplicate_artifact",
+      "expected_failure": "duplicate_artifact"
+    },
+    {
+      "case_id": "hash_tamper",
+      "mutation": "hash_tamper",
+      "expected_failure": "artifact_hash_mismatch"
+    },
+    {
+      "case_id": "missing_file",
+      "mutation": "missing_file",
+      "expected_failure": "missing_submission_file"
+    },
+    {
+      "case_id": "path_escape",
+      "mutation": "path_escape",
+      "expected_failure": "submission_path_escape"
+    },
+    {
+      "case_id": "private_path",
+      "mutation": "private_path",
+      "expected_failure": "private_path_exposure"
+    },
+    {
+      "case_id": "profile_mismatch",
+      "mutation": "profile_mismatch",
+      "expected_failure": "profile_mismatch"
+    },
+    {
+      "case_id": "unknown_artifact_role",
+      "mutation": "unknown_artifact_role",
+      "expected_failure": "unknown_artifact_role"
+    },
+    {
+      "case_id": "unsupported_exact_rank",
+      "mutation": "unsupported_exact_rank",
+      "expected_failure": "unsupported_exact_rank"
+    }
+  ]
+}

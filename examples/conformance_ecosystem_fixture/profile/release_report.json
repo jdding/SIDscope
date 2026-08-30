@@ -1,0 +1,21 @@
+{
+  "schema": "sidscope.profile_conformance_report.v1",
+  "schema_revision": "1.0.0",
+  "report_id": "release_local",
+  "producer": {"name": "sidinspector.fixture", "version": "1.5.0.dev0"},
+  "profile_binding": {"profile_id": "release_local", "profile_revision": "1.0.0", "catalog_sha256": "7f90a7407fb65a5dc5a74df093149f598f7dce92bc45bde04a3a640c74d8c404"},
+  "descriptor_binding": {"schema_id": "sidscope.dataset_profile_descriptor.v1", "schema_revision": "1.0.0", "content_sha256": "cbb48327e6623d435b59f2f2eabcc8e695e7ae700261bd4738a4a2e2b65dfb5a"},
+  "artifacts": [
+    {"artifact_id": "dataset-profile-descriptor", "role": "dataset_profile_descriptor", "schema_id": "sidscope.dataset_profile_descriptor.v1", "schema_revision": "1.0.0", "content_sha256": "cbb48327e6623d435b59f2f2eabcc8e695e7ae700261bd4738a4a2e2b65dfb5a"}
+  ],
+  "gates": [
+    {"gate_id": "L0", "status": "pass", "failure": null},
+    {"gate_id": "L1", "status": "pass", "failure": null},
+    {"gate_id": "L2", "status": "pass", "failure": null},
+    {"gate_id": "L3", "status": "pass", "failure": null},
+    {"gate_id": "L4", "status": "pass", "failure": null},
+    {"gate_id": "L5", "status": "pass", "failure": null}
+  ],
+  "decision": {"status": "pass", "status_label": "local_release_ready"},
+  "content_sha256": "3f7a0fbe079a89a6b6dc4d00424eeb8a3b3679ed400f0af75cf46d24f545550e"
+}

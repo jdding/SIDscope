@@ -41,6 +41,10 @@ def verify_inventory(path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
         for key in ("authority", "verifier"):
             if not (ROOT / profile[key]).exists():
                 raise FileNotFoundError(profile[key])
+    for authority in observed.get("legacy_profile_authorities", []):
+        for key in ("authority", "verifier"):
+            if not (ROOT / authority[key]).exists():
+                raise FileNotFoundError(authority[key])
 
     routes = observed["routes"]
     registry = observed["canonical_contract_registry"]

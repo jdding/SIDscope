@@ -16,7 +16,7 @@ if str(Path(__file__).resolve().parents[1] / "src") not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from sidinspector.contracts import load_contract_registry
-from sidinspector.conformance_core import load_profile_registry
+from sidinspector.conformance_core import load_profile_catalog, load_profile_registry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,8 +77,24 @@ def _schema_owner(schema_id: str) -> str:
         return "core:sdk"
     if prefix.startswith("trace_payload") or prefix == "native_payload_validation":
         return "core:trace"
-    if prefix in {"conformance_profile_registry", "composed_conformance_profile"}:
+    if prefix in {
+        "conformance_profile_registry",
+        "conformance_profile_catalog",
+        "composed_conformance_profile",
+        "dataset_profile_descriptor",
+        "profile_conformance_report",
+        "profile_conformance_validation",
+    }:
         return "core:conformance"
+    if prefix in {
+        "evidence_submission",
+        "submission_check_report",
+        "submission_index_export",
+        "adapter_status_index",
+        "adapter_result_index",
+        "legacy_status_parity",
+    }:
+        return "core:evidence"
     if prefix in {
         "adapter_conformance_report",
         "adapter_manifest",
@@ -192,6 +208,7 @@ def build_inventory() -> dict[str, Any]:
     schemas = schema_inventory()
     registry = load_contract_registry(repository_root=ROOT)
     native_profiles = load_profile_registry()
+    governed_profiles = load_profile_catalog()
     return {
         "schema": "sidscope.architecture_inventory.v1",
         "status": "pass",
@@ -205,33 +222,26 @@ def build_inventory() -> dict[str, Any]:
                 for descriptor in registry.contracts
             ],
             "conformance_profiles": [
-                "static_mapping_c0_c5", "generator_g0_g5", "release_local",
+                *[
+                    f"{profile.profile_id}@{profile.revision}"
+                    for profile in governed_profiles
+                ],
                 *[f"{profile.profile_id}@{profile.revision}" for profile in native_profiles],
             ],
             "evidence_bundle": "sidscope.evidence_bundle.v1@1.0.0_with_content_addressed_objects_and_sqlite_projection",
         },
         "profiles": [
-            {
-                "profile_id": "static_mapping_c0_c5",
-                "owner": "core:conformance",
-                "authority": "docs/ADAPTER_CONFORMANCE.md",
-                "verifier": "tools/verify_adapter_conformance_assets.py",
-                "migration_state": "legacy_authority",
-            },
-            {
-                "profile_id": "generator_g0_g5",
-                "owner": "core:conformance",
-                "authority": "docs/GENERATOR_ADAPTER_CONFORMANCE.md",
-                "verifier": "docs/reproducibility/generator_adapter_coverage.csv",
-                "migration_state": "legacy_authority",
-            },
-            {
-                "profile_id": "release_local",
-                "owner": "core:release",
-                "authority": "docs/SIDSCOPE_RELEASE_CHECKLIST.md",
-                "verifier": "tools/verify_sidscope_resource_package.py",
-                "migration_state": "active",
-            },
+            *[
+                {
+                    "profile_id": profile.profile_id,
+                    "revision": profile.revision,
+                    "owner": profile.owner,
+                    "authority": "src/sidinspector/schemas/conformance_profile_catalog.v1.json",
+                    "verifier": "tools/verify_sidscope_1_5_conformance_ecosystem.py",
+                    "migration_state": profile.lifecycle["status"],
+                }
+                for profile in governed_profiles
+            ],
             *[
                 {
                     "profile_id": profile.profile_id,
@@ -242,6 +252,26 @@ def build_inventory() -> dict[str, Any]:
                 }
                 for profile in native_profiles
             ],
+        ],
+        "legacy_profile_authorities": [
+            {
+                "profile_id": "static_mapping_c0_c5",
+                "authority": "docs/ADAPTER_CONFORMANCE.md",
+                "verifier": "tools/verify_adapter_conformance_assets.py",
+                "migration_state": "read_only_coexistence",
+            },
+            {
+                "profile_id": "generator_g0_g5",
+                "authority": "docs/GENERATOR_ADAPTER_CONFORMANCE.md",
+                "verifier": "docs/reproducibility/generator_adapter_coverage.csv",
+                "migration_state": "read_only_coexistence",
+            },
+            {
+                "profile_id": "release_local",
+                "authority": "docs/SIDSCOPE_RELEASE_CHECKLIST.md",
+                "verifier": "tools/verify_sidscope_resource_package.py",
+                "migration_state": "read_only_coexistence",
+            },
         ],
         "schema_count": len(schemas),
         "schemas": schemas,

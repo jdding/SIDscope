@@ -11,6 +11,27 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.5.0.dev0: conformance and submission ecosystem
+
+- Added a versioned shared profile catalog for static-mapping C0--C5,
+  generator G0--G5, decoder-overlay G0--G5 and local-release gates, with owners,
+  semantic revisions, fixtures, migration/deprecation policy and derived status
+  labels.
+- Added DatasetProfileDescriptor v1 and ProfileConformanceReport v1 to bind
+  split, catalog, target universe, evaluation depth, slices, privacy, artifacts
+  and ordered typed gate outcomes.
+- Added a root-contained EvidenceSubmission v1 checker that validates
+  structure, completeness, compatibility, claims and privacy without executing
+  upstream code or plugins.
+- Added deterministic status and result indexes derived from passing reports
+  and immutable EvidenceBundles, plus a read-only legacy parity interface.
+- Added public adapter-onboarding, profile-governance, security/privacy and code
+  ownership documentation; CI now spans supported Python versions, schemas,
+  profiles, plugins, backward compatibility and archives.
+- Kept complete 1.1.1 route replay/archival and external adoption hardening in
+  1.6. Existing bundles, legacy ledgers, adapter evidence and frozen TOIS assets
+  remain unchanged.
+
 ## SIDScope v1.4.0.dev0: immutable evidence system
 
 - Added exact EvidenceBundle v1 validation with canonical non-self-referential

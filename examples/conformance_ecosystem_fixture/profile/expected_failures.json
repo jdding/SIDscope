@@ -1,0 +1,13 @@
+{
+  "schema": "sidscope.profile_fixture_failures.v1",
+  "cases": [
+    {"case_id": "unknown-profile", "expected_code": "unknown_profile"},
+    {"case_id": "gate-order", "expected_code": "noncanonical_gate_order"},
+    {"case_id": "gate-dependency", "expected_code": "gate_dependency_status_mismatch"},
+    {"case_id": "descriptor-binding", "expected_code": "descriptor_binding_mismatch"},
+    {"case_id": "content-hash", "expected_code": "content_hash_mismatch"},
+    {"case_id": "unsupported-label", "expected_code": "unsupported_status_label"},
+    {"case_id": "privacy", "expected_code": "privacy_boundary_violation"},
+    {"case_id": "publication-depth", "expected_code": "invalid_evaluation_depth"}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "sidscope.profile_conformance_report.v1",
+  "schema_revision": "1.0.0",
+  "report_id": "overlay_g0_g5",
+  "producer": {"name": "sidinspector.fixture", "version": "1.5.0.dev0"},
+  "profile_binding": {"profile_id": "overlay_g0_g5", "profile_revision": "1.0.0", "catalog_sha256": "7f90a7407fb65a5dc5a74df093149f598f7dce92bc45bde04a3a640c74d8c404"},
+  "descriptor_binding": {"schema_id": "sidscope.dataset_profile_descriptor.v1", "schema_revision": "1.0.0", "content_sha256": "cbb48327e6623d435b59f2f2eabcc8e695e7ae700261bd4738a4a2e2b65dfb5a"},
+  "artifacts": [
+    {"artifact_id": "dataset-profile-descriptor", "role": "dataset_profile_descriptor", "schema_id": "sidscope.dataset_profile_descriptor.v1", "schema_revision": "1.0.0", "content_sha256": "cbb48327e6623d435b59f2f2eabcc8e695e7ae700261bd4738a4a2e2b65dfb5a"}
+  ],
+  "gates": [
+    {"gate_id": "G0", "status": "pass", "failure": null},
+    {"gate_id": "G1", "status": "pass", "failure": null},
+    {"gate_id": "G2", "status": "pass", "failure": null},
+    {"gate_id": "G3", "status": "pass", "failure": null},
+    {"gate_id": "G4", "status": "pass", "failure": null},
+    {"gate_id": "G5", "status": "pass", "failure": null}
+  ],
+  "decision": {"status": "pass", "status_label": "named_overlay_adapter"},
+  "content_sha256": "2ec6c8ce35076421d46f521fd4702c7218e741ae87896a0843f1cfd2cd6fa169"
+}

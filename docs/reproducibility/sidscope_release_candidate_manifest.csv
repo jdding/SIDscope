@@ -1,4 +1,16 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+conformance_submission_adr,docs/adr/0011-profile-governed-submission-admission.md,architecture_governance,documentation,yes,pass_local,Defines profile governed admission independent checking generated views and rollback.
+conformance_submission_doc,docs/CONFORMANCE_AND_SUBMISSION_ECOSYSTEM.md,conformance_submission,documentation,yes,pass_local,Documents public contracts CLI fail closed checks legacy coexistence and recovery.
+profile_governance,docs/CONFORMANCE_PROFILE_GOVERNANCE.md,release_governance,documentation,yes,pass_local,Defines owners semantic versions fixtures status derivation migration and deprecation.
+adapter_contributor_guide,docs/CONTRIBUTING_ADAPTERS.md,adapter_sdk,documentation,yes,pass_local,Provides project neutral external adapter and evidence onboarding.
+security_privacy_policy,docs/SECURITY_AND_PRIVACY.md,release_governance,documentation,yes,pass_local,Defines untrusted submission privacy path rank and redistribution boundaries.
+code_ownership_policy,docs/CODE_OWNERSHIP.md,release_governance,documentation,yes,pass_local,Separates contract profile adapter evidence security and release authority.
+github_codeowners,.github/CODEOWNERS,release_governance,documentation,yes,pass_local,Maps governed repository paths to explicit review ownership.
+conformance_ecosystem_fixture,examples/conformance_ecosystem_fixture,example,fully_runnable,yes,pass_local,Provides four profile positives eight profile negatives one external submission and nine registered submission negatives.
+conformance_ecosystem_verifier,tools/verify_sidscope_1_5_conformance_ecosystem.py,verification,fully_runnable,yes,pass_local,Verifies profiles submissions typed negatives deterministic indexes parity and legacy registry compatibility.
+conformance_profile_tests,tests/test_conformance_profile_engine.py,test,fully_runnable,yes,pass_local,Tests governed profiles descriptors reports labels dependencies privacy and legacy compatibility.
+submission_ecosystem_tests,tests/test_submission_ecosystem.py,test,fully_runnable,yes,pass_local,Tests portable submissions path safety compatibility claims indexes supersession and parity.
+conformance_submission_cli_tests,tests/test_conformance_submission_cli.py,test,fully_runnable,yes,pass_local,Tests profile and submission CLI validation checking and deterministic index export.
 stabilization_adr,docs/adr/0010-separate-hardening-from-2-0-stability.md,architecture_governance,documentation,yes,pass_local,Separates 1.6 compatibility migration and external-adoption hardening from the 2.0 stability declaration.
 evidence_system_adr,docs/adr/0009-content-addressed-evidence-and-derived-registry.md,architecture_governance,documentation,yes,pass_local,Defines immutable object authority derived SQLite correction comparison and rollback semantics.
 evidence_system_doc,docs/EVIDENCE_BUNDLES_AND_REGISTRY.md,evidence_registry,documentation,yes,pass_local,Documents EvidenceBundle object admission registry comparison privacy recovery and supersession contracts.

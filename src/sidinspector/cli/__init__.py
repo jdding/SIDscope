@@ -23,8 +23,12 @@ from sidinspector.contracts import (
 )
 from sidinspector.conformance_core import load_conformance_report
 from sidinspector.conformance_core import (
+    ProfileEngineError,
     ProfileCompositionError,
     composed_profile_document,
+    load_dataset_profile_descriptor,
+    load_profile_catalog,
+    load_profile_conformance_report,
     load_profile_registry,
 )
 from sidinspector.adapters_core import (
@@ -44,6 +48,13 @@ from sidinspector.evidence import (
     load_evidence_bundle,
 )
 from sidinspector.sdk import ADAPTER_SDK_VERSION, AdapterSDKError, load_adapter_capabilities
+from sidinspector.submission import (
+    SubmissionValidationError,
+    canonical_index_bytes,
+    check_submission,
+    generate_submission_indexes,
+    validate_submission_package,
+)
 from sidinspector.trace import (
     NativePayloadValidationError,
     load_native_payload,
@@ -61,7 +72,7 @@ def package_version() -> str:
     try:
         return metadata.version("sidinspector")
     except metadata.PackageNotFoundError:
-        return "1.4.0.dev0+source"
+        return "1.5.0.dev0+source"
 
 
 def _file_sha256(path: Path) -> str:
@@ -195,6 +206,33 @@ def build_parser() -> argparse.ArgumentParser:
     profile_compose = profile_commands.add_parser("compose")
     profile_compose.add_argument("--profile", action="append", required=True)
     profile_compose.add_argument("--result-json", type=Path, default=None)
+    profile_catalog = profile_commands.add_parser(
+        "catalog", help="list governed 1.5 admission profiles"
+    )
+    profile_catalog.add_argument("--result-json", type=Path, default=None)
+    profile_verify = profile_commands.add_parser(
+        "verify", help="validate a dataset descriptor and profile report"
+    )
+    profile_verify.add_argument("--descriptor", required=True, type=Path)
+    profile_verify.add_argument("--report", required=True, type=Path)
+    profile_verify.add_argument("--result-json", type=Path, default=None)
+
+    submission = commands.add_parser(
+        "submission", help="check portable evidence submissions and derive views"
+    )
+    submission_commands = submission.add_subparsers(
+        dest="submission_command", required=True
+    )
+    submission_check = submission_commands.add_parser("check")
+    submission_check.add_argument("--root", required=True, type=Path)
+    submission_check.add_argument("--manifest", default="submission.json")
+    submission_check.add_argument("--result-json", type=Path, default=None)
+    submission_indexes = submission_commands.add_parser("indexes")
+    submission_indexes.add_argument("--root", action="append", required=True, type=Path)
+    submission_indexes.add_argument("--manifest", default="submission.json")
+    submission_indexes.add_argument("--status-output", required=True, type=Path)
+    submission_indexes.add_argument("--result-output", required=True, type=Path)
+    submission_indexes.add_argument("--result-json", type=Path, default=None)
     return parser
 
 
@@ -355,12 +393,85 @@ def _profile_command(args: argparse.Namespace) -> int:
                 ],
                 "failure": None,
             }
-        else:
+        elif args.profile_command == "compose":
             result = composed_profile_document(args.profile)
             result["failure"] = None
+        elif args.profile_command == "catalog":
+            profiles = load_profile_catalog()
+            result = {
+                "schema": "sidscope.conformance_profile_catalog_listing.v1",
+                "status": "pass",
+                "profiles": [
+                    {
+                        "profile_id": item.profile_id,
+                        "revision": item.revision,
+                        "profile_kind": item.profile_kind,
+                        "owner": item.owner,
+                        "lifecycle_status": item.lifecycle["status"],
+                        "status_label_policy": dict(item.status_label_policy),
+                    }
+                    for item in profiles
+                ],
+                "failure": None,
+            }
+        elif args.profile_command == "verify":
+            descriptor = load_dataset_profile_descriptor(args.descriptor)
+            report = load_profile_conformance_report(args.report, descriptor=descriptor)
+            result = {
+                "schema": "sidscope.profile_conformance_validation.v1",
+                "status": "pass",
+                "descriptor_id": descriptor.descriptor_id,
+                "descriptor_sha256": descriptor.content_sha256,
+                "report_id": report.report_id,
+                "report_sha256": report.content_sha256,
+                "profile_id": report.profile_id,
+                "profile_revision": report.profile_revision,
+                "decision_status": report.decision_status,
+                "status_label": report.status_label,
+                "failure": None,
+            }
+        else:
+            raise AssertionError("unreachable profile command")
         code = 0
-    except (ProfileCompositionError, OSError, json.JSONDecodeError) as exc:
+    except (
+        ProfileCompositionError,
+        ProfileEngineError,
+        OSError,
+        json.JSONDecodeError,
+    ) as exc:
         result = _failure_result(f"profile {args.profile_command}", exc)
+        code = 2
+    _write_result(result, args.result_json)
+    return code
+
+
+def _submission_command(args: argparse.Namespace) -> int:
+    if args.submission_command == "check":
+        report = check_submission(args.root, manifest_path=args.manifest)
+        result = report.to_dict()
+        _write_result(result, args.result_json)
+        return 0 if report.status == "accepted" else 2
+    try:
+        submissions = [
+            validate_submission_package(root, manifest_path=args.manifest)
+            for root in args.root
+        ]
+        status_index, result_index = generate_submission_indexes(submissions)
+        args.status_output.parent.mkdir(parents=True, exist_ok=True)
+        args.result_output.parent.mkdir(parents=True, exist_ok=True)
+        args.status_output.write_bytes(canonical_index_bytes(status_index))
+        args.result_output.write_bytes(canonical_index_bytes(result_index))
+        result = {
+            "schema": "sidscope.submission_index_export.v1",
+            "status": "pass",
+            "submission_count": len(submissions),
+            "status_index_sha256": status_index["content_sha256"],
+            "result_index_sha256": result_index["content_sha256"],
+            "failure": None,
+        }
+        code = 0
+    except (SubmissionValidationError, OSError, json.JSONDecodeError) as exc:
+        result = _failure_result("submission indexes", exc)
         code = 2
     _write_result(result, args.result_json)
     return code
@@ -644,6 +755,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _registry_command(args)
     if args.command == "profile":
         return _profile_command(args)
+    if args.command == "submission":
+        return _submission_command(args)
     if args.command != "contract":
         raise AssertionError("unreachable argparse command")
 

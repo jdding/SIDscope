@@ -2,7 +2,7 @@
 
 Status: approved development direction
 
-Regression baseline: `1.1.1.dev0`; active development: `1.4.0.dev0`
+Regression baseline: `1.1.1.dev0`; active development: `1.5.0.dev0`
 
 Architecture authority: `SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 
@@ -306,9 +306,12 @@ Exit gates:
 
 - a third party can complete one adapter onboarding from public documentation
   without project-specific verifier edits;
-- all active status labels derive from conformance reports;
+- all status labels admitted to the 1.5 generated indexes derive from
+  conformance reports; legacy-only rows remain visibly outside that authority;
 - profiles have owners, semantic versions, fixtures and migration policy;
-- generated registry views match the read-only legacy ledger before it retires;
+- generated registry views match the read-only legacy ledger for every route
+  migrated in 1.5; complete 1.1.1 route migration or immutable archival remains
+  the explicit 1.6 hardening gate;
 - submission checker rejects every registered negative package.
 
 Rollback: keep the prior profile active and block admissions under the new
@@ -435,8 +438,9 @@ Release gates:
 | Access and governance | Core/release maintainers | CLI/API, privacy, compatibility and release policy | a second data model |
 
 One person may currently hold several roles, but every contract and release
-decision names the role responsible. Before 1.2, repository ownership rules
-must cover core contracts, schemas, profiles and release manifests.
+decision names the role responsible. Repository ownership rules cover core
+contracts, schemas, profiles, adapters, evidence and release manifests in
+`CODE_OWNERSHIP.md` and `.github/CODEOWNERS`.
 
 ## 6. Success Metrics
 

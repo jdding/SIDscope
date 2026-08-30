@@ -46,7 +46,9 @@ payload families, SDK 0.2 capability binding, and composable family profiles
 without moving EvidenceBundle storage forward from 1.4. ADR 0009 makes
 content-addressed evidence authoritative and SQLite derived. ADR 0010 separates
 1.6 compatibility, migration and external-adoption hardening from the 2.0
-stability declaration.
+stability declaration. ADR 0011 makes versioned profile reports the status
+authority for new admissions and keeps the submission checker and generated
+views deterministic, offline projections.
 
 ## 2. System Context
 
@@ -152,6 +154,11 @@ During coexistence:
 - each compatibility wrapper has an owner and retirement criterion;
 - rollback means selecting the previous profile/CLI path, not rewriting a
   previously admitted bundle.
+
+Version 1.5 adds a `submission` application-service module above the existing
+owned layers. It orchestrates public contract, conformance and evidence APIs,
+but owns none of their semantics and does not add a seventh product layer or a
+deployable service.
 
 ### 4.3 Pre-Stable State: 1.6 Hardening and Optional 1.7--1.9 Evolution
 
@@ -462,9 +469,10 @@ oriented:
 | Evidence registry | SIDScope maintainer | Local index/object store | Rebuild SQLite index from immutable objects; quarantine corrupt object. |
 | Public static index | Release maintainer | Generated release surface | Regenerate from admitted bundles and republish a superseding release. |
 
-Architecture and schema paths should gain explicit code ownership before 1.2.
-Release authority, profile approval and adapter ownership are separate roles
-even when one person currently holds more than one role.
+Architecture, schemas, profiles, adapters, evidence and release paths have
+explicit ownership in `CODE_OWNERSHIP.md` and `.github/CODEOWNERS`. Release
+authority, profile approval and adapter ownership remain separate roles even
+when one person currently holds more than one role.
 
 ## 11. Key Failure Modes
 

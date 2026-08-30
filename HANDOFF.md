@@ -1,4 +1,4 @@
-# SIDScope 1.4 Development Handoff
+# SIDScope 1.5 Development Handoff
 
 Last updated: 2026-08-30
 
@@ -6,7 +6,7 @@ Last updated: 2026-08-30
 
 SIDScope 1.1.0 is locally release-ready and publicly released. The verified
 `1.1.1.dev0` tree is the frozen regression authority; active development is
-`1.4.0.dev0` in the dedicated `SIDScope-v2` worktree. Annotated tag `v1.1.0`
+`1.5.0.dev0` in the dedicated `SIDScope-v2` worktree. Annotated tag `v1.1.0`
 remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
@@ -41,8 +41,8 @@ integration through canonical contracts, native observation, diagnostic
 evaluation, conformance verification, and immutable evidence. The authoritative
 design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 and `docs/V1_2_TO_V2_ROADMAP.md`. Implemented and planned surfaces are marked
-separately; 1.5, 1.6, optional 1.7--1.9 and 2.0 target features are not claimed
-by the 1.4 closure.
+separately; 1.6, optional 1.7--1.9 and 2.0 target features are not claimed by
+the 1.5 closure.
 
 Architecture Sprint 0 is implemented on the 1.1.1 regression baseline.
 It adds canonical version/hash governance, a machine-readable schema/profile/
@@ -115,12 +115,31 @@ only when profile revision, dataset, target universe, cutoff, publication
 depth, and rank semantics are compatible. The `sidscope evidence bundle` and
 `sidscope registry` command families close build, verify, admit, import, list,
 show, compare, supersede, quarantine, export, and rebuild workflows while the
-legacy evidence-package path remains compatible. The next milestone is 1.5
-conformance automation and submission ecosystem work. ADR-0010 then reserves
-1.6 for compatibility, migration and external-adoption hardening before 2.0
-declares the proven interfaces stable. Versions 1.7--1.9 are reserved optional
-slots that require separate approved scope and may be skipped; none of those
-planned surfaces is implied by the 1.4 closure.
+legacy evidence-package path remains compatible.
+
+The 1.5 conformance/submission milestone is development-closed. A hash-bound
+profile catalog governs `static_mapping_c0_c5`, `generator_g0_g5`,
+`overlay_g0_g5`, and `release_local` at revision `1.0.0`. Each profile has an
+owner, ordered gates, typed failures, positive and negative fixtures,
+migration/deprecation policy, and a status-label policy. DatasetProfileDescriptor
+v1 binds split, catalog, target-universe, evaluation and privacy identity;
+ProfileConformanceReport v1 derives its decision and status label from the
+catalog rather than accepting a caller-written promotion.
+
+EvidenceSubmission v1 provides a path-safe independent checker for structure,
+completeness, compatibility, claims and privacy. It calls the public profile and
+EvidenceBundle validators and never imports upstream code. The checked-in
+external-adapter package passes; eight profile negatives and nine submission
+negatives fail with their declared codes. Passing and registered partial/close
+reports may enter deterministic status/result indexes; failing reports cannot.
+The indexes contain no local paths or timestamps and rebuild byte-identically.
+Legacy ledgers remain read-only authorities for unmigrated routes; complete
+1.1.1 replay or archival stays in 1.6 rather than being fabricated in 1.5.
+
+ADR-0010 reserves 1.6 for compatibility, migration and external-adoption
+hardening before 2.0 declares the proven interfaces stable. Versions 1.7--1.9
+are reserved optional slots that require separate approved scope and may be
+skipped; none of those planned surfaces is implied by the 1.5 closure.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
@@ -152,7 +171,7 @@ remain unchanged until repository-level terms make redistribution explicit.
 - RPG P0 implementation commit before this handoff update:
   `60e421fb2736ceeead3cff0f7ac9e2cd23a04b95`.
 - Regression authority: `1.1.1.dev0` in the separate `SIDScope-v1.1` worktree.
-- Development version: `1.4.0.dev0` in both `pyproject.toml` and `setup.py`.
+- Development version: `1.5.0.dev0` in both `pyproject.toml` and `setup.py`.
 - Public release tag: `v1.1.0` at
   `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`.
 - Deterministic tag archive SHA-256:
@@ -325,11 +344,12 @@ identity and must never be cropped or silently converted.
 
 ## Last verified local release evidence
 
-The 1.4 development tree passed:
+The 1.5 development tree passed:
 
-- focused evidence-bundle, object-store, registry, comparison, and CLI tests:
-  `23 passed`;
-- full tests: `238 passed, 6 skipped`;
+- focused profile-engine, submission-checker, deterministic-index, CLI, and
+  architecture tests: `24 passed`;
+- integrated profile/submission/CLI/architecture regression: `21 passed`;
+- full tests: `256 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - contract-registry verifier: PASS with 11 canonical contracts, 11 positive
   fixtures, 12 typed-negative fixtures, and 14 declared dependency edges;
@@ -347,13 +367,21 @@ The 1.4 development tree passed:
 - 1.4 CLI CPU baseline verifier: PASS under the 20% review policy; seven-repeat
   medians are 5.098 ms bundle build, 4.226 ms verify, 8.374 ms registry add,
   5.051 ms compare, 3.953 ms list, and 10.041 ms rebuild;
+- 1.5 conformance-ecosystem verifier: PASS with four governed profiles, four
+  positive reports, eight typed profile negatives, one positive external
+  submission, nine typed submission negatives, deterministic status/result
+  indexes, and migrated-row legacy parity;
+- profile status-index SHA-256:
+  `cc358f11903680bc99a5baa2127e0d91150f531b41e0976263989386015b3589`;
+- profile result-index SHA-256:
+  `71ee3ea7c485a0885c65ac66e4a9b7e5a938dd954f3a5a1e0b2601b9e69e66af`;
 - release-metadata verifier: PASS;
-- architecture inventory verifier: PASS with 176 schema IDs, 11 canonical
-  contracts, 9 profiles, 6 generator routes, 9 static-mapping routes, and 15
+- architecture inventory verifier: PASS with 190 schema IDs, 11 canonical
+  contracts, 10 profiles, 6 generator routes, 9 static-mapping routes, and 15
   canonical evidence edges;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
-- G8 isolated `sidinspector==1.4.0.dev0` install and deterministic archive
+- G8 isolated `sidinspector==1.5.0.dev0` install and deterministic archive
   rebuild: PASS;
 - RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
   positive fixture, typed duplicate-selection failure, and the hash-bound CPU
@@ -364,8 +392,10 @@ The 1.4 development tree passed:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest: 288 rows, 285 public rows, 0 pending;
-- current public package surface: 480 files.
+- manifest: 300 rows, 297 public rows, 0 pending;
+- resource-package verifier: 334 required files, 513 public files, and 516
+  tracked files checked with no forbidden-content findings;
+- current release archive surface: 513 files.
 
 The development archive SHA-256 is intentionally reported by the final build
 command rather than embedded in this hash-sensitive source tree. Rebuild it
@@ -390,12 +420,13 @@ python3 tools/verify_sidscope_1_2_cli_baseline.py
 python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
 python3 tools/verify_sidscope_1_4_evidence_system.py
 python3 tools/verify_sidscope_1_4_cli_baseline.py
+python3 tools/verify_sidscope_1_5_conformance_ecosystem.py
 python3 tools/build_sidscope_release_candidate_archive.py \
-  --output /tmp/sidscope-v1.4.0.dev0.zip
+  --output /tmp/sidscope-v1.5.0.dev0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-v1.4.0.dev0.zip
+  /tmp/sidscope-v1.5.0.dev0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.4.0.dev0.zip
+  --archive /tmp/sidscope-v1.5.0.dev0.zip
 ```
 
 The release checks are CPU-only. A new GPU run is not required to reverify the
@@ -445,6 +476,7 @@ immutable 1.1.0 claim.
 Expected status at this handoff:
 
 ```text
+LOCAL_DEVELOPMENT_READY_1_5_DEV0: PASS
 LOCAL_DEVELOPMENT_READY_1_1_1_DEV0: PASS
 PUBLIC_RELEASED_1_1_1: NO
 PUBLIC_RELEASED_1_1_0: YES

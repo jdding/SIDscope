@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jdding/sidscope/schemas/submission_check_report.v1.schema.json",
+  "title": "SIDScope SubmissionCheckReport v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_revision",
+    "submission_id",
+    "submission_sha256",
+    "status",
+    "bindings",
+    "failures",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "sidscope.submission_check_report.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "submission_id": {"$ref": "#/$defs/identifier"},
+    "submission_sha256": {
+      "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+    },
+    "status": {"enum": ["accepted", "rejected"]},
+    "bindings": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "profile_id",
+            "profile_revision",
+            "dataset_identity_sha256",
+            "target_universe_sha256",
+            "evidence_bundle_sha256",
+            "conformance_report_sha256",
+            "status_label"
+          ],
+          "properties": {
+            "profile_id": {"type": "string", "minLength": 1},
+            "profile_revision": {"type": "string", "minLength": 1},
+            "dataset_identity_sha256": {"$ref": "#/$defs/sha256"},
+            "target_universe_sha256": {"$ref": "#/$defs/sha256"},
+            "evidence_bundle_sha256": {"$ref": "#/$defs/sha256"},
+            "conformance_report_sha256": {"$ref": "#/$defs/sha256"},
+            "status_label": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "detail"],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "detail": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "content_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
