@@ -15,6 +15,7 @@ from .profiles import (
     compose_profiles,
     composed_profile_document,
     load_profile_registry,
+    validate_profile_registry,
 )
 from .profile_engine import (
     CONTRACT_REVISION,
@@ -51,6 +52,7 @@ __all__ = [
     "compose_profiles",
     "composed_profile_document",
     "load_profile_registry",
+    "validate_profile_registry",
     "CONTRACT_REVISION",
     "DATASET_PROFILE_DESCRIPTOR_SCHEMA",
     "PROFILE_CATALOG_REVISION",

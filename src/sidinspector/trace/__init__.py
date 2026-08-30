@@ -15,6 +15,7 @@ from .native_payloads import (
     load_native_payload,
     load_native_payload_registry,
     validate_native_payload,
+    validate_native_payload_registry,
     validate_payload_binding,
 )
 
@@ -31,5 +32,6 @@ __all__ = [
     "load_native_payload",
     "load_native_payload_registry",
     "validate_native_payload",
+    "validate_native_payload_registry",
     "validate_payload_binding",
 ]

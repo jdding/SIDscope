@@ -82,6 +82,18 @@ class ContractRegistryTest(unittest.TestCase):
         ]
         self.assert_registry_failure(document, "incompatible_dependency")
 
+    def test_dependency_cannot_mix_supported_and_unsupported_revisions(self) -> None:
+        document = self.registry_document()
+        dataset = next(row for row in document["contracts"] if row["contract_type"] == "dataset-identity")
+        source = next(row for row in document["contracts"] if row["contract_type"] == "source-identity")
+        dataset["dependencies"] = [
+            {
+                "schema_id": source["schema_id"],
+                "accepted_revisions": ["1.0.0", "2.0.0"],
+            }
+        ]
+        self.assert_registry_failure(document, "incompatible_dependency")
+
     def test_unsupported_revision_fails_closed(self) -> None:
         document = self.registry_document()
         document["contracts"][0]["schema_revision"] = "1.1.0"

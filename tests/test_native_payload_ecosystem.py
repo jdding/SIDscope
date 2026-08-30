@@ -16,13 +16,18 @@ from sidinspector.adapters_core import (
 )
 from sidinspector.cli import main as cli_main
 from sidinspector.contracts import with_content_sha256
-from sidinspector.conformance_core import ProfileCompositionError, compose_profiles
+from sidinspector.conformance_core import (
+    ProfileCompositionError,
+    compose_profiles,
+    validate_profile_registry,
+)
 from sidinspector.sdk import probe_optional_backend
 from sidinspector.trace import (
     NativePayloadValidationError,
     load_native_payload,
     load_native_payload_registry,
     validate_native_payload,
+    validate_native_payload_registry,
 )
 
 
@@ -63,7 +68,7 @@ class _BadVersionPlugin(_GoodPlugin):
 
 class NativePayloadEcosystemTest(unittest.TestCase):
     def test_all_native_payload_families_and_fixture_harness(self) -> None:
-        registry = load_native_payload_registry()
+        registry = load_native_payload_registry(repository_root=ROOT)
         self.assertEqual(len(registry), 5)
         self.assertEqual(
             {item.method_family for item in registry},
@@ -103,6 +108,40 @@ class NativePayloadEcosystemTest(unittest.TestCase):
         with self.assertRaises(NativePayloadValidationError) as captured:
             validate_native_payload(with_content_sha256(changed))
         self.assertEqual(captured.exception.code, "provider_only_item_insertion")
+
+    def test_autoregressive_beams_require_unique_ids_and_continuous_prefixes(self) -> None:
+        value = json.loads((FIXTURE / "autoregressive_prefix.json").read_text())
+        changed = copy.deepcopy(value)
+        changed["episodes"][0]["beams"].append(
+            copy.deepcopy(changed["episodes"][0]["beams"][0])
+        )
+        with self.assertRaises(NativePayloadValidationError) as captured:
+            validate_native_payload(with_content_sha256(changed))
+        self.assertEqual(captured.exception.code, "duplicate_beam_id")
+
+        changed = copy.deepcopy(value)
+        changed["episodes"][0]["beams"][0]["steps"][1]["prefix_before"] = [99]
+        changed["episodes"][0]["beams"][0]["steps"][1]["prefix_after"] = [99, 20]
+        with self.assertRaises(NativePayloadValidationError) as captured:
+            validate_native_payload(with_content_sha256(changed))
+        self.assertEqual(captured.exception.code, "prefix_chain_discontinuity")
+
+    def test_legacy_profile_and_payload_registries_fail_closed(self) -> None:
+        profile_path = ROOT / "src/sidinspector/schemas/conformance_profile_registry.v1.json"
+        profile_document = json.loads(profile_path.read_text())
+        changed = copy.deepcopy(profile_document)
+        changed["profiles"].append(copy.deepcopy(changed["profiles"][0]))
+        with self.assertRaises(ProfileCompositionError) as captured:
+            validate_profile_registry(with_content_sha256(changed))
+        self.assertEqual(captured.exception.code, "noncanonical_profile_order")
+
+        payload_path = ROOT / "src/sidinspector/schemas/trace_payload_registry.v1.json"
+        payload_document = json.loads(payload_path.read_text())
+        changed = copy.deepcopy(payload_document)
+        changed["payload_contracts"][0]["canonical_fixture"] = "../escape.json"
+        with self.assertRaises(NativePayloadValidationError) as captured:
+            validate_native_payload_registry(with_content_sha256(changed))
+        self.assertEqual(captured.exception.code, "unsafe_registry_path")
 
     def test_discovery_does_not_load_and_preflight_loads_one_plugin(self) -> None:
         entry = _EntryPoint("good", _GoodPlugin)

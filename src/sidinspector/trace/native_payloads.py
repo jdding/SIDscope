@@ -8,6 +8,7 @@ import re
 from dataclasses import dataclass
 from importlib import resources
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any, Callable, Mapping, Sequence
 
 from sidinspector.contracts.hashing import SHA256_PATTERN, verify_content_sha256
@@ -88,6 +89,14 @@ def _exact(value: Any, fields: set[str], field: str) -> Mapping[str, Any]:
     return value
 
 
+def _safe_relative_path(value: Any, field: str) -> str:
+    path = _text(value, field)
+    pure = PurePosixPath(path)
+    if pure.is_absolute() or ".." in pure.parts or path != pure.as_posix():
+        _fail("unsafe_registry_path", f"{field}={path}")
+    return path
+
+
 def _ranked_topk(value: Any, field: str) -> None:
     rows = _sequence(value, field, nonempty=True)
     for index, row in enumerate(rows):
@@ -143,6 +152,13 @@ def _base(value: Mapping[str, Any], family: str) -> tuple[str, Sequence[Any], st
     if ID_PATTERN.fullmatch(payload_id) is None:
         _fail("invalid_payload_id", payload_id)
     episodes = _sequence(value["episodes"], "episodes", nonempty=True)
+    episode_ids: list[str] = []
+    for index, episode in enumerate(episodes):
+        if not isinstance(episode, Mapping):
+            _fail("invalid_type", f"episodes[{index}]")
+        episode_ids.append(_text(episode.get("episode_id"), f"episodes[{index}].episode_id"))
+    if len(episode_ids) != len(set(episode_ids)):
+        _fail("duplicate_episode_id", str(episode_ids))
     privacy = _exact(
         value["privacy"],
         {"source_user_ids_exported", "source_item_ids_exported", "absolute_private_paths_exported"},
@@ -171,10 +187,13 @@ def _validate_autoregressive(value: Mapping[str, Any]) -> NativePayload:
         for bi, beam in enumerate(_sequence(episode["beams"], f"episodes[{ei}].beams", nonempty=True)):
             beam = _exact(beam, {"beam_id", "parent_beam_id", "steps", "retained"}, f"beam[{bi}]")
             beam_id = _text(beam["beam_id"], f"beam[{bi}].beam_id")
+            if beam_id in known:
+                _fail("duplicate_beam_id", beam_id)
             parent = beam["parent_beam_id"]
             if parent is not None and parent not in known:
                 _fail("unknown_parent_beam", f"{beam_id}->{parent}")
             steps = _sequence(beam["steps"], f"beam[{bi}].steps", nonempty=True)
+            previous_after: list[int] | None = None
             for si, step in enumerate(steps):
                 step = _exact(step, {"step_index", "prefix_before", "topk", "selected_token_id", "prefix_after"}, f"step[{si}]")
                 if _integer(step["step_index"], f"step[{si}].step_index") != si:
@@ -183,8 +202,11 @@ def _validate_autoregressive(value: Mapping[str, Any]) -> NativePayload:
                 after = list(_sequence(step["prefix_after"], "prefix_after", nonempty=True))
                 selected = _integer(step["selected_token_id"], "selected_token_id")
                 _ranked_topk(step["topk"], "topk")
+                if previous_after is not None and before != previous_after:
+                    _fail("prefix_chain_discontinuity", beam_id)
                 if after != [*before, selected]:
                     _fail("prefix_transition_mismatch", beam_id)
+                previous_after = after
             if not isinstance(beam["retained"], bool):
                 _fail("invalid_boolean", f"beam[{bi}].retained")
             known.add(beam_id)
@@ -349,8 +371,9 @@ def native_payload_registry_path() -> Path:
     return Path(resources.files("sidinspector.schemas").joinpath("trace_payload_registry.v1.json"))
 
 
-def load_native_payload_registry() -> tuple[NativePayloadDescriptor, ...]:
-    value = json.loads(native_payload_registry_path().read_text(encoding="utf-8"))
+def validate_native_payload_registry(
+    value: Mapping[str, Any], *, repository_root: Path | None = None
+) -> tuple[NativePayloadDescriptor, ...]:
     if not isinstance(value, Mapping) or set(value) != {
         "schema", "schema_revision", "payload_contracts", "content_sha256"
     }:
@@ -371,13 +394,29 @@ def load_native_payload_registry() -> tuple[NativePayloadDescriptor, ...]:
             "canonical_fixture", "negative_fixtures",
         }:
             _fail("payload_registry_row_mismatch", str(row))
+        negatives = row["negative_fixtures"]
+        if not isinstance(negatives, list):
+            _fail("payload_registry_negative_mismatch", str(negatives))
+        checked_negatives: list[Mapping[str, str]] = []
+        for negative in negatives:
+            if not isinstance(negative, Mapping) or set(negative) != {"path", "expected_failure"}:
+                _fail("payload_registry_negative_mismatch", str(negative))
+            checked_negatives.append(
+                {
+                    "path": _safe_relative_path(negative.get("path"), "negative_fixtures.path"),
+                    "expected_failure": _text(negative.get("expected_failure"), "expected_failure"),
+                }
+            )
+        negative_paths = [item["path"] for item in checked_negatives]
+        if negative_paths != sorted(set(negative_paths)):
+            _fail("noncanonical_payload_registry_negatives", str(negative_paths))
         descriptor = NativePayloadDescriptor(
-            method_family=row["method_family"],
-            schema_id=row["schema_id"],
-            schema_revision=row["schema_revision"],
-            schema_resource=row["schema_resource"],
-            canonical_fixture=row["canonical_fixture"],
-            negative_fixtures=tuple(row["negative_fixtures"]),
+            method_family=_text(row["method_family"], "method_family"),
+            schema_id=_text(row["schema_id"], "schema_id"),
+            schema_revision=_text(row["schema_revision"], "schema_revision"),
+            schema_resource=_safe_relative_path(row["schema_resource"], "schema_resource"),
+            canonical_fixture=_safe_relative_path(row["canonical_fixture"], "canonical_fixture"),
+            negative_fixtures=tuple(checked_negatives),
         )
         if FAMILY_SCHEMAS.get(descriptor.method_family) != descriptor.schema_id:
             _fail("payload_registry_family_mismatch", descriptor.method_family)
@@ -388,4 +427,24 @@ def load_native_payload_registry() -> tuple[NativePayloadDescriptor, ...]:
         result.append(descriptor)
     if [item.method_family for item in result] != sorted(FAMILY_SCHEMAS):
         _fail("noncanonical_payload_registry_order", str([item.method_family for item in result]))
+    if repository_root is not None:
+        for descriptor in result:
+            schema_path = repository_root / "src" / "sidinspector" / "schemas" / descriptor.schema_resource
+            if not schema_path.is_file():
+                _fail("missing_payload_registry_resource", descriptor.schema_resource)
+            for relative in (
+                descriptor.canonical_fixture,
+                *(item["path"] for item in descriptor.negative_fixtures),
+            ):
+                if not (repository_root / relative).is_file():
+                    _fail("missing_payload_registry_resource", relative)
     return tuple(result)
+
+
+def load_native_payload_registry(
+    *, repository_root: Path | None = None
+) -> tuple[NativePayloadDescriptor, ...]:
+    value = json.loads(native_payload_registry_path().read_text(encoding="utf-8"))
+    if not isinstance(value, Mapping):
+        _fail("payload_registry_fields_mismatch", type(value).__name__)
+    return validate_native_payload_registry(value, repository_root=repository_root)

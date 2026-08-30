@@ -275,13 +275,14 @@ def validate_contract_registry(
             _fail("unknown_dependency", f"{item.schema_id}: {unknown_dependencies}")
         for dependency in item.dependencies:
             target = descriptors_by_schema[dependency.schema_id]
-            if not set(dependency.accepted_revisions).intersection(
-                target.supported_revisions
-            ):
+            unsupported = sorted(
+                set(dependency.accepted_revisions) - set(target.supported_revisions)
+            )
+            if unsupported:
                 _fail(
                     "incompatible_dependency",
                     f"{item.schema_id} requires {dependency.schema_id} "
-                    f"at {list(dependency.accepted_revisions)}",
+                    f"at unsupported revisions {unsupported}",
                 )
 
     graph = {

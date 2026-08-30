@@ -194,6 +194,8 @@ def _validate_v1_capabilities(value: Mapping[str, Any]) -> AdapterCapabilities:
 
 
 def validate_adapter_capabilities(value: Mapping[str, Any]) -> AdapterCapabilities:
+    if not isinstance(value, Mapping):
+        _fail("invalid_type", "adapter capabilities must be an object")
     if value.get("schema") == LEGACY_ADAPTER_CAPABILITIES_SCHEMA:
         return _validate_legacy_capabilities(value)
     return _validate_v1_capabilities(value)

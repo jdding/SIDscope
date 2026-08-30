@@ -8,6 +8,7 @@ from importlib import resources
 from typing import Any, Mapping, Sequence
 
 from sidinspector.contracts.hashing import verify_content_sha256
+from sidinspector.contracts.method_families import METHOD_FAMILIES
 
 
 PROFILE_REGISTRY_SCHEMA = "sidscope.conformance_profile_registry.v1"
@@ -47,9 +48,24 @@ def _fail(code: str, detail: str) -> None:
     raise ProfileCompositionError(code, detail)
 
 
-def load_profile_registry() -> tuple[ConformanceProfile, ...]:
-    path = resources.files("sidinspector.schemas").joinpath("conformance_profile_registry.v1.json")
-    value = json.loads(path.read_text(encoding="utf-8"))
+def _text(value: Any, field: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        _fail("invalid_profile_value", field)
+    return value
+
+
+def _strings(value: Any, field: str) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        _fail("invalid_profile_type", field)
+    result = tuple(_text(item, f"{field}[]") for item in value)
+    if list(result) != sorted(set(result)):
+        _fail("noncanonical_profile_order", field)
+    return result
+
+
+def validate_profile_registry(value: Mapping[str, Any]) -> tuple[ConformanceProfile, ...]:
+    if not isinstance(value, Mapping):
+        _fail("invalid_profile_type", "registry must be an object")
     if value.get("schema") != PROFILE_REGISTRY_SCHEMA:
         _fail("profile_registry_schema_mismatch", str(value.get("schema")))
     if set(value) != {"schema", "schema_revision", "profiles", "content_sha256"}:
@@ -58,29 +74,66 @@ def load_profile_registry() -> tuple[ConformanceProfile, ...]:
         _fail("profile_registry_revision_mismatch", str(value.get("schema_revision")))
     if not verify_content_sha256(value):
         _fail("profile_registry_hash_mismatch", "conformance_profile_registry.v1.json")
+    rows = value.get("profiles")
+    if not isinstance(rows, list) or not rows:
+        _fail("invalid_profile_type", "profiles")
     profiles: list[ConformanceProfile] = []
-    for row in value.get("profiles", []):
-        gates = tuple(
-            GateDefinition(
-                gate_id=gate["gate_id"],
-                owner=gate["owner"],
-                depends_on=tuple(gate["depends_on"]),
-                failure_code=gate["failure_code"],
+    for index, row in enumerate(rows):
+        if not isinstance(row, Mapping) or set(row) != {
+            "profile_id", "revision", "extends", "method_family", "gates"
+        }:
+            _fail("profile_registry_row_mismatch", str(index))
+        gates_raw = row.get("gates")
+        if not isinstance(gates_raw, list) or not gates_raw:
+            _fail("invalid_profile_type", f"profiles[{index}].gates")
+        gates: list[GateDefinition] = []
+        for gate_index, gate in enumerate(gates_raw):
+            if not isinstance(gate, Mapping) or set(gate) != {
+                "gate_id", "owner", "depends_on", "failure_code"
+            }:
+                _fail("profile_gate_fields_mismatch", f"{index}:{gate_index}")
+            gates.append(
+                GateDefinition(
+                    gate_id=_text(gate.get("gate_id"), "gate_id"),
+                    owner=_text(gate.get("owner"), "owner"),
+                    depends_on=_strings(gate.get("depends_on"), "depends_on"),
+                    failure_code=_text(gate.get("failure_code"), "failure_code"),
+                )
             )
-            for gate in row["gates"]
-        )
+        gate_ids = [gate.gate_id for gate in gates]
+        if len(gate_ids) != len(set(gate_ids)):
+            _fail("duplicate_profile_gate", str(gate_ids))
+        method_family = row.get("method_family")
+        if method_family is not None:
+            method_family = _text(method_family, "method_family")
+            if method_family not in METHOD_FAMILIES:
+                _fail("unsupported_method_family", method_family)
         profiles.append(
             ConformanceProfile(
-                profile_id=row["profile_id"],
-                revision=row["revision"],
-                extends=tuple(row["extends"]),
-                method_family=row["method_family"],
-                gates=gates,
+                profile_id=_text(row.get("profile_id"), "profile_id"),
+                revision=_text(row.get("revision"), "revision"),
+                extends=_strings(row.get("extends"), "extends"),
+                method_family=method_family,
+                gates=tuple(gates),
             )
         )
-    if [profile.profile_id for profile in profiles] != sorted(profile.profile_id for profile in profiles):
+    profile_ids = [profile.profile_id for profile in profiles]
+    if profile_ids != sorted(set(profile_ids)):
         _fail("noncanonical_profile_order", str([profile.profile_id for profile in profiles]))
+    known = set(profile_ids)
+    for profile in profiles:
+        unknown = sorted(set(profile.extends) - known)
+        if unknown:
+            _fail("unknown_profile_extension", f"{profile.profile_id}: {unknown}")
     return tuple(profiles)
+
+
+def load_profile_registry() -> tuple[ConformanceProfile, ...]:
+    path = resources.files("sidinspector.schemas").joinpath("conformance_profile_registry.v1.json")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, Mapping):
+        _fail("invalid_profile_type", "registry must be an object")
+    return validate_profile_registry(value)
 
 
 def compose_profiles(profile_ids: Sequence[str]) -> ComposedProfile:

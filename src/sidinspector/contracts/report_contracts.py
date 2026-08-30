@@ -6,7 +6,6 @@ import json
 import math
 import re
 from dataclasses import dataclass
-from importlib import resources
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -175,9 +174,18 @@ def validate_diagnostic_report(value: Mapping[str, Any]) -> ReportContract:
         for field in ("hit_at_cutoff", "ndcg_at_cutoff"):
             metric = row.get(field)
             if metric is not None:
-                _number(metric, f"slices[{index}].{field}")
+                metric_value = _number(metric, f"slices[{index}].{field}")
+                if metric_value < 0.0 or metric_value > 1.0:
+                    _fail("metric_out_of_range", f"slices[{index}].{field}")
     if slice_ids[0] != "overall" or slice_ids != ["overall", *sorted(slice_ids[1:])]:
         _fail("noncanonical_slice_order", str(slice_ids))
+    overall = slices[0]
+    if (
+        overall["episode_count"] != episode_count
+        or overall["hit_at_cutoff"] != evaluation["hit_at_cutoff"]
+        or overall["ndcg_at_cutoff"] != evaluation["ndcg_at_cutoff"]
+    ):
+        _fail("overall_slice_mismatch", str(dict(overall)))
     return ReportContract(
         DIAGNOSTIC_REPORT_SCHEMA,
         REPORT_SCHEMA_REVISION,
@@ -344,9 +352,16 @@ def validate_conformance_report(value: Mapping[str, Any]) -> ReportContract:
     if decision_status not in {"pass", "fail", "partial", "fixture_pass"}:
         _fail("unsupported_decision", decision_status)
     _text(decision.get("scope"), "decision.scope")
-    if decision_status in {"pass", "fixture_pass"} and any(
-        status != "pass" for status in gate_statuses
-    ):
+    expected_decision = (
+        "fail"
+        if "fail" in gate_statuses
+        else "partial"
+        if "partial" in gate_statuses
+        else "pass"
+    )
+    if expected_decision == "pass" and decision_status not in {"pass", "fixture_pass"}:
+        _fail("decision_gate_mismatch", decision_status)
+    if expected_decision != "pass" and decision_status != expected_decision:
         _fail("decision_gate_mismatch", decision_status)
     return ReportContract(
         CONFORMANCE_REPORT_SCHEMA,
@@ -492,7 +507,3 @@ def load_conformance_report(path: Path) -> ReportContract:
 
 def load_evidence_index(path: Path) -> ReportContract:
     return _load(path, validate_evidence_index)
-
-
-def report_schema_path(name: str) -> Path:
-    return Path(resources.files("sidinspector.schemas").joinpath(name))

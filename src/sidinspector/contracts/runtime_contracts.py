@@ -6,7 +6,6 @@ import json
 import math
 import re
 from dataclasses import dataclass
-from importlib import resources
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -126,13 +125,6 @@ def _base(
     if not verify_content_sha256(value):
         _fail("content_hash_mismatch", "content_sha256 does not bind canonical payload")
     return artifact_id, content_sha256
-
-
-def _runtime(value: Mapping[str, Any], schema: str, id_field: str, fields: set[str]) -> RuntimeContract:
-    artifact_id, content_sha256 = _base(
-        value, schema=schema, id_field=id_field, fields=fields
-    )
-    return RuntimeContract(schema, RUNTIME_SCHEMA_REVISION, artifact_id, content_sha256, dict(value))
 
 
 def validate_episode_selection(value: Mapping[str, Any]) -> RuntimeContract:
@@ -338,6 +330,8 @@ def validate_trace_envelope(value: Mapping[str, Any]) -> RuntimeContract:
             _fail("rank_state_mismatch", episode_id)
         if rank_state == "not_applicable" and (exact is not None or lower is not None):
             _fail("rank_state_mismatch", episode_id)
+        if rank_state == "exact" and target.get("resolved") is not True:
+            _fail("exact_rank_without_resolution", episode_id)
         compute = row.get("compute")
         compute_fields = {"nfe", "forward_calls", "candidate_count", "latency_ms"}
         if not isinstance(compute, Mapping) or set(compute) != compute_fields:
@@ -406,7 +400,3 @@ def load_checkpoint_binding(path: Path) -> RuntimeContract:
 
 def load_trace_envelope(path: Path) -> RuntimeContract:
     return _load(path, validate_trace_envelope)
-
-
-def runtime_schema_path(name: str) -> Path:
-    return Path(resources.files("sidinspector.schemas").joinpath(name))

@@ -90,6 +90,14 @@ class RuntimeContractsTest(unittest.TestCase):
         self.assertNotIn("parallel_token_scores", document)
         self.assertRegex(document["payload_sha256"], r"^[0-9a-f]{64}$")
 
+    def test_exact_rank_requires_resolved_target(self) -> None:
+        trace = load_trace_envelope(FIXTURE / "trace_envelope.json")
+        document = trace.to_dict()
+        document["observations"][0]["target"]["resolved"] = False
+        with self.assertRaises(RuntimeContractValidationError) as captured:
+            validate_trace_envelope(with_content_sha256(document))
+        self.assertEqual(captured.exception.code, "exact_rank_without_resolution")
+
 
 if __name__ == "__main__":
     unittest.main()
