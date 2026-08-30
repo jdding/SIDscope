@@ -1,0 +1,42 @@
+{
+  "$id": "https://sidscope.dev/schemas/masked_diffusion.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "episodes": {
+      "minItems": 1,
+      "type": "array"
+    },
+    "method_family": {
+      "const": "masked_diffusion"
+    },
+    "payload_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "privacy": {
+      "type": "object"
+    },
+    "schema": {
+      "const": "sidscope.trace_payload.masked_diffusion.v1"
+    },
+    "schema_revision": {
+      "const": "1.0.0"
+    }
+  },
+  "required": [
+    "schema",
+    "schema_revision",
+    "payload_id",
+    "method_family",
+    "episodes",
+    "privacy",
+    "content_sha256"
+  ],
+  "title": "SIDScope masked_diffusion native trace payload",
+  "type": "object"
+}

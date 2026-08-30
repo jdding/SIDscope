@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: SIDScope 1.2 development closure baseline
+Status: SIDScope 1.3 development closure baseline
 
 ## Product and Entry Points
 
@@ -10,6 +10,7 @@ Status: SIDScope 1.2 development closure baseline
 | 1.1.0 | `sidinspector` | `sidinspector` | route-specific commands | Published maintenance release |
 | 1.1.1.dev0 | `sidinspector` | `sidinspector` | `sidscope` facade plus legacy commands | Frozen regression authority |
 | 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Sprint 1--4 development closed; public release not implied |
+| 1.3.0.dev0 | `sidinspector` | `sidinspector` | facade plus lazy `sidscope.adapters` plugins | Adapter/native-trace ecosystem development closed; public release not implied |
 
 No import or distribution rename is planned during 1.x. The facade validates
 all eleven canonical 1.2 contracts and provides adapter preflight, trace
@@ -21,10 +22,10 @@ during migration.
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `1.2.0.dev0` | PEP 440 development version; not a public 1.2.0 release. |
-| Adapter SDK | `0.1.0-alpha` | Capability descriptor and harness are usable; plugin discovery and stable compatibility begin later. |
+| Product/package | `1.3.0.dev0` | PEP 440 development version; not a public 1.3.0 release. |
+| Adapter SDK | `0.2.0-alpha` | Versioned capability descriptors and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
-| Conformance profiles | legacy C0--C5 and G0--G5 authorities | Existing route verifiers remain authoritative until exact parity migration. |
+| Conformance profiles | legacy C0--C5/G0--G5 plus `common.generator.v1` and five family profiles | Existing route verifiers remain authoritative until exact parity migration. |
 | Evidence bundle | deterministic EvidenceIndex v1 plus route-specific 1.1 authorities | Indexes are reproducible; immutable object storage remains a 1.4 feature. |
 
 The canonical schema IDs are `sidscope.source_identity.v1`,
@@ -92,10 +93,31 @@ revision `1.0.0`. TraceEnvelope's native `payload_schema` is independently
 versioned: compatibility of the common envelope never implies compatibility of
 AR, parallel graph, masked diffusion, retry, or overlay payload semantics.
 
-Adapter SDK `0.1.0-alpha` is deliberately narrower than the future plugin API.
+Adapter SDK `0.1.0-alpha` remains a supported legacy descriptor. SDK
+`0.2.0-alpha` adds `sidscope.adapter_capabilities.v1`, an SDK compatibility
+interval, native payload schema binding, runtime requirements, and plugin API
+1.0 under the `sidscope.adapters` entry-point group.
 The distribution and import remain `sidinspector`; the product command is
 `sidscope`. Legacy CLIs and evidence remain unchanged. The migration matrix
 covers all six generator and nine static-mapping routes. RPG has exact
 canonical fixture parity; other routes receive a typed regeneration disposition
 and retain legacy status authority. An incomplete migration cannot promote an
 adapter or rewrite historical evidence.
+
+## Plugin and Native-Payload Compatibility
+
+Plugin discovery is metadata-only; explicit preflight loads one selected
+entry point. API mismatch, protocol mismatch, capability mismatch, payload
+schema mismatch, and plugin load failure are typed. Core verification never
+requires the producing plugin. Uninstalling a plugin is therefore a reversible
+integration rollback, not a schema rollback.
+
+The five payload schema majors are
+`sidscope.trace_payload.autoregressive_prefix.v1`,
+`sidscope.trace_payload.parallel_graph_token_set.v1`,
+`sidscope.trace_payload.masked_diffusion.v1`,
+`sidscope.trace_payload.latent_retry.v1`, and
+`sidscope.trace_payload.decoder_overlay.v1`. Envelope compatibility does not
+imply native-payload compatibility. Unknown family/schema pairs and unsupported
+semantic claims fail closed. EvidenceBundle format remains unimplemented until
+1.4; no 1.3 file is silently treated as an admitted immutable bundle.

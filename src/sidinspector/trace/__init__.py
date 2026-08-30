@@ -7,6 +7,16 @@ from sidinspector.contracts import (
     load_trace_envelope,
     validate_trace_envelope,
 )
+from .native_payloads import (
+    FAMILY_SCHEMAS,
+    NativePayload,
+    NativePayloadDescriptor,
+    NativePayloadValidationError,
+    load_native_payload,
+    load_native_payload_registry,
+    validate_native_payload,
+    validate_payload_binding,
+)
 
 __all__ = [
     "TRACE_ENVELOPE_SCHEMA",
@@ -14,4 +24,12 @@ __all__ = [
     "RuntimeContractValidationError",
     "load_trace_envelope",
     "validate_trace_envelope",
+    "FAMILY_SCHEMAS",
+    "NativePayload",
+    "NativePayloadDescriptor",
+    "NativePayloadValidationError",
+    "load_native_payload",
+    "load_native_payload_registry",
+    "validate_native_payload",
+    "validate_payload_binding",
 ]

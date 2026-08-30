@@ -1,0 +1,85 @@
+{
+  "content_sha256": "c7fc369e91547c3e25b35b7debc918a48bc2d4573ca3a7d46913aa0aa9fca253",
+  "episodes": [
+    {
+      "attempts": [
+        {
+          "attempt_index": 0,
+          "expanded_item_frontier": [
+            7,
+            8
+          ],
+          "parallel_position_scores": [
+            {
+              "position": 0,
+              "topk": [
+                {
+                  "logprob": -0.1,
+                  "rank": 1,
+                  "token_id": 1
+                },
+                {
+                  "logprob": -0.2,
+                  "rank": 2,
+                  "token_id": 2
+                }
+              ]
+            },
+            {
+              "position": 1,
+              "topk": [
+                {
+                  "logprob": -0.1,
+                  "rank": 1,
+                  "token_id": 3
+                },
+                {
+                  "logprob": -0.2,
+                  "rank": 2,
+                  "token_id": 4
+                }
+              ]
+            }
+          ],
+          "retained_token_sets": [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "visited_item_nodes": [
+            7,
+            8
+          ]
+        }
+      ],
+      "episode_id": "episode-0",
+      "failure_state": null,
+      "resolution_events": [
+        {
+          "collision_count": 1,
+          "raw_sid": [
+            1,
+            3
+          ],
+          "raw_valid": true,
+          "resolved_normalized_item_id": 7
+        }
+      ],
+      "termination_state": "success"
+    }
+  ],
+  "method_family": "parallel_graph_token_set",
+  "payload_id": "fixture:parallel_graph_token_set",
+  "privacy": {
+    "absolute_private_paths_exported": false,
+    "source_item_ids_exported": true,
+    "source_user_ids_exported": false
+  },
+  "schema": "sidscope.trace_payload.parallel_graph_token_set.v1",
+  "schema_revision": "1.0.0"
+}

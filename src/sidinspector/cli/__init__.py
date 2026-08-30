@@ -22,10 +22,25 @@ from sidinspector.contracts import (
     load_registered_contract,
 )
 from sidinspector.conformance_core import load_conformance_report
+from sidinspector.conformance_core import (
+    ProfileCompositionError,
+    composed_profile_document,
+    load_profile_registry,
+)
+from sidinspector.adapters_core import (
+    AdapterPluginError,
+    discover_adapter_plugins,
+    preflight_adapter_plugin,
+)
 from sidinspector.evaluation import diagnostic_report_document, validate_diagnostic_report
 from sidinspector.evidence import build_evidence_index
-from sidinspector.sdk import AdapterSDKError, load_adapter_capabilities
-from sidinspector.trace import load_trace_envelope
+from sidinspector.sdk import ADAPTER_SDK_VERSION, AdapterSDKError, load_adapter_capabilities
+from sidinspector.trace import (
+    NativePayloadValidationError,
+    load_native_payload,
+    load_native_payload_registry,
+    load_trace_envelope,
+)
 
 
 VALIDATION_REPORT_SCHEMA = "sidscope.contract_validation.v1"
@@ -37,7 +52,7 @@ def package_version() -> str:
     try:
         return metadata.version("sidinspector")
     except metadata.PackageNotFoundError:
-        return "1.2.0.dev0+source"
+        return "1.3.0.dev0+source"
 
 
 def _file_sha256(path: Path) -> str:
@@ -59,6 +74,14 @@ def build_parser() -> argparse.ArgumentParser:
     preflight.add_argument("--descriptor", required=True, type=Path)
     preflight.add_argument("--result-json", type=Path, default=None)
 
+    plugin = commands.add_parser("plugin", help="discover external adapter plugins")
+    plugin_commands = plugin.add_subparsers(dest="plugin_command", required=True)
+    plugin_list = plugin_commands.add_parser("list", help="list entry points without loading them")
+    plugin_list.add_argument("--result-json", type=Path, default=None)
+    plugin_preflight = plugin_commands.add_parser("preflight", help="load and validate one plugin")
+    plugin_preflight.add_argument("--name", required=True)
+    plugin_preflight.add_argument("--result-json", type=Path, default=None)
+
     contract = commands.add_parser("contract", help="inspect and validate canonical contracts")
     contract_commands = contract.add_subparsers(dest="contract_command", required=True)
     listing = contract_commands.add_parser("list", help="list registered contracts")
@@ -76,6 +99,13 @@ def build_parser() -> argparse.ArgumentParser:
     trace_validate = trace_commands.add_parser("validate")
     trace_validate.add_argument("--input", required=True, type=Path)
     trace_validate.add_argument("--result-json", type=Path, default=None)
+    payload = trace_commands.add_parser("payload", help="inspect native payload contracts")
+    payload_commands = payload.add_subparsers(dest="payload_command", required=True)
+    payload_list = payload_commands.add_parser("list")
+    payload_list.add_argument("--result-json", type=Path, default=None)
+    payload_validate = payload_commands.add_parser("validate")
+    payload_validate.add_argument("--input", required=True, type=Path)
+    payload_validate.add_argument("--result-json", type=Path, default=None)
 
     evaluate = commands.add_parser("evaluate", help="derive a canonical diagnostic report")
     evaluate.add_argument("--trace", required=True, type=Path)
@@ -94,6 +124,14 @@ def build_parser() -> argparse.ArgumentParser:
     package.add_argument("--artifact", action="append", required=True, type=Path)
     package.add_argument("--index-id", required=True)
     package.add_argument("--output", required=True, type=Path)
+
+    profile = commands.add_parser("profile", help="inspect and compose conformance profiles")
+    profile_commands = profile.add_subparsers(dest="profile_command", required=True)
+    profile_list = profile_commands.add_parser("list")
+    profile_list.add_argument("--result-json", type=Path, default=None)
+    profile_compose = profile_commands.add_parser("compose")
+    profile_compose.add_argument("--profile", action="append", required=True)
+    profile_compose.add_argument("--result-json", type=Path, default=None)
     return parser
 
 
@@ -129,7 +167,7 @@ def _adapter_preflight(args: argparse.Namespace) -> int:
             "schema": "sidscope.adapter_preflight.v1",
             "status": "pass",
             "adapter_id": capabilities.adapter_id,
-            "sdk_version": "0.1.0",
+            "sdk_version": ADAPTER_SDK_VERSION,
             "method_family": capabilities.method_family,
             "contract_types": list(capabilities.contract_types),
             "failure": None,
@@ -137,6 +175,44 @@ def _adapter_preflight(args: argparse.Namespace) -> int:
         code = 0
     except (AdapterSDKError, ContractRegistryError, OSError, json.JSONDecodeError) as exc:
         result = _failure_result("adapter preflight", exc)
+        code = 2
+    _write_result(result, args.result_json)
+    return code
+
+
+def _plugin_command(args: argparse.Namespace) -> int:
+    try:
+        if args.plugin_command == "list":
+            plugins = discover_adapter_plugins()
+            result = {
+                "schema": "sidscope.adapter_plugin_listing.v1",
+                "status": "pass",
+                "entry_point_group": "sidscope.adapters",
+                "plugins": [
+                    {"name": item.name, "value": item.value, "distribution": item.distribution}
+                    for item in plugins
+                ],
+                "failure": None,
+            }
+        else:
+            preflight = preflight_adapter_plugin(args.name)
+            result = {
+                "schema": "sidscope.adapter_plugin_preflight.v1",
+                "status": "pass",
+                "plugin": {
+                    "name": preflight.plugin.name,
+                    "value": preflight.plugin.value,
+                    "distribution": preflight.plugin.distribution,
+                },
+                "adapter_id": preflight.capabilities.adapter_id,
+                "method_family": preflight.capabilities.method_family,
+                "payload_schema": preflight.payload.schema,
+                "payload_sha256": preflight.payload.content_sha256,
+                "failure": None,
+            }
+        code = 0
+    except AdapterPluginError as exc:
+        result = _failure_result(f"plugin {args.plugin_command}", exc)
         code = 2
     _write_result(result, args.result_json)
     return code
@@ -157,6 +233,71 @@ def _trace_validate(args: argparse.Namespace) -> int:
         code = 0
     except (RuntimeContractValidationError, OSError, json.JSONDecodeError) as exc:
         result = _failure_result("trace validate", exc)
+        code = 2
+    _write_result(result, args.result_json)
+    return code
+
+
+def _trace_payload_command(args: argparse.Namespace) -> int:
+    try:
+        if args.payload_command == "list":
+            descriptors = load_native_payload_registry()
+            result = {
+                "schema": "sidscope.trace_payload_registry_listing.v1",
+                "status": "pass",
+                "payload_contracts": [
+                    {
+                        "method_family": item.method_family,
+                        "schema_id": item.schema_id,
+                        "schema_revision": item.schema_revision,
+                    }
+                    for item in descriptors
+                ],
+                "failure": None,
+            }
+        else:
+            payload = load_native_payload(args.input)
+            result = {
+                "schema": "sidscope.native_payload_validation.v1",
+                "status": "pass",
+                "payload_id": payload.payload_id,
+                "payload_schema": payload.schema,
+                "method_family": payload.method_family,
+                "content_sha256": payload.content_sha256,
+                "failure": None,
+            }
+        code = 0
+    except (NativePayloadValidationError, OSError, json.JSONDecodeError) as exc:
+        result = _failure_result("trace payload", exc)
+        code = 2
+    _write_result(result, args.result_json)
+    return code
+
+
+def _profile_command(args: argparse.Namespace) -> int:
+    try:
+        if args.profile_command == "list":
+            profiles = load_profile_registry()
+            result = {
+                "schema": "sidscope.conformance_profile_listing.v1",
+                "status": "pass",
+                "profiles": [
+                    {
+                        "profile_id": item.profile_id,
+                        "revision": item.revision,
+                        "extends": list(item.extends),
+                        "method_family": item.method_family,
+                    }
+                    for item in profiles
+                ],
+                "failure": None,
+            }
+        else:
+            result = composed_profile_document(args.profile)
+            result["failure"] = None
+        code = 0
+    except (ProfileCompositionError, OSError, json.JSONDecodeError) as exc:
+        result = _failure_result(f"profile {args.profile_command}", exc)
         code = 2
     _write_result(result, args.result_json)
     return code
@@ -239,7 +380,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "adapter":
         return _adapter_preflight(args)
+    if args.command == "plugin":
+        return _plugin_command(args)
     if args.command == "trace":
+        if args.trace_command == "payload":
+            return _trace_payload_command(args)
         return _trace_validate(args)
     if args.command == "evaluate":
         return _evaluate(args)
@@ -247,6 +392,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _verify(args)
     if args.command == "evidence":
         return _evidence_package(args)
+    if args.command == "profile":
+        return _profile_command(args)
     if args.command != "contract":
         raise AssertionError("unreachable argparse command")
 

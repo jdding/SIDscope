@@ -1,0 +1,61 @@
+{
+  "content_sha256": "c63c6f7bb7c8e9069fad1378b038ea6fc473d4ceb0001d7deafef21458db4870",
+  "episodes": [
+    {
+      "base_ranked_items": [
+        {
+          "normalized_item_id": 7,
+          "rank": 1,
+          "score": 0.8
+        },
+        {
+          "normalized_item_id": 8,
+          "rank": 2,
+          "score": 0.7
+        }
+      ],
+      "episode_id": "episode-0",
+      "failure_state": null,
+      "fused_ranked_items": [
+        {
+          "normalized_item_id": 8,
+          "rank": 1,
+          "score": 1.1
+        },
+        {
+          "normalized_item_id": 7,
+          "rank": 2,
+          "score": 0.8
+        }
+      ],
+      "overlay_support": [
+        {
+          "normalized_item_id": 8,
+          "support_score": 0.4,
+          "support_source": "catalog_prefix"
+        }
+      ],
+      "resolution_events": [
+        {
+          "collision_count": 0,
+          "raw_sid": [
+            2,
+            8
+          ],
+          "raw_valid": true,
+          "resolved_normalized_item_id": 8
+        }
+      ],
+      "termination_state": "success"
+    }
+  ],
+  "method_family": "decoder_overlay",
+  "payload_id": "fixture:decoder_overlay",
+  "privacy": {
+    "absolute_private_paths_exported": false,
+    "source_item_ids_exported": false,
+    "source_user_ids_exported": false
+  },
+  "schema": "sidscope.trace_payload.decoder_overlay.v1",
+  "schema_revision": "1.0.0"
+}

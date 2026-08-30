@@ -1,0 +1,31 @@
+{
+  "adapter_id": "fixture:parallel-plugin",
+  "content_sha256": "df71482c8ea96900178a840185574d0f2dfdea4c4c32f3f0866a76af52226263",
+  "contract_types": [
+    "trace-envelope"
+  ],
+  "execution_boundary": "external_runtime",
+  "method_family": "parallel_graph_token_set",
+  "payload_schema": "sidscope.trace_payload.autoregressive_prefix.v1",
+  "producer": {
+    "name": "sidscope.fixture",
+    "version": "1.3.0.dev0"
+  },
+  "runtime_requirements": [],
+  "schema": "sidscope.adapter_capabilities.v1",
+  "schema_revision": "1.0.0",
+  "sdk_compatibility": {
+    "maximum_exclusive": "0.3.0",
+    "minimum": "0.2.0"
+  },
+  "telemetry": {
+    "supported": [
+      "graph_frontier",
+      "parallel_position_scores",
+      "resolution_events"
+    ],
+    "unavailable": [
+      "autoregressive_prefix_ancestry"
+    ]
+  }
+}

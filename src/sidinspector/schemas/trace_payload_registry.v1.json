@@ -1,0 +1,67 @@
+{
+  "content_sha256": "77a0bddde0b8feb13d5633c24ac6bb66c2424f4496e88275dd892eb03aee805e",
+  "payload_contracts": [
+    {
+      "canonical_fixture": "examples/native_trace_payload_fixtures/autoregressive_prefix.json",
+      "method_family": "autoregressive_prefix",
+      "negative_fixtures": [
+        {
+          "expected_failure": "unknown_parent_beam",
+          "path": "examples/native_trace_payload_fixtures/expected_failure_ancestry.json"
+        }
+      ],
+      "schema_id": "sidscope.trace_payload.autoregressive_prefix.v1",
+      "schema_resource": "trace_payload_autoregressive_prefix.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/native_trace_payload_fixtures/decoder_overlay.json",
+      "method_family": "decoder_overlay",
+      "negative_fixtures": [
+        {
+          "expected_failure": "resolution_collision_mismatch",
+          "path": "examples/native_trace_payload_fixtures/expected_failure_resolution.json"
+        }
+      ],
+      "schema_id": "sidscope.trace_payload.decoder_overlay.v1",
+      "schema_resource": "trace_payload_decoder_overlay.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/native_trace_payload_fixtures/latent_retry.json",
+      "method_family": "latent_retry",
+      "negative_fixtures": [
+        {
+          "expected_failure": "termination_failure_mismatch",
+          "path": "examples/native_trace_payload_fixtures/expected_failure_termination.json"
+        }
+      ],
+      "schema_id": "sidscope.trace_payload.latent_retry.v1",
+      "schema_resource": "trace_payload_latent_retry.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/native_trace_payload_fixtures/masked_diffusion.json",
+      "method_family": "masked_diffusion",
+      "negative_fixtures": [],
+      "schema_id": "sidscope.trace_payload.masked_diffusion.v1",
+      "schema_resource": "trace_payload_masked_diffusion.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/native_trace_payload_fixtures/parallel_graph_token_set.json",
+      "method_family": "parallel_graph_token_set",
+      "negative_fixtures": [
+        {
+          "expected_failure": "privacy_boundary_violation",
+          "path": "examples/native_trace_payload_fixtures/expected_failure_privacy.json"
+        }
+      ],
+      "schema_id": "sidscope.trace_payload.parallel_graph_token_set.v1",
+      "schema_resource": "trace_payload_parallel_graph_token_set.v1.schema.json",
+      "schema_revision": "1.0.0"
+    }
+  ],
+  "schema": "sidscope.trace_payload_registry.v1",
+  "schema_revision": "1.0.0"
+}

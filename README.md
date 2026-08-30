@@ -54,8 +54,10 @@ sidscope contract validate \
   --input examples/source_identity_fixture/source_identity.json
 ```
 
-The active `1.2.0.dev0` line now closes eleven canonical contracts from source
-identity through evidence index, Adapter SDK `0.1.0-alpha`, and the shared CLI.
+The active `1.3.0.dev0` line retains the eleven canonical contracts from source
+identity through evidence index and adds Adapter SDK `0.2.0-alpha`, lazy
+external plugins, five registered native payload families, composable profiles,
+and the shared CLI.
 The complete common path runs without optional adapter runtimes:
 
 ```bash
@@ -66,6 +68,7 @@ sidscope contract validate \
   --input examples/dataset_identity_fixture/dataset_identity.json
 python3 tools/verify_sidscope_sprint2_contracts.py
 python3 tools/verify_sidscope_1_2_closure.py
+python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
 ```
 
 DatasetIdentity binds dataset/category/profile, ordered split identities,
@@ -94,9 +97,22 @@ sidscope verify \
 The common TraceEnvelope never substitutes for the bound method-native payload.
 RPG is the first end-to-end canonical fixture. Other current routes retain
 their legacy verifier authority and receive explicit regeneration dispositions;
-no historical evidence or adapter status is rewritten. Plugin discovery starts
-in 1.3, while immutable EvidenceBundle storage and SQLite projection start in
+no historical evidence or adapter status is rewritten. External adapters are
+discovered lazily under `sidscope.adapters`; core verification works with the
+plugin absent. Immutable EvidenceBundle storage and SQLite projection start in
 1.4.
+
+```bash
+sidscope plugin list
+sidscope trace payload list
+sidscope trace payload validate \
+  --input examples/native_trace_payload_fixtures/masked_diffusion.json
+sidscope profile compose --profile family.masked_diffusion.v1
+```
+
+The reference plugin under `examples/reference_adapter_plugin/` is an external
+package proof, not a named-method result. See `docs/ADAPTER_PLUGIN_ECOSYSTEM.md`
+and `docs/NATIVE_TRACE_PAYLOADS.md`.
 
 ### Optional Latte Tokenizer Intake
 

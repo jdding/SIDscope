@@ -1,0 +1,32 @@
+{
+  "$id": "https://sidscope.dev/schemas/adapter_capabilities.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "content_sha256": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "sidscope.adapter_capabilities.v1"
+    },
+    "schema_revision": {
+      "const": "1.0.0"
+    }
+  },
+  "required": [
+    "schema",
+    "schema_revision",
+    "sdk_compatibility",
+    "adapter_id",
+    "producer",
+    "method_family",
+    "contract_types",
+    "payload_schema",
+    "telemetry",
+    "execution_boundary",
+    "runtime_requirements",
+    "content_sha256"
+  ],
+  "title": "SIDScope Adapter Capabilities v1",
+  "type": "object"
+}

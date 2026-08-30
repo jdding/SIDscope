@@ -16,7 +16,7 @@
         "sdk",
         "trace"
       ],
-      "status": "planned"
+      "status": "active"
     },
     "cli": {
       "allowed_internal_imports": [

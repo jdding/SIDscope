@@ -1,4 +1,4 @@
-"""Adapter capability declaration and artifact-producer harness for SDK 0.1."""
+"""Backward-compatible adapter capability contracts for SDK 0.1 and 0.2."""
 
 from __future__ import annotations
 
@@ -9,21 +9,17 @@ from pathlib import Path
 from typing import Any, Mapping, Protocol
 
 from sidinspector.contracts.hashing import verify_content_sha256
+from sidinspector.contracts.method_families import (
+    METHOD_FAMILIES,
+    METHOD_FAMILY_PAYLOAD_SCHEMAS,
+)
 from sidinspector.contracts.registry import load_contract_registry, load_registered_contract
 
 
-ADAPTER_CAPABILITIES_SCHEMA = "sidscope.adapter_capabilities.alpha.v1"
-ADAPTER_SDK_VERSION = "0.1.0"
+LEGACY_ADAPTER_CAPABILITIES_SCHEMA = "sidscope.adapter_capabilities.alpha.v1"
+ADAPTER_CAPABILITIES_SCHEMA = "sidscope.adapter_capabilities.v1"
+ADAPTER_SDK_VERSION = "0.2.0"
 ADAPTER_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
-METHOD_FAMILIES = frozenset(
-    {
-        "autoregressive_prefix",
-        "parallel_graph_token_set",
-        "masked_diffusion",
-        "latent_retry",
-        "decoder_overlay",
-    }
-)
 
 
 class AdapterSDKError(ValueError):
@@ -35,11 +31,14 @@ class AdapterSDKError(ValueError):
 
 @dataclass(frozen=True)
 class AdapterCapabilities:
+    schema: str
     adapter_id: str
     method_family: str
     contract_types: tuple[str, ...]
+    payload_schema: str | None
     telemetry_supported: tuple[str, ...]
     telemetry_unavailable: tuple[str, ...]
+    runtime_requirements: tuple[str, ...]
     document: Mapping[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
@@ -70,16 +69,23 @@ def _strings(value: Any, field: str) -> tuple[str, ...]:
     return result
 
 
-def validate_adapter_capabilities(value: Mapping[str, Any]) -> AdapterCapabilities:
+def _version(value: str) -> tuple[int, int, int]:
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", value)
+    if match is None:
+        _fail("invalid_sdk_version", value)
+    return tuple(int(part) for part in match.groups())  # type: ignore[return-value]
+
+
+def _validate_legacy_capabilities(value: Mapping[str, Any]) -> AdapterCapabilities:
     fields = {
         "schema", "sdk_version", "adapter_id", "producer", "method_family",
         "contract_types", "telemetry", "execution_boundary", "content_sha256",
     }
     if not isinstance(value, Mapping) or set(value) != fields:
         _fail("descriptor_fields_mismatch", str(sorted(set(value) ^ fields)))
-    if value.get("schema") != ADAPTER_CAPABILITIES_SCHEMA:
+    if value.get("schema") != LEGACY_ADAPTER_CAPABILITIES_SCHEMA:
         _fail("schema_mismatch", str(value.get("schema")))
-    if value.get("sdk_version") != ADAPTER_SDK_VERSION:
+    if value.get("sdk_version") != "0.1.0":
         _fail("sdk_version_mismatch", str(value.get("sdk_version")))
     adapter_id = _text(value.get("adapter_id"), "adapter_id")
     if ADAPTER_ID_PATTERN.fullmatch(adapter_id) is None:
@@ -110,13 +116,87 @@ def validate_adapter_capabilities(value: Mapping[str, Any]) -> AdapterCapabiliti
     if not verify_content_sha256(value):
         _fail("content_hash_mismatch", adapter_id)
     return AdapterCapabilities(
+        LEGACY_ADAPTER_CAPABILITIES_SCHEMA,
         adapter_id,
         method_family,
         contract_types,
+        None,
         supported,
         unavailable,
+        (),
         dict(value),
     )
+
+
+def _validate_v1_capabilities(value: Mapping[str, Any]) -> AdapterCapabilities:
+    fields = {
+        "schema", "schema_revision", "sdk_compatibility", "adapter_id", "producer",
+        "method_family", "contract_types", "payload_schema", "telemetry",
+        "execution_boundary", "runtime_requirements", "content_sha256",
+    }
+    if not isinstance(value, Mapping) or set(value) != fields:
+        _fail("descriptor_fields_mismatch", str(sorted(set(value) ^ fields)))
+    if value.get("schema") != ADAPTER_CAPABILITIES_SCHEMA:
+        _fail("schema_mismatch", str(value.get("schema")))
+    if value.get("schema_revision") != "1.0.0":
+        _fail("schema_revision_mismatch", str(value.get("schema_revision")))
+    compatibility = value.get("sdk_compatibility")
+    if not isinstance(compatibility, Mapping) or set(compatibility) != {"minimum", "maximum_exclusive"}:
+        _fail("invalid_sdk_compatibility", str(compatibility))
+    minimum = _text(compatibility.get("minimum"), "sdk_compatibility.minimum")
+    maximum = _text(compatibility.get("maximum_exclusive"), "sdk_compatibility.maximum_exclusive")
+    current = _version(ADAPTER_SDK_VERSION)
+    if not (_version(minimum) <= current < _version(maximum)):
+        _fail("sdk_version_incompatible", f"{minimum} <= {ADAPTER_SDK_VERSION} < {maximum}")
+    adapter_id = _text(value.get("adapter_id"), "adapter_id")
+    if ADAPTER_ID_PATTERN.fullmatch(adapter_id) is None:
+        _fail("invalid_adapter_id", adapter_id)
+    producer = value.get("producer")
+    if not isinstance(producer, Mapping) or set(producer) != {"name", "version"}:
+        _fail("invalid_producer", adapter_id)
+    _text(producer.get("name"), "producer.name")
+    _text(producer.get("version"), "producer.version")
+    method_family = _text(value.get("method_family"), "method_family")
+    if method_family not in METHOD_FAMILIES:
+        _fail("unsupported_method_family", method_family)
+    contract_types = _strings(value.get("contract_types"), "contract_types")
+    known_types = {item.contract_type for item in load_contract_registry().contracts}
+    unknown = sorted(set(contract_types) - known_types)
+    if unknown:
+        _fail("unknown_contract_capability", str(unknown))
+    payload_schema = _text(value.get("payload_schema"), "payload_schema")
+    if METHOD_FAMILY_PAYLOAD_SCHEMAS[method_family] != payload_schema:
+        _fail("payload_capability_mismatch", f"{method_family}->{payload_schema}")
+    telemetry = value.get("telemetry")
+    if not isinstance(telemetry, Mapping) or set(telemetry) != {"supported", "unavailable"}:
+        _fail("invalid_telemetry", adapter_id)
+    supported = _strings(telemetry.get("supported"), "telemetry.supported")
+    unavailable = _strings(telemetry.get("unavailable"), "telemetry.unavailable")
+    overlap = sorted(set(supported).intersection(unavailable))
+    if overlap:
+        _fail("telemetry_overlap", str(overlap))
+    if value.get("execution_boundary") != "external_runtime":
+        _fail("execution_boundary_mismatch", str(value.get("execution_boundary")))
+    requirements = _strings(value.get("runtime_requirements"), "runtime_requirements")
+    if not verify_content_sha256(value):
+        _fail("content_hash_mismatch", adapter_id)
+    return AdapterCapabilities(
+        ADAPTER_CAPABILITIES_SCHEMA,
+        adapter_id,
+        method_family,
+        contract_types,
+        payload_schema,
+        supported,
+        unavailable,
+        requirements,
+        dict(value),
+    )
+
+
+def validate_adapter_capabilities(value: Mapping[str, Any]) -> AdapterCapabilities:
+    if value.get("schema") == LEGACY_ADAPTER_CAPABILITIES_SCHEMA:
+        return _validate_legacy_capabilities(value)
+    return _validate_v1_capabilities(value)
 
 
 def load_adapter_capabilities(path: Path) -> AdapterCapabilities:

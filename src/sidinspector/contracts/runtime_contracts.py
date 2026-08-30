@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from .hashing import SHA256_PATTERN, verify_content_sha256
+from .method_families import METHOD_FAMILIES
 
 
 EPISODE_SELECTION_SCHEMA = "sidscope.episode_selection.v1"
@@ -19,15 +20,6 @@ CHECKPOINT_BINDING_SCHEMA = "sidscope.checkpoint_binding.v1"
 TRACE_ENVELOPE_SCHEMA = "sidscope.trace_envelope.v1"
 RUNTIME_SCHEMA_REVISION = "1.0.0"
 ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
-METHOD_FAMILIES = frozenset(
-    {
-        "autoregressive_prefix",
-        "parallel_graph_token_set",
-        "masked_diffusion",
-        "latent_retry",
-        "decoder_overlay",
-    }
-)
 RANK_STATES = frozenset({"exact", "right_censored", "not_applicable"})
 RUN_KINDS = frozenset({"training", "evaluation", "trace_export", "fixture"})
 

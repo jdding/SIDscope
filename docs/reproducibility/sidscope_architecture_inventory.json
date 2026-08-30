@@ -419,7 +419,7 @@
     }
   ],
   "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
-  "product_version": "1.2.0.dev0",
+  "product_version": "1.3.0.dev0",
   "profiles": [
     {
       "authority": "docs/ADAPTER_CONFORMANCE.md",
@@ -441,6 +441,48 @@
       "owner": "core:release",
       "profile_id": "release_local",
       "verifier": "tools/verify_sidscope_resource_package.py"
+    },
+    {
+      "authority": "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+      "migration_state": "active",
+      "owner": "core:conformance",
+      "profile_id": "common.generator.v1",
+      "verifier": "tools/verify_sidscope_1_3_plugin_ecosystem.py"
+    },
+    {
+      "authority": "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+      "migration_state": "active",
+      "owner": "core:conformance",
+      "profile_id": "family.autoregressive_prefix.v1",
+      "verifier": "tools/verify_sidscope_1_3_plugin_ecosystem.py"
+    },
+    {
+      "authority": "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+      "migration_state": "active",
+      "owner": "core:conformance",
+      "profile_id": "family.decoder_overlay.v1",
+      "verifier": "tools/verify_sidscope_1_3_plugin_ecosystem.py"
+    },
+    {
+      "authority": "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+      "migration_state": "active",
+      "owner": "core:conformance",
+      "profile_id": "family.latent_retry.v1",
+      "verifier": "tools/verify_sidscope_1_3_plugin_ecosystem.py"
+    },
+    {
+      "authority": "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+      "migration_state": "active",
+      "owner": "core:conformance",
+      "profile_id": "family.masked_diffusion.v1",
+      "verifier": "tools/verify_sidscope_1_3_plugin_ecosystem.py"
+    },
+    {
+      "authority": "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+      "migration_state": "active",
+      "owner": "core:conformance",
+      "profile_id": "family.parallel_graph_token_set.v1",
+      "verifier": "tools/verify_sidscope_1_3_plugin_ecosystem.py"
     }
   ],
   "routes": {
@@ -582,14 +624,16 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 143,
+  "schema_count": 159,
   "schemas": [
     {
       "artifact_paths": [
+        "docs/ADAPTER_SDK_ALPHA.md",
         "examples/canonical_pipeline_fixture/adapter_capabilities.json",
         "examples/canonical_pipeline_fixture/expected_failure_telemetry_overlap.json"
       ],
       "declaration_paths": [
+        "docs/ADAPTER_SDK_ALPHA.md",
         "examples/canonical_pipeline_fixture/adapter_capabilities.json",
         "examples/canonical_pipeline_fixture/expected_failure_telemetry_overlap.json",
         "src/sidinspector/schemas/adapter_capabilities.alpha.schema.json",
@@ -597,13 +641,49 @@
         "tools/build_sidscope_1_2_closure_fixtures.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
-      "owner": "core:diagnostics",
+      "owner": "core:sdk",
       "producer_paths": [
         "src/sidinspector/schemas/adapter_capabilities.alpha.schema.json",
         "src/sidinspector/sdk/alpha.py",
         "tools/build_sidscope_1_2_closure_fixtures.py"
       ],
       "schema_id": "sidscope.adapter_capabilities.alpha.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/ADAPTER_PLUGIN_ECOSYSTEM.md",
+        "docs/ADAPTER_SDK_ALPHA.md",
+        "docs/COMPATIBILITY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/adr/0008-plugin-and-native-trace-ecosystem.md",
+        "examples/native_trace_payload_fixtures/adapter_capabilities.v1.json",
+        "examples/native_trace_payload_fixtures/expected_failure_capability.json",
+        "examples/reference_adapter_plugin/src/sidscope_reference_adapter/__init__.py"
+      ],
+      "declaration_paths": [
+        "docs/ADAPTER_PLUGIN_ECOSYSTEM.md",
+        "docs/ADAPTER_SDK_ALPHA.md",
+        "docs/COMPATIBILITY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/adr/0008-plugin-and-native-trace-ecosystem.md",
+        "examples/native_trace_payload_fixtures/adapter_capabilities.v1.json",
+        "examples/native_trace_payload_fixtures/expected_failure_capability.json",
+        "examples/reference_adapter_plugin/src/sidscope_reference_adapter/__init__.py",
+        "src/sidinspector/schemas/adapter_capabilities.v1.schema.json",
+        "src/sidinspector/sdk/alpha.py",
+        "src/sidinspector/sdk/plugin_api.py",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:sdk",
+      "producer_paths": [
+        "src/sidinspector/schemas/adapter_capabilities.v1.schema.json",
+        "src/sidinspector/sdk/alpha.py",
+        "src/sidinspector/sdk/plugin_api.py",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "schema_id": "sidscope.adapter_capabilities.v1",
       "verifier_paths": []
     },
     {
@@ -644,6 +724,24 @@
       "verifier_paths": [
         "tools/verify_sidscope_source_inventory.py"
       ]
+    },
+    {
+      "artifact_paths": [
+        "examples/native_trace_payload_fixtures/fixture_manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/native_trace_payload_fixtures/fixture_manifest.json",
+        "src/sidinspector/adapters_core/fixtures.py",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:sdk",
+      "producer_paths": [
+        "src/sidinspector/adapters_core/fixtures.py",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "schema_id": "sidscope.adapter_fixture_manifest.v1",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [
@@ -714,6 +812,32 @@
       "producer_paths": [
         "src/sidinspector/cli/__init__.py"
       ],
+      "schema_id": "sidscope.adapter_plugin_listing.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.adapter_plugin_preflight.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
       "schema_id": "sidscope.adapter_preflight.v1",
       "verifier_paths": []
     },
@@ -751,7 +875,8 @@
         "examples/canonical_pipeline_fixture/expected_failure_evidence_cycle.json",
         "examples/canonical_pipeline_fixture/expected_failure_incomplete_resumable_state.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
-        "examples/canonical_pipeline_fixture/trace_envelope.json"
+        "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json"
       ],
       "declaration_paths": [
         "docs/COMPATIBILITY.md",
@@ -761,6 +886,7 @@
         "examples/canonical_pipeline_fixture/expected_failure_incomplete_resumable_state.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
         "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "src/sidinspector/contracts/runtime_contracts.py",
         "src/sidinspector/schemas/checkpoint_binding.v1.schema.json",
         "src/sidinspector/schemas/contract_registry.v1.json",
@@ -821,6 +947,49 @@
       "verifier_paths": [
         "tools/verify_sidscope_1_2_cli_baseline.py"
       ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/conformance_core/profiles.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:conformance",
+      "producer_paths": [
+        "src/sidinspector/conformance_core/profiles.py"
+      ],
+      "schema_id": "sidscope.composed_conformance_profile.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.conformance_profile_listing.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/conformance_core/profiles.py",
+        "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:conformance",
+      "producer_paths": [
+        "src/sidinspector/conformance_core/profiles.py",
+        "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "schema_id": "sidscope.conformance_profile_registry.v1",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [
@@ -1540,7 +1709,8 @@
         "examples/canonical_pipeline_fixture/expected_failure_evidence_cycle.json",
         "examples/canonical_pipeline_fixture/expected_failure_metric_mismatch.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
-        "examples/canonical_pipeline_fixture/trace_envelope.json"
+        "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json"
       ],
       "declaration_paths": [
         "docs/COMPATIBILITY.md",
@@ -1552,6 +1722,7 @@
         "examples/canonical_pipeline_fixture/expected_failure_metric_mismatch.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
         "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "src/sidinspector/contracts/report_contracts.py",
         "src/sidinspector/contracts/runtime_contracts.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
@@ -2384,6 +2555,19 @@
       "verifier_paths": []
     },
     {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.native_payload_validation.v1",
+      "verifier_paths": []
+    },
+    {
       "artifact_paths": [
         "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
         "examples/latte_psid_trained_trace_fixture/manifest.json",
@@ -2497,6 +2681,19 @@
       "schema_id": "sidscope.release_1_2_closure_verification.v1",
       "verifier_paths": [
         "tools/verify_sidscope_1_2_closure.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_1_3_plugin_ecosystem.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.release_1_3_ecosystem_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_1_3_plugin_ecosystem.py"
       ]
     },
     {
@@ -2995,6 +3192,7 @@
         "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
         "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "examples/rpg_non_ar_bridge_fixture/trained_trace_v2.json"
       ],
       "declaration_paths": [
@@ -3004,6 +3202,7 @@
         "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
         "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "examples/rpg_non_ar_bridge_fixture/trained_trace_v2.json",
         "tests/test_runtime_contracts.py",
         "tools/export_rpg_trained_trace.py",
@@ -3076,7 +3275,8 @@
         "examples/canonical_pipeline_fixture/expected_failure_invalid_seed.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
         "examples/canonical_pipeline_fixture/run_identity.json",
-        "examples/canonical_pipeline_fixture/trace_envelope.json"
+        "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json"
       ],
       "declaration_paths": [
         "docs/COMPATIBILITY.md",
@@ -3088,6 +3288,7 @@
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
         "examples/canonical_pipeline_fixture/run_identity.json",
         "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "src/sidinspector/contracts/runtime_contracts.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/run_identity.v1.schema.json",
@@ -3267,7 +3468,8 @@
         "examples/canonical_pipeline_fixture/expected_failure_gate_order.json",
         "examples/canonical_pipeline_fixture/expected_failure_metric_mismatch.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
-        "examples/canonical_pipeline_fixture/trace_envelope.json"
+        "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json"
       ],
       "declaration_paths": [
         "docs/COMPATIBILITY.md",
@@ -3279,6 +3481,7 @@
         "examples/canonical_pipeline_fixture/expected_failure_metric_mismatch.json",
         "examples/canonical_pipeline_fixture/expected_failure_rank_state.json",
         "examples/canonical_pipeline_fixture/trace_envelope.json",
+        "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "src/sidinspector/contracts/report_contracts.py",
         "src/sidinspector/contracts/runtime_contracts.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
@@ -3296,12 +3499,184 @@
       ],
       "schema_id": "sidscope.trace_envelope.v1",
       "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/autoregressive_prefix.json",
+        "examples/native_trace_payload_fixtures/expected_failure_ancestry.json",
+        "examples/native_trace_payload_fixtures/expected_failure_capability.json"
+      ],
+      "declaration_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/autoregressive_prefix.json",
+        "examples/native_trace_payload_fixtures/expected_failure_ancestry.json",
+        "examples/native_trace_payload_fixtures/expected_failure_capability.json",
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_autoregressive_prefix.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_autoregressive_prefix.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "schema_id": "sidscope.trace_payload.autoregressive_prefix.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/decoder_overlay.json",
+        "examples/native_trace_payload_fixtures/expected_failure_resolution.json"
+      ],
+      "declaration_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/decoder_overlay.json",
+        "examples/native_trace_payload_fixtures/expected_failure_resolution.json",
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_decoder_overlay.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_decoder_overlay.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "schema_id": "sidscope.trace_payload.decoder_overlay.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/expected_failure_termination.json",
+        "examples/native_trace_payload_fixtures/latent_retry.json"
+      ],
+      "declaration_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/expected_failure_termination.json",
+        "examples/native_trace_payload_fixtures/latent_retry.json",
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_latent_retry.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_latent_retry.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "schema_id": "sidscope.trace_payload.latent_retry.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/masked_diffusion.json"
+      ],
+      "declaration_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/masked_diffusion.json",
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_masked_diffusion.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json",
+        "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_masked_diffusion.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "schema_id": "sidscope.trace_payload.masked_diffusion.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/adapter_capabilities.v1.json",
+        "examples/native_trace_payload_fixtures/expected_failure_privacy.json",
+        "examples/native_trace_payload_fixtures/fixture_manifest.json",
+        "examples/native_trace_payload_fixtures/parallel_graph_token_set.json",
+        "examples/reference_adapter_plugin/src/sidscope_reference_adapter/__init__.py"
+      ],
+      "declaration_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "examples/native_trace_payload_fixtures/adapter_capabilities.v1.json",
+        "examples/native_trace_payload_fixtures/expected_failure_privacy.json",
+        "examples/native_trace_payload_fixtures/fixture_manifest.json",
+        "examples/native_trace_payload_fixtures/parallel_graph_token_set.json",
+        "examples/reference_adapter_plugin/src/sidscope_reference_adapter/__init__.py",
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_parallel_graph_token_set.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/contracts/method_families.py",
+        "src/sidinspector/schemas/trace_payload_parallel_graph_token_set.v1.schema.json",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json"
+      ],
+      "schema_id": "sidscope.trace_payload.parallel_graph_token_set.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/NATIVE_TRACE_PAYLOADS.md"
+      ],
+      "declaration_paths": [
+        "docs/NATIVE_TRACE_PAYLOADS.md",
+        "src/sidinspector/schemas/trace_payload_registry.v1.json",
+        "src/sidinspector/trace/native_payloads.py",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/schemas/trace_payload_registry.v1.json",
+        "src/sidinspector/trace/native_payloads.py",
+        "tools/build_sidscope_1_3_ecosystem_fixtures.py"
+      ],
+      "schema_id": "sidscope.trace_payload_registry.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:trace",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.trace_payload_registry_listing.v1",
+      "verifier_paths": []
     }
   ],
   "scope": "public_release_manifest_plus_active_route_ledgers",
   "status": "pass",
   "version_axes": {
-    "adapter_sdk": "0.1.0-alpha",
+    "adapter_sdk": "0.2.0-alpha",
     "canonical_schemas": [
       "sidscope.checkpoint_binding.v1@1.0.0",
       "sidscope.conformance_report.v1@1.0.0",
@@ -3318,9 +3693,15 @@
     "conformance_profiles": [
       "static_mapping_c0_c5",
       "generator_g0_g5",
-      "release_local"
+      "release_local",
+      "common.generator.v1@1.0.0",
+      "family.autoregressive_prefix.v1@1.0.0",
+      "family.decoder_overlay.v1@1.0.0",
+      "family.latent_retry.v1@1.0.0",
+      "family.masked_diffusion.v1@1.0.0",
+      "family.parallel_graph_token_set.v1@1.0.0"
     ],
     "evidence_bundle": "canonical_evidence_index_v1_plus_route_specific_legacy_authorities",
-    "product_package": "1.2.0.dev0"
+    "product_package": "1.3.0.dev0"
   }
 }

@@ -2,7 +2,7 @@
 
 Status: approved development direction
 
-Regression baseline: `1.1.1.dev0`; active development: `1.2.0.dev0`
+Regression baseline: `1.1.1.dev0`; active development: `1.3.0.dev0`
 
 Architecture authority: `SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 
@@ -92,6 +92,26 @@ Together Sprints 1--4 close the planned 1.2 development scope. This is a
 development closure, not a public tag or release declaration. Plugin discovery,
 registered native payload families, immutable EvidenceBundle storage, and
 SQLite projections remain assigned to 1.3 and 1.4.
+
+### 1.3 implementation status
+
+The 1.3 Adapter and Native-Trace Ecosystem is development-closed. Lazy
+`importlib.metadata` discovery under `sidscope.adapters` does not import plugin
+code until one named plugin is explicitly preflighted. SDK `0.2.0-alpha`
+capabilities bind method family to one of five registered native payload
+schemas while legacy SDK 0.1 descriptors remain accepted.
+
+Autoregressive prefix, parallel graph/token-set, masked diffusion, latent
+retry, and decoder-overlay payloads now have independent semantic validators,
+hash-bound registries, positive fixtures, and typed negative fixtures. Shared
+and family profiles compose deterministically. An external reference package
+installs without core edits; isolated verification proves core payload
+validation still works with no plugin installed. RecBole availability is
+probed without import or core dependency.
+
+This closes the 1.3 deliverables and exit gates without changing existing
+named-adapter evidence. Immutable EvidenceBundle storage, SQLite projections,
+admission, comparison, and supersession remain exclusively assigned to 1.4.
 
 ## 2. State Transition
 

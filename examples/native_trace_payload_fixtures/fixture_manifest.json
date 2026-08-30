@@ -1,0 +1,93 @@
+{
+  "cases": [
+    {
+      "case_id": "positive_autoregressive_prefix",
+      "expected_failure": null,
+      "expected_status": "pass",
+      "path": "autoregressive_prefix.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "positive_decoder_overlay",
+      "expected_failure": null,
+      "expected_status": "pass",
+      "path": "decoder_overlay.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "positive_latent_retry",
+      "expected_failure": null,
+      "expected_status": "pass",
+      "path": "latent_retry.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "positive_masked_diffusion",
+      "expected_failure": null,
+      "expected_status": "pass",
+      "path": "masked_diffusion.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "positive_parallel_graph_token_set",
+      "expected_failure": null,
+      "expected_status": "pass",
+      "path": "parallel_graph_token_set.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "negative_ancestry",
+      "expected_failure": "unknown_parent_beam",
+      "expected_status": "fail",
+      "path": "expected_failure_ancestry.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "negative_privacy",
+      "expected_failure": "privacy_boundary_violation",
+      "expected_status": "fail",
+      "path": "expected_failure_privacy.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "negative_termination",
+      "expected_failure": "termination_failure_mismatch",
+      "expected_status": "fail",
+      "path": "expected_failure_termination.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "negative_resolution",
+      "expected_failure": "resolution_collision_mismatch",
+      "expected_status": "fail",
+      "path": "expected_failure_resolution.json",
+      "validator": "native_payload"
+    },
+    {
+      "case_id": "negative_censoring",
+      "expected_failure": "rank_state_mismatch",
+      "expected_status": "fail",
+      "path": "expected_failure_censoring.json",
+      "validator": "trace_envelope"
+    },
+    {
+      "case_id": "negative_capability",
+      "expected_failure": "payload_capability_mismatch",
+      "expected_status": "fail",
+      "path": "expected_failure_capability.json",
+      "validator": "adapter_capabilities"
+    },
+    {
+      "binding": {
+        "content_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "schema_id": "sidscope.trace_payload.parallel_graph_token_set.v1"
+      },
+      "case_id": "negative_binding",
+      "expected_failure": "payload_binding_mismatch",
+      "expected_status": "fail",
+      "path": "parallel_graph_token_set.json",
+      "validator": "payload_binding"
+    }
+  ],
+  "schema": "sidscope.adapter_fixture_manifest.v1"
+}

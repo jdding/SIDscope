@@ -41,6 +41,9 @@ data; ADR 0007 fixes the execution/report boundary and Adapter SDK alpha without
 absorbing upstream training. The executable dependency
 policy is `reproducibility/sidscope_module_dependencies.json`, documented in
 `SIDSCOPE_MODULE_DEPENDENCIES.md` and enforced by architecture tests.
+ADR 0008 activates the lazy adapter-plugin boundary, five registered native
+payload families, SDK 0.2 capability binding, and composable family profiles
+without moving EvidenceBundle storage forward from 1.4.
 
 ## 2. System Context
 

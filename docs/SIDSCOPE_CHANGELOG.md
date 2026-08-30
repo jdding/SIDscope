@@ -11,6 +11,25 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.3.0.dev0: adapter plugins and native trace families
+
+- Added lazy `importlib.metadata` discovery under `sidscope.adapters`; listing
+  does not load plugin code and explicit preflight converts load, API,
+  capability, and payload incompatibilities into typed failures.
+- Added SDK `0.2.0-alpha` and `sidscope.adapter_capabilities.v1` with exact
+  method-family/payload-schema binding while preserving SDK 0.1 descriptor
+  validation.
+- Registered independent autoregressive-prefix, parallel-graph/token-set,
+  masked-diffusion, latent-retry, and decoder-overlay payload contracts with
+  semantic validators and hash-bound registry resources.
+- Added composable common/family conformance profiles, five positive fixtures,
+  and seven typed negative fixtures covering ancestry, privacy, termination,
+  resolution, censoring, capability, and binding.
+- Added a separately packaged reference plugin, a no-import RecBole boundary
+  probe, ecosystem CLI commands, ADR-0008, and an isolated installation verifier.
+- Kept named-adapter evidence unchanged and deferred immutable EvidenceBundle,
+  SQLite projection, admission, comparison, and supersession to 1.4.
+
 ## SIDScope v1.2.0.dev0: Sprint 3/4 execution, reports, SDK alpha, and CLI closure
 
 - Added EpisodeSelection, RunIdentity, CheckpointBinding, and TraceEnvelope v1

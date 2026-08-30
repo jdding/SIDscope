@@ -1,4 +1,4 @@
-# SIDScope 1.2 Development Handoff
+# SIDScope 1.3 Development Handoff
 
 Last updated: 2026-08-30
 
@@ -6,7 +6,7 @@ Last updated: 2026-08-30
 
 SIDScope 1.1.0 is locally release-ready and publicly released. The verified
 `1.1.1.dev0` tree is the frozen regression authority; active development is
-`1.2.0.dev0` in the dedicated `SIDScope-v2` worktree. Annotated tag `v1.1.0`
+`1.3.0.dev0` in the dedicated `SIDScope-v2` worktree. Annotated tag `v1.1.0`
 remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
@@ -41,7 +41,7 @@ integration through canonical contracts, native observation, diagnostic
 evaluation, conformance verification, and immutable evidence. The authoritative
 design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 and `docs/V1_2_TO_V2_ROADMAP.md`. Implemented and planned surfaces are marked
-separately; 1.3--2.0 target features are not claimed by the 1.2 closure.
+separately; 1.4--2.0 target features are not claimed by the 1.3 closure.
 
 Architecture Sprint 0 is implemented on the 1.1.1 regression baseline.
 It adds canonical version/hash governance, a machine-readable schema/profile/
@@ -80,8 +80,24 @@ routes retain their existing verifier and status authority and receive a typed
 canonical-regeneration disposition; this is not an adapter failure or implicit
 promotion. The six shared command families have an eleven-repeat CPU baseline
 and a 20% review policy. This closes 1.2 development scope, but does not create
-a public 1.2 tag or release. The next milestone is 1.3 plugin discovery and
-native payload registration.
+a public 1.2 tag or release.
+
+The 1.3 ecosystem milestone is also development-closed. SDK `0.2.0-alpha`
+retains SDK 0.1 descriptor compatibility and binds each current capability
+descriptor to one native payload schema. Lazy entry-point discovery uses
+`sidscope.adapters`; listing reads metadata only and explicit preflight loads
+one selected plugin. Five payload families preserve AR prefix, parallel
+graph/token-set, masked diffusion, latent retry, and decoder-overlay semantics.
+Their hash-bound registry, composable common/family profiles, five positive
+fixtures, and seven typed negatives are independently verified.
+
+The separately packaged `reference-parallel` plugin installs without core
+edits. The isolated verifier first proves payload verification with no plugin
+installed and then proves discovery/preflight after installation. RecBole is
+only availability-probed and never imported. Existing named-adapter evidence is
+unchanged. The next milestone is 1.4 immutable EvidenceBundle storage, local
+registry projection, admission, comparison, and supersession; none of those
+surfaces is implied by the 1.3 closure.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
@@ -113,7 +129,7 @@ remain unchanged until repository-level terms make redistribution explicit.
 - RPG P0 implementation commit before this handoff update:
   `60e421fb2736ceeead3cff0f7ac9e2cd23a04b95`.
 - Regression authority: `1.1.1.dev0` in the separate `SIDScope-v1.1` worktree.
-- Development version: `1.2.0.dev0` in both `pyproject.toml` and `setup.py`.
+- Development version: `1.3.0.dev0` in both `pyproject.toml` and `setup.py`.
 - Public release tag: `v1.1.0` at
   `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`.
 - Deterministic tag archive SHA-256:
@@ -286,22 +302,28 @@ identity and must never be cropped or silently converted.
 
 ## Last verified local release evidence
 
-The Sprint 2 working tree passed:
+The 1.3 development tree passed:
 
-- focused contract/registry tests: `21 passed`;
-- full tests: `200 passed, 6 skipped`;
+- focused plugin/payload/profile and architecture tests: `14 passed`;
+- full tests: `215 passed, 6 skipped`;
 - resource-package verifier: PASS;
-- contract-registry verifier: PASS with 4 canonical contracts, 4 positive
-  fixtures, 5 typed-negative fixtures, and 2 dependency bindings;
+- contract-registry verifier: PASS with 11 canonical contracts, 11 positive
+  fixtures, 12 typed-negative fixtures, and 14 declared dependency edges;
 - Sprint 2 verifier: PASS with exact RPG migration parity and typed
   regeneration-required outcomes for DiffGRM/LLaDA legacy prepared artifacts;
+- 1.2 execution/report/SDK legacy closure and fifteen-route migration matrix:
+  PASS;
+- 1.3 ecosystem verifier: PASS with SDK `0.2.0`, five native payload families,
+  six composable profiles, five positive fixtures, seven typed negatives,
+  no-plugin core validation, and external `reference-parallel` installation;
 - release-metadata verifier: PASS;
-- architecture inventory verifier: PASS with 129 schema IDs, 4 canonical
-  contracts, 3 profiles, 6 generator routes, 9 static-mapping routes, and 7
+- architecture inventory verifier: PASS with 159 schema IDs, 11 canonical
+  contracts, 9 profiles, 6 generator routes, 9 static-mapping routes, and 14
   canonical evidence edges;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
-- G8 isolated `sidinspector==1.2.0.dev0` install and verification: PASS;
+- G8 isolated `sidinspector==1.3.0.dev0` install and deterministic archive
+  rebuild: PASS;
 - RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
   positive fixture, typed duplicate-selection failure, and the hash-bound CPU
   runner/export smoke;
@@ -311,8 +333,8 @@ The Sprint 2 working tree passed:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest: 251 rows, 248 public rows, 0 pending;
-- current public package surface: 369 files.
+- manifest: 277 rows, 274 public rows, 0 pending;
+- current public package surface: 455 files.
 
 The development archive SHA-256 is intentionally reported by the final build
 command rather than embedded in this hash-sensitive source tree. Rebuild it
@@ -334,12 +356,13 @@ python3 tools/verify_sidscope_sprint2_contracts.py
 python3 tools/verify_sidscope_1_2_closure.py
 python3 tools/verify_sidscope_1_2_legacy_migration_matrix.py
 python3 tools/verify_sidscope_1_2_cli_baseline.py
+python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
 python3 tools/build_sidscope_release_candidate_archive.py \
-  --output /tmp/sidscope-v1.2.0.dev0.zip
+  --output /tmp/sidscope-v1.3.0.dev0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-v1.2.0.dev0.zip
+  /tmp/sidscope-v1.3.0.dev0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.2.0.dev0.zip
+  --archive /tmp/sidscope-v1.3.0.dev0.zip
 ```
 
 The release checks are CPU-only. A new GPU run is not required to reverify the

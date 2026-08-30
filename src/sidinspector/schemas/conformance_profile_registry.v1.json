@@ -1,0 +1,156 @@
+{
+  "content_sha256": "050fe624d58e93f224033675758513f8358a31ebf1c5ed45df72f211e93276ba",
+  "profiles": [
+    {
+      "extends": [],
+      "gates": [
+        {
+          "depends_on": [],
+          "failure_code": "binding_mismatch",
+          "gate_id": "binding_integrity",
+          "owner": "core:contracts"
+        },
+        {
+          "depends_on": [
+            "binding_integrity"
+          ],
+          "failure_code": "capability_mismatch",
+          "gate_id": "capability_coverage",
+          "owner": "core:sdk"
+        },
+        {
+          "depends_on": [
+            "binding_integrity"
+          ],
+          "failure_code": "privacy_boundary_violation",
+          "gate_id": "privacy_boundary",
+          "owner": "core:contracts"
+        },
+        {
+          "depends_on": [
+            "binding_integrity"
+          ],
+          "failure_code": "resolution_mismatch",
+          "gate_id": "resolution_integrity",
+          "owner": "core:evaluation"
+        },
+        {
+          "depends_on": [
+            "binding_integrity"
+          ],
+          "failure_code": "termination_failure_mismatch",
+          "gate_id": "termination_accounting",
+          "owner": "core:trace"
+        },
+        {
+          "depends_on": [
+            "termination_accounting"
+          ],
+          "failure_code": "rank_state_mismatch",
+          "gate_id": "censoring_integrity",
+          "owner": "core:evaluation"
+        }
+      ],
+      "method_family": null,
+      "profile_id": "common.generator.v1",
+      "revision": "1.0.0"
+    },
+    {
+      "extends": [
+        "common.generator.v1"
+      ],
+      "gates": [
+        {
+          "depends_on": [
+            "capability_coverage",
+            "termination_accounting"
+          ],
+          "failure_code": "unknown_parent_beam",
+          "gate_id": "ancestry_integrity",
+          "owner": "core:trace"
+        }
+      ],
+      "method_family": "autoregressive_prefix",
+      "profile_id": "family.autoregressive_prefix.v1",
+      "revision": "1.0.0"
+    },
+    {
+      "extends": [
+        "common.generator.v1"
+      ],
+      "gates": [
+        {
+          "depends_on": [
+            "capability_coverage",
+            "termination_accounting"
+          ],
+          "failure_code": "provider_only_item_insertion",
+          "gate_id": "overlay_noninsertion",
+          "owner": "core:trace"
+        }
+      ],
+      "method_family": "decoder_overlay",
+      "profile_id": "family.decoder_overlay.v1",
+      "revision": "1.0.0"
+    },
+    {
+      "extends": [
+        "common.generator.v1"
+      ],
+      "gates": [
+        {
+          "depends_on": [
+            "capability_coverage",
+            "termination_accounting"
+          ],
+          "failure_code": "invalid_retry_order",
+          "gate_id": "retry_provenance",
+          "owner": "core:trace"
+        }
+      ],
+      "method_family": "latent_retry",
+      "profile_id": "family.latent_retry.v1",
+      "revision": "1.0.0"
+    },
+    {
+      "extends": [
+        "common.generator.v1"
+      ],
+      "gates": [
+        {
+          "depends_on": [
+            "capability_coverage",
+            "termination_accounting"
+          ],
+          "failure_code": "invalid_mask_transition",
+          "gate_id": "unmask_transition",
+          "owner": "core:trace"
+        }
+      ],
+      "method_family": "masked_diffusion",
+      "profile_id": "family.masked_diffusion.v1",
+      "revision": "1.0.0"
+    },
+    {
+      "extends": [
+        "common.generator.v1"
+      ],
+      "gates": [
+        {
+          "depends_on": [
+            "capability_coverage",
+            "termination_accounting"
+          ],
+          "failure_code": "synthetic_ancestry_forbidden",
+          "gate_id": "parallel_semantics",
+          "owner": "core:trace"
+        }
+      ],
+      "method_family": "parallel_graph_token_set",
+      "profile_id": "family.parallel_graph_token_set.v1",
+      "revision": "1.0.0"
+    }
+  ],
+  "schema": "sidscope.conformance_profile_registry.v1",
+  "schema_revision": "1.0.0"
+}

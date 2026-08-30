@@ -1,0 +1,82 @@
+{
+  "content_sha256": "8c86463a49cef195442ea18621bab5ffbd6dc0b3e323d9723b4f6172295c1e30",
+  "episodes": [
+    {
+      "beams": [
+        {
+          "beam_id": "beam-0",
+          "parent_beam_id": "missing",
+          "retained": true,
+          "steps": [
+            {
+              "prefix_after": [
+                10
+              ],
+              "prefix_before": [],
+              "selected_token_id": 10,
+              "step_index": 0,
+              "topk": [
+                {
+                  "logprob": -0.1,
+                  "rank": 1,
+                  "token_id": 10
+                },
+                {
+                  "logprob": -0.2,
+                  "rank": 2,
+                  "token_id": 11
+                }
+              ]
+            },
+            {
+              "prefix_after": [
+                10,
+                20
+              ],
+              "prefix_before": [
+                10
+              ],
+              "selected_token_id": 20,
+              "step_index": 1,
+              "topk": [
+                {
+                  "logprob": -0.1,
+                  "rank": 1,
+                  "token_id": 20
+                },
+                {
+                  "logprob": -0.2,
+                  "rank": 2,
+                  "token_id": 21
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "episode_id": "episode-0",
+      "failure_state": null,
+      "resolution_events": [
+        {
+          "collision_count": 1,
+          "raw_sid": [
+            10,
+            20
+          ],
+          "raw_valid": true,
+          "resolved_normalized_item_id": 7
+        }
+      ],
+      "termination_state": "success"
+    }
+  ],
+  "method_family": "autoregressive_prefix",
+  "payload_id": "fixture:autoregressive_prefix",
+  "privacy": {
+    "absolute_private_paths_exported": false,
+    "source_item_ids_exported": false,
+    "source_user_ids_exported": false
+  },
+  "schema": "sidscope.trace_payload.autoregressive_prefix.v1",
+  "schema_revision": "1.0.0"
+}

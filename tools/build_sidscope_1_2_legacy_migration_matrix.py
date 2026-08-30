@@ -72,7 +72,8 @@ def build_matrix() -> dict[str, Any]:
     return {
         "schema": "sidscope.legacy_migration_matrix.v1",
         "status": "pass",
-        "product_version": inventory["product_version"],
+        # This is the frozen 1.2 migration disposition, not a live product-version view.
+        "product_version": "1.2.0.dev0",
         "contract_registry_sha256": inventory["canonical_contract_registry"]["content_sha256"],
         "policy": {
             "historical_evidence_rewritten": False,

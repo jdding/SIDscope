@@ -42,6 +42,7 @@ Run from the repository root:
 python3 tools/verify_sidscope_resource_package.py
 python3 tools/verify_sidscope_release_metadata.py
 python3 tools/verify_sidscope_architecture_inventory.py
+python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
 python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1.1.0.zip

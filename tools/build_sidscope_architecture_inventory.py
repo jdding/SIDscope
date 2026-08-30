@@ -16,6 +16,7 @@ if str(Path(__file__).resolve().parents[1] / "src") not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from sidinspector.contracts import load_contract_registry
+from sidinspector.conformance_core import load_profile_registry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -71,6 +72,12 @@ def _schema_owner(schema_id: str) -> str:
         "module_dependency_matrix",
     }:
         return "core:contracts"
+    if prefix in {"adapter_capabilities", "adapter_fixture_manifest"}:
+        return "core:sdk"
+    if prefix.startswith("trace_payload") or prefix == "native_payload_validation":
+        return "core:trace"
+    if prefix in {"conformance_profile_registry", "composed_conformance_profile"}:
+        return "core:conformance"
     if prefix in {
         "adapter_conformance_report",
         "adapter_manifest",
@@ -183,6 +190,7 @@ def package_version() -> str:
 def build_inventory() -> dict[str, Any]:
     schemas = schema_inventory()
     registry = load_contract_registry(repository_root=ROOT)
+    native_profiles = load_profile_registry()
     return {
         "schema": "sidscope.architecture_inventory.v1",
         "status": "pass",
@@ -190,12 +198,15 @@ def build_inventory() -> dict[str, Any]:
         "product_version": package_version(),
         "version_axes": {
             "product_package": package_version(),
-            "adapter_sdk": "0.1.0-alpha",
+            "adapter_sdk": "0.2.0-alpha",
             "canonical_schemas": [
                 f"{descriptor.schema_id}@{descriptor.schema_revision}"
                 for descriptor in registry.contracts
             ],
-            "conformance_profiles": ["static_mapping_c0_c5", "generator_g0_g5", "release_local"],
+            "conformance_profiles": [
+                "static_mapping_c0_c5", "generator_g0_g5", "release_local",
+                *[f"{profile.profile_id}@{profile.revision}" for profile in native_profiles],
+            ],
             "evidence_bundle": "canonical_evidence_index_v1_plus_route_specific_legacy_authorities",
         },
         "profiles": [
@@ -220,6 +231,16 @@ def build_inventory() -> dict[str, Any]:
                 "verifier": "tools/verify_sidscope_resource_package.py",
                 "migration_state": "active",
             },
+            *[
+                {
+                    "profile_id": profile.profile_id,
+                    "owner": "core:conformance",
+                    "authority": "src/sidinspector/schemas/conformance_profile_registry.v1.json",
+                    "verifier": "tools/verify_sidscope_1_3_plugin_ecosystem.py",
+                    "migration_state": "active",
+                }
+                for profile in native_profiles
+            ],
         ],
         "schema_count": len(schemas),
         "schemas": schemas,

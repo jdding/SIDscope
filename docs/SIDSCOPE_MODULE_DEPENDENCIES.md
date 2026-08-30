@@ -1,6 +1,6 @@
 # SIDScope Module Dependency Contract
 
-Status: enforced SIDScope 1.2 boundary
+Status: enforced SIDScope 1.3 boundary
 
 Machine-readable authority:
 `docs/reproducibility/sidscope_module_dependencies.json`
@@ -36,7 +36,7 @@ are grandfathered only until their inventory entries migrate or become archived.
   machine-readable matrix, architecture tests, and an ADR when it changes the
   accepted topology.
 
-`tests/test_architecture_boundaries.py` enforces the matrix. Contracts, SDK,
-trace, evaluation, conformance_core, evidence, and CLI now have active package
-surfaces. `adapters_core` remains planned for the 1.3 plugin lifecycle; current
+`tests/test_architecture_boundaries.py` enforces the matrix. All target modules,
+including `adapters_core`, now have active package surfaces. Plugin discovery
+loads only the selected entry point during explicit preflight; current
 route-specific `adapters/` modules remain compatibility authorities.

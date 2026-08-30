@@ -1,4 +1,17 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+plugin_native_trace_adr,docs/adr/0008-plugin-and-native-trace-ecosystem.md,architecture_governance,documentation,yes,pass_local,Defines lazy plugins native payload registry profile composition migration and rollback.
+plugin_ecosystem_doc,docs/ADAPTER_PLUGIN_ECOSYSTEM.md,adapter_sdk,documentation,yes,pass_local,Documents entry point discovery typed failures isolated install proof and plugin absence boundary.
+native_trace_payload_doc,docs/NATIVE_TRACE_PAYLOADS.md,trace_protocol,documentation,yes,pass_local,Documents five semantic payload families shared fields profiles and typed fixtures.
+adapter_core,src/sidinspector/adapters_core,runnable_code,fully_runnable,yes,pass_local,Implements lazy plugin discovery explicit preflight and reusable fixture harnesses.
+native_payload_core,src/sidinspector/trace/native_payloads.py,runnable_code,fully_runnable,yes,pass_local,Validates five family native payloads without semantic flattening.
+profile_composition_core,src/sidinspector/conformance_core/profiles.py,runnable_code,fully_runnable,yes,pass_local,Loads hash bound profile registry and composes deterministic gate dependencies.
+sdk_plugin_surface,src/sidinspector/sdk,runnable_code,fully_runnable,yes,pass_local,Provides SDK 0.2 plugin protocol optional backend probe and SDK 0.1 compatibility.
+native_payload_schemas,src/sidinspector/schemas,contract_schema,fully_runnable,yes,pass_local,Bundles capability payload and profile schema and registry resources.
+native_payload_fixtures,examples/native_trace_payload_fixtures,example,fully_runnable,yes,pass_local,Provides five positive and seven typed negative ecosystem cases.
+reference_adapter_plugin,examples/reference_adapter_plugin,example,fully_runnable,yes,pass_local,Proves separately packaged entry point installation without trusted core edits.
+plugin_ecosystem_builder,tools/build_sidscope_1_3_ecosystem_fixtures.py,fixture_builder,fully_runnable,yes,pass_local,Deterministically rebuilds native payload registries profiles schemas and fixtures.
+plugin_ecosystem_verifier,tools/verify_sidscope_1_3_plugin_ecosystem.py,verification,fully_runnable,yes,pass_local,Verifies fixtures profiles SDK compatibility plugin absence external install and RecBole no import boundary.
+plugin_ecosystem_tests,tests/test_native_payload_ecosystem.py,test,fully_runnable,yes,pass_local,Tests payload semantics profile composition lazy discovery typed incompatibility CLI and backend boundary.
 sprint34_adr,docs/adr/0007-canonical-execution-report-and-sdk-boundary.md,architecture_governance,documentation,yes,pass_local,Defines the common execution and report boundary native payload preservation SDK alpha scope migration and rollback.
 adapter_sdk_alpha_doc,docs/ADAPTER_SDK_ALPHA.md,adapter_sdk,documentation,yes,pass_local,Documents capability descriptors registry-enforced producers and the explicit non-plugin alpha boundary.
 canonical_pipeline_fixture,examples/canonical_pipeline_fixture,example,fully_runnable,yes,pass_local,Deterministic eleven-contract RPG non-AR canonical pipeline plus Adapter SDK descriptor and eight typed failures.

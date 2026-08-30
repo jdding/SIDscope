@@ -1,0 +1,48 @@
+{
+  "content_sha256": "c9488c300be4c8cf51856ad39c3405f70c24589bf65163cd7e6cf8a7a886b336",
+  "episodes": [
+    {
+      "episode_id": "episode-0",
+      "failure_state": null,
+      "resolution_events": [
+        {
+          "collision_count": 1,
+          "raw_sid": [
+            4,
+            6
+          ],
+          "raw_valid": true,
+          "resolved_normalized_item_id": 7
+        }
+      ],
+      "retries": [
+        {
+          "accepted": true,
+          "beams": [
+            {
+              "beam_id": "beam-0",
+              "ordered_tokens": [
+                4,
+                6
+              ],
+              "score": -0.2
+            }
+          ],
+          "failure_state": null,
+          "latent_state_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "retry_index": 0
+        }
+      ],
+      "termination_state": "success"
+    }
+  ],
+  "method_family": "latent_retry",
+  "payload_id": "fixture:latent_retry",
+  "privacy": {
+    "absolute_private_paths_exported": false,
+    "source_item_ids_exported": false,
+    "source_user_ids_exported": false
+  },
+  "schema": "sidscope.trace_payload.latent_retry.v1",
+  "schema_revision": "1.0.0"
+}
