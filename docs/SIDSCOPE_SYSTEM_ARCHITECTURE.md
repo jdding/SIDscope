@@ -169,6 +169,14 @@ across generator families. No new owned product layer is introduced in this
 state. A failing hardening gate returns to the last passing 1.5 profile/CLI
 combination and delays 2.0 without rewriting immutable evidence.
 
+Implementation status: 1.6 is development-closed in the existing modular
+monolith. Executable artifacts now cover six compatibility axes, fifteen
+legacy migration records and a deterministic status projection, isolated
+external-plugin replay, cross-family compatible comparison, and the candidate
+Python/CLI/wrapper inventory. No service, method runtime, mutable authority, or
+additional product layer was introduced. These proofs must be rerun by the
+final active 1.x release before 2.0.
+
 Versions 1.7--1.9 are reserved optional iterations, not additional architecture
 layers. An activated minor release must have an approved bounded scope, retain
 the previous passing 1.x rollback point, and rerun all applicable 1.6 hardening

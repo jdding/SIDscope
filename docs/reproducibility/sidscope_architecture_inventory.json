@@ -444,7 +444,7 @@
     }
   ],
   "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
-  "product_version": "1.5.0.dev0",
+  "product_version": "1.6.0.dev0",
   "profiles": [
     {
       "authority": "src/sidinspector/schemas/conformance_profile_catalog.v1.json",
@@ -660,8 +660,34 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 190,
+  "schema_count": 196,
   "schemas": [
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "schema_id": "sidscope.1_6_fixture_build.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_1_6_hardening.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [],
+      "schema_id": "sidscope.1_6_hardening_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_1_6_hardening.py"
+      ]
+    },
     {
       "artifact_paths": [
         "docs/ADAPTER_SDK_ALPHA.md",
@@ -1027,6 +1053,25 @@
       "verifier_paths": [
         "tools/verify_sidscope_1_2_cli_baseline.py",
         "tools/verify_sidscope_1_4_cli_baseline.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_1_6_compatibility_matrix.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_1_6_compatibility_matrix.json",
+        "tests/test_sidscope_resource_package.py",
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "schema_id": "sidscope.compatibility_hardening_matrix.v1",
+      "verifier_paths": [
+        "tests/test_sidscope_resource_package.py"
       ]
     },
     {
@@ -1917,6 +1962,9 @@
         "docs/COMPATIBILITY.md",
         "docs/EVIDENCE_BUNDLES_AND_REGISTRY.md",
         "docs/adr/0009-content-addressed-evidence-and-derived-registry.md",
+        "docs/reproducibility/sidscope_1_6_compatibility_matrix.json",
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/conformance_ecosystem_fixture/submission/positive/evidence/bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -1929,6 +1977,9 @@
         "docs/COMPATIBILITY.md",
         "docs/EVIDENCE_BUNDLES_AND_REGISTRY.md",
         "docs/adr/0009-content-addressed-evidence-and-derived-registry.md",
+        "docs/reproducibility/sidscope_1_6_compatibility_matrix.json",
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/conformance_ecosystem_fixture/submission/positive/evidence/bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -1939,6 +1990,7 @@
         "src/sidinspector/evidence/bundle.py",
         "src/sidinspector/schemas/evidence_bundle.v1.schema.json",
         "tests/test_evidence_cli.py",
+        "tools/build_sidscope_1_6_hardening_fixtures.py",
         "tools/build_sidscope_architecture_inventory.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
@@ -1946,6 +1998,7 @@
       "producer_paths": [
         "src/sidinspector/evidence/bundle.py",
         "src/sidinspector/schemas/evidence_bundle.v1.schema.json",
+        "tools/build_sidscope_1_6_hardening_fixtures.py",
         "tools/build_sidscope_architecture_inventory.py"
       ],
       "schema_id": "sidscope.evidence_bundle.v1",
@@ -2105,6 +2158,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2114,6 +2169,8 @@
         "examples/evidence_system_fixture/incompatible_bundle.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2130,6 +2187,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2140,6 +2199,8 @@
         "examples/evidence_system_fixture/public_conformance_summary.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2160,6 +2221,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2169,6 +2232,8 @@
         "examples/evidence_system_fixture/incompatible_bundle.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2185,6 +2250,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2194,6 +2261,8 @@
         "examples/evidence_system_fixture/incompatible_bundle.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2210,6 +2279,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2219,6 +2290,8 @@
         "examples/evidence_system_fixture/incompatible_bundle.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2235,6 +2308,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2244,6 +2319,8 @@
         "examples/evidence_system_fixture/incompatible_bundle.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2260,6 +2337,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2269,6 +2348,8 @@
         "examples/evidence_system_fixture/incompatible_bundle.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2285,6 +2366,8 @@
     },
     {
       "artifact_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2294,6 +2377,8 @@
         "examples/evidence_system_fixture/incompatible_bundle.json"
       ],
       "declaration_paths": [
+        "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
+        "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle.json",
         "examples/evidence_system_fixture/baseline_bundle_spec.json",
         "examples/evidence_system_fixture/correction_bundle.json",
@@ -2721,6 +2806,40 @@
       "verifier_paths": [
         "tools/verify_sidscope_1_2_legacy_migration_matrix.py"
       ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_1_6_legacy_migration_records.json",
+        "docs/reproducibility/sidscope_1_6_legacy_status_index.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_1_6_legacy_migration_records.json",
+        "docs/reproducibility/sidscope_1_6_legacy_status_index.json",
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "schema_id": "sidscope.legacy_migration_records.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_1_6_legacy_status_index.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_1_6_legacy_status_index.json",
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "schema_id": "sidscope.legacy_migration_status_index.v1",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [],
@@ -3259,6 +3378,22 @@
       "owner": "core:diagnostics",
       "producer_paths": [],
       "schema_id": "sidscope.profile_fixture_failures.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_1_6_public_api_inventory.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_1_6_public_api_inventory.json",
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/build_sidscope_1_6_hardening_fixtures.py"
+      ],
+      "schema_id": "sidscope.public_api_inventory.v1",
       "verifier_paths": []
     },
     {
@@ -4400,6 +4535,6 @@
       "family.parallel_graph_token_set.v1@1.0.0"
     ],
     "evidence_bundle": "sidscope.evidence_bundle.v1@1.0.0_with_content_addressed_objects_and_sqlite_projection",
-    "product_package": "1.5.0.dev0"
+    "product_package": "1.6.0.dev0"
   }
 }

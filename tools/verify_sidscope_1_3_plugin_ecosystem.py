@@ -45,6 +45,21 @@ def _run_json(command: list[str]) -> dict[str, object]:
     return value
 
 
+def _run_checked(command: list[str], *, cwd: Path) -> None:
+    completed = subprocess.run(
+        command,
+        check=False,
+        cwd=cwd,
+        text=True,
+        capture_output=True,
+    )
+    if completed.returncode != 0:
+        raise ValueError(
+            f"command failed ({completed.returncode}): {command}; "
+            f"stdout={completed.stdout[-4000:]}; stderr={completed.stderr[-4000:]}"
+        )
+
+
 def _verify_external_install() -> dict[str, object]:
     with tempfile.TemporaryDirectory(prefix="sidscope-plugin-proof-") as temporary:
         temporary_path = Path(temporary)
@@ -70,9 +85,9 @@ def _verify_external_install() -> dict[str, object]:
             ]
         install = [
             str(python), "-m", "pip", "install", "--disable-pip-version-check",
-            "--no-deps", "--no-build-isolation",
+            "--no-cache-dir", "--no-deps", "--no-build-isolation",
         ]
-        subprocess.run([*install, str(core_source)], check=True, cwd=core_source, capture_output=True, text=True)
+        _run_checked([*install, str(core_source)], cwd=core_source)
         absent = _run_json(cli("plugin", "list"))
         if absent.get("plugins"):
             raise ValueError(f"isolated core unexpectedly discovered plugins: {absent['plugins']}")
@@ -82,13 +97,7 @@ def _verify_external_install() -> dict[str, object]:
                 str(FIXTURES / "parallel_graph_token_set.json"),
             )
         )
-        subprocess.run(
-            [*install, str(plugin_source)],
-            check=True,
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-        )
+        _run_checked([*install, str(plugin_source)], cwd=ROOT)
         listing = _run_json(cli("plugin", "list"))
         names = [row["name"] for row in listing["plugins"]]
         if names != ["reference-parallel"]:

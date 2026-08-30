@@ -11,6 +11,30 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.6.0.dev0: compatibility, migration and adoption hardening
+
+- Added an executable six-axis compatibility matrix for package, Adapter SDK,
+  canonical schemas, profiles, native payloads, and EvidenceBundle v1, with a
+  positive and typed-negative check for every axis.
+- Bound all fifteen active 1.1.1 generator/static routes to immutable authority
+  and verifier hashes. RPG retains canonical replay parity; routes missing
+  canonical surfaces remain honest historical records with an explicit
+  regeneration action rather than fabricated migration fields.
+- Added a deterministic legacy status projection and verified byte-identical
+  rebuild. Existing 1.5 submission status/result indexes remain report- and
+  bundle-derived; historical records are not promoted into synthetic results.
+- Replayed the separately packaged reference adapter from public onboarding
+  documentation in an isolated CPU environment and verified zero core-file
+  changes.
+- Added compatible-profile comparison fixtures spanning parallel graph/token
+  set and masked diffusion families, while preserving dataset, target-universe,
+  cutoff, publication-depth, and rank-semantics identity.
+- Froze the candidate Python exports and CLI leaf commands and assigned every
+  legacy compatibility wrapper an owner, support interval, and archive decision.
+- Added the 1.x-to-2.0 migration guide, ADR-0012, multi-version CI hardening
+  gates, and release rehearsal. This development closure creates no tag or
+  public-release claim.
+
 ## SIDScope v1.5.0.dev0: conformance and submission ecosystem
 
 - Added a versioned shared profile catalog for static-mapping C0--C5,

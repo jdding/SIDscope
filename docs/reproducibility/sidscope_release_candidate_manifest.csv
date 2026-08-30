@@ -1,4 +1,16 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+hardening_1_6_doc,docs/SIDSCOPE_1_6_HARDENING.md,release_governance,documentation,yes,pass_local,Defines executable compatibility migration adoption comparison API and rollback gates.
+migration_1_x_to_2_0,docs/MIGRATING_1_X_TO_2_0.md,migration,documentation,yes,pass_local,Defines user and adapter actions for honest 1.x to 2.0 migration.
+candidate_surface_adr,docs/adr/0012-freeze-pre-2-0-candidate-surface.md,architecture_governance,documentation,yes,pass_local,Freezes the pre stable CLI Python wrapper and evidence surface through executable inventories.
+review_1_2_1_3,docs/SIDSCOPE_1_2_1_3_CODE_REVIEW.md,review_record,documentation,yes,pass_local,Records correctness compatibility fail closed and complexity review with applied fixes.
+compatibility_1_6_matrix,docs/reproducibility/sidscope_1_6_compatibility_matrix.json,compatibility,tracked_snapshot,yes,pass_local,Binds six independent axes with positive and typed negative checks.
+legacy_1_6_migration_records,docs/reproducibility/sidscope_1_6_legacy_migration_records.json,migration,tracked_snapshot,yes,pass_local,Binds all fifteen legacy route authorities and verifiers without fabricated fields.
+legacy_1_6_status_index,docs/reproducibility/sidscope_1_6_legacy_status_index.json,derived_view,tracked_snapshot,yes,pass_local,Deterministic status projection from immutable migration records.
+public_1_6_api_inventory,docs/reproducibility/sidscope_1_6_public_api_inventory.json,compatibility,tracked_snapshot,yes,pass_local,Freezes candidate Python exports CLI leaves and owned wrapper lifecycle.
+hardening_1_6_fixtures,examples/compatibility_hardening_fixture,example,fully_runnable,yes,pass_local,Provides compatible parallel graph and masked diffusion bundle comparison fixtures.
+hardening_1_6_builder,tools/build_sidscope_1_6_hardening_fixtures.py,fixture_builder,fully_runnable,yes,pass_local,Deterministically rebuilds compatibility migration API and comparison evidence.
+hardening_1_6_verifier,tools/verify_sidscope_1_6_hardening.py,verification,fully_runnable,yes,pass_local,Verifies all compatibility migration adoption comparison and API gates on CPU.
+hardening_1_6_tests,tests/test_sidscope_1_6_hardening.py,test,fully_runnable,yes,pass_local,Tests six axes legacy coverage cross family comparison external onboarding and wrapper ownership.
 conformance_submission_adr,docs/adr/0011-profile-governed-submission-admission.md,architecture_governance,documentation,yes,pass_local,Defines profile governed admission independent checking generated views and rollback.
 conformance_submission_doc,docs/CONFORMANCE_AND_SUBMISSION_ECOSYSTEM.md,conformance_submission,documentation,yes,pass_local,Documents public contracts CLI fail closed checks legacy coexistence and recovery.
 profile_governance,docs/CONFORMANCE_PROFILE_GOVERNANCE.md,release_governance,documentation,yes,pass_local,Defines owners semantic versions fixtures status derivation migration and deprecation.

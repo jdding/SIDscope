@@ -2,7 +2,7 @@
 
 Status: approved development direction
 
-Regression baseline: `1.1.1.dev0`; active development: `1.5.0.dev0`
+Regression baseline: `1.1.1.dev0`; active development: `1.6.0.dev0`
 
 Architecture authority: `SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 
@@ -318,6 +318,11 @@ Rollback: keep the prior profile active and block admissions under the new
 profile until corrected; existing bundle identities remain unchanged.
 
 ### 1.6.0: Compatibility, Migration and Adoption Hardening
+
+Implementation status: development-closed on `1.6.0.dev0`. The executable
+matrix, migration records/status projection, candidate API inventory,
+cross-family fixtures, isolated external-plugin replay, migration guide, CI
+gates and release rehearsal are present. This does not create a public tag.
 
 Purpose: prove that the 1.5 product surface can support external adoption and
 historical evidence before SIDScope makes a stable 2.0 compatibility promise.

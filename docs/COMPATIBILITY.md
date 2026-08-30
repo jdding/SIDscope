@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: SIDScope 1.5 development closure baseline
+Status: SIDScope 1.6 development closure baseline
 
 ## Product and Entry Points
 
@@ -13,6 +13,7 @@ Status: SIDScope 1.5 development closure baseline
 | 1.3.0.dev0 | `sidinspector` | `sidinspector` | facade plus lazy `sidscope.adapters` plugins | Adapter/native-trace ecosystem development closed; public release not implied |
 | 1.4.0.dev0 | `sidinspector` | `sidinspector` | facade plus evidence bundle and registry commands | Immutable evidence-system development closed; public release not implied |
 | 1.5.0.dev0 | `sidinspector` | `sidinspector` | facade plus profile, submission and generated-view commands | Conformance/submission ecosystem development closed locally; public release not implied |
+| 1.6.0.dev0 | `sidinspector` | `sidinspector` | frozen candidate facade plus compatibility/migration verification | Compatibility, migration and external-adoption hardening closed locally; public release not implied |
 
 No import or distribution rename is planned during 1.x. The facade validates
 all eleven canonical 1.2 contracts and provides adapter preflight, trace
@@ -24,12 +25,19 @@ during migration.
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `1.5.0.dev0` | PEP 440 development version; not a public 1.5.0 release. |
+| Product/package | `1.6.0.dev0` | PEP 440 development version; not a public 1.6.0 release. |
 | Adapter SDK | `0.2.0-alpha` | Versioned capability descriptors and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | governed `static_mapping_c0_c5`, `generator_g0_g5`, `overlay_g0_g5`, `release_local` at `1.0.0`; legacy `common.generator.v1` and five family profiles remain supported | Profile reports bind the exact catalog hash; legacy-only routes retain read-only authority until migration. |
 | Evidence bundle | `sidscope.evidence_bundle.v1@1.0.0` | Immutable canonical JSON; SHA-256 object directory authoritative; SQLite and static views are derived. |
 | Submission | `sidscope.evidence_submission.v1@1.0.0` and `sidscope.submission_check_report.v1@1.0.0` | Root-relative canonical package; unknown roles revisions bindings or claims fail closed. |
+
+The executable matrix is
+`docs/reproducibility/sidscope_1_6_compatibility_matrix.json`. Every axis has a
+positive case and a typed negative. The matrix distinguishes frozen historical
+replay, released historical replay, the 1.1.1 migration baseline, and the
+pre-stable canonical development interval; development milestones are not
+retroactively represented as public releases.
 
 The canonical schema IDs are `sidscope.source_identity.v1`,
 `sidscope.dataset_identity.v1`, `sidscope.sid_space_identity.v1`,

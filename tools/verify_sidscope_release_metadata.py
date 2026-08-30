@@ -80,6 +80,17 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "Conformance profiles and reports",
             "Release manifests",
         ],
+        "docs/SIDSCOPE_1_6_HARDENING.md": [
+            "sidscope_1_6_compatibility_matrix.json",
+            "sidscope_1_6_legacy_migration_records.json",
+            "sidscope_1_6_public_api_inventory.json",
+            "without core edits",
+        ],
+        "docs/MIGRATING_1_X_TO_2_0.md": [
+            "immutable_historical_record",
+            "canonical_replay_retained",
+            "Never modify frozen TOIS software",
+        ],
     }
     for rel_path, tokens in required_docs.items():
         text = (root / rel_path).read_text(encoding="utf-8")

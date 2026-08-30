@@ -1,6 +1,6 @@
 # SIDScope Versioning and Release Governance
 
-Status: active; current development baseline `1.5.0.dev0`
+Status: active; current development baseline `1.6.0.dev0`
 
 ## Sources of Truth
 
@@ -66,6 +66,12 @@ Reserved 1.7--1.9 numbers are not placeholder releases. A number is used only
 after its scope, compatibility delta, migration, rollback and exit gates are
 approved and documented. Unused numbers may be skipped, and no empty tag or
 synthetic changelog entry is created merely to keep the sequence contiguous.
+
+The 1.6 candidate surface is machine-readable in
+`docs/reproducibility/sidscope_1_6_public_api_inventory.json`. Any change to a
+listed CLI leaf command, Python export, compatibility wrapper owner, support
+interval, or archive decision requires a compatibility review and an updated
+migration action before 2.0.
 
 ## Release Flow
 

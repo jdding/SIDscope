@@ -27,6 +27,10 @@ TEXT_SUFFIXES = {".csv", ".json", ".md", ".py", ".toml", ".txt"}
 SCAN_EXCLUDES = {
     "docs/reproducibility/sidscope_architecture_inventory.json",
 }
+NEGATIVE_SCHEMA_SENTINELS = {
+    # Deliberate verifier input, never a declared or supported contract.
+    "sidscope.trace_payload.unknown.v1",
+}
 
 
 def _public_paths() -> list[Path]:
@@ -113,6 +117,12 @@ def _schema_owner(schema_id: str) -> str:
         "sampled_regeneration",
         "architecture_inventory",
         "architecture_inventory_verification",
+        "compatibility_hardening_matrix",
+        "legacy_migration_records",
+        "legacy_migration_status_index",
+        "public_api_inventory",
+        "1_6_fixture_build",
+        "1_6_hardening_verification",
     }:
         return "core:release"
     return "core:diagnostics"
@@ -140,6 +150,8 @@ def schema_inventory() -> list[dict[str, Any]]:
         except UnicodeDecodeError:
             continue
         for schema_id in SCHEMA_PATTERN.findall(text):
+            if schema_id in NEGATIVE_SCHEMA_SENTINELS:
+                continue
             occurrences.setdefault(schema_id, set()).add(rel_path)
 
     records: list[dict[str, Any]] = []

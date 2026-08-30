@@ -13,6 +13,7 @@ Product changes:
 Compatibility:
 Breaking changes:
 Migration:
+1.x-to-2.0 migration guide:
 
 Package version:
 Adapter SDK version:
@@ -30,6 +31,7 @@ Validation:
 - archive smoke:
 - G8 fresh-environment smoke:
 - public URL smoke:
+- 1.6 compatibility/migration/adoption hardening:
 
 Artifacts:
 - source/archive URL:

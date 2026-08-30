@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 from sidinspector.adapters import (
     LATTE_TOKENIZER_OPTIONAL_DISTRIBUTIONS,
@@ -118,6 +120,9 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("docs/SIDSCOPE_RELEASE_CHECKLIST.md", expanded)
         self.assertIn("docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md", expanded)
         self.assertIn("docs/V1_2_TO_V2_ROADMAP.md", expanded)
+        self.assertIn("docs/SIDSCOPE_1_6_HARDENING.md", expanded)
+        self.assertIn("docs/MIGRATING_1_X_TO_2_0.md", expanded)
+        self.assertIn("tools/verify_sidscope_1_6_hardening.py", expanded)
         self.assertIn("docs/adr/0001-product-boundary.md", expanded)
         self.assertIn("docs/adr/0002-local-first-modular-platform.md", expanded)
         self.assertIn("docs/adr/0003-canonical-identity-versioning-hashing.md", expanded)
@@ -212,9 +217,20 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         inventory = verify_inventory()
 
         self.assertEqual(metadata["status"], "pass")
-        self.assertEqual(metadata["package_version"], "1.5.0.dev0")
+        self.assertEqual(metadata["package_version"], "1.6.0.dev0")
         self.assertEqual(inventory["canonical_contract_count"], 11)
         self.assertEqual(inventory["status"], "pass")
+        document = json.loads(
+            (ROOT / "docs/reproducibility/sidscope_architecture_inventory.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        schemas = {row["schema_id"]: row for row in document["schemas"]}
+        self.assertNotIn("sidscope.trace_payload.unknown.v1", schemas)
+        self.assertEqual(
+            schemas["sidscope.compatibility_hardening_matrix.v1"]["owner"],
+            "core:release",
+        )
 
     def test_public_package_content_scan_is_clean(self) -> None:
         expanded = expand_public_manifest_paths(
@@ -226,11 +242,12 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
 
     def test_public_package_content_scan_catches_private_tokens(self) -> None:
         private_token = "/" + "Users" + "/"
-        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
+        with tempfile.TemporaryDirectory() as tmp:
             leak_path = Path(tmp) / "private_path_leak_example.md"
             leak_path.write_text(f"local path: {private_token}example/private\n", encoding="utf-8")
-            rel_path = leak_path.relative_to(ROOT).as_posix()
-            findings = check_forbidden_public_content([rel_path])
+            rel_path = leak_path.name
+            with patch("tools.verify_sidscope_resource_package.ROOT", Path(tmp)):
+                findings = check_forbidden_public_content([rel_path])
 
         self.assertEqual(
             findings,

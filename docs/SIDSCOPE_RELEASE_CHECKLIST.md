@@ -43,6 +43,8 @@ python3 tools/verify_sidscope_resource_package.py
 python3 tools/verify_sidscope_release_metadata.py
 python3 tools/verify_sidscope_architecture_inventory.py
 python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
+python3 tools/verify_sidscope_1_5_conformance_ecosystem.py
+python3 tools/verify_sidscope_1_6_hardening.py
 python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1.1.0.zip
@@ -53,6 +55,13 @@ These checks are CPU-only. They verify the local reviewer-package contract,
 bounded sampled regeneration, matrix consistency, release-clean archive
 construction, package-boundary rules, public-package content hygiene, and local
 clean-extract install usability.
+
+For a 1.6 or later pre-2.0 candidate, the hardening verifier additionally
+requires all six compatibility axes, all fifteen legacy migration records,
+external-plugin adoption, cross-family comparison, and the candidate API/
+wrapper inventory to pass. The release body must link
+`docs/MIGRATING_1_X_TO_2_0.md`; no development closure authorizes a tag, push,
+or public release by itself.
 
 ## Public Release Gates
 

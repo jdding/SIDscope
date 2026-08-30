@@ -37,6 +37,21 @@ The reference external plugin and
 are the executable onboarding examples. They demonstrate that no
 file under SIDScope core needs an adapter-specific edit.
 
+The reference plugin can be replayed from a clean core install with the public
+CLI only:
+
+```bash
+python3 -m pip install /path/to/sidscope-source
+sidscope plugin list
+python3 -m pip install examples/reference_adapter_plugin
+sidscope plugin list
+sidscope plugin preflight --name reference-parallel
+```
+
+The 1.6 adoption gate performs this sequence without core edits in an isolated CPU environment,
+checks that the plugin is absent before its package is installed, and compares
+the SIDScope core tree hash before and after onboarding.
+
 ## Review Checklist
 
 - Source, data, SID/tokenizer, run, checkpoint and trace identities are

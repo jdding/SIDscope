@@ -54,7 +54,7 @@ sidscope contract validate \
   --input examples/source_identity_fixture/source_identity.json
 ```
 
-The active `1.5.0.dev0` line retains the eleven canonical contracts from source
+The active `1.6.0.dev0` line retains the eleven canonical contracts from source
 identity through evidence index, Adapter SDK `0.2.0-alpha`, lazy external
 plugins, five registered native payload families, and composable profiles. It
 adds immutable EvidenceBundle v1 objects, a rebuildable SQLite registry,
@@ -62,6 +62,11 @@ supersession, privacy-gated admission, and compatibility-aware comparison.
 Version 1.5 adds governed static-mapping, generator, overlay and release
 profiles, dataset/evaluation/privacy descriptors, an independent submission
 checker, and deterministic report-derived status/result indexes.
+Version 1.6 adds executable compatibility intervals, hash-bound migration
+records for every 1.1.1 route, a frozen candidate Python/CLI inventory,
+independent external-plugin onboarding proof, and a compatible cross-family
+EvidenceBundle comparison. It is a hardening release: no method or training API
+enters SIDScope.
 The complete common path runs without optional adapter runtimes:
 
 ```bash
@@ -74,6 +79,7 @@ python3 tools/verify_sidscope_sprint2_contracts.py
 python3 tools/verify_sidscope_1_2_closure.py
 python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
 python3 tools/verify_sidscope_1_5_conformance_ecosystem.py
+python3 tools/verify_sidscope_1_6_hardening.py
 ```
 
 DatasetIdentity binds dataset/category/profile, ordered split identities,

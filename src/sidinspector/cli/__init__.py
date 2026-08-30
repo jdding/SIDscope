@@ -72,7 +72,7 @@ def package_version() -> str:
     try:
         return metadata.version("sidinspector")
     except metadata.PackageNotFoundError:
-        return "1.5.0.dev0+source"
+        return "1.6.0.dev0+source"
 
 
 def _file_sha256(path: Path) -> str:
