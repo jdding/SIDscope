@@ -114,6 +114,10 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("tools/run_sidscope_g8_fresh_env_smoke.py", expanded)
         self.assertIn("tools/run_sidscope_public_url_smoke.py", expanded)
         self.assertIn("docs/SIDSCOPE_RELEASE_CHECKLIST.md", expanded)
+        self.assertIn("docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md", expanded)
+        self.assertIn("docs/V1_2_TO_V2_ROADMAP.md", expanded)
+        self.assertIn("docs/adr/0001-product-boundary.md", expanded)
+        self.assertIn("docs/adr/0002-local-first-modular-platform.md", expanded)
         self.assertIn("docs/SIDSCOPE_USAGE_DEMO.md", expanded)
         self.assertIn("docs/reproducibility/g14_usage_demo_decisions.csv", expanded)
         self.assertIn(
@@ -134,6 +138,48 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
             expanded,
         )
         self.assertNotIn("experiments/v1_evidence_chain/autodl/payloads", expanded)
+
+    def test_system_architecture_and_v2_roadmap_share_one_layer_vocabulary(self) -> None:
+        architecture = (ROOT / "docs" / "SIDSCOPE_SYSTEM_ARCHITECTURE.md").read_text(
+            encoding="utf-8"
+        )
+        roadmap = (ROOT / "docs" / "V1_2_TO_V2_ROADMAP.md").read_text(
+            encoding="utf-8"
+        )
+
+        owned_layers = [
+            "Integration Layer",
+            "Contract Layer",
+            "Observation Layer",
+            "Evaluation Layer",
+            "Conformance Layer",
+            "Evidence Layer",
+        ]
+        for layer in owned_layers:
+            self.assertIn(layer, architecture)
+
+        for workstream in [
+            "Adapter SDK",
+            "Contracts",
+            "Trace Protocol",
+            "Evaluation",
+            "Conformance",
+            "Evidence",
+        ]:
+            self.assertIn(f"| {workstream} |", roadmap)
+
+        self.assertIn("does not own or reimplement upstream recommendation methods", architecture)
+        self.assertIn("## 3. Options Considered", architecture)
+        self.assertIn("### 4.1 Current State: 1.1.1 Baseline", architecture)
+        self.assertIn("### 4.2 Interim State: 1.2 to 1.5 Coexistence", architecture)
+        self.assertIn("### 4.3 Target State: 2.0", architecture)
+        self.assertIn("local-first modular monolith", architecture)
+        self.assertIn("## 3. Migration-Wave Controls", roadmap)
+        self.assertIn("## 2.0.0: Stable Conformance and Observability Platform", roadmap)
+
+        adr_index = (ROOT / "docs" / "adr" / "README.md").read_text(encoding="utf-8")
+        self.assertIn("0001-product-boundary.md", adr_index)
+        self.assertIn("0002-local-first-modular-platform.md", adr_index)
 
     def test_public_package_content_scan_is_clean(self) -> None:
         expanded = expand_public_manifest_paths(

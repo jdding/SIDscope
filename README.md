@@ -1,10 +1,17 @@
 # SIDScope
 
-SIDScope is a resource package for auditing semantic-ID tokenizer artifacts
-before training or evaluating a downstream generative recommender. It does not
-train a tokenizer or generator. It checks an existing `item_id -> SID` mapping
-plus item metadata and interactions, then reports artifact-level diagnostics,
-candidate-exposure probes, and bounded trace-accounting evidence.
+SIDScope is evolving into the conformance and observability layer for
+Semantic-ID and generative recommender systems. It owns the evidence pipeline
+from adapter integration through canonical contracts, native trace capture,
+diagnostic evaluation, conformance verification, and immutable evidence. It
+does not own or reimplement upstream recommendation methods or training.
+
+The current 1.1 line is the verified resource-package baseline: it audits
+existing `item_id -> SID` mappings, validates configuration-bound generator
+adapters, and publishes artifact-level diagnostics, candidate-exposure probes,
+method-faithful trace accounting, and bounded evidence. The approved target
+architecture is documented in `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`; the
+implementation sequence through 2.0 is in `docs/V1_2_TO_V2_ROADMAP.md`.
 
 Implementation note: the Python import package remains `sidinspector` for
 compatibility with the released diagnostic code.

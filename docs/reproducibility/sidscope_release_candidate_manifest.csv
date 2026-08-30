@@ -21,6 +21,9 @@ datasheet,docs/SIDSCOPE_DATASHEET.md,documentation,documentation,yes,pass_local,
 limitations,docs/SIDSCOPE_LIMITATIONS.md,documentation,documentation,yes,pass_local,G6 limitation boundary.
 maintenance,docs/SIDSCOPE_MAINTENANCE.md,documentation,documentation,yes,pass_local,G6 maintenance and versioning plan.
 v1_1_roadmap,docs/V1_1_ROADMAP.md,documentation,documentation,yes,pass_local,Post-submission software roadmap and paper-freeze boundary for SIDScope 1.1 development.
+sidscope_system_architecture,docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md,documentation,documentation,yes,pass_local,Approved six-layer product architecture from Adapter SDK integration through immutable evidence with the upstream method and training boundary out of scope.
+v1_2_to_v2_roadmap,docs/V1_2_TO_V2_ROADMAP.md,documentation,documentation,yes,pass_local,Versioned implementation milestones and exit gates for evolving the 1.1.1 regression baseline into the stable SIDScope 2.0 platform.
+architecture_decisions,docs/adr,documentation,documentation,yes,pass_local,Accepted product-boundary and local-first modular-platform decisions with immutable ADR governance.
 changelog,docs/SIDSCOPE_CHANGELOG.md,documentation,documentation,yes,pass_local,Release-candidate changelog records the clean sidscope split and requires a fresh public smoke for main.
 release_checklist,docs/SIDSCOPE_RELEASE_CHECKLIST.md,release_gate,documentation,yes,pass_local,Defines local and public release gates; R708 passed for rc2.
 public_release_packet,docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md,release_gate,documentation,yes,pass_local,Records candidate public URL tag archive checksum and G8 commands for rc2.

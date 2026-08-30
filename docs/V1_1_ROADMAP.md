@@ -12,6 +12,11 @@ manuscript is frozen in its paper repository and is not part of this worktree.
 New adapters, fixes, and evidence may inform a future revision, but they do not
 retroactively change submitted claims or tables.
 
+The approved successor architecture and product milestones are documented in
+`SIDSCOPE_SYSTEM_ARCHITECTURE.md` and `V1_2_TO_V2_ROADMAP.md`. The 1.1 line is
+the regression baseline for that work; it must not acquire breaking shared-core
+refactors under the maintenance version.
+
 ## Objectives
 
 1. Make tokenizer intake robust in hermetic downstream environments.

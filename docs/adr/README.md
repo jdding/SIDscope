@@ -1,0 +1,14 @@
+# SIDScope Architecture Decision Records
+
+Accepted ADRs are immutable decision records. A later decision supersedes an
+earlier ADR rather than editing its rationale or consequences in place.
+
+| ADR | Title | Status | Date |
+| --- | --- | --- | --- |
+| [0001](0001-product-boundary.md) | Own conformance and observability, not upstream methods | Accepted | 2026-08-30 |
+| [0002](0002-local-first-modular-platform.md) | Use a local-first modular platform with adapter plugins | Accepted | 2026-08-30 |
+
+New ADRs must include context, decision drivers, viable options, the decision,
+positive and negative consequences, migration, validation and rollback. Accepted
+records may be marked superseded but not rewritten to make a later outcome look
+inevitable.

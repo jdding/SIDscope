@@ -57,6 +57,20 @@ Before any public release, create or update `docs/SIDSCOPE_CHANGELOG.md` with:
 - reproduction commands tested;
 - compatibility notes.
 
+## Architecture Governance
+
+The approved post-1.1.1 product boundary and runtime shape are defined in
+`docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`; versioned transition gates are in
+`docs/V1_2_TO_V2_ROADMAP.md`. Significant changes to owned layers, plugin
+boundaries, schema compatibility, registry authority, distribution policy or
+runtime topology require an Architecture Decision Record under `docs/adr/`.
+
+Accepted ADRs are historical records. Do not rewrite an accepted decision to
+fit a later implementation; create a superseding ADR with the new context,
+alternatives, consequences, rollout and rollback. Patch releases must not
+introduce breaking shared-core refactors. Compatibility wrappers require an
+owner plus an explicit retirement or archived-history condition.
+
 ## Issue Triage
 
 Report and triage issues by category:

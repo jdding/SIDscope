@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-29
+Last updated: 2026-08-30
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -10,6 +10,25 @@ release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
+
+## SIDScope v1.1.1.dev0: approve the 2.0 system architecture
+
+- Adopted the product position "conformance and observability for Semantic-ID
+  and generative recommender systems" while retaining upstream method,
+  training, checkpoint production and serving as external responsibilities.
+- Defined one six-layer responsibility chain: Integration, Contract,
+  Observation, Evaluation, Conformance and Evidence.
+- Selected a local-first modular monolith with external adapter plugins,
+  file-first interchange, immutable content-addressed bundles, a rebuildable
+  SQLite registry projection and deterministic static public indexes.
+- Rejected both continued route-specific script growth and a premature hosted
+  service topology as the post-1.1.1 target.
+- Added current/interim/target states, migration waves with rollback and
+  retirement gates, quality fitness functions, ownership, failure modes and
+  measurable 2.0 acceptance criteria.
+- Added accepted ADRs for the product boundary and runtime topology. These
+  documents guide future releases and do not claim that planned 1.2--2.0
+  interfaces already exist.
 
 ## SIDScope v1.1.1.dev0: DiffGRM VG trained closure and G0 license policy
 

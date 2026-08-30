@@ -1,6 +1,6 @@
 # SIDScope 1.1 Development Handoff
 
-Last updated: 2026-08-29
+Last updated: 2026-08-30
 
 ## Executive status
 
@@ -34,6 +34,15 @@ the full traces and upstream assets remain external.
 The submitted TOIS manuscript is a frozen, separate repository. Nothing in
 SIDScope 1.1 may be written back into that submission before an explicitly
 authorized revision phase.
+
+The approved long-term product position is a conformance and observability
+platform for Semantic-ID and generative recommender systems. SIDScope does not
+own the upstream method or training layer. It owns six layers from Adapter SDK
+integration through canonical contracts, native observation, diagnostic
+evaluation, conformance verification, and immutable evidence. The authoritative
+design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
+and `docs/V1_2_TO_V2_ROADMAP.md`. These documents guide post-1.1.1 work and do
+not claim that planned 1.2--2.0 product surfaces already exist.
 
 On 2026-08-29, the first authors of DIGER, LETTER, and ReSOT supplied direct
 email clarifications for research use. DIGER's author states that the code is
