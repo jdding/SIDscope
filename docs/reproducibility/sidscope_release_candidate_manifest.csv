@@ -1,4 +1,5 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+stabilization_adr,docs/adr/0010-separate-hardening-from-2-0-stability.md,architecture_governance,documentation,yes,pass_local,Separates 1.6 compatibility migration and external-adoption hardening from the 2.0 stability declaration.
 evidence_system_adr,docs/adr/0009-content-addressed-evidence-and-derived-registry.md,architecture_governance,documentation,yes,pass_local,Defines immutable object authority derived SQLite correction comparison and rollback semantics.
 evidence_system_doc,docs/EVIDENCE_BUNDLES_AND_REGISTRY.md,evidence_registry,documentation,yes,pass_local,Documents EvidenceBundle object admission registry comparison privacy recovery and supersession contracts.
 evidence_system_fixture,examples/evidence_system_fixture,example,fully_runnable,yes,pass_local,Provides three positive bundles one public object and three typed negative evidence cases.

@@ -43,7 +43,10 @@ policy is `reproducibility/sidscope_module_dependencies.json`, documented in
 `SIDSCOPE_MODULE_DEPENDENCIES.md` and enforced by architecture tests.
 ADR 0008 activates the lazy adapter-plugin boundary, five registered native
 payload families, SDK 0.2 capability binding, and composable family profiles
-without moving EvidenceBundle storage forward from 1.4.
+without moving EvidenceBundle storage forward from 1.4. ADR 0009 makes
+content-addressed evidence authoritative and SQLite derived. ADR 0010 separates
+1.6 compatibility, migration and external-adoption hardening from the 2.0
+stability declaration.
 
 ## 2. System Context
 
@@ -150,7 +153,16 @@ During coexistence:
 - rollback means selecting the previous profile/CLI path, not rewriting a
   previously admitted bundle.
 
-### 4.3 Target State: 2.0
+### 4.3 Pre-Stable State: 1.6 Compatibility and Adoption Hardening
+
+The 1.5 feature surface remains active while SIDScope proves multi-version
+compatibility, migrates or archives every legacy authority, completes an
+independent external-plugin onboarding, and verifies a compatible comparison
+across generator families. No new owned product layer is introduced in this
+state. A failing hardening gate returns to the last passing 1.5 profile/CLI
+combination and delays 2.0 without rewriting immutable evidence.
+
+### 4.4 Target State: 2.0
 
 Adapters produce registered contracts and native trace payloads. The shared
 evaluator and verifier derive diagnostics and status under a versioned profile.
@@ -496,6 +508,11 @@ The target is realized at 2.0 only when:
 9. public indexes are deterministic derivations rather than hand-edited truth;
 10. every temporary compatibility path has retired or has an explicit archived
     historical status.
+
+These criteria must be implemented and repeatedly demonstrated during the 1.6
+hardening milestone. The 2.0 release reruns them against the final candidate and
+declares the proven interfaces stable; it does not absorb unfinished migration
+or external-adoption development.
 
 The versioned transition waves and rollback gates are defined in
 `V1_2_TO_V2_ROADMAP.md`.

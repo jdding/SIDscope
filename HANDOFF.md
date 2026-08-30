@@ -41,7 +41,7 @@ integration through canonical contracts, native observation, diagnostic
 evaluation, conformance verification, and immutable evidence. The authoritative
 design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 and `docs/V1_2_TO_V2_ROADMAP.md`. Implemented and planned surfaces are marked
-separately; 1.5--2.0 target features are not claimed by the 1.4 closure.
+separately; 1.5, 1.6 and 2.0 target features are not claimed by the 1.4 closure.
 
 Architecture Sprint 0 is implemented on the 1.1.1 regression baseline.
 It adds canonical version/hash governance, a machine-readable schema/profile/
@@ -115,8 +115,10 @@ depth, and rank semantics are compatible. The `sidscope evidence bundle` and
 `sidscope registry` command families close build, verify, admit, import, list,
 show, compare, supersede, quarantine, export, and rebuild workflows while the
 legacy evidence-package path remains compatible. The next milestone is 1.5
-conformance automation and submission ecosystem work; none of those planned
-surfaces is implied by the 1.4 closure.
+conformance automation and submission ecosystem work. ADR-0010 then reserves
+1.6 for compatibility, migration and external-adoption hardening before 2.0
+declares the proven interfaces stable; none of those planned surfaces is
+implied by the 1.4 closure.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
@@ -360,8 +362,8 @@ The 1.4 development tree passed:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest: 287 rows, 284 public rows, 0 pending;
-- current public package surface: 479 files.
+- manifest: 288 rows, 285 public rows, 0 pending;
+- current public package surface: 480 files.
 
 The development archive SHA-256 is intentionally reported by the final build
 command rather than embedded in this hash-sensitive source tree. Rebuild it

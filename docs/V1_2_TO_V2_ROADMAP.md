@@ -20,6 +20,7 @@ evidence.
         -> 1.3 adapter plugins and native trace families
         -> 1.4 immutable evidence and local registry
         -> 1.5 conformance/submission ecosystem
+        -> 1.6 compatibility, migration and adoption hardening
         -> 2.0 stable public platform contract
 ```
 
@@ -145,7 +146,7 @@ not uniformly registered or dispatched.
 
 ### Interim State
 
-Versions 1.2 through 1.5 run shared and legacy paths side by side. Each adapter
+Versions 1.2 through 1.6 run shared and legacy paths side by side. Each adapter
 migrates independently after outcome, metric, binding, hash and typed-failure
 parity. Compatibility wrappers are temporary, owned and reversible.
 
@@ -164,7 +165,8 @@ source of truth; SQLite and public indexes are rebuildable projections.
 | 2 | 1.3 | One adapter and trace family at a time | Built-in and plugin adapter forms may coexist. | Serialization round-trip, semantic fixture and isolated import tests. | Disable plugin descriptor and retain built-in adapter. | External reference plugin passes without core edits. |
 | 3 | 1.4 | One evidence-bundle family at a time | Existing evidence files remain authoritative until bundled and verified. | Hash parity, provenance DAG, registry rebuild and privacy scan. | Discard derived SQLite index and rebuild from immutable bundles. | All active evidence types have deterministic bundles and registry entries. |
 | 4 | 1.5 | One conformance profile at a time | Legacy status ledger stays read-only while generated view is compared. | Profile replay, submission checker and generated-ledger parity. | Keep previous profile version active; reject new admissions. | All active status labels derive from versioned reports. |
-| 5 | 2.0 | Stable public interfaces | Historical CLIs remain replay-only where documented. | Complete architecture criteria, compatibility matrix and public release gates. | Pin latest 1.x release; immutable bundles require no rollback mutation. | Compatibility wrappers retire or become explicitly archived history. |
+| 5 | 1.6 | One supported compatibility interval or legacy route at a time | 1.5 profiles and commands stay active while migration, external-plugin and cross-family parity are hardened. | Multi-version CI, migration replay, external onboarding, cross-family comparison and wrapper-owner audit. | Pin the last passing 1.5 profile/CLI combination and defer 2.0; immutable bundles are never rewritten. | Every supported interval is tested and every wrapper is retired or explicitly archived. |
+| 6 | 2.0 | Stable public interfaces | Only interfaces proven under 1.6 enter the stable support contract; historical CLIs remain replay-only where documented. | Complete architecture criteria, compatibility matrix and public release gates. | Pin the final 1.6 release candidate; immutable bundles require no rollback mutation. | Stable public contract is declared without carrying an unresolved migration backlog. |
 
 No wave moves two independently risky boundaries at once. A schema migration,
 verifier migration and public status promotion are separate cutover units.
@@ -308,10 +310,53 @@ Exit gates:
 Rollback: keep the prior profile active and block admissions under the new
 profile until corrected; existing bundle identities remain unchanged.
 
+### 1.6.0: Compatibility, Migration and Adoption Hardening
+
+Purpose: prove that the 1.5 product surface can support external adoption and
+historical evidence before SIDScope makes a stable 2.0 compatibility promise.
+This is a hardening and migration release, not a new product-layer expansion.
+
+Deliverables:
+
+- a tested compatibility matrix spanning supported 1.x package, SDK, schema,
+  profile, payload and EvidenceBundle intervals;
+- immutable migration records or replay paths for every active 1.1.1 adapter
+  status and evidence family;
+- registry/profile-derived status and result views with legacy-ledger parity;
+- at least one independently packaged external adapter onboarding completed
+  from public documentation without core edits;
+- at least one compatible-profile comparison spanning generator families;
+- a frozen candidate `sidscope` CLI and Python API surface with documented
+  deprecations, ownership and retirement state for every compatibility wrapper;
+- multi-version CI and release rehearsal across supported Python versions,
+  schemas, profiles, plugins, archives and fresh environments;
+- a complete 1.x-to-2.0 migration guide and release-candidate checklist.
+
+Exit gates:
+
+- every supported compatibility interval has positive and typed-negative CI;
+- every active adapter status is replayable from a versioned report and
+  hash-bound bundle, or has an immutable historical migration record;
+- external plugin onboarding and cross-family comparison pass independently;
+- no compatibility wrapper lacks an owner, support interval and retirement or
+  archived-history decision;
+- deleting derived state and replaying the supported evidence set reproduces
+  the same public indexes;
+- the proposed 2.0 CLI, Python API, SDK, schemas and profiles have no unresolved
+  breaking change or undocumented migration action.
+
+Rollback: retain the last passing 1.5 profile/CLI combination, quarantine only
+new invalid bundles, and defer 2.0. Existing immutable objects, historical
+verifiers and released tags are never mutated to force a hardening gate.
+
 ### 2.0.0: Stable Conformance and Observability Platform
 
 Purpose: declare the architecture and extension contract stable for external
 adoption.
+
+2.0 is a stability declaration and final release certification over the 1.6
+hardening baseline. It is not the place to finish unowned migrations, introduce
+a new product subsystem or discover the first external-adoption path.
 
 Required product surface:
 

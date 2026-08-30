@@ -44,6 +44,21 @@ records supported combinations.
 and must carry the same distribution name, version, package data, and console
 entry point until retired by an ADR.
 
+## Pre-2.0 Stabilization Sequence
+
+The roadmap intentionally uses three distinct release responsibilities:
+
+- 1.5 completes the additive conformance and submission feature surface;
+- 1.6 hardens compatibility, migration, external adoption and candidate API
+  stability without adding another owned product layer;
+- 2.0 reruns the final gates and makes the stable public compatibility promise.
+
+A major version is not used as a backlog container. Any unresolved migration,
+first-time external onboarding, unowned wrapper or undocumented breaking change
+blocks 2.0 and remains on the 1.6 line. If additional additive work is later
+required, it receives another 1.x minor version rather than being hidden inside
+the 2.0 release candidate.
+
 ## Release Flow
 
 ```text

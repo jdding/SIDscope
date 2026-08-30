@@ -190,7 +190,11 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("## 3. Options Considered", architecture)
         self.assertIn("### 4.1 Current State: 1.1.1 Baseline", architecture)
         self.assertIn("### 4.2 Interim State: 1.2 to 1.5 Coexistence", architecture)
-        self.assertIn("### 4.3 Target State: 2.0", architecture)
+        self.assertIn(
+            "### 4.3 Pre-Stable State: 1.6 Compatibility and Adoption Hardening",
+            architecture,
+        )
+        self.assertIn("### 4.4 Target State: 2.0", architecture)
         self.assertIn("local-first modular monolith", architecture)
         self.assertIn("## 3. Migration-Wave Controls", roadmap)
         self.assertIn("## 2.0.0: Stable Conformance and Observability Platform", roadmap)

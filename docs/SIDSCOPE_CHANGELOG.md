@@ -25,6 +25,9 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
   mismatches and rejects unsupported exact-rank claims.
 - Added bundle and registry CLI commands, positive and typed-negative fixtures,
   ADR-0009, architecture inventory integration, and a CPU-only closure verifier.
+- Split the post-1.5 transition into a dedicated 1.6 compatibility, migration
+  and external-adoption hardening milestone before the 2.0 stability
+  declaration; recorded the boundary and rollback policy in ADR-0010.
 - Kept EvidenceIndex v1, route-specific evidence, adapter statuses, upstream
   training, and all frozen TOIS assets unchanged.
 

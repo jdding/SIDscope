@@ -36,6 +36,22 @@ The canonical schema IDs are `sidscope.source_identity.v1`,
 `sidscope.trace_envelope.v1`, `sidscope.diagnostic_report.v1`,
 `sidscope.conformance_report.v1`, and `sidscope.evidence_index.v1`.
 
+## Pre-2.0 Stabilization Boundary
+
+The planned version sequence separates feature completion from the stable
+compatibility declaration:
+
+| Milestone | Compatibility purpose | Admission rule |
+| --- | --- | --- |
+| 1.5 | Add versioned conformance profiles, submission checking and generated registry views. | Additive development surface; legacy authorities remain available until parity passes. |
+| 1.6 | Prove package/SDK/schema/profile/payload/bundle intervals, migrate or archive legacy authorities, and freeze candidate CLI/Python interfaces. | No unresolved breaking change, unowned wrapper or undocumented migration may advance to 2.0. |
+| 2.0 | Declare the interfaces demonstrated under 1.6 stable. | Final release gates reverify the frozen compatibility surface; they do not complete missing migrations. |
+
+If 1.6 hardening fails, the last passing 1.5 profile/CLI combination remains
+the supported development baseline and 2.0 is deferred. Existing bundles,
+historical evidence and published tags are never rewritten to manufacture
+compatibility.
+
 ## Schema Compatibility
 
 - A schema ID suffix `vN` is the semantic major.
