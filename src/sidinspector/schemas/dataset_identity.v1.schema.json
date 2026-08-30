@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jdding/sidscope/schemas/dataset_identity.v1.schema.json",
+  "title": "SIDScope DatasetIdentity v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_revision", "dataset_id", "producer", "dataset", "splits", "catalog", "target_universe", "privacy", "identity_status", "unbound_fields", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.dataset_identity.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "dataset_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "producer": {"type": "object", "additionalProperties": false, "required": ["name", "version"], "properties": {"name": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}},
+    "dataset": {"type": "object", "additionalProperties": false, "required": ["name", "normalized_name", "category", "profile"], "properties": {"name": {"type": "string", "minLength": 1}, "normalized_name": {"type": "string", "minLength": 1}, "category": {"type": ["string", "null"], "minLength": 1}, "profile": {"type": ["string", "null"], "minLength": 1}}},
+    "splits": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["role", "split_id", "sha256", "row_count"], "properties": {"role": {"enum": ["train", "validation", "test"]}, "split_id": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "row_count": {"type": "integer", "minimum": 0}}}},
+    "catalog": {"$ref": "#/$defs/catalog"},
+    "target_universe": {"$ref": "#/$defs/targetUniverse"},
+    "privacy": {"type": "object", "additionalProperties": false, "required": ["item_identity", "contains_source_item_ids"], "properties": {"item_identity": {"enum": ["pseudonymous_normalized_items", "normalized_items", "legacy_unspecified"]}, "contains_source_item_ids": {"const": false}}},
+    "identity_status": {"enum": ["fully_bound", "legacy_partial"]},
+    "unbound_fields": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "catalog": {"type": "object", "additionalProperties": false, "required": ["scope", "item_count", "sha256"], "properties": {"scope": {"enum": ["train_only", "full_dataset", "legacy_expected_items"]}, "item_count": {"type": "integer", "minimum": 1}, "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}}},
+    "targetUniverse": {"type": "object", "additionalProperties": false, "required": ["scope", "item_count", "sha256"], "properties": {"scope": {"enum": ["train_only_catalog", "evaluation_targets", "legacy_expected_items"]}, "item_count": {"type": "integer", "minimum": 1}, "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}}}
+  }
+}

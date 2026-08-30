@@ -1,8 +1,75 @@
 {
+  "canonical_contract_registry": {
+    "content_sha256": "1e7f94401b90ecd18b8fa292cf36bf39b2b768908229315eda8d663c903c18ea",
+    "contract_count": 2,
+    "contracts": [
+      {
+        "canonical_fixture": "examples/dataset_identity_fixture/dataset_identity.json",
+        "compatibility": {
+          "policy": "exact_major_supported_revision",
+          "supported_revisions": [
+            "1.0.0"
+          ]
+        },
+        "contract_type": "dataset-identity",
+        "dependencies": [],
+        "negative_fixtures": [
+          {
+            "expected_failure": "content_hash_mismatch",
+            "path": "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json"
+          },
+          {
+            "expected_failure": "noncanonical_split_order",
+            "path": "examples/dataset_identity_fixture/expected_failure_split_order.json"
+          }
+        ],
+        "owner": "core:contracts",
+        "result_id_field": "dataset_id",
+        "schema_id": "sidscope.dataset_identity.v1",
+        "schema_resource": "dataset_identity.v1.schema.json",
+        "schema_revision": "1.0.0"
+      },
+      {
+        "canonical_fixture": "examples/source_identity_fixture/source_identity.json",
+        "compatibility": {
+          "policy": "exact_major_supported_revision",
+          "supported_revisions": [
+            "1.0.0"
+          ]
+        },
+        "contract_type": "source-identity",
+        "dependencies": [],
+        "negative_fixtures": [
+          {
+            "expected_failure": "content_hash_mismatch",
+            "path": "examples/source_identity_fixture/expected_failure_content_hash_mismatch.json"
+          }
+        ],
+        "owner": "core:contracts",
+        "result_id_field": "source_id",
+        "schema_id": "sidscope.source_identity.v1",
+        "schema_resource": "source_identity.v1.schema.json",
+        "schema_revision": "1.0.0"
+      }
+    ],
+    "registry_id": "sidscope-core-contracts",
+    "schema": "sidscope.contract_registry.v1",
+    "schema_revision": "1.0.0"
+  },
   "canonical_evidence_edges": [
     {
       "from": "SourceIdentity",
-      "status": "source_identity_implemented",
+      "status": "both_implemented",
+      "to": "DatasetIdentity"
+    },
+    {
+      "from": "DatasetIdentity",
+      "status": "planned",
+      "to": "SIDSpaceIdentity"
+    },
+    {
+      "from": "SIDSpaceIdentity",
+      "status": "planned",
       "to": "PreparedDataset"
     },
     {
@@ -27,7 +94,7 @@
     }
   ],
   "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
-  "product_version": "1.1.1.dev0",
+  "product_version": "1.2.0.dev0",
   "profiles": [
     {
       "authority": "docs/ADAPTER_CONFORMANCE.md",
@@ -190,7 +257,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 121,
+  "schema_count": 126,
   "schemas": [
     {
       "artifact_paths": [
@@ -234,6 +301,7 @@
     {
       "artifact_paths": [
         "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
         "docs/reproducibility/conformance/adapter_manifest.schema.json",
         "docs/reproducibility/conformance/card_p5_beauty_manifest.json",
         "docs/reproducibility/conformance/diger_beauty_manifest.json",
@@ -249,6 +317,7 @@
       ],
       "declaration_paths": [
         "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
         "docs/reproducibility/conformance/adapter_manifest.schema.json",
         "docs/reproducibility/conformance/card_p5_beauty_manifest.json",
         "docs/reproducibility/conformance/diger_beauty_manifest.json",
@@ -262,19 +331,23 @@
         "docs/reproducibility/conformance/rpg_beauty_manifest.json",
         "examples/conformance_failure_fixture/manifest.json",
         "src/sidinspector/conformance.py",
+        "src/sidinspector/contracts/dataset_identity.py",
         "src/sidinspector/contracts/source_identity.py",
         "tests/test_adapter_conformance.py",
+        "tests/test_dataset_identity_contract.py",
         "tools/verify_sidscope_source_inventory.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:conformance",
       "producer_paths": [
         "src/sidinspector/conformance.py",
+        "src/sidinspector/contracts/dataset_identity.py",
         "src/sidinspector/contracts/source_identity.py"
       ],
       "schema_id": "sidscope.adapter_manifest.v1",
       "verifier_paths": [
         "tests/test_adapter_conformance.py",
+        "tests/test_dataset_identity_contract.py",
         "tools/verify_sidscope_source_inventory.py"
       ]
     },
@@ -315,6 +388,82 @@
       "schema_id": "sidscope.claim_ledger_verification.v1",
       "verifier_paths": [
         "tools/verify_sidscope_claim_ledger.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md",
+        "docs/V1_2_TO_V2_ROADMAP.md",
+        "docs/adr/0005-contract-registry-and-dataset-identity.md"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md",
+        "docs/V1_2_TO_V2_ROADMAP.md",
+        "docs/adr/0005-contract-registry-and-dataset-identity.md",
+        "src/sidinspector/contracts/registry.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/contract_registry.v1.schema.json",
+        "tests/test_contract_registry.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:contracts",
+      "producer_paths": [
+        "src/sidinspector/contracts/registry.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/contract_registry.v1.schema.json"
+      ],
+      "schema_id": "sidscope.contract_registry.v1",
+      "verifier_paths": [
+        "tests/test_contract_registry.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.contract_registry_entry.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.contract_registry_listing.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_contract_registry.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.contract_registry_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_contract_registry.py"
       ]
     },
     {
@@ -490,6 +639,47 @@
       "producer_paths": [],
       "schema_id": "sidscope.dact_tiger_fixture.v1",
       "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/V1_2_TO_V2_ROADMAP.md",
+        "docs/adr/0005-contract-registry-and-dataset-identity.md",
+        "examples/dataset_identity_fixture/dataset_identity.json",
+        "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json",
+        "examples/dataset_identity_fixture/expected_failure_split_order.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/V1_2_TO_V2_ROADMAP.md",
+        "docs/adr/0005-contract-registry-and-dataset-identity.md",
+        "examples/dataset_identity_fixture/dataset_identity.json",
+        "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json",
+        "examples/dataset_identity_fixture/expected_failure_split_order.json",
+        "src/sidinspector/contracts/dataset_identity.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/dataset_identity.v1.schema.json",
+        "tests/test_dataset_identity_contract.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:contracts",
+      "producer_paths": [
+        "src/sidinspector/contracts/dataset_identity.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/dataset_identity.v1.schema.json"
+      ],
+      "schema_id": "sidscope.dataset_identity.v1",
+      "verifier_paths": [
+        "tests/test_dataset_identity_contract.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ]
     },
     {
       "artifact_paths": [
@@ -2225,17 +2415,17 @@
         "examples/source_identity_fixture/expected_failure_content_hash_mismatch.json",
         "examples/source_identity_fixture/source_identity.json",
         "src/sidinspector/contracts/source_identity.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/source_identity.v1.schema.json",
         "tests/test_source_identity_contract.py",
-        "tools/build_sidscope_architecture_inventory.py",
         "tools/verify_sidscope_release_metadata.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:contracts",
       "producer_paths": [
         "src/sidinspector/contracts/source_identity.py",
-        "src/sidinspector/schemas/source_identity.v1.schema.json",
-        "tools/build_sidscope_architecture_inventory.py"
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/source_identity.v1.schema.json"
       ],
       "schema_id": "sidscope.source_identity.v1",
       "verifier_paths": [
@@ -2277,14 +2467,16 @@
   "status": "pass",
   "version_axes": {
     "adapter_sdk": "not_released",
-    "canonical_schema": "sidscope.source_identity.v1@1.0.0",
+    "canonical_schemas": [
+      "sidscope.dataset_identity.v1@1.0.0",
+      "sidscope.source_identity.v1@1.0.0"
+    ],
     "conformance_profiles": [
       "static_mapping_c0_c5",
       "generator_g0_g5",
       "release_local"
     ],
     "evidence_bundle": "route_specific_legacy_authorities",
-    "product_package": "1.1.1.dev0"
+    "product_package": "1.2.0.dev0"
   }
 }
-

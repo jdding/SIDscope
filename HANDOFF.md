@@ -1,14 +1,13 @@
-# SIDScope 1.1 Development Handoff
+# SIDScope 1.2 Development Handoff
 
 Last updated: 2026-08-30
 
 ## Executive status
 
-SIDScope 1.1.0 is locally release-ready and publicly released. Post-release
-development is now `1.1.1.dev0`, where RPG's trained parallel-decoding P0 is
-closed and passes G0--G5. The 1.1.1.dev0 local tests, resource-package
-verifier, deterministic archive smoke, and G8 clean-environment installation
-pass. Annotated tag `v1.1.0` remains unchanged and resolves to
+SIDScope 1.1.0 is locally release-ready and publicly released. The verified
+`1.1.1.dev0` tree is the frozen regression authority; active development is
+`1.2.0.dev0` in the dedicated `SIDScope-v2` worktree. Annotated tag `v1.1.0`
+remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
 Latte/PSID, RPG, DiffGRM, DACT/TIGER Tools, and LLaDA-Rec VG are the five
@@ -44,19 +43,24 @@ design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 and `docs/V1_2_TO_V2_ROADMAP.md`. These documents guide post-1.1.1 work and do
 not claim that planned 1.2--2.0 product surfaces already exist.
 
-Architecture Sprint 0 is now implemented on the 1.1.1 development baseline.
+Architecture Sprint 0 is implemented on the 1.1.1 regression baseline.
 It adds canonical version/hash governance, a machine-readable schema/profile/
 producer/verifier/evidence inventory, an enforced acyclic module-dependency
 matrix, the stable `sidscope` CLI facade, and the first complete vertical slice:
 `sidscope.source_identity.v1` schema, Python model, validator, canonical hash,
 positive fixture, typed negative fixture, and legacy adapter-manifest parity.
-This is transition infrastructure and does not declare 1.2 released.
+Sprint 1 is now implemented on `1.2.0.dev0`: the bundled
+`sidscope.contract_registry.v1` is the canonical discovery and CLI-dispatch
+authority, and `sidscope.dataset_identity.v1` provides a complete vertical
+slice with full split/catalog/target-universe bindings plus an honest
+`legacy_partial` migration. Registry unknown dependencies, cycles, unsupported
+revisions, resource drift, and typed negative fixtures fail closed. This is an
+unreleased development milestone and does not declare 1.2 publicly released.
 
-The verified workspace policy is to keep this worktree as the 1.1.x
-maintenance surface and create a separate `SIDScope-v2` worktree on
-`codex/sidscope-v2` after this sprint commit. All 1.2--2.0 implementation then
-moves to that worktree. The independent frozen TOIS repository remains a
-non-merge target and was rechecked clean at its frozen commit.
+The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
+surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
+1.2--2.0 development surface. The independent frozen TOIS repository remains
+a non-merge target.
 
 On 2026-08-29, the first authors of DIGER, LETTER, and ReSOT supplied direct
 email clarifications for research use. DIGER's author states that the code is
@@ -74,15 +78,16 @@ remain unchanged until repository-level terms make redistribution explicit.
 
 ## Canonical development surface
 
-- Repository: the standalone `SIDScope-v1.1` worktree, not the historical
+- Repository: the standalone `SIDScope-v2` worktree, not the historical
   `SIDInspector` workspace.
-- Branch: `codex/sidscope-v1.1`.
+- Branch: `codex/sidscope-v2`.
 - Upstream tracking branch: `sidscope/main`.
 - TOIS-submission software/resource base, public `v1.0.2`:
   `6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`.
 - RPG P0 implementation commit before this handoff update:
   `60e421fb2736ceeead3cff0f7ac9e2cd23a04b95`.
-- Development version: `1.1.1.dev0` in both `pyproject.toml` and `setup.py`.
+- Regression authority: `1.1.1.dev0` in the separate `SIDScope-v1.1` worktree.
+- Development version: `1.2.0.dev0` in both `pyproject.toml` and `setup.py`.
 - Public release tag: `v1.1.0` at
   `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`.
 - Deterministic tag archive SHA-256:
@@ -255,16 +260,20 @@ identity and must never be cropped or silently converted.
 
 ## Last verified local release evidence
 
-The Architecture Sprint 0 working tree passed:
+The Sprint 1 working tree passed:
 
-- full tests: `179 passed, 6 skipped`;
+- focused contract/registry tests: `21 passed`;
+- full tests: `191 passed, 6 skipped`;
 - resource-package verifier: PASS;
+- contract-registry verifier: PASS with 2 canonical contracts, 2 positive
+  fixtures, and 3 typed-negative fixtures;
 - release-metadata verifier: PASS;
-- architecture inventory verifier: PASS with 121 schema IDs, 3 profiles,
-  6 generator routes, 9 static-mapping routes, and 5 canonical evidence edges;
+- architecture inventory verifier: PASS with 126 schema IDs, 2 canonical
+  contracts, 3 profiles, 6 generator routes, 9 static-mapping routes, and 7
+  canonical evidence edges;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
-- G8 isolated `sidinspector==1.1.1.dev0` install and verification: PASS;
+- G8 isolated `sidinspector==1.2.0.dev0` install and verification: PASS;
 - RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
   positive fixture, typed duplicate-selection failure, and the hash-bound CPU
   runner/export smoke;
@@ -274,14 +283,12 @@ The Architecture Sprint 0 working tree passed:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest after this handoff update: 239 rows, 236 public rows, 0 pending;
-- current public package surface: 341 files;
-- deterministic Architecture Sprint 0 archive SHA-256 before this final
-  handoff text refresh: `81e3cc73322c775536aa2ddd656761309df2b5f8d1247709a51413fa6f40eea6`.
+- manifest: 245 rows, 242 public rows, 0 pending;
+- current public package surface: 355 files.
 
-Because this document updates the public manifest, a resumed session must use
-the commands below to obtain the current archive counts and SHA-256. Treat the
-command results, not the historical counts above, as current release evidence.
+The development archive SHA-256 is intentionally reported by the final build
+command rather than embedded in this hash-sensitive source tree. Rebuild it
+after any source or documentation change.
 
 ## Required verification commands
 
@@ -294,12 +301,13 @@ git rev-parse HEAD
 git remote -v
 python3 -m pytest -q
 python3 tools/verify_sidscope_resource_package.py
+python3 tools/verify_sidscope_contract_registry.py
 python3 tools/build_sidscope_release_candidate_archive.py \
-  --output /tmp/sidscope-v1.1.1.dev0.zip
+  --output /tmp/sidscope-v1.2.0.dev0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-v1.1.1.dev0.zip
+  /tmp/sidscope-v1.2.0.dev0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.1.1.dev0.zip
+  --archive /tmp/sidscope-v1.2.0.dev0.zip
 ```
 
 The release checks are CPU-only. A new GPU run is not required to reverify the
@@ -335,7 +343,8 @@ immutable 1.1.0 claim.
 
 ## Resume protocol
 
-1. Read this file, `docs/V1_1_ROADMAP.md`, the two conformance documents,
+1. Read this file, `docs/V1_2_TO_V2_ROADMAP.md`, `docs/CONTRACT_REGISTRY.md`,
+   `docs/COMPATIBILITY.md`, the two conformance documents,
    `docs/VALIDATED_ADAPTERS.md`, the generator coverage CSV,
    `docs/SIDSCOPE_MAINTENANCE.md`, and the release checklist/packet.
 2. Verify the live Git and package state before making claims.

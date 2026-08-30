@@ -1,0 +1,38 @@
+{
+  "schema": "sidscope.contract_registry.v1",
+  "schema_revision": "1.0.0",
+  "registry_id": "sidscope-core-contracts",
+  "producer": {"name": "sidinspector.contracts", "version": "1.2.0.dev0"},
+  "contracts": [
+    {
+      "contract_type": "dataset-identity",
+      "schema_id": "sidscope.dataset_identity.v1",
+      "schema_revision": "1.0.0",
+      "owner": "core:contracts",
+      "schema_resource": "dataset_identity.v1.schema.json",
+      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
+      "canonical_fixture": "examples/dataset_identity_fixture/dataset_identity.json",
+      "negative_fixtures": [
+        {"path": "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json", "expected_failure": "content_hash_mismatch"},
+        {"path": "examples/dataset_identity_fixture/expected_failure_split_order.json", "expected_failure": "noncanonical_split_order"}
+      ],
+      "dependencies": [],
+      "result_id_field": "dataset_id"
+    },
+    {
+      "contract_type": "source-identity",
+      "schema_id": "sidscope.source_identity.v1",
+      "schema_revision": "1.0.0",
+      "owner": "core:contracts",
+      "schema_resource": "source_identity.v1.schema.json",
+      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
+      "canonical_fixture": "examples/source_identity_fixture/source_identity.json",
+      "negative_fixtures": [
+        {"path": "examples/source_identity_fixture/expected_failure_content_hash_mismatch.json", "expected_failure": "content_hash_mismatch"}
+      ],
+      "dependencies": [],
+      "result_id_field": "source_id"
+    }
+  ],
+  "content_sha256": "1e7f94401b90ecd18b8fa292cf36bf39b2b768908229315eda8d663c903c18ea"
+}

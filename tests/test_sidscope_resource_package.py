@@ -122,6 +122,12 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("docs/adr/0002-local-first-modular-platform.md", expanded)
         self.assertIn("docs/adr/0003-canonical-identity-versioning-hashing.md", expanded)
         self.assertIn("docs/adr/0004-module-boundaries-and-cli-identity.md", expanded)
+        self.assertIn("docs/adr/0005-contract-registry-and-dataset-identity.md", expanded)
+        self.assertIn("docs/CONTRACT_REGISTRY.md", expanded)
+        self.assertIn("examples/dataset_identity_fixture/dataset_identity.json", expanded)
+        self.assertIn("tools/verify_sidscope_contract_registry.py", expanded)
+        self.assertIn("tests/test_dataset_identity_contract.py", expanded)
+        self.assertIn(".github/workflows/ci.yml", expanded)
         self.assertIn("docs/VERSIONING.md", expanded)
         self.assertIn("docs/COMPATIBILITY.md", expanded)
         self.assertIn("docs/reproducibility/sidscope_architecture_inventory.json", expanded)
@@ -189,13 +195,15 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("0002-local-first-modular-platform.md", adr_index)
         self.assertIn("0003-canonical-identity-versioning-hashing.md", adr_index)
         self.assertIn("0004-module-boundaries-and-cli-identity.md", adr_index)
+        self.assertIn("0005-contract-registry-and-dataset-identity.md", adr_index)
 
     def test_release_metadata_and_architecture_inventory_verify(self) -> None:
         metadata = verify_release_metadata()
         inventory = verify_inventory()
 
         self.assertEqual(metadata["status"], "pass")
-        self.assertEqual(metadata["package_version"], "1.1.1.dev0")
+        self.assertEqual(metadata["package_version"], "1.2.0.dev0")
+        self.assertEqual(inventory["canonical_contract_count"], 2)
         self.assertEqual(inventory["status"], "pass")
 
     def test_public_package_content_scan_is_clean(self) -> None:

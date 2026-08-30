@@ -11,6 +11,23 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.2.0.dev0: Sprint 1 contract registry and DatasetIdentity
+
+- Added the bundled `sidscope.contract_registry.v1` authority with owner,
+  schema/revision compatibility, JSON Schema 2020-12 resource, canonical and
+  typed-negative fixtures, dependencies, and generic CLI dispatch.
+- Added `sidscope contract list`, `show`, and registry-backed `validate` with
+  typed rejection of unknown types, unknown/cyclic dependencies, unsupported
+  revisions, resource drift, and invalid contract artifacts.
+- Added `sidscope.dataset_identity.v1` for dataset/category/profile, ordered
+  split identities, catalog, target universe, privacy identity, and canonical
+  hashing. Full identities cannot omit bindings or expose source item IDs.
+- Added honest `legacy_partial` projection across existing adapter manifests;
+  missing split/universe bindings are enumerated and `sid_depth` is deferred to
+  SIDSpaceIdentity rather than silently moved into DatasetIdentity.
+- Added registry/dataset fixtures, focused tests, a dedicated registry verifier,
+  architecture inventory integration, ADR-0005, and Python 3.9/3.12 CPU CI.
+
 ## SIDScope v1.1.1.dev0: Architecture Sprint 0 and SourceIdentity slice
 
 - Added version and compatibility policies, a reusable GitHub Release

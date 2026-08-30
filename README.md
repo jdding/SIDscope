@@ -6,7 +6,7 @@ from adapter integration through canonical contracts, native trace capture,
 diagnostic evaluation, conformance verification, and immutable evidence. It
 does not own or reimplement upstream recommendation methods or training.
 
-The current 1.1 line is the verified resource-package baseline: it audits
+The 1.1 line remains the verified resource-package baseline: it audits
 existing `item_id -> SID` mappings, validates configuration-bound generator
 adapters, and publishes artifact-level diagnostics, candidate-exposure probes,
 method-faithful trace accounting, and bounded evidence. The approved target
@@ -54,8 +54,23 @@ sidscope contract validate \
   --input examples/source_identity_fixture/source_identity.json
 ```
 
-This SourceIdentity v1 slice is the first implemented 1.2 contract surface;
-the other 1.2--2.0 interfaces remain roadmap items until their exit gates pass.
+The active `1.2.0.dev0` line now has a versioned contract registry plus complete
+SourceIdentity and DatasetIdentity vertical slices. Registry discovery and the
+second contract can be exercised without optional adapter runtimes:
+
+```bash
+sidscope contract list
+sidscope contract show --type dataset-identity
+sidscope contract validate \
+  --type dataset-identity \
+  --input examples/dataset_identity_fixture/dataset_identity.json
+```
+
+DatasetIdentity binds dataset/category/profile, ordered split identities,
+catalog, target universe, and pseudonymous item identity. Legacy manifests
+with insufficient bindings are explicitly `legacy_partial`; SID depth remains
+deferred to the planned SIDSpaceIdentity. Other 1.2--2.0 interfaces remain
+roadmap items until their vertical slices pass.
 
 ### Optional Latte Tokenizer Intake
 

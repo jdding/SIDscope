@@ -34,7 +34,9 @@ The chosen runtime shape through 2.0 is a local-first modular monolith:
 The accepted product-boundary and topology decisions are recorded in
 `adr/0001-product-boundary.md` and `adr/0002-local-first-modular-platform.md`.
 ADR 0003 defines canonical identity, versioning and hashing; ADR 0004 defines
-module boundaries and the stable CLI/import identity. The executable dependency
+module boundaries and the stable CLI/import identity; ADR 0005 makes the local
+contract registry authoritative and separates complete DatasetIdentity from
+honest legacy-partial migration. The executable dependency
 policy is `reproducibility/sidscope_module_dependencies.json`, documented in
 `SIDSCOPE_MODULE_DEPENDENCIES.md` and enforced by architecture tests.
 
@@ -238,6 +240,11 @@ SIDScope a training framework.
 Every canonical artifact has a schema ID/version, producer identity, canonical
 content hash and explicit dependency references. Cyclic or unknown dependencies
 fail closed.
+
+The bundled `sidscope.contract_registry.v1` is the machine authority for those
+contracts. Each entry declares its owner, compatible revisions, JSON Schema
+2020-12 resource, fixtures, dependencies and public CLI type. It is file-first
+and local; it is not a hosted control plane.
 
 ### 6.3 Observation Layer: Trace Protocol
 

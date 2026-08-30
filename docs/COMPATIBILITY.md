@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: Architecture Sprint 0 baseline
+Status: Sprint 1 active development baseline
 
 ## Product and Entry Points
 
@@ -8,20 +8,21 @@ Status: Architecture Sprint 0 baseline
 | --- | --- | --- | --- | --- |
 | 1.0.2 | `sidinspector` | `sidinspector` | route-specific commands | Frozen TOIS-bound release |
 | 1.1.0 | `sidinspector` | `sidinspector` | route-specific commands | Published maintenance release |
-| 1.1.1.dev0 | `sidinspector` | `sidinspector` | `sidscope` facade plus legacy commands | Active development baseline |
-| 1.2 planned | `sidinspector` | `sidinspector` | expanded `sidscope` facade | Canonical-contract milestone |
+| 1.1.1.dev0 | `sidinspector` | `sidinspector` | `sidscope` facade plus legacy commands | Frozen regression authority |
+| 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Active Sprint 1 baseline |
 
 No import or distribution rename is planned during 1.x. The first implemented
-facade command validates `SourceIdentity v1`; planned commands are not claimed
-as available until their vertical slices pass.
+facade lists and shows registered contracts and validates `SourceIdentity v1`
+and `DatasetIdentity v1`. Planned commands are not claimed as available until
+their vertical slices pass.
 
 ## Version-Axis Baseline
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `1.1.1.dev0` | PEP 440 development version; not a public 1.1.1 release. |
+| Product/package | `1.2.0.dev0` | PEP 440 development version; not a public 1.2.0 release. |
 | Adapter SDK | not released | No external SDK compatibility promise yet. |
-| Canonical schema | `sidscope.source_identity.v1` revision `1.0.0` | Exact major and supported revision required. |
+| Canonical schemas | `sidscope.source_identity.v1` and `sidscope.dataset_identity.v1`, revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | legacy C0--C5 and G0--G5 authorities | Existing route verifiers remain authoritative until exact parity migration. |
 | Evidence bundle | route-specific 1.1 schemas | Immutable; no automatic upgrade. |
 
@@ -47,3 +48,16 @@ The converter does not invent a paper URL, notices, or patches.
 
 Rollback removes the shared dispatch and leaves the legacy manifest and report
 unchanged.
+
+## DatasetIdentity v1 Migration
+
+`DatasetIdentity v1` distinguishes `fully_bound` from `legacy_partial`.
+Complete identities require ordered train/validation/test IDs, counts and
+hashes, category/profile, catalog and target-universe hashes, and a public
+pseudonymous item-identity policy. The adapter-manifest converter preserves
+name, normalized name and expected item count but explicitly records missing
+bindings. `sid_depth` is returned separately for the later SIDSpace migration.
+
+The authoritative registry is `sidscope.contract_registry.v1` revision
+`1.0.0`; it rejects unknown/cyclic dependencies and unsupported revisions.
+Rollback removes the shared registry entry without rewriting legacy evidence.

@@ -2,7 +2,7 @@
 
 Status: approved development direction
 
-Baseline: `1.1.1.dev0`
+Regression baseline: `1.1.1.dev0`; active development: `1.2.0.dev0`
 
 Architecture authority: `SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 
@@ -42,6 +42,21 @@ After this sprint is committed, implementation from 1.2 through 2.0 moves to
 the dedicated `SIDScope-v2` worktree and `codex/sidscope-v2` branch. The
 `SIDScope-v1.1` worktree remains the 1.1.x maintenance surface, and the frozen
 TOIS repository remains an independent, non-merge target.
+
+### Sprint 1 implementation status
+
+Sprint 1 closes the registry and DatasetIdentity vertical slice on the
+dedicated `SIDScope-v2` worktree. The bundled `sidscope.contract_registry.v1`
+is now the discovery and CLI-dispatch authority for SourceIdentity and
+DatasetIdentity. It binds owner, schema revision, compatibility, JSON Schema
+2020-12 resource, canonical fixture, typed negative fixtures and dependencies,
+and fails closed on unknown/cyclic/incompatible declarations.
+
+`sidscope.dataset_identity.v1` implements complete split/catalog/target-universe
+identity plus an explicit `legacy_partial` migration that never fabricates
+missing legacy hashes. SID depth is deferred to Sprint 2's SIDSpaceIdentity.
+Focused, full package, archive and isolated-install gates close the sprint; the
+remaining 1.2 canonical entities stay planned.
 
 ## 2. State Transition
 

@@ -7,8 +7,15 @@ import argparse
 import csv
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
+
+
+if str(Path(__file__).resolve().parents[1] / "src") not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from sidinspector.contracts import load_contract_registry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,7 +56,13 @@ def _schema_owner(schema_id: str) -> str:
     }
     if prefix in adapter_owners:
         return adapter_owners[prefix]
-    if prefix in {"source_identity", "contract_validation", "module_dependency_matrix"}:
+    if prefix in {
+        "source_identity",
+        "dataset_identity",
+        "contract_registry",
+        "contract_validation",
+        "module_dependency_matrix",
+    }:
         return "core:contracts"
     if prefix in {
         "adapter_conformance_report",
@@ -162,6 +175,7 @@ def package_version() -> str:
 
 def build_inventory() -> dict[str, Any]:
     schemas = schema_inventory()
+    registry = load_contract_registry(repository_root=ROOT)
     return {
         "schema": "sidscope.architecture_inventory.v1",
         "status": "pass",
@@ -170,7 +184,10 @@ def build_inventory() -> dict[str, Any]:
         "version_axes": {
             "product_package": package_version(),
             "adapter_sdk": "not_released",
-            "canonical_schema": "sidscope.source_identity.v1@1.0.0",
+            "canonical_schemas": [
+                f"{descriptor.schema_id}@{descriptor.schema_revision}"
+                for descriptor in registry.contracts
+            ],
             "conformance_profiles": ["static_mapping_c0_c5", "generator_g0_g5", "release_local"],
             "evidence_bundle": "route_specific_legacy_authorities",
         },
@@ -199,12 +216,22 @@ def build_inventory() -> dict[str, Any]:
         ],
         "schema_count": len(schemas),
         "schemas": schemas,
+        "canonical_contract_registry": {
+            "registry_id": registry.registry_id,
+            "schema": registry.schema,
+            "schema_revision": registry.schema_revision,
+            "content_sha256": registry.content_sha256,
+            "contract_count": len(registry.contracts),
+            "contracts": [descriptor.to_dict() for descriptor in registry.contracts],
+        },
         "routes": {
             "generator": generator_routes(),
             "static_mapping": static_mapping_routes(),
         },
         "canonical_evidence_edges": [
-            {"from": "SourceIdentity", "to": "PreparedDataset", "status": "source_identity_implemented"},
+            {"from": "SourceIdentity", "to": "DatasetIdentity", "status": "both_implemented"},
+            {"from": "DatasetIdentity", "to": "SIDSpaceIdentity", "status": "planned"},
+            {"from": "SIDSpaceIdentity", "to": "PreparedDataset", "status": "planned"},
             {"from": "PreparedDataset", "to": "TraceBundle", "status": "planned"},
             {"from": "TraceBundle", "to": "DiagnosticReport", "status": "planned"},
             {"from": "DiagnosticReport", "to": "ConformanceReport", "status": "planned"},

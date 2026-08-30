@@ -46,7 +46,11 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
     required_docs = {
         "README.md": ["docs/VERSIONING.md", "docs/COMPATIBILITY.md"],
         "docs/VERSIONING.md": ["five independent compatibility axes", "GitHub Release"],
-        "docs/COMPATIBILITY.md": [project_version, "sidscope.source_identity.v1"],
+        "docs/COMPATIBILITY.md": [
+            project_version,
+            "sidscope.source_identity.v1",
+            "sidscope.dataset_identity.v1",
+        ],
         "docs/SIDSCOPE_RELEASE_TEMPLATE.md": ["Adapter SDK version:", "archive SHA-256:"],
         "docs/SIDSCOPE_RELEASE_CHECKLIST.md": ["docs/SIDSCOPE_RELEASE_TEMPLATE.md"],
     }
@@ -63,8 +67,11 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         "package_version": project_version,
         "python_import": "sidinspector",
         "console_command": "sidscope",
-        "canonical_schema": "sidscope.source_identity.v1",
-        "schema_revision": "1.0.0",
+        "canonical_schemas": [
+            "sidscope.dataset_identity.v1@1.0.0",
+            "sidscope.source_identity.v1@1.0.0",
+        ],
+        "contract_registry": "sidscope.contract_registry.v1@1.0.0",
         "governance_documents_checked": len(required_docs),
     }
 

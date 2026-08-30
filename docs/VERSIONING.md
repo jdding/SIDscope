@@ -1,6 +1,6 @@
 # SIDScope Versioning and Release Governance
 
-Status: active from `1.1.1.dev0`
+Status: active; current development baseline `1.2.0.dev0`
 
 ## Sources of Truth
 

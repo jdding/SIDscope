@@ -43,6 +43,11 @@ def verify_inventory(path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
                 raise FileNotFoundError(profile[key])
 
     routes = observed["routes"]
+    registry = observed["canonical_contract_registry"]
+    if registry["contract_count"] != len(registry["contracts"]):
+        raise ValueError("canonical contract registry count mismatch")
+    if registry["contract_count"] < 2:
+        raise ValueError("canonical contract registry missing Sprint 1 contracts")
     return {
         "schema": REPORT_SCHEMA,
         "status": "pass",
@@ -52,6 +57,7 @@ def verify_inventory(path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
         "generator_route_count": len(routes["generator"]),
         "static_mapping_route_count": len(routes["static_mapping"]),
         "canonical_evidence_edge_count": len(observed["canonical_evidence_edges"]),
+        "canonical_contract_count": registry["contract_count"],
     }
 
 
