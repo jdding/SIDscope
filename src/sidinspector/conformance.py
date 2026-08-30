@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
+from sidinspector.contracts.source_identity import SOURCE_LICENSE_STATES
 from sidinspector.interface import CONTRACTS, validate_columns
 from sidinspector.preflight import preflight_inputs, read_table
 
@@ -18,12 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_SCHEMA = "sidscope.adapter_manifest.v1"
 REPORT_SCHEMA = "sidscope.adapter_conformance_report.v1"
 
-ALLOWED_LICENSE_STATUSES = {
-    "licensed",
-    "restricted_source_license",
-    "source_licensed_artifact_boundary_unresolved",
-    "no_license_detected",
-}
+ALLOWED_LICENSE_STATUSES = set(SOURCE_LICENSE_STATES)
 ALLOWED_DERIVATIONS = {
     "tracked_snapshot",
     "official_code_derived",

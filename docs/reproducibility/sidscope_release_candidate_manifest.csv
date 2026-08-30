@@ -1,4 +1,14 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+versioning_policy,docs/VERSIONING.md,release_governance,documentation,yes,pass_local,Defines package SDK schema profile bundle and CLI version axes plus release branch and tag policy.
+compatibility_policy,docs/COMPATIBILITY.md,release_governance,documentation,yes,pass_local,Records supported interface versions migration expectations and the current SourceIdentity slice.
+release_template,docs/SIDSCOPE_RELEASE_TEMPLATE.md,release_governance,documentation,yes,pass_local,Reusable GitHub Release body checklist bound to machine and human release evidence.
+module_dependency_policy,docs/SIDSCOPE_MODULE_DEPENDENCIES.md,architecture_governance,documentation,yes,pass_local,Documents enforceable inward acyclic target-module boundaries and legacy coexistence.
+source_identity_fixture,examples/source_identity_fixture,example,fully_runnable,yes,pass_local,Positive canonical SourceIdentity plus typed content-hash mismatch fixture.
+architecture_inventory_builder,tools/build_sidscope_architecture_inventory.py,verification,fully_runnable,yes,pass_local,Deterministically inventories schemas producers verifiers profiles adapter owners and evidence edges.
+architecture_inventory_verifier,tools/verify_sidscope_architecture_inventory.py,verification,fully_runnable,yes,pass_local,Rejects stale unowned or non-public architecture inventory entries.
+release_metadata_verifier,tools/verify_sidscope_release_metadata.py,release_gate,fully_runnable,yes,pass_local,Checks distribution version console schema packaging and release-governance consistency.
+source_identity_tests,tests/test_source_identity_contract.py,test,fully_runnable,yes,pass_local,Tests schema model canonical hashing CLI typed failure and legacy adapter parity.
+architecture_boundary_tests,tests/test_architecture_boundaries.py,test,fully_runnable,yes,pass_local,Enforces the machine dependency matrix and core optional-runtime isolation.
 package_readme,README.md,entrypoint,documentation,yes,pass_local,Reviewer-facing repository entrypoint and quickstart.
 development_handoff,HANDOFF.md,maintenance_handoff,documentation,yes,pass_local,Current standalone repository state gate boundaries verification commands and post-release decisions for safe continuation.
 license,LICENSE,license,documentation,yes,pass_local,Repository license for code package.

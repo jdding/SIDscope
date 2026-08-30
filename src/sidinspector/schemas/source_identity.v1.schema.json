@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jdding/sidscope/schemas/source_identity.v1.schema.json",
+  "title": "SIDScope SourceIdentity v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_revision",
+    "source_id",
+    "producer",
+    "paper",
+    "repository",
+    "license",
+    "derivation",
+    "artifact_name",
+    "patches",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "sidscope.source_identity.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "source_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "paper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "url"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "url": {"type": ["string", "null"], "pattern": "^https://"}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "revision_kind", "revision"],
+      "properties": {
+        "url": {"type": "string", "pattern": "^https://"},
+        "revision_kind": {
+          "enum": ["git_commit", "content_sha256", "archive_digest", "other_immutable"]
+        },
+        "revision": {"type": "string", "minLength": 1}
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "identifier", "notices", "redistribution_policy"],
+      "properties": {
+        "status": {
+          "enum": [
+            "licensed",
+            "restricted_source_license",
+            "source_licensed_artifact_boundary_unresolved",
+            "no_license_detected"
+          ]
+        },
+        "identifier": {"type": ["string", "null"]},
+        "notices": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "redistribution_policy": {"type": "string", "minLength": 1}
+      }
+    },
+    "derivation": {"type": "string", "minLength": 1},
+    "artifact_name": {"type": "string", "minLength": 1},
+    "patches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "purpose"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "purpose": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -27,6 +27,10 @@ Paper submission readiness remains a separate writing and venue-decision gate.
   `docs/SIDSCOPE_RESOURCE_PACKAGE.md`, `docs/SIDSCOPE_DATASHEET.md`,
   `docs/SIDSCOPE_LIMITATIONS.md`, `docs/SIDSCOPE_MAINTENANCE.md`, and
   `docs/SIDSCOPE_CHANGELOG.md`
+- Version and compatibility policies:
+  `docs/VERSIONING.md` and `docs/COMPATIBILITY.md`
+- GitHub Release body template:
+  `docs/SIDSCOPE_RELEASE_TEMPLATE.md`
 - Public release preparation packet:
   `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`
 
@@ -36,6 +40,8 @@ Run from the repository root:
 
 ```bash
 python3 tools/verify_sidscope_resource_package.py
+python3 tools/verify_sidscope_release_metadata.py
+python3 tools/verify_sidscope_architecture_inventory.py
 python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1.1.0.zip
@@ -59,7 +65,8 @@ surface whenever a new release tag or reviewer package is cut:
 5. Record the exact tag, commit, archive checksum, and command transcript in
    the final claim ledger.
 6. Add or update a changelog entry for the release tag.
-7. Update `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md` with the final public URL,
+7. Populate the GitHub Release body from `docs/SIDSCOPE_RELEASE_TEMPLATE.md`.
+8. Update `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md` with the final public URL,
    commit SHA, archive SHA256, and G8 command transcript.
 
 ## G8 Fresh-Environment Smoke Contract
@@ -103,6 +110,8 @@ changes.
 ## Release Blockers
 
 - Any public-package manifest row points to a missing path.
+- Package, SDK, schema, profile, bundle or CLI compatibility changes without
+  the required migration note and version-axis update.
 - Any tracked package file matches a forbidden private-artifact path or suffix.
 - Any public-package file contains forbidden private-path, remote-address, or
   AI/tooling trace tokens outside explicit safety-token declarations.

@@ -44,6 +44,20 @@ design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 and `docs/V1_2_TO_V2_ROADMAP.md`. These documents guide post-1.1.1 work and do
 not claim that planned 1.2--2.0 product surfaces already exist.
 
+Architecture Sprint 0 is now implemented on the 1.1.1 development baseline.
+It adds canonical version/hash governance, a machine-readable schema/profile/
+producer/verifier/evidence inventory, an enforced acyclic module-dependency
+matrix, the stable `sidscope` CLI facade, and the first complete vertical slice:
+`sidscope.source_identity.v1` schema, Python model, validator, canonical hash,
+positive fixture, typed negative fixture, and legacy adapter-manifest parity.
+This is transition infrastructure and does not declare 1.2 released.
+
+The verified workspace policy is to keep this worktree as the 1.1.x
+maintenance surface and create a separate `SIDScope-v2` worktree on
+`codex/sidscope-v2` after this sprint commit. All 1.2--2.0 implementation then
+moves to that worktree. The independent frozen TOIS repository remains a
+non-merge target and was rechecked clean at its frozen commit.
+
 On 2026-08-29, the first authors of DIGER, LETTER, and ReSOT supplied direct
 email clarifications for research use. DIGER's author states that the code is
 MIT and that its Hugging Face artifacts may be used for research under the
@@ -241,11 +255,13 @@ identity and must never be cropped or silently converted.
 
 ## Last verified local release evidence
 
-The exact working tree containing the three implementation commits above
-passed:
+The Architecture Sprint 0 working tree passed:
 
-- full tests: `168 passed, 6 skipped`;
+- full tests: `179 passed, 6 skipped`;
 - resource-package verifier: PASS;
+- release-metadata verifier: PASS;
+- architecture inventory verifier: PASS with 121 schema IDs, 3 profiles,
+  6 generator routes, 9 static-mapping routes, and 5 canonical evidence edges;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
 - G8 isolated `sidinspector==1.1.1.dev0` install and verification: PASS;
@@ -258,8 +274,10 @@ passed:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest after this handoff update: 226 rows, 223 public rows, 0 pending;
-- current public package surface: 313 files.
+- manifest after this handoff update: 239 rows, 236 public rows, 0 pending;
+- current public package surface: 341 files;
+- deterministic Architecture Sprint 0 archive SHA-256 before this final
+  handoff text refresh: `81e3cc73322c775536aa2ddd656761309df2b5f8d1247709a51413fa6f40eea6`.
 
 Because this document updates the public manifest, a resumed session must use
 the commands below to obtain the current archive counts and SHA-256. Treat the

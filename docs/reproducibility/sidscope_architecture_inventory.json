@@ -1,0 +1,2290 @@
+{
+  "canonical_evidence_edges": [
+    {
+      "from": "SourceIdentity",
+      "status": "source_identity_implemented",
+      "to": "PreparedDataset"
+    },
+    {
+      "from": "PreparedDataset",
+      "status": "planned",
+      "to": "TraceBundle"
+    },
+    {
+      "from": "TraceBundle",
+      "status": "planned",
+      "to": "DiagnosticReport"
+    },
+    {
+      "from": "DiagnosticReport",
+      "status": "planned",
+      "to": "ConformanceReport"
+    },
+    {
+      "from": "ConformanceReport",
+      "status": "planned",
+      "to": "EvidenceBundle"
+    }
+  ],
+  "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
+  "product_version": "1.1.1.dev0",
+  "profiles": [
+    {
+      "authority": "docs/ADAPTER_CONFORMANCE.md",
+      "migration_state": "legacy_authority",
+      "owner": "core:conformance",
+      "profile_id": "static_mapping_c0_c5",
+      "verifier": "tools/verify_adapter_conformance_assets.py"
+    },
+    {
+      "authority": "docs/GENERATOR_ADAPTER_CONFORMANCE.md",
+      "migration_state": "legacy_authority",
+      "owner": "core:conformance",
+      "profile_id": "generator_g0_g5",
+      "verifier": "docs/reproducibility/generator_adapter_coverage.csv"
+    },
+    {
+      "authority": "docs/SIDSCOPE_RELEASE_CHECKLIST.md",
+      "migration_state": "active",
+      "owner": "core:release",
+      "profile_id": "release_local",
+      "verifier": "tools/verify_sidscope_resource_package.py"
+    }
+  ],
+  "routes": {
+    "generator": [
+      {
+        "adapter_kind": "autoregressive_generator",
+        "authority_path": "docs/reproducibility/dact_tiger_adapter_status.json",
+        "contract_state": "g0_g5_pass",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:dact_tiger",
+        "profile": "generator_g0_g5",
+        "route_id": "dact_tiger",
+        "status": "named_adapter"
+      },
+      {
+        "adapter_kind": "autoregressive_generator",
+        "authority_path": "docs/reproducibility/latte_psid_adapter_status.json",
+        "contract_state": "g0_g5_pass",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:latte_psid",
+        "profile": "generator_g0_g5",
+        "route_id": "latte_psid",
+        "status": "named_adapter"
+      },
+      {
+        "adapter_kind": "parallel_generator",
+        "authority_path": "docs/reproducibility/rpg_kdd2025_adapter_status.json",
+        "contract_state": "g0_g5_pass",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:rpg_kdd2025",
+        "profile": "generator_g0_g5",
+        "route_id": "rpg_kdd2025",
+        "status": "named_adapter"
+      },
+      {
+        "adapter_kind": "diffusion_generator",
+        "authority_path": "docs/reproducibility/llada_rec_adapter_status.json",
+        "contract_state": "g0_g5_pass",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:llada_rec",
+        "profile": "generator_g0_g5",
+        "route_id": "llada_rec",
+        "status": "named_adapter"
+      },
+      {
+        "adapter_kind": "diffusion_generator",
+        "authority_path": "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "contract_state": "g0_g5_pass",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:diffgrm_www2026",
+        "profile": "generator_g0_g5",
+        "route_id": "diffgrm_www2026",
+        "status": "named_adapter"
+      },
+      {
+        "adapter_kind": "decoder_overlay",
+        "authority_path": "docs/reproducibility/isd_adapter_status.json",
+        "contract_state": "g0_partial_revision_g1_fixture_g2_g4_pass_g5_partial",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:isd",
+        "profile": "generator_g0_g5",
+        "route_id": "isd",
+        "status": "close_named_adapter"
+      }
+    ],
+    "static_mapping": [
+      {
+        "authority_path": "docs/reproducibility/table1_evidence_catalog.csv",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:resid_musical_snapshot",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "resid_musical_snapshot",
+        "status": "auditable_snapshot_not_fully_regenerable"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/resid_gaoq_video_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:resid_gaoq_video",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "resid_gaoq_video",
+        "status": "c0_c5_pass"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/grid_p5_beauty_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:grid_p5_beauty",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "grid_p5_beauty",
+        "status": "c0_c5_pass"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/card_p5_beauty_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:card_p5_beauty",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "card_p5_beauty",
+        "status": "c0_c5_pass"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/diger_beauty_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:diger_beauty",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "diger_beauty",
+        "status": "c0_c5_pass"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/diger_yelp_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:diger_yelp",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "diger_yelp",
+        "status": "c0_c5_pass"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/resot_instruments_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:resot_instruments",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "resot_instruments",
+        "status": "c0_c5_pass"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/letter_instruments_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:letter_instruments",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "letter_instruments",
+        "status": "c0_c5_pass"
+      },
+      {
+        "authority_path": "docs/reproducibility/conformance/lcrec_instruments_report.json",
+        "migration_state": "legacy_authority",
+        "owner": "adapter:lcrec_instruments",
+        "profile": "static_mapping_c0_c5",
+        "route_id": "lcrec_instruments",
+        "status": "c0_c5_pass"
+      }
+    ]
+  },
+  "schema": "sidscope.architecture_inventory.v1",
+  "schema_count": 121,
+  "schemas": [
+    {
+      "artifact_paths": [
+        "docs/reproducibility/conformance/card_p5_beauty_report.json",
+        "docs/reproducibility/conformance/diger_beauty_report.json",
+        "docs/reproducibility/conformance/diger_yelp_report.json",
+        "docs/reproducibility/conformance/grid_p5_beauty_report.json",
+        "docs/reproducibility/conformance/latte_psid_musical_report.json",
+        "docs/reproducibility/conformance/lcrec_instruments_report.json",
+        "docs/reproducibility/conformance/letter_instruments_report.json",
+        "docs/reproducibility/conformance/resid_gaoq_video_report.json",
+        "docs/reproducibility/conformance/resot_instruments_report.json",
+        "docs/reproducibility/conformance/rpg_beauty_report.json",
+        "examples/conformance_failure_fixture/conformance_report.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/conformance/card_p5_beauty_report.json",
+        "docs/reproducibility/conformance/diger_beauty_report.json",
+        "docs/reproducibility/conformance/diger_yelp_report.json",
+        "docs/reproducibility/conformance/grid_p5_beauty_report.json",
+        "docs/reproducibility/conformance/latte_psid_musical_report.json",
+        "docs/reproducibility/conformance/lcrec_instruments_report.json",
+        "docs/reproducibility/conformance/letter_instruments_report.json",
+        "docs/reproducibility/conformance/resid_gaoq_video_report.json",
+        "docs/reproducibility/conformance/resot_instruments_report.json",
+        "docs/reproducibility/conformance/rpg_beauty_report.json",
+        "examples/conformance_failure_fixture/conformance_report.json",
+        "src/sidinspector/conformance.py",
+        "tools/verify_sidscope_source_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:conformance",
+      "producer_paths": [
+        "src/sidinspector/conformance.py"
+      ],
+      "schema_id": "sidscope.adapter_conformance_report.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_source_inventory.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/reproducibility/conformance/adapter_manifest.schema.json",
+        "docs/reproducibility/conformance/card_p5_beauty_manifest.json",
+        "docs/reproducibility/conformance/diger_beauty_manifest.json",
+        "docs/reproducibility/conformance/diger_yelp_manifest.json",
+        "docs/reproducibility/conformance/grid_p5_beauty_manifest.json",
+        "docs/reproducibility/conformance/latte_psid_musical_manifest.json",
+        "docs/reproducibility/conformance/lcrec_instruments_manifest.json",
+        "docs/reproducibility/conformance/letter_instruments_manifest.json",
+        "docs/reproducibility/conformance/resid_gaoq_video_manifest.json",
+        "docs/reproducibility/conformance/resot_instruments_manifest.json",
+        "docs/reproducibility/conformance/rpg_beauty_manifest.json",
+        "examples/conformance_failure_fixture/manifest.json"
+      ],
+      "declaration_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/reproducibility/conformance/adapter_manifest.schema.json",
+        "docs/reproducibility/conformance/card_p5_beauty_manifest.json",
+        "docs/reproducibility/conformance/diger_beauty_manifest.json",
+        "docs/reproducibility/conformance/diger_yelp_manifest.json",
+        "docs/reproducibility/conformance/grid_p5_beauty_manifest.json",
+        "docs/reproducibility/conformance/latte_psid_musical_manifest.json",
+        "docs/reproducibility/conformance/lcrec_instruments_manifest.json",
+        "docs/reproducibility/conformance/letter_instruments_manifest.json",
+        "docs/reproducibility/conformance/resid_gaoq_video_manifest.json",
+        "docs/reproducibility/conformance/resot_instruments_manifest.json",
+        "docs/reproducibility/conformance/rpg_beauty_manifest.json",
+        "examples/conformance_failure_fixture/manifest.json",
+        "src/sidinspector/conformance.py",
+        "src/sidinspector/contracts/source_identity.py",
+        "tests/test_adapter_conformance.py",
+        "tools/verify_sidscope_source_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:conformance",
+      "producer_paths": [
+        "src/sidinspector/conformance.py",
+        "src/sidinspector/contracts/source_identity.py"
+      ],
+      "schema_id": "sidscope.adapter_manifest.v1",
+      "verifier_paths": [
+        "tests/test_adapter_conformance.py",
+        "tools/verify_sidscope_source_inventory.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/build_sidscope_architecture_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/build_sidscope_architecture_inventory.py"
+      ],
+      "schema_id": "sidscope.architecture_inventory.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_architecture_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [],
+      "schema_id": "sidscope.architecture_inventory_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_architecture_inventory.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_claim_ledger.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.claim_ledger_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_claim_ledger.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:contracts",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.contract_validation.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/d3_protocol_sensitivity.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/d3_protocol_sensitivity.json",
+        "tools/analyze_d3_protocol_sensitivity.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/analyze_d3_protocol_sensitivity.py"
+      ],
+      "schema_id": "sidscope.d3.protocol_sensitivity.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/d3_catalog_dependence_summary.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/d3_catalog_dependence_summary.json",
+        "tools/analyze_d3_catalog_dependence.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/analyze_d3_catalog_dependence.py"
+      ],
+      "schema_id": "sidscope.d3_catalog_dependence.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/d7_labeled_trace_release.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/d7_labeled_trace_release.json",
+        "tools/build_sidscope_d7_labeled_trace_release.py",
+        "tools/verify_sidscope_d7_labeled_trace_release.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_sidscope_d7_labeled_trace_release.py"
+      ],
+      "schema_id": "sidscope.d7_labeled_trace_release.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_d7_labeled_trace_release.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_d7_labeled_trace_release.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.d7_labeled_trace_release.verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_d7_labeled_trace_release.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/dact_tiger_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/dact_tiger_adapter_status.json",
+        "tools/verify_dact_tiger_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.dact_tiger_adapter_status.v3",
+      "verifier_paths": [
+        "tools/verify_dact_tiger_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_dact_tiger_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.dact_tiger_adapter_verification.v1",
+      "verifier_paths": [
+        "tools/verify_dact_tiger_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/dact_tiger_ancestry_preflight.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/dact_tiger_ancestry_preflight.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.dact_tiger_ancestry_preflight.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/dact_tiger_ancestry_refresh_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/dact_tiger_ancestry_refresh_evidence.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.dact_tiger_ancestry_refresh_evidence.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/dact_tiger_ancestry_refresh_expected_inputs.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/dact_tiger_ancestry_refresh_expected_inputs.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.dact_tiger_ancestry_refresh_expected_inputs.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/dact_tiger_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/dact_tiger_adapter_status.json",
+        "src/sidinspector/adapters/dact.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/dact.py"
+      ],
+      "schema_id": "sidscope.dact_tiger_autoregressive_trace.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/dact_tiger_autoregressive_fixture/manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/dact_tiger_autoregressive_fixture/manifest.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.dact_tiger_fixture.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/trained_trace_fixture.json"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/trained_trace_fixture.json",
+        "src/sidinspector/adapters/diffgrm.py",
+        "tools/export_diffgrm_masked_trace.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/diffgrm.py",
+        "tools/export_diffgrm_masked_trace.py"
+      ],
+      "schema_id": "sidscope.diffgrm_adapter.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "tools/verify_diffgrm_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.diffgrm_adapter_status.v4",
+      "verifier_paths": [
+        "tools/verify_diffgrm_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "tools/verify_diffgrm_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.diffgrm_adapter_verification.v1",
+      "verifier_paths": [
+        "tools/verify_diffgrm_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/episode_selection.json"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/episode_selection.json",
+        "src/sidinspector/adapters/diffgrm.py",
+        "tests/test_llada_rec_adapter.py",
+        "tools/export_diffgrm_masked_trace.py",
+        "tools/finalize_diffgrm_prepared_contract.py",
+        "tools/finalize_llada_rec_prepared_contract.py",
+        "tools/run_diffgrm_runtime.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/diffgrm.py",
+        "tools/export_diffgrm_masked_trace.py",
+        "tools/finalize_diffgrm_prepared_contract.py",
+        "tools/finalize_llada_rec_prepared_contract.py",
+        "tools/run_diffgrm_runtime.py"
+      ],
+      "schema_id": "sidscope.diffgrm_episode_selection.v1",
+      "verifier_paths": [
+        "tests/test_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "examples/diffgrm_masked_diffusion_fixture/expected_failures.json"
+      ],
+      "declaration_paths": [
+        "examples/diffgrm_masked_diffusion_fixture/expected_failures.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.diffgrm_expected_failures.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/trained_trace_fixture.json"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/trained_trace_fixture.json",
+        "src/sidinspector/adapters/diffgrm.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/diffgrm.py"
+      ],
+      "schema_id": "sidscope.diffgrm_masked_trace_bundle.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json",
+        "examples/diffgrm_masked_diffusion_fixture/README.md"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json",
+        "examples/diffgrm_masked_diffusion_fixture/README.md",
+        "src/sidinspector/adapters/diffgrm.py",
+        "tools/export_diffgrm_masked_trace.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/diffgrm.py",
+        "tools/export_diffgrm_masked_trace.py"
+      ],
+      "schema_id": "sidscope.diffgrm_masked_trace_bundle.v2",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/export_diffgrm_masked_trace.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_diffgrm_masked_trace.py"
+      ],
+      "schema_id": "sidscope.diffgrm_official_equivalence_failure.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/prepared_dataset.json"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "examples/diffgrm_masked_diffusion_fixture/prepared_dataset.json",
+        "src/sidinspector/adapters/diffgrm.py",
+        "tests/test_llada_rec_adapter.py",
+        "tools/finalize_diffgrm_prepared_contract.py",
+        "tools/finalize_llada_rec_prepared_contract.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/diffgrm.py",
+        "tools/finalize_diffgrm_prepared_contract.py",
+        "tools/finalize_llada_rec_prepared_contract.py"
+      ],
+      "schema_id": "sidscope.diffgrm_prepared_dataset.v1",
+      "verifier_paths": [
+        "tests/test_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "tests/test_diffgrm_dataset_bridge.py",
+        "tools/run_diffgrm_runtime.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_diffgrm_runtime.py"
+      ],
+      "schema_id": "sidscope.diffgrm_processed_cache_manifest.v1",
+      "verifier_paths": [
+        "tests/test_diffgrm_dataset_bridge.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "docs/reproducibility/diffgrm_www2026_staged_preflight.json"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "docs/reproducibility/diffgrm_www2026_staged_preflight.json",
+        "tools/preflight_diffgrm_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/preflight_diffgrm_adapter.py"
+      ],
+      "schema_id": "sidscope.diffgrm_staged_preflight.v2",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/diffgrm_steam_bridge_preflight_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/diffgrm_steam_bridge_preflight_evidence.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.diffgrm_steam_bridge_preflight_evidence.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/diffgrm_steam_trained_trace_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/diffgrm_steam_trained_trace_evidence.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.diffgrm_steam_trained_trace_evidence.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/materialize_diffgrm_protocol_train_surface.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/materialize_diffgrm_protocol_train_surface.py"
+      ],
+      "schema_id": "sidscope.diffgrm_train_surface_materialization.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/DIFFGRM_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+        "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json",
+        "tests/test_diffgrm_trained_trace_bundle.py",
+        "tools/verify_diffgrm_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.diffgrm_trained_trace_bundle_verification.v1",
+      "verifier_paths": [
+        "tests/test_diffgrm_trained_trace_bundle.py",
+        "tools/verify_diffgrm_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/diffgrm_www2026_trained_trace_evidence.json",
+        "tools/verify_diffgrm_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.diffgrm_trained_trace_evidence.v1",
+      "verifier_paths": [
+        "tools/verify_diffgrm_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/adapters/diffgrm.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/diffgrm.py"
+      ],
+      "schema_id": "sidscope.diffgrm_trained_trace_verification.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_v1_gate17_diger_intake.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_v1_gate17_diger_intake.py"
+      ],
+      "schema_id": "sidscope.diger_intake.v2",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_v1_gate17_diger_intake.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_v1_gate17_diger_intake.py"
+      ],
+      "schema_id": "sidscope.diger_intake_pass.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_sidscope_usage_demo.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_sidscope_usage_demo.py"
+      ],
+      "schema_id": "sidscope.g14_usage_demo.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_v1_gate17_resot_intake.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_v1_gate17_resot_intake.py"
+      ],
+      "schema_id": "sidscope.g17.resot_intake.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/g22_handoff_uncertainty.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/g22_handoff_uncertainty.json",
+        "tools/analyze_g22_handoff_uncertainty.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/analyze_g22_handoff_uncertainty.py"
+      ],
+      "schema_id": "sidscope.g22.handoff_uncertainty.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_v1_gate2_cross_dataset_utility.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_v1_gate2_cross_dataset_utility.py"
+      ],
+      "schema_id": "sidscope.g23_matrix_admission.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_sidscope_g8_fresh_env_smoke.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/run_sidscope_g8_fresh_env_smoke.py"
+      ],
+      "schema_id": "sidscope.g8_fresh_env_smoke.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_source_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:conformance",
+      "producer_paths": [],
+      "schema_id": "sidscope.generator_adapter_coverage.verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_source_inventory.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/dact_tiger_source_audit.json",
+        "docs/reproducibility/diffgrm_www2026_source_audit.json",
+        "docs/reproducibility/isd_source_audit.json",
+        "docs/reproducibility/llada_rec_source_audit.json",
+        "docs/reproducibility/rpg_kdd2025_source_audit.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/dact_tiger_source_audit.json",
+        "docs/reproducibility/diffgrm_www2026_source_audit.json",
+        "docs/reproducibility/isd_source_audit.json",
+        "docs/reproducibility/llada_rec_source_audit.json",
+        "docs/reproducibility/rpg_kdd2025_source_audit.json",
+        "tools/verify_dact_tiger_adapter.py",
+        "tools/verify_isd_adapter.py",
+        "tools/verify_llada_rec_adapter.py",
+        "tools/verify_rpg_generator_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:conformance",
+      "producer_paths": [],
+      "schema_id": "sidscope.generator_source_audit.v1",
+      "verifier_paths": [
+        "tools/verify_dact_tiger_adapter.py",
+        "tools/verify_isd_adapter.py",
+        "tools/verify_llada_rec_adapter.py",
+        "tools/verify_rpg_generator_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/isd_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/isd_adapter_status.json",
+        "tools/verify_isd_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.isd_adapter_status.v2",
+      "verifier_paths": [
+        "tools/verify_isd_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_isd_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.isd_adapter_verification.v1",
+      "verifier_paths": [
+        "tools/verify_isd_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "examples/isd_decoder_overlay_fixture/manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/isd_decoder_overlay_fixture/manifest.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.isd_decoder_overlay_fixture.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/ISD_DECODER_OVERLAY_ADAPTER.md",
+        "docs/reproducibility/isd_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/ISD_DECODER_OVERLAY_ADAPTER.md",
+        "docs/reproducibility/isd_adapter_status.json",
+        "src/sidinspector/adapters/isd.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/isd.py"
+      ],
+      "schema_id": "sidscope.isd_decoder_overlay_trace.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/isd_official_source_smoke.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/isd_official_source_smoke.json",
+        "tools/run_isd_official_source_smoke.py",
+        "tools/verify_isd_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_isd_official_source_smoke.py"
+      ],
+      "schema_id": "sidscope.isd_official_source_smoke.v1",
+      "verifier_paths": [
+        "tools/verify_isd_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/LATTE_PSID_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/latte_psid_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/LATTE_PSID_GENERATOR_ADAPTER.md",
+        "docs/reproducibility/latte_psid_adapter_status.json",
+        "src/sidinspector/adapters/latte.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/latte.py"
+      ],
+      "schema_id": "sidscope.latte_autoregressive_trace.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/latte_psid_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/latte_psid_adapter_status.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.latte_psid_adapter_status.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_latte_psid_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.latte_psid_adapter_verification.v1",
+      "verifier_paths": [
+        "tools/verify_latte_psid_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/latte_psid_musical_cache_build.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/latte_psid_musical_cache_build.json",
+        "tools/build_latte_psid_cache.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_latte_psid_cache.py"
+      ],
+      "schema_id": "sidscope.latte_psid_cache_build.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/latte_psid_cache_fixture/manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/latte_psid_cache_fixture/manifest.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.latte_psid_cache_fixture.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/latte_psid_musical_intake.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/latte_psid_musical_intake.json",
+        "tools/normalize_latte_psid_cache.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/normalize_latte_psid_cache.py"
+      ],
+      "schema_id": "sidscope.latte_psid_normalized_intake.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/latte_psid_official_source_smoke.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/latte_psid_official_source_smoke.json",
+        "tools/run_latte_official_source_smoke.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_latte_official_source_smoke.py"
+      ],
+      "schema_id": "sidscope.latte_psid_official_source_smoke.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/latte_psid_source_audit.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/latte_psid_source_audit.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.latte_psid_source_audit.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tests/test_latte_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.latte_psid_trained_trace_bundle.v1",
+      "verifier_paths": [
+        "tests/test_latte_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/LATTE_PSID_GENERATOR_ADAPTER.md",
+        "docs/SIDSCOPE_MAINTENANCE.md",
+        "docs/reproducibility/latte_psid_adapter_status.json",
+        "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
+        "examples/latte_psid_trained_trace_fixture/manifest.json",
+        "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
+        "examples/latte_psid_trained_trace_real_smoke/README.md",
+        "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+        "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json"
+      ],
+      "declaration_paths": [
+        "docs/LATTE_PSID_GENERATOR_ADAPTER.md",
+        "docs/SIDSCOPE_MAINTENANCE.md",
+        "docs/reproducibility/latte_psid_adapter_status.json",
+        "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
+        "examples/latte_psid_trained_trace_fixture/manifest.json",
+        "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
+        "examples/latte_psid_trained_trace_real_smoke/README.md",
+        "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+        "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+        "src/sidinspector/adapters/latte.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/latte.py"
+      ],
+      "schema_id": "sidscope.latte_psid_trained_trace_bundle.v2",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/latte_psid_trained_trace_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/latte_psid_trained_trace_evidence.json",
+        "tools/verify_latte_psid_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.latte_psid_trained_trace_evidence.v1",
+      "verifier_paths": [
+        "tools/verify_latte_psid_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/adapters/latte.py",
+        "tools/verify_latte_psid_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/latte.py"
+      ],
+      "schema_id": "sidscope.latte_psid_trained_trace_verification.v2",
+      "verifier_paths": [
+        "tools/verify_latte_psid_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json",
+        "examples/llada_rec_trained_trace_fixture/trained_trace.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json",
+        "examples/llada_rec_trained_trace_fixture/trained_trace.json",
+        "tools/export_llada_rec_trained_trace.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_llada_rec_trained_trace.py"
+      ],
+      "schema_id": "sidscope.llada_rec_adapter.v2",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "tools/verify_llada_rec_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_adapter_status.v4",
+      "verifier_paths": [
+        "tools/verify_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_llada_rec_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_adapter_verification.v1",
+      "verifier_paths": [
+        "tools/verify_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "examples/llada_rec_diffusion_fixture/manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/llada_rec_diffusion_fixture/manifest.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_diffusion_fixture.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/LLADA_REC_DIFFUSION_ADAPTER.md",
+        "docs/reproducibility/llada_rec_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/LLADA_REC_DIFFUSION_ADAPTER.md",
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "src/sidinspector/adapters/llada_rec.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/llada_rec.py"
+      ],
+      "schema_id": "sidscope.llada_rec_diffusion_trace.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/llada_rec_trained_trace_fixture/episode_selection.json"
+      ],
+      "declaration_paths": [
+        "examples/llada_rec_trained_trace_fixture/episode_selection.json",
+        "tests/test_llada_rec_adapter.py",
+        "tools/export_llada_rec_trained_trace.py",
+        "tools/finalize_llada_rec_prepared_contract.py",
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_llada_rec_trained_trace.py",
+        "tools/finalize_llada_rec_prepared_contract.py"
+      ],
+      "schema_id": "sidscope.llada_rec_episode_selection.v1",
+      "verifier_paths": [
+        "tests/test_llada_rec_adapter.py",
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tests/test_llada_rec_adapter.py",
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "schema_id": "sidscope.llada_rec_generator_state.v1",
+      "verifier_paths": [
+        "tests/test_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "schema_id": "sidscope.llada_rec_generator_state_summary.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/llada_rec_trained_trace_fixture/training_manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/llada_rec_trained_trace_fixture/training_manifest.json",
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "schema_id": "sidscope.llada_rec_generator_training.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_official_source_smoke.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_official_source_smoke.json",
+        "tools/run_llada_rec_official_source_smoke.py",
+        "tools/verify_llada_rec_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_llada_rec_official_source_smoke.py"
+      ],
+      "schema_id": "sidscope.llada_rec_official_source_smoke.v1",
+      "verifier_paths": [
+        "tools/verify_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "examples/llada_rec_trained_trace_fixture/prepared_dataset.json"
+      ],
+      "declaration_paths": [
+        "examples/llada_rec_trained_trace_fixture/prepared_dataset.json",
+        "tests/test_llada_rec_adapter.py",
+        "tools/export_llada_rec_trained_trace.py",
+        "tools/finalize_llada_rec_prepared_contract.py",
+        "tools/run_llada_rec_resumable_training.py",
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_llada_rec_trained_trace.py",
+        "tools/finalize_llada_rec_prepared_contract.py",
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "schema_id": "sidscope.llada_rec_prepared_dataset.v1",
+      "verifier_paths": [
+        "tests/test_llada_rec_adapter.py",
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/finalize_llada_rec_prepared_contract.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/finalize_llada_rec_prepared_contract.py"
+      ],
+      "schema_id": "sidscope.llada_rec_prepared_finalization.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_vg_tokenizer_formal_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_vg_tokenizer_formal_evidence.json",
+        "tools/verify_llada_rec_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_project_tokenizer_evidence.v1",
+      "verifier_paths": [
+        "tools/verify_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_vg_tokenizer_smoke.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_vg_tokenizer_smoke.json",
+        "tools/verify_llada_rec_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_project_tokenizer_smoke.v1",
+      "verifier_paths": [
+        "tools/verify_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tests/test_llada_rec_adapter.py",
+        "tools/run_llada_rec_resumable_tokenizer.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_llada_rec_resumable_tokenizer.py"
+      ],
+      "schema_id": "sidscope.llada_rec_tokenizer_state.v1",
+      "verifier_paths": [
+        "tests/test_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_llada_rec_resumable_tokenizer.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_llada_rec_resumable_tokenizer.py"
+      ],
+      "schema_id": "sidscope.llada_rec_tokenizer_state_summary.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tests/test_llada_rec_adapter.py",
+        "tools/finalize_llada_rec_prepared_contract.py",
+        "tools/run_llada_rec_resumable_tokenizer.py",
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/finalize_llada_rec_prepared_contract.py",
+        "tools/run_llada_rec_resumable_tokenizer.py",
+        "tools/run_llada_rec_resumable_training.py"
+      ],
+      "schema_id": "sidscope.llada_rec_tokenizer_training.v1",
+      "verifier_paths": [
+        "tests/test_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json",
+        "examples/llada_rec_trained_trace_fixture/trained_trace.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json",
+        "examples/llada_rec_trained_trace_fixture/trained_trace.json",
+        "tools/export_llada_rec_trained_trace.py",
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_llada_rec_trained_trace.py"
+      ],
+      "schema_id": "sidscope.llada_rec_trained_trace.v2",
+      "verifier_paths": [
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_trained_trace_expected_failure.v1",
+      "verifier_paths": [
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_adapter_status.json",
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json",
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_trained_trace_verification.v1",
+      "verifier_paths": [
+        "tools/verify_llada_rec_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/llada_rec_vg_trained_trace_evidence.json",
+        "tools/verify_llada_rec_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.llada_rec_vg_trained_trace_evidence.v1",
+      "verifier_paths": [
+        "tools/verify_llada_rec_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_module_dependencies.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_module_dependencies.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:contracts",
+      "producer_paths": [],
+      "schema_id": "sidscope.module_dependency_matrix.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
+        "examples/latte_psid_trained_trace_fixture/manifest.json",
+        "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
+        "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+        "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json"
+      ],
+      "declaration_paths": [
+        "examples/latte_psid_trained_trace_fixture/expected_failure_missing_ancestry.json",
+        "examples/latte_psid_trained_trace_fixture/manifest.json",
+        "examples/latte_psid_trained_trace_fixture/psid_evaluation_slots.json",
+        "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+        "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+        "src/sidinspector/adapters/latte.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/latte.py"
+      ],
+      "schema_id": "sidscope.normalized_item_sid_universe.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_sidscope_public_url_smoke.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/run_sidscope_public_url_smoke.py"
+      ],
+      "schema_id": "sidscope.public_url_smoke.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_sidscope_realistic_tutorial.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_sidscope_realistic_tutorial.py"
+      ],
+      "schema_id": "sidscope.realistic_tutorial.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/smoke_sidscope_release_candidate_archive.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/smoke_sidscope_release_candidate_archive.py"
+      ],
+      "schema_id": "sidscope.release_archive_smoke.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/build_sidscope_release_candidate_archive.py",
+        "tools/run_sidscope_g8_fresh_env_smoke.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/build_sidscope_release_candidate_archive.py",
+        "tools/run_sidscope_g8_fresh_env_smoke.py"
+      ],
+      "schema_id": "sidscope.release_candidate_archive.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [],
+      "schema_id": "sidscope.release_metadata_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/resot_instruments_category_control.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/resot_instruments_category_control.json",
+        "tools/build_resot_same_dataset_control.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_resot_same_dataset_control.py"
+      ],
+      "schema_id": "sidscope.resot.same_dataset_control.v2",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/resot_resource_walkthrough.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/resot_resource_walkthrough.json",
+        "tools/build_resot_resource_walkthrough.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_resot_resource_walkthrough.py"
+      ],
+      "schema_id": "sidscope.resot_resource_walkthrough.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/resot_walkthrough_sources.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/resot_walkthrough_sources.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.resot_walkthrough_sources.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_resource_package.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [],
+      "schema_id": "sidscope.resource_package_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_resource_package.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "schema_id": "sidscope.rpg_downstream_handoff.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "examples/rpg_non_ar_bridge_fixture/episode_selection.json",
+        "examples/rpg_non_ar_bridge_fixture/expected_failure_duplicate_selection.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "examples/rpg_non_ar_bridge_fixture/episode_selection.json",
+        "examples/rpg_non_ar_bridge_fixture/expected_failure_duplicate_selection.json",
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "schema_id": "sidscope.rpg_episode_selection.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "tools/run_rpg_resumable_training.py",
+        "tools/verify_rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_rpg_resumable_training.py"
+      ],
+      "schema_id": "sidscope.rpg_epoch_ledger.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_non_ar_bridge.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/rpg_kdd2025_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/rpg_kdd2025_adapter_status.json",
+        "tools/verify_rpg_generator_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_generator_adapter_status.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_generator_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_rpg_generator_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_generator_adapter_verification.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_generator_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "examples/rpg_generator_fixture/manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/rpg_generator_fixture/manifest.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_generator_fixture.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/rpg_non_ar_bridge_fixture/interactions.json"
+      ],
+      "declaration_paths": [
+        "examples/rpg_non_ar_bridge_fixture/interactions.json",
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "schema_id": "sidscope.rpg_interaction_sequences.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "tools/verify_rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_non_ar_bridge_smoke.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_non_ar_bridge.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_non_ar_bridge_verification.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_non_ar_bridge.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/rpg_kdd2025_official_source_smoke.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/rpg_kdd2025_official_source_smoke.json",
+        "tools/run_rpg_official_source_smoke.py",
+        "tools/verify_rpg_generator_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_rpg_official_source_smoke.py"
+      ],
+      "schema_id": "sidscope.rpg_official_source_smoke.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_generator_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/rpg_beauty_cache_build.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/rpg_beauty_cache_build.json",
+        "tools/build_rpg_opq_cache.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_rpg_opq_cache.py"
+      ],
+      "schema_id": "sidscope.rpg_opq_cache_build.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/rpg_beauty_intake.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/rpg_beauty_intake.json",
+        "tools/normalize_rpg_opq_cache.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/normalize_rpg_opq_cache.py"
+      ],
+      "schema_id": "sidscope.rpg_opq_normalized_intake.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/rpg_kdd2025_adapter_status.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/rpg_kdd2025_adapter_status.json",
+        "src/sidinspector/adapters/rpg.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/adapters/rpg.py"
+      ],
+      "schema_id": "sidscope.rpg_parallel_trace.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "examples/rpg_non_ar_bridge_fixture/prepared_dataset.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "examples/rpg_non_ar_bridge_fixture/prepared_dataset.json",
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "schema_id": "sidscope.rpg_prepared_dataset.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/finalize_rpg_prepared_dataset.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/finalize_rpg_prepared_dataset.py"
+      ],
+      "schema_id": "sidscope.rpg_prepared_dataset_finalization.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_rpg_resumable_training.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_rpg_resumable_training.py"
+      ],
+      "schema_id": "sidscope.rpg_prepared_training_preflight.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/rpg_rank_depth_fixture/target_rank_claims.json"
+      ],
+      "declaration_paths": [
+        "examples/rpg_rank_depth_fixture/target_rank_claims.json",
+        "tests/test_rpg_rank_depth.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_rank_depth_claim_fixture.v1",
+      "verifier_paths": [
+        "tests/test_rpg_rank_depth.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "tests/test_rpg_rank_depth.py",
+        "tools/export_rpg_trained_trace.py",
+        "tools/verify_rpg_non_ar_bridge.py",
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_rpg_trained_trace.py"
+      ],
+      "schema_id": "sidscope.rpg_rank_depth_diagnostic.v1",
+      "verifier_paths": [
+        "tests/test_rpg_rank_depth.py",
+        "tools/verify_rpg_non_ar_bridge.py",
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "tools/run_rpg_resumable_training.py",
+        "tools/verify_rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_rpg_resumable_training.py"
+      ],
+      "schema_id": "sidscope.rpg_resumable_state.v2",
+      "verifier_paths": [
+        "tools/verify_rpg_non_ar_bridge.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json"
+      ],
+      "declaration_paths": [
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "tools/run_rpg_resumable_training.py",
+        "tools/verify_rpg_non_ar_bridge.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_rpg_resumable_training.py"
+      ],
+      "schema_id": "sidscope.rpg_trained_closure_run.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_non_ar_bridge.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json"
+      ],
+      "declaration_paths": [
+        "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
+        "tools/export_rpg_trained_trace.py",
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_rpg_trained_trace.py"
+      ],
+      "schema_id": "sidscope.rpg_trained_trace_bundle.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "examples/rpg_non_ar_bridge_fixture/trained_trace_v2.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/RPG_NON_AR_BRIDGE.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
+        "examples/rpg_non_ar_bridge_fixture/trained_trace_v2.json",
+        "tools/export_rpg_trained_trace.py",
+        "tools/rpg_non_ar_bridge.py",
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/export_rpg_trained_trace.py",
+        "tools/rpg_non_ar_bridge.py"
+      ],
+      "schema_id": "sidscope.rpg_trained_trace_bundle.v2",
+      "verifier_paths": [
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/rpg_kdd2025_trained_trace_evidence.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/rpg_kdd2025_trained_trace_evidence.json",
+        "tools/verify_rpg_generator_adapter.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_trained_trace_evidence.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_generator_adapter.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_trained_trace_verification.v1",
+      "verifier_paths": [
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tests/test_rpg_non_ar_bridge.py",
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.rpg_trained_trace_verification.v2",
+      "verifier_paths": [
+        "tests/test_rpg_non_ar_bridge.py",
+        "tools/verify_rpg_trained_trace_bundle.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_sidscope_sampled_regeneration.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/run_sidscope_sampled_regeneration.py"
+      ],
+      "schema_id": "sidscope.sampled_regeneration.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/V1_2_TO_V2_ROADMAP.md",
+        "docs/adr/0003-canonical-identity-versioning-hashing.md",
+        "examples/source_identity_fixture/expected_failure_content_hash_mismatch.json",
+        "examples/source_identity_fixture/source_identity.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/V1_2_TO_V2_ROADMAP.md",
+        "docs/adr/0003-canonical-identity-versioning-hashing.md",
+        "examples/source_identity_fixture/expected_failure_content_hash_mismatch.json",
+        "examples/source_identity_fixture/source_identity.json",
+        "src/sidinspector/contracts/source_identity.py",
+        "src/sidinspector/schemas/source_identity.v1.schema.json",
+        "tests/test_source_identity_contract.py",
+        "tools/build_sidscope_architecture_inventory.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:contracts",
+      "producer_paths": [
+        "src/sidinspector/contracts/source_identity.py",
+        "src/sidinspector/schemas/source_identity.v1.schema.json",
+        "tools/build_sidscope_architecture_inventory.py"
+      ],
+      "schema_id": "sidscope.source_identity.v1",
+      "verifier_paths": [
+        "tests/test_source_identity_contract.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_source_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:conformance",
+      "producer_paths": [],
+      "schema_id": "sidscope.source_license_config_inventory.verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_source_inventory.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/source_route_evidence_summary.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/source_route_evidence_summary.json",
+        "tools/verify_sidscope_source_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.source_route_evidence_summary.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_source_inventory.py"
+      ]
+    }
+  ],
+  "scope": "public_release_manifest_plus_active_route_ledgers",
+  "status": "pass",
+  "version_axes": {
+    "adapter_sdk": "not_released",
+    "canonical_schema": "sidscope.source_identity.v1@1.0.0",
+    "conformance_profiles": [
+      "static_mapping_c0_c5",
+      "generator_g0_g5",
+      "release_local"
+    ],
+    "evidence_bundle": "route_specific_legacy_authorities",
+    "product_package": "1.1.1.dev0"
+  }
+}
+

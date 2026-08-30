@@ -28,6 +28,21 @@ package, deterministic archive and isolated-environment gates. New GPU evidence
 is required only when a method, data, checkpoint or configuration identity
 changes, not for shared-core refactoring.
 
+### Architecture Sprint 0 implementation status
+
+The 1.1.1 development line now contains the first executable transition
+slice: a machine-readable architecture inventory, canonical hashing/version
+rules, an enforced module-dependency matrix, the `sidscope` CLI facade, and
+the `sidscope.source_identity.v1` model/schema/validator with positive,
+typed-negative, and legacy-adapter parity tests. This starts 1.2 delivery but
+does not declare 1.2 released or imply that the remaining canonical entities
+already exist.
+
+After this sprint is committed, implementation from 1.2 through 2.0 moves to
+the dedicated `SIDScope-v2` worktree and `codex/sidscope-v2` branch. The
+`SIDScope-v1.1` worktree remains the 1.1.x maintenance surface, and the frozen
+TOIS repository remains an independent, non-merge target.
+
 ## 2. State Transition
 
 ### Current State

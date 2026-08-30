@@ -12,6 +12,8 @@ adapters, and publishes artifact-level diagnostics, candidate-exposure probes,
 method-faithful trace accounting, and bounded evidence. The approved target
 architecture is documented in `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`; the
 implementation sequence through 2.0 is in `docs/V1_2_TO_V2_ROADMAP.md`.
+Release numbering and compatibility are governed by `docs/VERSIONING.md` and
+`docs/COMPATIBILITY.md`.
 
 Implementation note: the Python import package remains `sidinspector` for
 compatibility with the released diagnostic code.
@@ -43,6 +45,17 @@ python3 -m pip install -e .
 ```
 
 This installs the `sidinspector` package from the repository's `src/` layout.
+It also installs the stable `sidscope` command facade. The first shared
+contract slice can be checked without loading any optional adapter runtime:
+
+```bash
+sidscope contract validate \
+  --type source-identity \
+  --input examples/source_identity_fixture/source_identity.json
+```
+
+This SourceIdentity v1 slice is the first implemented 1.2 contract surface;
+the other 1.2--2.0 interfaces remain roadmap items until their exit gates pass.
 
 ### Optional Latte Tokenizer Intake
 
@@ -124,7 +137,8 @@ the release package.
 For the SIDScope resource-package contract, see
 `docs/SIDSCOPE_RESOURCE_PACKAGE.md`, `docs/SIDSCOPE_DATASHEET.md`,
 `docs/SIDSCOPE_LIMITATIONS.md`, `docs/SIDSCOPE_MAINTENANCE.md`, and
-`docs/SIDSCOPE_RELEASE_CHECKLIST.md`. The local release-candidate changelog is
+`docs/SIDSCOPE_RELEASE_CHECKLIST.md`. Version and compatibility policies are
+in `docs/VERSIONING.md` and `docs/COMPATIBILITY.md`. The local release-candidate changelog is
 `docs/SIDSCOPE_CHANGELOG.md`; the public release preparation packet is
 `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
 

@@ -33,6 +33,10 @@ The chosen runtime shape through 2.0 is a local-first modular monolith:
 
 The accepted product-boundary and topology decisions are recorded in
 `adr/0001-product-boundary.md` and `adr/0002-local-first-modular-platform.md`.
+ADR 0003 defines canonical identity, versioning and hashing; ADR 0004 defines
+module boundaries and the stable CLI/import identity. The executable dependency
+policy is `reproducibility/sidscope_module_dependencies.json`, documented in
+`SIDSCOPE_MODULE_DEPENDENCIES.md` and enforced by architecture tests.
 
 ## 2. System Context
 

@@ -11,6 +11,21 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.1.1.dev0: Architecture Sprint 0 and SourceIdentity slice
+
+- Added version and compatibility policies, a reusable GitHub Release
+  template, canonical hashing/version ADR, module-boundary ADR, and an
+  executable dependency matrix.
+- Added a deterministic machine inventory of schema IDs, producers,
+  verifiers, profiles, adapter ownership, and evidence edges.
+- Added `sidscope.source_identity.v1` as the first canonical vertical slice:
+  JSON Schema, Python model, fail-closed validator, canonical content hash,
+  positive/typed-negative fixtures, and legacy adapter-manifest parity.
+- Added the stable `sidscope contract validate` CLI facade while retaining
+  the `sidinspector` import and all legacy method-specific CLIs.
+- Integrated architecture inventory and release-metadata checks into the CPU
+  resource-package gate. This is transition infrastructure, not a 1.2 release.
+
 ## SIDScope v1.1.1.dev0: approve the 2.0 system architecture
 
 - Adopted the product position "conformance and observability for Semantic-ID

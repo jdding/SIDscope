@@ -19,5 +19,7 @@ setup(
             "sentence-transformers>=3.0,<6",
         ],
     },
+    package_data={"sidinspector": ["schemas/*.json"]},
+    entry_points={"console_scripts": ["sidscope=sidinspector.cli:main"]},
     python_requires=">=3.9",
 )

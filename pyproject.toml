@@ -38,5 +38,11 @@ latte = [
 Homepage = "https://github.com/jdding/sidscope"
 Repository = "https://github.com/jdding/sidscope"
 
+[project.scripts]
+sidscope = "sidinspector.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+sidinspector = ["schemas/*.json"]

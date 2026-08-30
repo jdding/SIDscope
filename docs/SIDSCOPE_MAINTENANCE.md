@@ -15,6 +15,10 @@ or archive should be checked with `tools/verify_sidscope_resource_package.py`
 and the G8 fresh-environment smoke in `docs/SIDSCOPE_RELEASE_CHECKLIST.md`.
 The public URL, tag, archive checksum, and fresh-environment transcript should
 be recorded in `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
+The five independent compatibility axes and supported-version matrix are
+authoritative in `docs/VERSIONING.md` and `docs/COMPATIBILITY.md`. GitHub
+Release notes start from `docs/SIDSCOPE_RELEASE_TEMPLATE.md`; README changes
+are reviewed every release but made only when the public entrypoint changes.
 
 Release refs:
 
@@ -26,6 +30,14 @@ Release refs:
 - `sidscope-v1-tois-submission`: frozen journal-submission package.
 - `sidscope-v1-tois-revision-N`: revised journal packages when requested by
   the editor; each tag must bind a verifier record and archive checksum.
+
+Workspace policy:
+
+- the `SIDScope-v1.1` worktree is the 1.1.x maintenance surface;
+- after Architecture Sprint 0 is committed, 1.2--2.0 development uses a
+  separate `SIDScope-v2` worktree on `codex/sidscope-v2`;
+- the frozen TOIS repository and refs are never a merge target for either
+  worktree.
 
 Version 1.1.0 was released from `codex/sidscope-v1.1` as annotated tag
 `v1.1.0` at `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`. The public URL smoke
@@ -64,6 +76,8 @@ The approved post-1.1.1 product boundary and runtime shape are defined in
 `docs/V1_2_TO_V2_ROADMAP.md`. Significant changes to owned layers, plugin
 boundaries, schema compatibility, registry authority, distribution policy or
 runtime topology require an Architecture Decision Record under `docs/adr/`.
+Canonical hash/version policy is ADR 0003, and enforceable module/CLI
+boundaries are ADR 0004 plus `docs/SIDSCOPE_MODULE_DEPENDENCIES.md`.
 
 Accepted ADRs are historical records. Do not rewrite an accepted decision to
 fit a later implementation; create a superseding ADR with the new context,

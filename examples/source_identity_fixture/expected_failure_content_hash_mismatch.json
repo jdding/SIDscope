@@ -1,0 +1,28 @@
+{
+  "artifact_name": "deidentified source-identity fixture",
+  "content_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "derivation": "tracked_snapshot",
+  "license": {
+    "identifier": "NOASSERTION",
+    "notices": [],
+    "redistribution_policy": "excluded",
+    "status": "no_license_detected"
+  },
+  "paper": {
+    "title": "Fixture Method",
+    "url": "https://example.org/papers/fixture"
+  },
+  "patches": [],
+  "producer": {
+    "name": "sidscope.fixture",
+    "version": "1.1.1.dev0"
+  },
+  "repository": {
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "revision_kind": "git_commit",
+    "url": "https://github.com/example/fixture-method"
+  },
+  "schema": "sidscope.source_identity.v1",
+  "schema_revision": "1.0.0",
+  "source_id": "fixture_method"
+}

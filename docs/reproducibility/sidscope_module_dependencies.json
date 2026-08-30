@@ -1,0 +1,84 @@
+{
+  "legacy_compatibility_modules": [
+    "sidinspector.adapters",
+    "sidinspector.conformance",
+    "sidinspector.d7_trace",
+    "sidinspector.interface",
+    "sidinspector.metrics",
+    "sidinspector.preflight",
+    "sidinspector.trace_analysis"
+  ],
+  "modules": {
+    "adapters_core": {
+      "allowed_internal_imports": [
+        "adapters_core",
+        "contracts",
+        "sdk",
+        "trace"
+      ],
+      "status": "planned"
+    },
+    "cli": {
+      "allowed_internal_imports": [
+        "adapters_core",
+        "cli",
+        "conformance_core",
+        "contracts",
+        "evaluation",
+        "evidence",
+        "sdk",
+        "trace"
+      ],
+      "status": "active"
+    },
+    "conformance_core": {
+      "allowed_internal_imports": [
+        "conformance_core",
+        "contracts",
+        "evaluation",
+        "trace"
+      ],
+      "status": "planned"
+    },
+    "contracts": {
+      "allowed_internal_imports": [
+        "contracts"
+      ],
+      "status": "active"
+    },
+    "evaluation": {
+      "allowed_internal_imports": [
+        "contracts",
+        "evaluation",
+        "trace"
+      ],
+      "status": "planned"
+    },
+    "evidence": {
+      "allowed_internal_imports": [
+        "conformance_core",
+        "contracts",
+        "evaluation",
+        "evidence"
+      ],
+      "status": "planned"
+    },
+    "sdk": {
+      "allowed_internal_imports": [
+        "contracts",
+        "sdk"
+      ],
+      "status": "planned"
+    },
+    "trace": {
+      "allowed_internal_imports": [
+        "contracts",
+        "trace"
+      ],
+      "status": "planned"
+    }
+  },
+  "schema": "sidscope.module_dependency_matrix.v1",
+  "status": "accepted",
+  "target_package": "sidinspector"
+}

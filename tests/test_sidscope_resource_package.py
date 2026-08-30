@@ -17,6 +17,8 @@ from tools.run_sidscope_g8_fresh_env_smoke import fresh_env_install_commands
 from tools.run_sidscope_realistic_tutorial import run_tutorial
 from tools.smoke_sidscope_release_candidate_archive import smoke_archive
 from tools.verify_sidscope_claim_ledger import verify_ledger
+from tools.verify_sidscope_architecture_inventory import verify_inventory
+from tools.verify_sidscope_release_metadata import verify_release_metadata
 from tools.verify_sidscope_resource_package import (
     ROOT,
     check_forbidden_public_content,
@@ -118,6 +120,11 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("docs/V1_2_TO_V2_ROADMAP.md", expanded)
         self.assertIn("docs/adr/0001-product-boundary.md", expanded)
         self.assertIn("docs/adr/0002-local-first-modular-platform.md", expanded)
+        self.assertIn("docs/adr/0003-canonical-identity-versioning-hashing.md", expanded)
+        self.assertIn("docs/adr/0004-module-boundaries-and-cli-identity.md", expanded)
+        self.assertIn("docs/VERSIONING.md", expanded)
+        self.assertIn("docs/COMPATIBILITY.md", expanded)
+        self.assertIn("docs/reproducibility/sidscope_architecture_inventory.json", expanded)
         self.assertIn("docs/SIDSCOPE_USAGE_DEMO.md", expanded)
         self.assertIn("docs/reproducibility/g14_usage_demo_decisions.csv", expanded)
         self.assertIn(
@@ -180,6 +187,16 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         adr_index = (ROOT / "docs" / "adr" / "README.md").read_text(encoding="utf-8")
         self.assertIn("0001-product-boundary.md", adr_index)
         self.assertIn("0002-local-first-modular-platform.md", adr_index)
+        self.assertIn("0003-canonical-identity-versioning-hashing.md", adr_index)
+        self.assertIn("0004-module-boundaries-and-cli-identity.md", adr_index)
+
+    def test_release_metadata_and_architecture_inventory_verify(self) -> None:
+        metadata = verify_release_metadata()
+        inventory = verify_inventory()
+
+        self.assertEqual(metadata["status"], "pass")
+        self.assertEqual(metadata["package_version"], "1.1.1.dev0")
+        self.assertEqual(inventory["status"], "pass")
 
     def test_public_package_content_scan_is_clean(self) -> None:
         expanded = expand_public_manifest_paths(
