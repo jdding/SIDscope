@@ -13,6 +13,7 @@ earlier ADR rather than editing its rationale or consequences in place.
 | [0006](0006-sid-space-and-prepared-dataset-boundary.md) | Separate SID space identity from prepared dataset bindings | Accepted | 2026-08-30 |
 | [0007](0007-canonical-execution-report-and-sdk-boundary.md) | Canonicalize execution evidence and reports without owning training | Accepted | 2026-08-30 |
 | [0008](0008-plugin-and-native-trace-ecosystem.md) | Add lazy adapter plugins and registered native trace families | Accepted | 2026-08-30 |
+| [0009](0009-content-addressed-evidence-and-derived-registry.md) | Make immutable evidence objects authoritative and SQLite derived | Accepted | 2026-08-30 |
 
 New ADRs must include context, decision drivers, viable options, the decision,
 positive and negative consequences, migration, validation and rollback. Accepted

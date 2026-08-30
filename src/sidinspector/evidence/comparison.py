@@ -1,0 +1,269 @@
+"""Fail-closed comparison of immutable SIDScope evidence bundles."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import Any
+
+from sidinspector.evidence.bundle import (
+    EvidenceBundle,
+    EvidenceBundleValidationError,
+    validate_evidence_bundle,
+)
+
+
+_COMPATIBILITY_FIELDS = (
+    ("profile_id", "profile_id_mismatch"),
+    ("profile_revision", "profile_revision_mismatch"),
+    ("dataset_identity_sha256", "dataset_identity_mismatch"),
+    ("target_universe_sha256", "target_universe_mismatch"),
+    ("evaluation_cutoff", "evaluation_cutoff_mismatch"),
+    ("publication_depth", "publication_depth_mismatch"),
+    ("rank_semantics", "rank_semantics_mismatch"),
+)
+
+
+def _raw_document(bundle: EvidenceBundle | Mapping[str, Any]) -> dict[str, Any]:
+    return bundle.to_dict() if isinstance(bundle, EvidenceBundle) else dict(bundle)
+
+
+def _compatibility_view(document: Mapping[str, Any]) -> dict[str, Any]:
+    profile = document["profile_binding"]
+    compatibility = document["compatibility"]
+    return {
+        "profile_id": profile["profile_id"],
+        "profile_revision": profile["profile_revision"],
+        "dataset_identity_sha256": compatibility["dataset_identity_sha256"],
+        "target_universe_sha256": compatibility["target_universe_sha256"],
+        "evaluation_cutoff": compatibility["evaluation_cutoff"],
+        "publication_depth": compatibility["publication_depth"],
+        "rank_semantics": compatibility["rank_semantics"],
+    }
+
+
+def _rank_rejections(side: str, document: Mapping[str, Any]) -> list[dict[str, Any]]:
+    compatibility = document["compatibility"]
+    observations = document["result_card"].get("rank_observations", {})
+    if not isinstance(observations, Mapping):
+        return [{"code": "invalid_rank_observations", "side": side}]
+    exact_ranks = observations.get("exact_ranks", [])
+    if not isinstance(exact_ranks, list):
+        return [{"code": "invalid_exact_ranks", "side": side}]
+    exact_count = observations.get("exact_count", len(exact_ranks))
+    if isinstance(exact_count, bool) or not isinstance(exact_count, int) or exact_count < 0:
+        return [{"code": "invalid_exact_count", "side": side}]
+    rejections: list[dict[str, Any]] = []
+    if exact_count != len(exact_ranks):
+        rejections.append(
+            {
+                "code": "exact_rank_count_mismatch",
+                "side": side,
+                "exact_count": exact_count,
+                "observed_count": len(exact_ranks),
+            }
+        )
+    if compatibility["rank_semantics"] == "cutoff_only" and exact_count > 0:
+        rejections.append(
+            {
+                "code": "unsupported_exact_rank_claim",
+                "side": side,
+                "rank_semantics": "cutoff_only",
+            }
+        )
+    publication_depth = compatibility["publication_depth"]
+    invalid = sorted(
+        {
+            rank
+            for rank in exact_ranks
+            if isinstance(rank, bool)
+            or not isinstance(rank, int)
+            or rank < 1
+            or rank > publication_depth
+        },
+        key=lambda value: (str(type(value)), str(value)),
+    )
+    if invalid:
+        rejections.append(
+            {
+                "code": "exact_rank_exceeds_publication_depth",
+                "side": side,
+                "publication_depth": publication_depth,
+                "invalid_exact_ranks": invalid,
+            }
+        )
+    return rejections
+
+
+def _numeric_delta(left: Any, right: Any) -> dict[str, Any] | None:
+    if (
+        isinstance(left, bool)
+        or isinstance(right, bool)
+        or not isinstance(left, (int, float))
+        or not isinstance(right, (int, float))
+    ):
+        return None
+    return {"left": left, "right": right, "delta": right - left}
+
+
+def _mapping_deltas(left: Any, right: Any) -> dict[str, Any]:
+    left_values = left if isinstance(left, Mapping) else {}
+    right_values = right if isinstance(right, Mapping) else {}
+    result: dict[str, Any] = {}
+    for name in sorted(set(left_values) | set(right_values)):
+        if name not in left_values or name not in right_values:
+            result[str(name)] = {
+                "left": left_values.get(name),
+                "right": right_values.get(name),
+                "delta": None,
+                "status": "missing_operand",
+            }
+            continue
+        delta = _numeric_delta(left_values[name], right_values[name])
+        if delta is None:
+            result[str(name)] = {
+                "left": left_values[name],
+                "right": right_values[name],
+                "delta": None,
+                "status": "non_numeric",
+            }
+        else:
+            result[str(name)] = delta
+    return result
+
+
+def _slice_deltas(left: Any, right: Any) -> dict[str, Any]:
+    left_slices = left if isinstance(left, Mapping) else {}
+    right_slices = right if isinstance(right, Mapping) else {}
+    return {
+        str(slice_id): _mapping_deltas(
+            left_slices.get(slice_id, {}), right_slices.get(slice_id, {})
+        )
+        for slice_id in sorted(set(left_slices) | set(right_slices))
+    }
+
+
+def compare_evidence_bundles(
+    left: EvidenceBundle | Mapping[str, Any],
+    right: EvidenceBundle | Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compare compatible method evidence or return typed incompatibilities.
+
+    Metric deltas are intentionally absent unless every comparison contract axis
+    matches.  A malformed exact-rank claim is rejected before compatibility is
+    considered.
+    """
+
+    raw_left = _raw_document(left)
+    raw_right = _raw_document(right)
+    validation_rejections: list[dict[str, Any]] = []
+    validated: dict[str, dict[str, Any]] = {}
+    for side, raw in (("left", raw_left), ("right", raw_right)):
+        try:
+            validated[side] = validate_evidence_bundle(raw).to_dict()
+        except EvidenceBundleValidationError as error:
+            validation_rejections.append(
+                {
+                    "code": "invalid_bundle",
+                    "side": side,
+                    "validation_code": error.code,
+                    "detail": error.detail,
+                }
+            )
+    left_hash = raw_left.get("content_sha256")
+    right_hash = raw_right.get("content_sha256")
+    base = {
+        "schema": "sidscope.evidence_comparison.v1",
+        "schema_revision": "1.0.0",
+        "left_bundle_sha256": left_hash,
+        "right_bundle_sha256": right_hash,
+    }
+    if validation_rejections:
+        return {
+            **base,
+            "status": "rejected",
+            "contract_compatibility": {
+                "status": "rejected",
+                "reasons": sorted(
+                    validation_rejections,
+                    key=lambda row: (row["validation_code"], row["side"]),
+                ),
+            },
+            "method_difference": None,
+        }
+
+    left_document = validated["left"]
+    right_document = validated["right"]
+
+    rank_rejections = sorted(
+        _rank_rejections("left", left_document)
+        + _rank_rejections("right", right_document),
+        key=lambda row: (row["code"], row["side"]),
+    )
+    if rank_rejections:
+        return {
+            **base,
+            "status": "rejected",
+            "contract_compatibility": {
+                "status": "rejected",
+                "reasons": rank_rejections,
+            },
+            "method_difference": None,
+        }
+
+    left_contract = _compatibility_view(left_document)
+    right_contract = _compatibility_view(right_document)
+    reasons = []
+    for field, code in _COMPATIBILITY_FIELDS:
+        if left_contract[field] != right_contract[field]:
+            reasons.append(
+                {
+                    "code": code,
+                    "field": field,
+                    "left": left_contract[field],
+                    "right": right_contract[field],
+                }
+            )
+    if reasons:
+        return {
+            **base,
+            "status": "incompatible",
+            "contract_compatibility": {
+                "status": "incompatible",
+                "reasons": reasons,
+            },
+            "method_difference": None,
+        }
+
+    left_card = left_document["result_card"]
+    right_card = right_document["result_card"]
+    return {
+        **base,
+        "status": "compatible",
+        "contract_compatibility": {
+            "status": "compatible",
+            "reasons": [],
+            "shared_contract": left_contract,
+        },
+        "method_difference": {
+            "left_subject": left_document["subject"],
+            "right_subject": right_document["subject"],
+            "overall_metrics": _mapping_deltas(
+                left_card.get("overall_metrics", {}),
+                right_card.get("overall_metrics", {}),
+            ),
+            "slice_metrics": _slice_deltas(
+                left_card.get("slice_metrics", {}),
+                right_card.get("slice_metrics", {}),
+            ),
+            "failure_counts": _mapping_deltas(
+                left_card.get("failure_counts", {}),
+                right_card.get("failure_counts", {}),
+            ),
+            "compute": _mapping_deltas(
+                left_card.get("compute", {}), right_card.get("compute", {})
+            ),
+        },
+    }
+
+
+__all__ = ["compare_evidence_bundles"]

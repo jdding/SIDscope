@@ -25,6 +25,8 @@ jobs:
       - run: python tools/verify_sidscope_1_2_legacy_migration_matrix.py
       - run: python tools/verify_sidscope_1_2_cli_baseline.py
       - run: python tools/verify_sidscope_1_3_plugin_ecosystem.py
+      - run: python tools/verify_sidscope_1_4_evidence_system.py
+      - run: python tools/verify_sidscope_1_4_cli_baseline.py
       - run: python tools/verify_sidscope_release_metadata.py
 
   resource-package:

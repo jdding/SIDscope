@@ -33,7 +33,16 @@ from sidinspector.adapters_core import (
     preflight_adapter_plugin,
 )
 from sidinspector.evaluation import diagnostic_report_document, validate_diagnostic_report
-from sidinspector.evidence import build_evidence_index
+from sidinspector.evidence import (
+    EvidenceBundleValidationError,
+    EvidenceRegistry,
+    EvidenceRegistryError,
+    ObjectStore,
+    build_evidence_bundle,
+    build_evidence_index,
+    compare_evidence_bundles,
+    load_evidence_bundle,
+)
 from sidinspector.sdk import ADAPTER_SDK_VERSION, AdapterSDKError, load_adapter_capabilities
 from sidinspector.trace import (
     NativePayloadValidationError,
@@ -52,7 +61,7 @@ def package_version() -> str:
     try:
         return metadata.version("sidinspector")
     except metadata.PackageNotFoundError:
-        return "1.3.0.dev0+source"
+        return "1.4.0.dev0+source"
 
 
 def _file_sha256(path: Path) -> str:
@@ -118,12 +127,66 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--report", required=True, type=Path)
     verify.add_argument("--result-json", type=Path, default=None)
 
-    evidence = commands.add_parser("evidence", help="build canonical evidence indexes")
+    evidence = commands.add_parser("evidence", help="build indexes and immutable bundles")
     evidence_commands = evidence.add_subparsers(dest="evidence_command", required=True)
     package = evidence_commands.add_parser("package", help="package artifact dependencies")
     package.add_argument("--artifact", action="append", required=True, type=Path)
     package.add_argument("--index-id", required=True)
     package.add_argument("--output", required=True, type=Path)
+    bundle = evidence_commands.add_parser("bundle", help="build or verify EvidenceBundle v1")
+    bundle_commands = bundle.add_subparsers(dest="bundle_command", required=True)
+    bundle_build = bundle_commands.add_parser("build")
+    bundle_build.add_argument("--spec", required=True, type=Path)
+    bundle_build.add_argument("--output", required=True, type=Path)
+    bundle_verify = bundle_commands.add_parser("verify")
+    bundle_verify.add_argument("--input", required=True, type=Path)
+    bundle_verify.add_argument("--result-json", type=Path, default=None)
+
+    registry = commands.add_parser("registry", help="manage the derived evidence registry")
+    registry_commands = registry.add_subparsers(dest="registry_command", required=True)
+    for name in ("add", "import"):
+        command = registry_commands.add_parser(name)
+        command.add_argument("--store", required=True, type=Path)
+        command.add_argument("--bundle", action="append", required=True, type=Path)
+        command.add_argument(
+            "--artifact",
+            action="append",
+            default=[],
+            metavar="SHA256=PATH",
+            help="supply one embedded public artifact",
+        )
+        command.add_argument("--result-json", type=Path, default=None)
+    registry_list = registry_commands.add_parser("list")
+    registry_list.add_argument("--store", required=True, type=Path)
+    registry_list.add_argument("--result-json", type=Path, default=None)
+    registry_show = registry_commands.add_parser("show")
+    registry_show.add_argument("--store", required=True, type=Path)
+    registry_show.add_argument("--sha256", required=True)
+    registry_show.add_argument("--result-json", type=Path, default=None)
+    registry_compare = registry_commands.add_parser("compare")
+    registry_compare.add_argument("--store", required=True, type=Path)
+    registry_compare.add_argument("--left", required=True)
+    registry_compare.add_argument("--right", required=True)
+    registry_compare.add_argument("--result-json", type=Path, default=None)
+    registry_supersede = registry_commands.add_parser("supersede")
+    registry_supersede.add_argument("--store", required=True, type=Path)
+    registry_supersede.add_argument("--prior", required=True)
+    registry_supersede.add_argument("--bundle", required=True, type=Path)
+    registry_supersede.add_argument(
+        "--artifact", action="append", default=[], metavar="SHA256=PATH"
+    )
+    registry_supersede.add_argument("--result-json", type=Path, default=None)
+    registry_export = registry_commands.add_parser("export")
+    registry_export.add_argument("--store", required=True, type=Path)
+    registry_export.add_argument("--output", required=True, type=Path)
+    registry_rebuild = registry_commands.add_parser("rebuild")
+    registry_rebuild.add_argument("--store", required=True, type=Path)
+    registry_rebuild.add_argument("--result-json", type=Path, default=None)
+    registry_quarantine = registry_commands.add_parser("quarantine")
+    registry_quarantine.add_argument("--store", required=True, type=Path)
+    registry_quarantine.add_argument("--sha256", required=True)
+    registry_quarantine.add_argument("--reason", required=True)
+    registry_quarantine.add_argument("--result-json", type=Path, default=None)
 
     profile = commands.add_parser("profile", help="inspect and compose conformance profiles")
     profile_commands = profile.add_subparsers(dest="profile_command", required=True)
@@ -376,6 +439,189 @@ def _evidence_package(args: argparse.Namespace) -> int:
         return 2
 
 
+def _evidence_bundle(args: argparse.Namespace) -> int:
+    try:
+        if args.bundle_command == "build":
+            spec = json.loads(args.spec.read_text(encoding="utf-8"))
+            if not isinstance(spec, Mapping):
+                raise EvidenceBundleValidationError("invalid_type", "bundle spec")
+            document = build_evidence_bundle(**dict(spec)).to_dict()
+            _write_artifact(document, args.output)
+            print(json.dumps(document, indent=2, sort_keys=True))
+            return 0
+        bundle = load_evidence_bundle(args.input)
+        result = {
+            "schema": "sidscope.evidence_bundle_validation.v1",
+            "status": "pass",
+            "bundle_id": bundle.bundle_id,
+            "content_sha256": bundle.content_sha256,
+            "artifact_count": len(bundle.artifacts),
+            "supersedes": list(bundle.supersedes),
+            "failure": None,
+        }
+        _write_result(result, args.result_json)
+        return 0
+    except (EvidenceBundleValidationError, OSError, json.JSONDecodeError, TypeError) as exc:
+        result = _failure_result(f"evidence bundle {args.bundle_command}", exc)
+        _write_result(result, getattr(args, "result_json", None))
+        return 2
+
+
+def _public_artifacts(values: Sequence[str]) -> dict[str, Path]:
+    result: dict[str, Path] = {}
+    for value in values:
+        digest, separator, raw_path = value.partition("=")
+        if not separator or not digest or not raw_path:
+            raise EvidenceBundleValidationError(
+                "invalid_artifact_argument", "expected SHA256=PATH"
+            )
+        if digest in result:
+            raise EvidenceBundleValidationError("duplicate_artifact_argument", digest)
+        result[digest] = Path(raw_path)
+    return result
+
+
+def _order_bundles_for_admission(store: ObjectStore, bundles: Sequence[Any]) -> list[Any]:
+    available = {bundle.content_sha256 for bundle in store.iter_bundles()}
+    remaining = {bundle.content_sha256: bundle for bundle in bundles}
+    ordered: list[Any] = []
+    while remaining:
+        ready = sorted(
+            digest
+            for digest, bundle in remaining.items()
+            if set(bundle.supersedes) <= available
+        )
+        if not ready:
+            referenced = {
+                predecessor
+                for bundle in remaining.values()
+                for predecessor in bundle.supersedes
+            }
+            missing = sorted(referenced - available - set(remaining))
+            code = "missing_superseded_bundle" if missing else "supersession_cycle"
+            raise EvidenceBundleValidationError(code, ",".join(missing or sorted(remaining)))
+        for digest in ready:
+            ordered.append(remaining.pop(digest))
+            available.add(digest)
+    return ordered
+
+
+def _registry_command(args: argparse.Namespace) -> int:
+    store = ObjectStore(args.store)
+    registry = EvidenceRegistry(args.store / "registry.sqlite3")
+    try:
+        command = args.registry_command
+        if command in {"add", "import"}:
+            supplied = _public_artifacts(args.artifact)
+            bundles = [load_evidence_bundle(path) for path in args.bundle]
+            used_artifacts: set[str] = set()
+            for bundle in _order_bundles_for_admission(store, bundles):
+                embedded = {
+                    str(row["object_sha256"])
+                    for row in bundle.artifacts
+                    if row["availability"] == "embedded_public"
+                }
+                selected = {digest: path for digest, path in supplied.items() if digest in embedded}
+                used_artifacts.update(selected)
+                store.admit_bundle(bundle, selected)
+            unused = sorted(set(supplied) - used_artifacts)
+            if unused:
+                raise EvidenceBundleValidationError(
+                    "unexpected_public_artifact", ",".join(unused)
+                )
+            if command == "import":
+                registry.import_bundles(bundles)
+            else:
+                for bundle in bundles:
+                    registry.add(bundle)
+            result = {
+                "schema": "sidscope.evidence_registry_operation.v1",
+                "status": "pass",
+                "operation": command,
+                "bundle_sha256s": [bundle.content_sha256 for bundle in bundles],
+                "failure": None,
+            }
+        elif command == "list":
+            result = {
+                "schema": "sidscope.evidence_registry_listing.v1",
+                "status": "pass",
+                "bundles": registry.list_bundles(),
+                "failure": None,
+            }
+        elif command == "show":
+            result = {
+                "schema": "sidscope.evidence_registry_entry.v1",
+                "status": "pass",
+                "bundle": registry.show(args.sha256),
+                "failure": None,
+            }
+        elif command == "compare":
+            result = compare_evidence_bundles(
+                registry.show(args.left), registry.show(args.right)
+            )
+        elif command == "supersede":
+            bundle = load_evidence_bundle(args.bundle)
+            if args.prior not in bundle.supersedes:
+                raise EvidenceRegistryError(
+                    "missing_supersession_declaration", args.prior
+                )
+            store.admit_bundle(bundle, _public_artifacts(args.artifact))
+            registry.add(bundle)
+            result = {
+                "schema": "sidscope.evidence_registry_operation.v1",
+                "status": "pass",
+                "operation": "supersede",
+                "prior_bundle_sha256": args.prior,
+                "replacement_bundle_sha256": bundle.content_sha256,
+                "failure": None,
+            }
+        elif command == "export":
+            result = registry.export_static()
+            _write_artifact(result, args.output)
+            print(json.dumps(result, indent=2, sort_keys=True))
+            return 0
+        elif command == "rebuild":
+            bundles = list(store.iter_bundles())
+            quarantined = list(store.iter_quarantined_bundles())
+            registry.rebuild([*bundles, *quarantined])
+            for bundle in quarantined:
+                registry.quarantine(bundle.content_sha256, reason="object_store_quarantine")
+            result = {
+                "schema": "sidscope.evidence_registry_operation.v1",
+                "status": "pass",
+                "operation": "rebuild",
+                "bundle_count": len(bundles) + len(quarantined),
+                "quarantined_bundle_count": len(quarantined),
+                "failure": None,
+            }
+        elif command == "quarantine":
+            registry.show(args.sha256)
+            store.quarantine_bundle(args.sha256)
+            registry.quarantine(args.sha256, reason=args.reason)
+            result = {
+                "schema": "sidscope.evidence_registry_operation.v1",
+                "status": "pass",
+                "operation": "quarantine",
+                "bundle_sha256": args.sha256,
+                "failure": None,
+            }
+        else:
+            raise AssertionError("unreachable registry command")
+        _write_result(result, getattr(args, "result_json", None))
+        return 0
+    except (
+        EvidenceBundleValidationError,
+        EvidenceRegistryError,
+        OSError,
+        json.JSONDecodeError,
+    ) as exc:
+        _write_result(
+            _failure_result(f"registry {args.registry_command}", exc),
+            getattr(args, "result_json", None),
+        )
+        return 2
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "adapter":
@@ -391,7 +637,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "verify":
         return _verify(args)
     if args.command == "evidence":
+        if args.evidence_command == "bundle":
+            return _evidence_bundle(args)
         return _evidence_package(args)
+    if args.command == "registry":
+        return _registry_command(args)
     if args.command == "profile":
         return _profile_command(args)
     if args.command != "contract":

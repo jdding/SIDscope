@@ -1,0 +1,14 @@
+{
+  "negative": {
+    "expected_failure_privacy.json": "privacy_boundary_violation",
+    "expected_failure_provenance_cycle.json": "provenance_cycle",
+    "expected_failure_unsupported_rank.json": "unsupported_exact_rank_claim"
+  },
+  "positive": [
+    "baseline_bundle.json",
+    "correction_bundle.json",
+    "incompatible_bundle.json"
+  ],
+  "public_artifact": "public_conformance_summary.json",
+  "schema": "sidscope.evidence_system_fixture_manifest.v1"
+}

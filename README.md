@@ -54,10 +54,11 @@ sidscope contract validate \
   --input examples/source_identity_fixture/source_identity.json
 ```
 
-The active `1.3.0.dev0` line retains the eleven canonical contracts from source
-identity through evidence index and adds Adapter SDK `0.2.0-alpha`, lazy
-external plugins, five registered native payload families, composable profiles,
-and the shared CLI.
+The active `1.4.0.dev0` line retains the eleven canonical contracts from source
+identity through evidence index, Adapter SDK `0.2.0-alpha`, lazy external
+plugins, five registered native payload families, and composable profiles. It
+adds immutable EvidenceBundle v1 objects, a rebuildable SQLite registry,
+supersession, privacy-gated admission, and compatibility-aware comparison.
 The complete common path runs without optional adapter runtimes:
 
 ```bash
@@ -99,8 +100,10 @@ RPG is the first end-to-end canonical fixture. Other current routes retain
 their legacy verifier authority and receive explicit regeneration dispositions;
 no historical evidence or adapter status is rewritten. External adapters are
 discovered lazily under `sidscope.adapters`; core verification works with the
-plugin absent. Immutable EvidenceBundle storage and SQLite projection start in
-1.4.
+plugin absent. EvidenceIndex remains the deterministic dependency inventory.
+EvidenceBundle v1 is the independently versioned immutable package: the
+SHA-256 object layout is authoritative and SQLite is only a disposable
+projection. See `docs/EVIDENCE_BUNDLES_AND_REGISTRY.md`.
 
 ```bash
 sidscope plugin list

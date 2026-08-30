@@ -11,6 +11,23 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.4.0.dev0: immutable evidence system
+
+- Added exact EvidenceBundle v1 validation with canonical non-self-referential
+  hashes, complete provenance DAGs, result cards, censoring, privacy, and
+  hash-only restricted-asset references.
+- Added atomic SHA-256 bundle/object storage. Immutable JSON objects are the
+  authority; corrections create new objects with explicit supersession edges.
+- Added a standard-library SQLite projection with add/list/show, deterministic
+  static export, import, rebuild, quarantine, and deletion/rebuild parity.
+- Added compatibility-aware comparison that refuses metric deltas across
+  profile, dataset, target-universe, cutoff, publication-depth, or rank-semantic
+  mismatches and rejects unsupported exact-rank claims.
+- Added bundle and registry CLI commands, positive and typed-negative fixtures,
+  ADR-0009, architecture inventory integration, and a CPU-only closure verifier.
+- Kept EvidenceIndex v1, route-specific evidence, adapter statuses, upstream
+  training, and all frozen TOIS assets unchanged.
+
 ## SIDScope v1.3.0.dev0: adapter plugins and native trace families
 
 - Added lazy `importlib.metadata` discovery under `sidscope.adapters`; listing

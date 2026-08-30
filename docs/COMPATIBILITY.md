@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: SIDScope 1.3 development closure baseline
+Status: SIDScope 1.4 development closure baseline
 
 ## Product and Entry Points
 
@@ -11,6 +11,7 @@ Status: SIDScope 1.3 development closure baseline
 | 1.1.1.dev0 | `sidinspector` | `sidinspector` | `sidscope` facade plus legacy commands | Frozen regression authority |
 | 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Sprint 1--4 development closed; public release not implied |
 | 1.3.0.dev0 | `sidinspector` | `sidinspector` | facade plus lazy `sidscope.adapters` plugins | Adapter/native-trace ecosystem development closed; public release not implied |
+| 1.4.0.dev0 | `sidinspector` | `sidinspector` | facade plus evidence bundle and registry commands | Immutable evidence-system development closed; public release not implied |
 
 No import or distribution rename is planned during 1.x. The facade validates
 all eleven canonical 1.2 contracts and provides adapter preflight, trace
@@ -22,11 +23,11 @@ during migration.
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `1.3.0.dev0` | PEP 440 development version; not a public 1.3.0 release. |
+| Product/package | `1.4.0.dev0` | PEP 440 development version; not a public 1.4.0 release. |
 | Adapter SDK | `0.2.0-alpha` | Versioned capability descriptors and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | legacy C0--C5/G0--G5 plus `common.generator.v1` and five family profiles | Existing route verifiers remain authoritative until exact parity migration. |
-| Evidence bundle | deterministic EvidenceIndex v1 plus route-specific 1.1 authorities | Indexes are reproducible; immutable object storage remains a 1.4 feature. |
+| Evidence bundle | `sidscope.evidence_bundle.v1@1.0.0` | Immutable canonical JSON; SHA-256 object directory authoritative; SQLite and static views are derived. |
 
 The canonical schema IDs are `sidscope.source_identity.v1`,
 `sidscope.dataset_identity.v1`, `sidscope.sid_space_identity.v1`,
@@ -119,5 +120,20 @@ The five payload schema majors are
 `sidscope.trace_payload.latent_retry.v1`, and
 `sidscope.trace_payload.decoder_overlay.v1`. Envelope compatibility does not
 imply native-payload compatibility. Unknown family/schema pairs and unsupported
-semantic claims fail closed. EvidenceBundle format remains unimplemented until
-1.4; no 1.3 file is silently treated as an admitted immutable bundle.
+semantic claims fail closed. No 1.3 file is silently treated as an admitted
+immutable bundle.
+
+## EvidenceBundle and Registry Compatibility
+
+EvidenceBundle v1 is additive to, and distinct from, EvidenceIndex v1. Bundle
+admission requires exact revision `1.0.0`, a valid canonical content hash, a
+complete acyclic provenance graph, false privacy-export flags, and supported
+rank-censoring semantics. Restricted artifacts may be hash references and do
+not need to be redistributed.
+
+The SQLite registry is not a compatibility or identity axis. It may be deleted
+and rebuilt from admitted objects, and its deterministic static export must
+remain unchanged. A correction creates a new bundle with a supersession edge;
+it never changes the old bundle. Comparison produces metric deltas only when
+profile revision, dataset, target universe, evaluation cutoff, publication
+depth, and rank semantics match. Otherwise it returns typed incompatibility.

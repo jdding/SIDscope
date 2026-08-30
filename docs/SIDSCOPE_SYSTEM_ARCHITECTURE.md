@@ -240,7 +240,8 @@ SIDScope a training framework.
 | `TraceEnvelope` | Common observation summary plus a hash-bound method-family-native payload. |
 | `DiagnosticReport` | Metrics, failure decomposition, compute and censoring semantics. |
 | `ConformanceReport` | Profile, gate outcomes, typed failures, verifier identity and verified input hashes. |
-| `EvidenceIndex` | Deterministic dependency index without embedded excluded private assets; immutable storage follows in 1.4. |
+| `EvidenceIndex` | Deterministic dependency index without embedded excluded private assets. |
+| `EvidenceBundle` | Immutable result package binding profile, compatibility, provenance, result card, privacy, and supersession. |
 
 Every canonical artifact has a schema ID/version, producer identity, canonical
 content hash and explicit dependency references. Cyclic or unknown dependencies
@@ -258,6 +259,13 @@ DatasetIdentity and SIDSpaceIdentity. EpisodeSelection, RunIdentity,
 CheckpointBinding, TraceEnvelope, DiagnosticReport, ConformanceReport, and
 EvidenceIndex form the downstream acyclic chain. Training remains external;
 selection, trace, and evaluation dependencies are excluded from PreparedDataset.
+
+EvidenceBundle is independently versioned from the eleven-contract registry.
+It packages that chain and its result card into a canonical SHA-256 object.
+Admitted bundle and public-artifact objects are authoritative; the local SQLite
+registry is a disposable query projection that must rebuild to the same static
+view. Restricted assets remain hash-only references. Corrections append a new
+bundle with a supersession edge instead of mutating prior evidence.
 
 ### 6.3 Observation Layer: Trace Protocol
 

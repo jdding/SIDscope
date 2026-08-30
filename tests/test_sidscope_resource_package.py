@@ -208,7 +208,7 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         inventory = verify_inventory()
 
         self.assertEqual(metadata["status"], "pass")
-        self.assertEqual(metadata["package_version"], "1.3.0.dev0")
+        self.assertEqual(metadata["package_version"], "1.4.0.dev0")
         self.assertEqual(inventory["canonical_contract_count"], 11)
         self.assertEqual(inventory["status"], "pass")
 

@@ -2,7 +2,7 @@
 
 Status: approved development direction
 
-Regression baseline: `1.1.1.dev0`; active development: `1.3.0.dev0`
+Regression baseline: `1.1.1.dev0`; active development: `1.4.0.dev0`
 
 Architecture authority: `SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 
@@ -112,6 +112,28 @@ probed without import or core dependency.
 This closes the 1.3 deliverables and exit gates without changing existing
 named-adapter evidence. Immutable EvidenceBundle storage, SQLite projections,
 admission, comparison, and supersession remain exclusively assigned to 1.4.
+
+### 1.4 implementation status
+
+The 1.4 Evidence Bundles, Registry and Comparison milestone is
+development-closed. EvidenceBundle v1 binds profile, method family, dataset,
+target universe, evaluation depth, provenance, result card, rank censoring,
+privacy, and supersession under one canonical non-self-referential SHA-256.
+Public bytes use an atomic content-addressed object layout; restricted assets
+remain hash-only references.
+
+Standard-library SQLite is a derived projection with add, list, show, compare,
+supersede, import, export, quarantine, and rebuild. Deleting it and rebuilding
+from immutable active and quarantined objects reproduces the deterministic
+static view. Comparison emits metric deltas only when profile, dataset,
+universe, cutoff, publication depth, and rank semantics match; unsupported
+exact-rank claims fail closed.
+
+Positive, supersession, incompatibility, privacy, provenance-cycle, and rank
+fixtures close the CPU verifier. Six new command families have a measured CPU
+baseline and the existing 20% review policy. No upstream training, adapter
+status, historical EvidenceIndex, 1.1 evidence, or frozen TOIS artifact changes
+as part of this milestone.
 
 ## 2. State Transition
 

@@ -1,4 +1,4 @@
-# SIDScope 1.3 Development Handoff
+# SIDScope 1.4 Development Handoff
 
 Last updated: 2026-08-30
 
@@ -6,7 +6,7 @@ Last updated: 2026-08-30
 
 SIDScope 1.1.0 is locally release-ready and publicly released. The verified
 `1.1.1.dev0` tree is the frozen regression authority; active development is
-`1.3.0.dev0` in the dedicated `SIDScope-v2` worktree. Annotated tag `v1.1.0`
+`1.4.0.dev0` in the dedicated `SIDScope-v2` worktree. Annotated tag `v1.1.0`
 remains unchanged and resolves to
 `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3` on the public `main` branch.
 
@@ -41,7 +41,7 @@ integration through canonical contracts, native observation, diagnostic
 evaluation, conformance verification, and immutable evidence. The authoritative
 design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 and `docs/V1_2_TO_V2_ROADMAP.md`. Implemented and planned surfaces are marked
-separately; 1.4--2.0 target features are not claimed by the 1.3 closure.
+separately; 1.5--2.0 target features are not claimed by the 1.4 closure.
 
 Architecture Sprint 0 is implemented on the 1.1.1 regression baseline.
 It adds canonical version/hash governance, a machine-readable schema/profile/
@@ -95,9 +95,28 @@ The separately packaged `reference-parallel` plugin installs without core
 edits. The isolated verifier first proves payload verification with no plugin
 installed and then proves discovery/preflight after installation. RecBole is
 only availability-probed and never imported. Existing named-adapter evidence is
-unchanged. The next milestone is 1.4 immutable EvidenceBundle storage, local
-registry projection, admission, comparison, and supersession; none of those
-surfaces is implied by the 1.3 closure.
+unchanged.
+
+The 1.4 evidence-system milestone is development-closed. EvidenceBundle v1 is
+an immutable, canonical-JSON contract that binds profile, dataset, SID space,
+run, checkpoint, trace, diagnostics, conformance, result-card, privacy, and
+supersession identity. Semantic artifact identity (`content_sha256`) is kept
+separate from exact stored-byte identity (`object_sha256`). The content-addressed
+object store admits public bytes atomically, retains restricted assets as
+hash-only references, and fail-closes on tampering, hash collision, forbidden
+content, invalid provenance, and unsupported exact-rank claims.
+
+SQLite is a disposable local projection, not evidence authority. It can be
+deleted and deterministically rebuilt from active and quarantined immutable
+bundles; the static export remains byte-equivalent. Corrections create a new
+bundle with an explicit supersession edge. Comparison reports metric deltas
+only when profile revision, dataset, target universe, cutoff, publication
+depth, and rank semantics are compatible. The `sidscope evidence bundle` and
+`sidscope registry` command families close build, verify, admit, import, list,
+show, compare, supersede, quarantine, export, and rebuild workflows while the
+legacy evidence-package path remains compatible. The next milestone is 1.5
+conformance automation and submission ecosystem work; none of those planned
+surfaces is implied by the 1.4 closure.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
@@ -129,7 +148,7 @@ remain unchanged until repository-level terms make redistribution explicit.
 - RPG P0 implementation commit before this handoff update:
   `60e421fb2736ceeead3cff0f7ac9e2cd23a04b95`.
 - Regression authority: `1.1.1.dev0` in the separate `SIDScope-v1.1` worktree.
-- Development version: `1.3.0.dev0` in both `pyproject.toml` and `setup.py`.
+- Development version: `1.4.0.dev0` in both `pyproject.toml` and `setup.py`.
 - Public release tag: `v1.1.0` at
   `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`.
 - Deterministic tag archive SHA-256:
@@ -302,10 +321,11 @@ identity and must never be cropped or silently converted.
 
 ## Last verified local release evidence
 
-The 1.3 development tree passed:
+The 1.4 development tree passed:
 
-- focused plugin/payload/profile and architecture tests: `14 passed`;
-- full tests: `215 passed, 6 skipped`;
+- focused evidence-bundle, object-store, registry, comparison, and CLI tests:
+  `23 passed`;
+- full tests: `238 passed, 6 skipped`;
 - resource-package verifier: PASS;
 - contract-registry verifier: PASS with 11 canonical contracts, 11 positive
   fixtures, 12 typed-negative fixtures, and 14 declared dependency edges;
@@ -316,13 +336,20 @@ The 1.3 development tree passed:
 - 1.3 ecosystem verifier: PASS with SDK `0.2.0`, five native payload families,
   six composable profiles, five positive fixtures, seven typed negatives,
   no-plugin core validation, and external `reference-parallel` installation;
+- 1.4 evidence-system verifier: PASS with three positive immutable bundles,
+  three typed negative fixtures, one embedded CAS object, seven hash-only
+  objects, supersession, quarantine/rebuild, compatible comparison, typed
+  incompatible-comparison rejection, and SQLite delete/rebuild parity;
+- 1.4 CLI CPU baseline verifier: PASS under the 20% review policy; seven-repeat
+  medians are 5.098 ms bundle build, 4.226 ms verify, 8.374 ms registry add,
+  5.051 ms compare, 3.953 ms list, and 10.041 ms rebuild;
 - release-metadata verifier: PASS;
-- architecture inventory verifier: PASS with 159 schema IDs, 11 canonical
-  contracts, 9 profiles, 6 generator routes, 9 static-mapping routes, and 14
+- architecture inventory verifier: PASS with 176 schema IDs, 11 canonical
+  contracts, 9 profiles, 6 generator routes, 9 static-mapping routes, and 15
   canonical evidence edges;
 - release archive build: PASS;
 - extracted archive smoke: PASS;
-- G8 isolated `sidinspector==1.3.0.dev0` install and deterministic archive
+- G8 isolated `sidinspector==1.4.0.dev0` install and deterministic archive
   rebuild: PASS;
 - RPG non-AR bridge verifier: PASS, including Beauty v1 regression, generic v2
   positive fixture, typed duplicate-selection failure, and the hash-bound CPU
@@ -333,8 +360,8 @@ The 1.3 development tree passed:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest: 277 rows, 274 public rows, 0 pending;
-- current public package surface: 455 files.
+- manifest: 287 rows, 284 public rows, 0 pending;
+- current public package surface: 479 files.
 
 The development archive SHA-256 is intentionally reported by the final build
 command rather than embedded in this hash-sensitive source tree. Rebuild it
@@ -357,12 +384,14 @@ python3 tools/verify_sidscope_1_2_closure.py
 python3 tools/verify_sidscope_1_2_legacy_migration_matrix.py
 python3 tools/verify_sidscope_1_2_cli_baseline.py
 python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
+python3 tools/verify_sidscope_1_4_evidence_system.py
+python3 tools/verify_sidscope_1_4_cli_baseline.py
 python3 tools/build_sidscope_release_candidate_archive.py \
-  --output /tmp/sidscope-v1.3.0.dev0.zip
+  --output /tmp/sidscope-v1.4.0.dev0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-v1.3.0.dev0.zip
+  /tmp/sidscope-v1.4.0.dev0.zip
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.3.0.dev0.zip
+  --archive /tmp/sidscope-v1.4.0.dev0.zip
 ```
 
 The release checks are CPU-only. A new GPU run is not required to reverify the

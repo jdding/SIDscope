@@ -416,10 +416,15 @@
       "from": "EvidenceIndex",
       "status": "implemented",
       "to": "ConformanceReport"
+    },
+    {
+      "from": "EvidenceBundle",
+      "status": "implemented",
+      "to": "EvidenceIndex"
     }
   ],
   "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
-  "product_version": "1.3.0.dev0",
+  "product_version": "1.4.0.dev0",
   "profiles": [
     {
       "authority": "docs/ADAPTER_CONFORMANCE.md",
@@ -624,7 +629,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 159,
+  "schema_count": 176,
   "schemas": [
     {
       "artifact_paths": [
@@ -918,34 +923,42 @@
     },
     {
       "artifact_paths": [
-        "docs/reproducibility/sidscope_1_2_cli_cpu_baseline.json"
+        "docs/reproducibility/sidscope_1_2_cli_cpu_baseline.json",
+        "docs/reproducibility/sidscope_1_4_cli_cpu_baseline.json"
       ],
       "declaration_paths": [
         "docs/reproducibility/sidscope_1_2_cli_cpu_baseline.json",
+        "docs/reproducibility/sidscope_1_4_cli_cpu_baseline.json",
         "tools/benchmark_sidscope_1_2_cli.py",
-        "tools/verify_sidscope_1_2_cli_baseline.py"
+        "tools/benchmark_sidscope_1_4_cli.py",
+        "tools/verify_sidscope_1_2_cli_baseline.py",
+        "tools/verify_sidscope_1_4_cli_baseline.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/benchmark_sidscope_1_2_cli.py"
+        "tools/benchmark_sidscope_1_2_cli.py",
+        "tools/benchmark_sidscope_1_4_cli.py"
       ],
       "schema_id": "sidscope.cli_cpu_baseline.v1",
       "verifier_paths": [
-        "tools/verify_sidscope_1_2_cli_baseline.py"
+        "tools/verify_sidscope_1_2_cli_baseline.py",
+        "tools/verify_sidscope_1_4_cli_baseline.py"
       ]
     },
     {
       "artifact_paths": [],
       "declaration_paths": [
-        "tools/verify_sidscope_1_2_cli_baseline.py"
+        "tools/verify_sidscope_1_2_cli_baseline.py",
+        "tools/verify_sidscope_1_4_cli_baseline.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [],
       "schema_id": "sidscope.cli_cpu_baseline_verification.v1",
       "verifier_paths": [
-        "tools/verify_sidscope_1_2_cli_baseline.py"
+        "tools/verify_sidscope_1_2_cli_baseline.py",
+        "tools/verify_sidscope_1_4_cli_baseline.py"
       ]
     },
     {
@@ -1744,6 +1757,71 @@
     {
       "artifact_paths": [
         "docs/COMPATIBILITY.md",
+        "docs/EVIDENCE_BUNDLES_AND_REGISTRY.md",
+        "docs/adr/0009-content-addressed-evidence-and-derived-registry.md",
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "docs/COMPATIBILITY.md",
+        "docs/EVIDENCE_BUNDLES_AND_REGISTRY.md",
+        "docs/adr/0009-content-addressed-evidence-and-derived-registry.md",
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json",
+        "src/sidinspector/evidence/bundle.py",
+        "src/sidinspector/schemas/evidence_bundle.v1.schema.json",
+        "tests/test_evidence_cli.py",
+        "tools/build_sidscope_architecture_inventory.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:contracts",
+      "producer_paths": [
+        "src/sidinspector/evidence/bundle.py",
+        "src/sidinspector/schemas/evidence_bundle.v1.schema.json",
+        "tools/build_sidscope_architecture_inventory.py"
+      ],
+      "schema_id": "sidscope.evidence_bundle.v1",
+      "verifier_paths": [
+        "tests/test_evidence_cli.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.evidence_bundle_validation.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/evidence/comparison.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/evidence/comparison.py"
+      ],
+      "schema_id": "sidscope.evidence_comparison.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/COMPATIBILITY.md",
         "examples/canonical_pipeline_fixture/evidence_index.json",
         "examples/canonical_pipeline_fixture/expected_failure_evidence_cycle.json"
       ],
@@ -1767,6 +1845,282 @@
         "tools/build_sidscope_1_2_closure_fixtures.py"
       ],
       "schema_id": "sidscope.evidence_index.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.evidence_registry_entry.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.evidence_registry_listing.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/cli/__init__.py"
+      ],
+      "schema_id": "sidscope.evidence_registry_operation.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidinspector/evidence/registry.py",
+        "tests/test_evidence_cli.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/evidence/registry.py"
+      ],
+      "schema_id": "sidscope.evidence_registry_projection.v1",
+      "verifier_paths": [
+        "tests/test_evidence_cli.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/manifest.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/manifest.json",
+        "tools/build_sidscope_1_4_evidence_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_sidscope_1_4_evidence_fixtures.py"
+      ],
+      "schema_id": "sidscope.evidence_system_fixture_manifest.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.fixture.checkpoint.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json",
+        "examples/evidence_system_fixture/public_conformance_summary.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json",
+        "examples/evidence_system_fixture/public_conformance_summary.json",
+        "tools/build_sidscope_1_4_evidence_fixtures.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_sidscope_1_4_evidence_fixtures.py"
+      ],
+      "schema_id": "sidscope.fixture.conformance.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.fixture.data.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.fixture.diagnostics.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.fixture.run.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.fixture.sid.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.fixture.source.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "declaration_paths": [
+        "examples/evidence_system_fixture/baseline_bundle.json",
+        "examples/evidence_system_fixture/baseline_bundle_spec.json",
+        "examples/evidence_system_fixture/correction_bundle.json",
+        "examples/evidence_system_fixture/expected_failure_privacy.json",
+        "examples/evidence_system_fixture/expected_failure_provenance_cycle.json",
+        "examples/evidence_system_fixture/expected_failure_unsupported_rank.json",
+        "examples/evidence_system_fixture/incompatible_bundle.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.fixture.trace.v1",
       "verifier_paths": []
     },
     {
@@ -2694,6 +3048,19 @@
       "schema_id": "sidscope.release_1_3_ecosystem_verification.v1",
       "verifier_paths": [
         "tools/verify_sidscope_1_3_plugin_ecosystem.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_1_4_evidence_system.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.release_1_4_evidence_system_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_1_4_evidence_system.py"
       ]
     },
     {
@@ -3701,7 +4068,7 @@
       "family.masked_diffusion.v1@1.0.0",
       "family.parallel_graph_token_set.v1@1.0.0"
     ],
-    "evidence_bundle": "canonical_evidence_index_v1_plus_route_specific_legacy_authorities",
-    "product_package": "1.3.0.dev0"
+    "evidence_bundle": "sidscope.evidence_bundle.v1@1.0.0_with_content_addressed_objects_and_sqlite_projection",
+    "product_package": "1.4.0.dev0"
   }
 }

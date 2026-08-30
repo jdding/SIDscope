@@ -1,0 +1,54 @@
+{
+  "commands": {
+    "evidence_bundle_build": {
+      "max_ms": 5.499167,
+      "median_ms": 5.098041,
+      "min_ms": 4.623583,
+      "repeats": 7
+    },
+    "evidence_bundle_verify": {
+      "max_ms": 4.546959,
+      "median_ms": 4.226375,
+      "min_ms": 4.075583,
+      "repeats": 7
+    },
+    "registry_add": {
+      "max_ms": 8.999375,
+      "median_ms": 8.374084,
+      "min_ms": 8.270208,
+      "repeats": 7
+    },
+    "registry_compare": {
+      "max_ms": 5.498708,
+      "median_ms": 5.051125,
+      "min_ms": 4.868542,
+      "repeats": 7
+    },
+    "registry_list": {
+      "max_ms": 4.82075,
+      "median_ms": 3.952917,
+      "min_ms": 3.6605,
+      "repeats": 7
+    },
+    "registry_rebuild": {
+      "max_ms": 13.055917,
+      "median_ms": 10.040709,
+      "min_ms": 9.666167,
+      "repeats": 7
+    }
+  },
+  "environment": {
+    "implementation": "CPython",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "processor": "arm",
+    "python": "3.9.6"
+  },
+  "policy": {
+    "comparison_state": "evidence_command_baseline_established",
+    "gpu_required": false,
+    "review_threshold_percent": 20
+  },
+  "product_version": "1.4.0.dev0",
+  "schema": "sidscope.cli_cpu_baseline.v1",
+  "status": "pass"
+}

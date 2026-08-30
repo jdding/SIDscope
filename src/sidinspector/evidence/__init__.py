@@ -1,4 +1,4 @@
-"""Evidence-layer construction for deterministic 1.2 dependency indexes."""
+"""Deterministic evidence indexes, immutable bundles, and derived registries."""
 
 from __future__ import annotations
 
@@ -13,6 +13,20 @@ from sidinspector.contracts import (
     validate_evidence_index,
     with_content_sha256,
 )
+
+from .bundle import (
+    EVIDENCE_BUNDLE_SCHEMA,
+    EVIDENCE_BUNDLE_SCHEMA_REVISION,
+    EvidenceBundle,
+    EvidenceBundleValidationError,
+    build_evidence_bundle,
+    load_evidence_bundle,
+    scan_evidence_content,
+    validate_evidence_bundle,
+)
+from .comparison import compare_evidence_bundles
+from .object_store import ObjectStore
+from .registry import EvidenceRegistry, EvidenceRegistryError
 
 
 def build_evidence_index(
@@ -83,4 +97,18 @@ def build_evidence_index(
     return document
 
 
-__all__ = ["build_evidence_index"]
+__all__ = [
+    "EVIDENCE_BUNDLE_SCHEMA",
+    "EVIDENCE_BUNDLE_SCHEMA_REVISION",
+    "EvidenceBundle",
+    "EvidenceBundleValidationError",
+    "EvidenceRegistry",
+    "EvidenceRegistryError",
+    "ObjectStore",
+    "build_evidence_bundle",
+    "build_evidence_index",
+    "compare_evidence_bundles",
+    "load_evidence_bundle",
+    "scan_evidence_content",
+    "validate_evidence_bundle",
+]

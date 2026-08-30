@@ -67,6 +67,7 @@ def _schema_owner(schema_id: str) -> str:
         "checkpoint_binding",
         "trace_envelope",
         "evidence_index",
+        "evidence_bundle",
         "contract_registry",
         "contract_validation",
         "module_dependency_matrix",
@@ -207,7 +208,7 @@ def build_inventory() -> dict[str, Any]:
                 "static_mapping_c0_c5", "generator_g0_g5", "release_local",
                 *[f"{profile.profile_id}@{profile.revision}" for profile in native_profiles],
             ],
-            "evidence_bundle": "canonical_evidence_index_v1_plus_route_specific_legacy_authorities",
+            "evidence_bundle": "sidscope.evidence_bundle.v1@1.0.0_with_content_addressed_objects_and_sqlite_projection",
         },
         "profiles": [
             {
@@ -271,6 +272,7 @@ def build_inventory() -> dict[str, Any]:
             {"from": "ConformanceReport", "to": "TraceEnvelope", "status": "implemented"},
             {"from": "ConformanceReport", "to": "DiagnosticReport", "status": "implemented"},
             {"from": "EvidenceIndex", "to": "ConformanceReport", "status": "implemented"},
+            {"from": "EvidenceBundle", "to": "EvidenceIndex", "status": "implemented"},
         ],
         "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
     }

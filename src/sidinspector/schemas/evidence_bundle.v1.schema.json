@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jdding/sidscope/schemas/evidence_bundle.v1.schema.json",
+  "title": "SIDScope EvidenceBundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_revision",
+    "bundle_id",
+    "producer",
+    "profile_binding",
+    "subject",
+    "compatibility",
+    "artifacts",
+    "provenance_edges",
+    "result_card",
+    "supersedes",
+    "privacy",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "sidscope.evidence_bundle.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "bundle_id": {"$ref": "#/$defs/identifier"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "profile_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "profile_revision", "conformance_report_sha256"],
+      "properties": {
+        "profile_id": {"type": "string", "minLength": 1},
+        "profile_revision": {"type": "string", "minLength": 1},
+        "conformance_report_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "method_family"],
+      "properties": {
+        "adapter_id": {"$ref": "#/$defs/identifier"},
+        "method_family": {"$ref": "#/$defs/identifier"}
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_identity_sha256",
+        "target_universe_sha256",
+        "evaluation_cutoff",
+        "publication_depth",
+        "rank_semantics"
+      ],
+      "properties": {
+        "dataset_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "target_universe_sha256": {"$ref": "#/$defs/sha256"},
+        "evaluation_cutoff": {"type": "integer", "minimum": 1},
+        "publication_depth": {"type": "integer", "minimum": 1},
+        "rank_semantics": {"enum": ["exact_with_censoring", "cutoff_only"]}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "provenance_edges": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/edge"}
+    },
+    "result_card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overall_metrics",
+        "slice_metrics",
+        "failure_counts",
+        "compute",
+        "rank_observations"
+      ],
+      "properties": {
+        "overall_metrics": {"$ref": "#/$defs/nonemptyMetricMap"},
+        "slice_metrics": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/nonemptyMetricMap"}
+        },
+        "failure_counts": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "compute": {
+          "type": "object",
+          "additionalProperties": {"type": "number", "minimum": 0}
+        },
+        "rank_observations": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["exact_count", "censored_count", "exact_ranks"],
+          "properties": {
+            "exact_count": {"type": "integer", "minimum": 0},
+            "censored_count": {"type": "integer", "minimum": 0},
+            "exact_ranks": {
+              "type": "array",
+              "items": {"type": "integer", "minimum": 1}
+            }
+          }
+        }
+      }
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/sha256"},
+      "uniqueItems": true
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_user_ids_exported",
+        "source_item_ids_exported",
+        "absolute_private_paths_exported",
+        "checkpoint_payload_exported"
+      ],
+      "properties": {
+        "source_user_ids_exported": {"const": false},
+        "source_item_ids_exported": {"const": false},
+        "absolute_private_paths_exported": {"const": false},
+        "checkpoint_payload_exported": {"const": false}
+      }
+    },
+    "content_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "nonemptyMetricMap": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "number"}
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "role",
+        "schema_id",
+        "schema_revision",
+        "content_sha256",
+        "object_sha256",
+        "size_bytes",
+        "media_type",
+        "availability"
+      ],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "role": {"$ref": "#/$defs/identifier"},
+        "schema_id": {"type": "string", "minLength": 1},
+        "schema_revision": {"type": "string", "minLength": 1},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "object_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string", "minLength": 1},
+        "availability": {"enum": ["embedded_public", "hash_reference_only"]}
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from_artifact", "to_artifact", "relation"],
+      "properties": {
+        "from_artifact": {"type": "string", "minLength": 1},
+        "to_artifact": {"type": "string", "minLength": 1},
+        "relation": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

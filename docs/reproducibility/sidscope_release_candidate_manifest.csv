@@ -1,4 +1,14 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+evidence_system_adr,docs/adr/0009-content-addressed-evidence-and-derived-registry.md,architecture_governance,documentation,yes,pass_local,Defines immutable object authority derived SQLite correction comparison and rollback semantics.
+evidence_system_doc,docs/EVIDENCE_BUNDLES_AND_REGISTRY.md,evidence_registry,documentation,yes,pass_local,Documents EvidenceBundle object admission registry comparison privacy recovery and supersession contracts.
+evidence_system_fixture,examples/evidence_system_fixture,example,fully_runnable,yes,pass_local,Provides three positive bundles one public object and three typed negative evidence cases.
+evidence_system_builder,tools/build_sidscope_1_4_evidence_fixtures.py,fixture_builder,fully_runnable,yes,pass_local,Deterministically rebuilds the 1.4 evidence system fixtures.
+evidence_system_verifier,tools/verify_sidscope_1_4_evidence_system.py,verification,fully_runnable,yes,pass_local,Verifies CAS admission privacy supersession compatibility comparison and SQLite delete rebuild parity.
+evidence_cli_benchmark,tools/benchmark_sidscope_1_4_cli.py,verification,fully_runnable,yes,pass_local,Measures the six new evidence command families on CPU.
+evidence_cli_baseline_verifier,tools/verify_sidscope_1_4_cli_baseline.py,verification,fully_runnable,yes,pass_local,Checks evidence command baseline coverage version and regression policy.
+evidence_system_tests,tests/test_evidence_bundle_store.py,test,fully_runnable,yes,pass_local,Tests bundle validation content addressed storage tamper privacy rank supersession and quarantine.
+evidence_registry_tests,tests/test_evidence_registry_compare.py,test,fully_runnable,yes,pass_local,Tests derived SQLite import export rebuild supersession compare and adversarial failures.
+evidence_cli_tests,tests/test_evidence_cli.py,test,fully_runnable,yes,pass_local,Tests bundle and registry public CLI round trips and typed failure behavior.
 plugin_native_trace_adr,docs/adr/0008-plugin-and-native-trace-ecosystem.md,architecture_governance,documentation,yes,pass_local,Defines lazy plugins native payload registry profile composition migration and rollback.
 plugin_ecosystem_doc,docs/ADAPTER_PLUGIN_ECOSYSTEM.md,adapter_sdk,documentation,yes,pass_local,Documents entry point discovery typed failures isolated install proof and plugin absence boundary.
 native_trace_payload_doc,docs/NATIVE_TRACE_PAYLOADS.md,trace_protocol,documentation,yes,pass_local,Documents five semantic payload families shared fields profiles and typed fixtures.
