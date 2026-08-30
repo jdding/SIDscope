@@ -32,7 +32,12 @@ class ContractRegistryTest(unittest.TestCase):
         self.assertEqual(registry.schema_revision, "1.0.0")
         self.assertEqual(
             [item.contract_type for item in registry.contracts],
-            ["dataset-identity", "source-identity"],
+            [
+                "dataset-identity",
+                "prepared-dataset",
+                "sid-space-identity",
+                "source-identity",
+            ],
         )
         for descriptor in registry.contracts:
             self.assertEqual(descriptor.compatibility, "exact_major_supported_revision")
@@ -51,7 +56,8 @@ class ContractRegistryTest(unittest.TestCase):
 
     def test_dependency_cycle_fails_closed(self) -> None:
         document = self.registry_document()
-        dataset, source = document["contracts"]
+        dataset = document["contracts"][0]
+        source = document["contracts"][3]
         dataset["dependencies"] = [
             {"schema_id": source["schema_id"], "accepted_revisions": ["1.0.0"]}
         ]
@@ -62,7 +68,8 @@ class ContractRegistryTest(unittest.TestCase):
 
     def test_incompatible_dependency_revision_fails_closed(self) -> None:
         document = self.registry_document()
-        dataset, source = document["contracts"]
+        dataset = document["contracts"][0]
+        source = document["contracts"][3]
         dataset["dependencies"] = [
             {"schema_id": source["schema_id"], "accepted_revisions": ["2.0.0"]}
         ]

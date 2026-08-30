@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: Sprint 1 active development baseline
+Status: Sprint 2 active development baseline
 
 ## Product and Entry Points
 
@@ -9,12 +9,12 @@ Status: Sprint 1 active development baseline
 | 1.0.2 | `sidinspector` | `sidinspector` | route-specific commands | Frozen TOIS-bound release |
 | 1.1.0 | `sidinspector` | `sidinspector` | route-specific commands | Published maintenance release |
 | 1.1.1.dev0 | `sidinspector` | `sidinspector` | `sidscope` facade plus legacy commands | Frozen regression authority |
-| 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Active Sprint 1 baseline |
+| 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Active Sprint 2 baseline |
 
 No import or distribution rename is planned during 1.x. The first implemented
-facade lists and shows registered contracts and validates `SourceIdentity v1`
-and `DatasetIdentity v1`. Planned commands are not claimed as available until
-their vertical slices pass.
+facade lists and shows registered contracts and validates `SourceIdentity v1`,
+`DatasetIdentity v1`, `SIDSpaceIdentity v1`, and `PreparedDataset v1`. Planned
+commands are not claimed as available until their vertical slices pass.
 
 ## Version-Axis Baseline
 
@@ -22,7 +22,7 @@ their vertical slices pass.
 | --- | --- | --- |
 | Product/package | `1.2.0.dev0` | PEP 440 development version; not a public 1.2.0 release. |
 | Adapter SDK | not released | No external SDK compatibility promise yet. |
-| Canonical schemas | `sidscope.source_identity.v1` and `sidscope.dataset_identity.v1`, revision `1.0.0` | Registry-declared exact major and supported revision required. |
+| Canonical schemas | `sidscope.source_identity.v1`, `sidscope.dataset_identity.v1`, `sidscope.sid_space_identity.v1`, and `sidscope.prepared_dataset.v1` at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | legacy C0--C5 and G0--G5 authorities | Existing route verifiers remain authoritative until exact parity migration. |
 | Evidence bundle | route-specific 1.1 schemas | Immutable; no automatic upgrade. |
 
@@ -61,3 +61,17 @@ bindings. `sid_depth` is returned separately for the later SIDSpace migration.
 The authoritative registry is `sidscope.contract_registry.v1` revision
 `1.0.0`; it rejects unknown/cyclic dependencies and unsupported revisions.
 Rollback removes the shared registry entry without rewriting legacy evidence.
+
+## SIDSpaceIdentity and PreparedDataset v1 Migration
+
+SIDSpaceIdentity keeps tokenizer/SID structure separate from dataset identity.
+Legacy adapter manifests retain only proven depth and SID-cache hash and are
+typed `legacy_partial`. PreparedDataset requires fully bound DatasetIdentity
+and SIDSpaceIdentity content hashes plus exact split, artifact, catalog and
+target-universe parity.
+
+The complete RPG prepared fixture migrates deterministically. Current
+DiffGRM/LLaDA prepared v1 artifacts require regeneration because canonical
+split counts or artifact bindings are absent. No historical evidence is
+rewritten. Rollback removes the two registry entries and resumes the unchanged
+route-specific validators.

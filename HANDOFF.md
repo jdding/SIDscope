@@ -56,6 +56,14 @@ slice with full split/catalog/target-universe bindings plus an honest
 `legacy_partial` migration. Registry unknown dependencies, cycles, unsupported
 revisions, resource drift, and typed negative fixtures fail closed. This is an
 unreleased development milestone and does not declare 1.2 publicly released.
+Sprint 2 is also closed: `sidscope.sid_space_identity.v1` binds SID structure,
+vocabulary, tokenizer/cache, collision, and de-duplication semantics, while
+`sidscope.prepared_dataset.v1` binds complete DatasetIdentity and
+SIDSpaceIdentity artifacts to normalized splits, artifacts, catalog, target
+universe, and privacy. RPG migrates with exact fixture parity. Incomplete
+DiffGRM and LLaDA legacy prepared contracts fail with a typed regeneration
+requirement instead of inferred fields. EpisodeSelection is the next 1.2
+vertical slice.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
@@ -260,15 +268,17 @@ identity and must never be cropped or silently converted.
 
 ## Last verified local release evidence
 
-The Sprint 1 working tree passed:
+The Sprint 2 working tree passed:
 
 - focused contract/registry tests: `21 passed`;
-- full tests: `191 passed, 6 skipped`;
+- full tests: `200 passed, 6 skipped`;
 - resource-package verifier: PASS;
-- contract-registry verifier: PASS with 2 canonical contracts, 2 positive
-  fixtures, and 3 typed-negative fixtures;
+- contract-registry verifier: PASS with 4 canonical contracts, 4 positive
+  fixtures, 5 typed-negative fixtures, and 2 dependency bindings;
+- Sprint 2 verifier: PASS with exact RPG migration parity and typed
+  regeneration-required outcomes for DiffGRM/LLaDA legacy prepared artifacts;
 - release-metadata verifier: PASS;
-- architecture inventory verifier: PASS with 126 schema IDs, 2 canonical
+- architecture inventory verifier: PASS with 129 schema IDs, 4 canonical
   contracts, 3 profiles, 6 generator routes, 9 static-mapping routes, and 7
   canonical evidence edges;
 - release archive build: PASS;
@@ -283,8 +293,8 @@ The Sprint 1 working tree passed:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest: 245 rows, 242 public rows, 0 pending;
-- current public package surface: 355 files.
+- manifest: 251 rows, 248 public rows, 0 pending;
+- current public package surface: 369 files.
 
 The development archive SHA-256 is intentionally reported by the final build
 command rather than embedded in this hash-sensitive source tree. Rebuild it
@@ -302,6 +312,7 @@ git remote -v
 python3 -m pytest -q
 python3 tools/verify_sidscope_resource_package.py
 python3 tools/verify_sidscope_contract_registry.py
+python3 tools/verify_sidscope_sprint2_contracts.py
 python3 tools/build_sidscope_release_candidate_archive.py \
   --output /tmp/sidscope-v1.2.0.dev0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \

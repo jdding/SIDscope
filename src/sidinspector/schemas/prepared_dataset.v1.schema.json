@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidscope.dev/schemas/prepared_dataset.v1.schema.json",
+  "title": "SIDScope PreparedDataset v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_revision", "prepared_dataset_id", "producer", "dataset_binding", "sid_space_binding", "normalization", "splits", "artifacts", "catalog", "target_universe", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.prepared_dataset.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "prepared_dataset_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "dataset_binding": {"$ref": "#/$defs/binding"},
+    "sid_space_binding": {"$ref": "#/$defs/binding"},
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["representation", "item_identity", "episode_identity", "source_item_ids_exported", "source_user_ids_exported", "evaluator_labels_in_generator_input"],
+      "properties": {
+        "representation": {"const": "normalized_item_sequences"},
+        "item_identity": {"const": "pseudonymous_normalized_items"},
+        "episode_identity": {"const": "pseudonymous_episode_ids"},
+        "source_item_ids_exported": {"const": false},
+        "source_user_ids_exported": {"const": false},
+        "evaluator_labels_in_generator_input": {"const": false}
+      }
+    },
+    "splits": {"type": "array", "prefixItems": [{"$ref": "#/$defs/split"}, {"$ref": "#/$defs/split"}, {"$ref": "#/$defs/split"}], "minItems": 3, "maxItems": 3},
+    "artifacts": {"type": "array", "prefixItems": [{"$ref": "#/$defs/artifact"}, {"$ref": "#/$defs/artifact"}, {"$ref": "#/$defs/artifact"}], "minItems": 3, "maxItems": 3},
+    "catalog": {"$ref": "#/$defs/universe"},
+    "target_universe": {"$ref": "#/$defs/universe"},
+    "content_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "producer": {"type": "object", "additionalProperties": false, "required": ["name", "version"], "properties": {"name": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}},
+    "binding": {"type": "object", "additionalProperties": false, "required": ["schema_id", "schema_revision", "content_sha256"], "properties": {"schema_id": {"type": "string", "minLength": 1}, "schema_revision": {"const": "1.0.0"}, "content_sha256": {"$ref": "#/$defs/sha256"}}},
+    "split": {"type": "object", "additionalProperties": false, "required": ["role", "split_id", "sha256", "row_count"], "properties": {"role": {"enum": ["train", "validation", "test"]}, "split_id": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}, "row_count": {"type": "integer", "minimum": 0}}},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["role", "sha256", "row_count"], "properties": {"role": {"enum": ["interaction_sequences", "item_mapping", "semantic_id_cache"]}, "sha256": {"$ref": "#/$defs/sha256"}, "row_count": {"type": "integer", "minimum": 0}}},
+    "universe": {"type": "object", "additionalProperties": false, "required": ["scope", "item_count", "sha256"], "properties": {"scope": {"enum": ["train_only", "full_dataset", "train_only_catalog", "evaluation_targets"]}, "item_count": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha256"}}}
+  }
+}

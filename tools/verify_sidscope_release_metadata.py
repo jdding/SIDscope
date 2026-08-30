@@ -50,6 +50,8 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             project_version,
             "sidscope.source_identity.v1",
             "sidscope.dataset_identity.v1",
+            "sidscope.sid_space_identity.v1",
+            "sidscope.prepared_dataset.v1",
         ],
         "docs/SIDSCOPE_RELEASE_TEMPLATE.md": ["Adapter SDK version:", "archive SHA-256:"],
         "docs/SIDSCOPE_RELEASE_CHECKLIST.md": ["docs/SIDSCOPE_RELEASE_TEMPLATE.md"],
@@ -69,6 +71,8 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         "console_command": "sidscope",
         "canonical_schemas": [
             "sidscope.dataset_identity.v1@1.0.0",
+            "sidscope.prepared_dataset.v1@1.0.0",
+            "sidscope.sid_space_identity.v1@1.0.0",
             "sidscope.source_identity.v1@1.0.0",
         ],
         "contract_registry": "sidscope.contract_registry.v1@1.0.0",

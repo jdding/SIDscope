@@ -46,8 +46,8 @@ def verify_inventory(path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
     registry = observed["canonical_contract_registry"]
     if registry["contract_count"] != len(registry["contracts"]):
         raise ValueError("canonical contract registry count mismatch")
-    if registry["contract_count"] < 2:
-        raise ValueError("canonical contract registry missing Sprint 1 contracts")
+    if registry["contract_count"] < 4:
+        raise ValueError("canonical contract registry missing Sprint 2 contracts")
     return {
         "schema": REPORT_SCHEMA,
         "status": "pass",

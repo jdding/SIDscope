@@ -246,6 +246,12 @@ contracts. Each entry declares its owner, compatible revisions, JSON Schema
 2020-12 resource, fixtures, dependencies and public CLI type. It is file-first
 and local; it is not a hosted control plane.
 
+The implemented 1.2 Sprint 2 cut follows this boundary directly:
+SourceIdentity and DatasetIdentity remain independent roots;
+SIDSpaceIdentity owns tokenizer/SID semantics; PreparedDataset depends on both
+DatasetIdentity and SIDSpaceIdentity. Training, selection, trace and evaluation
+dependencies are intentionally excluded from PreparedDataset.
+
 ### 6.3 Observation Layer: Trace Protocol
 
 The common envelope binds episode, attempt, target universe, checkpoint,

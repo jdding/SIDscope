@@ -20,6 +20,7 @@ jobs:
       - run: python -m pip install -e . pytest
       - run: python -m pytest -q
       - run: python tools/verify_sidscope_contract_registry.py
+      - run: python tools/verify_sidscope_sprint2_contracts.py
       - run: python tools/verify_sidscope_release_metadata.py
 
   resource-package:

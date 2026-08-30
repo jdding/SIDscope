@@ -1,7 +1,7 @@
 {
   "canonical_contract_registry": {
-    "content_sha256": "1e7f94401b90ecd18b8fa292cf36bf39b2b768908229315eda8d663c903c18ea",
-    "contract_count": 2,
+    "content_sha256": "e1dd2a74e732b391e395e4e7e1dcfeddfc7e81b09e5ef6a960a9f202825ce4a9",
+    "contract_count": 4,
     "contracts": [
       {
         "canonical_fixture": "examples/dataset_identity_fixture/dataset_identity.json",
@@ -27,6 +27,63 @@
         "result_id_field": "dataset_id",
         "schema_id": "sidscope.dataset_identity.v1",
         "schema_resource": "dataset_identity.v1.schema.json",
+        "schema_revision": "1.0.0"
+      },
+      {
+        "canonical_fixture": "examples/prepared_dataset_fixture/prepared_dataset.json",
+        "compatibility": {
+          "policy": "exact_major_supported_revision",
+          "supported_revisions": [
+            "1.0.0"
+          ]
+        },
+        "contract_type": "prepared-dataset",
+        "dependencies": [
+          {
+            "accepted_revisions": [
+              "1.0.0"
+            ],
+            "schema_id": "sidscope.dataset_identity.v1"
+          },
+          {
+            "accepted_revisions": [
+              "1.0.0"
+            ],
+            "schema_id": "sidscope.sid_space_identity.v1"
+          }
+        ],
+        "negative_fixtures": [
+          {
+            "expected_failure": "normalization_or_privacy_mismatch",
+            "path": "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json"
+          }
+        ],
+        "owner": "core:contracts",
+        "result_id_field": "prepared_dataset_id",
+        "schema_id": "sidscope.prepared_dataset.v1",
+        "schema_resource": "prepared_dataset.v1.schema.json",
+        "schema_revision": "1.0.0"
+      },
+      {
+        "canonical_fixture": "examples/prepared_dataset_fixture/sid_space_identity.json",
+        "compatibility": {
+          "policy": "exact_major_supported_revision",
+          "supported_revisions": [
+            "1.0.0"
+          ]
+        },
+        "contract_type": "sid-space-identity",
+        "dependencies": [],
+        "negative_fixtures": [
+          {
+            "expected_failure": "overlapping_position_vocabulary",
+            "path": "examples/prepared_dataset_fixture/expected_failure_overlapping_position_vocabulary.json"
+          }
+        ],
+        "owner": "core:contracts",
+        "result_id_field": "sid_space_id",
+        "schema_id": "sidscope.sid_space_identity.v1",
+        "schema_resource": "sid_space_identity.v1.schema.json",
         "schema_revision": "1.0.0"
       },
       {
@@ -64,12 +121,12 @@
     },
     {
       "from": "DatasetIdentity",
-      "status": "planned",
-      "to": "SIDSpaceIdentity"
+      "status": "both_implemented",
+      "to": "PreparedDataset"
     },
     {
       "from": "SIDSpaceIdentity",
-      "status": "planned",
+      "status": "both_implemented",
       "to": "PreparedDataset"
     },
     {
@@ -257,7 +314,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 126,
+  "schema_count": 129,
   "schemas": [
     {
       "artifact_paths": [
@@ -332,9 +389,11 @@
         "examples/conformance_failure_fixture/manifest.json",
         "src/sidinspector/conformance.py",
         "src/sidinspector/contracts/dataset_identity.py",
+        "src/sidinspector/contracts/sid_space_identity.py",
         "src/sidinspector/contracts/source_identity.py",
         "tests/test_adapter_conformance.py",
         "tests/test_dataset_identity_contract.py",
+        "tests/test_sid_space_identity_contract.py",
         "tools/verify_sidscope_source_inventory.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
@@ -342,12 +401,14 @@
       "producer_paths": [
         "src/sidinspector/conformance.py",
         "src/sidinspector/contracts/dataset_identity.py",
+        "src/sidinspector/contracts/sid_space_identity.py",
         "src/sidinspector/contracts/source_identity.py"
       ],
       "schema_id": "sidscope.adapter_manifest.v1",
       "verifier_paths": [
         "tests/test_adapter_conformance.py",
         "tests/test_dataset_identity_contract.py",
+        "tests/test_sid_space_identity_contract.py",
         "tools/verify_sidscope_source_inventory.py"
       ]
     },
@@ -650,7 +711,10 @@
         "docs/adr/0005-contract-registry-and-dataset-identity.md",
         "examples/dataset_identity_fixture/dataset_identity.json",
         "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json",
-        "examples/dataset_identity_fixture/expected_failure_split_order.json"
+        "examples/dataset_identity_fixture/expected_failure_split_order.json",
+        "examples/prepared_dataset_fixture/dataset_identity.json",
+        "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json",
+        "examples/prepared_dataset_fixture/prepared_dataset.json"
       ],
       "declaration_paths": [
         "HANDOFF.md",
@@ -662,6 +726,9 @@
         "examples/dataset_identity_fixture/dataset_identity.json",
         "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json",
         "examples/dataset_identity_fixture/expected_failure_split_order.json",
+        "examples/prepared_dataset_fixture/dataset_identity.json",
+        "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json",
+        "examples/prepared_dataset_fixture/prepared_dataset.json",
         "src/sidinspector/contracts/dataset_identity.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/dataset_identity.v1.schema.json",
@@ -849,6 +916,7 @@
         "docs/reproducibility/diffgrm_www2026_adapter_status.json",
         "examples/diffgrm_masked_diffusion_fixture/prepared_dataset.json",
         "src/sidinspector/adapters/diffgrm.py",
+        "src/sidinspector/contracts/prepared_dataset.py",
         "tests/test_llada_rec_adapter.py",
         "tools/finalize_diffgrm_prepared_contract.py",
         "tools/finalize_llada_rec_prepared_contract.py"
@@ -857,6 +925,7 @@
       "owner": "core:diagnostics",
       "producer_paths": [
         "src/sidinspector/adapters/diffgrm.py",
+        "src/sidinspector/contracts/prepared_dataset.py",
         "tools/finalize_diffgrm_prepared_contract.py",
         "tools/finalize_llada_rec_prepared_contract.py"
       ],
@@ -1578,6 +1647,7 @@
       ],
       "declaration_paths": [
         "examples/llada_rec_trained_trace_fixture/prepared_dataset.json",
+        "src/sidinspector/contracts/prepared_dataset.py",
         "tests/test_llada_rec_adapter.py",
         "tools/export_llada_rec_trained_trace.py",
         "tools/finalize_llada_rec_prepared_contract.py",
@@ -1587,6 +1657,7 @@
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
+        "src/sidinspector/contracts/prepared_dataset.py",
         "tools/export_llada_rec_trained_trace.py",
         "tools/finalize_llada_rec_prepared_contract.py",
         "tools/run_llada_rec_resumable_training.py"
@@ -1797,6 +1868,43 @@
       ],
       "schema_id": "sidscope.normalized_item_sid_universe.v1",
       "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/adr/0006-sid-space-and-prepared-dataset-boundary.md",
+        "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json",
+        "examples/prepared_dataset_fixture/prepared_dataset.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/adr/0006-sid-space-and-prepared-dataset-boundary.md",
+        "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json",
+        "examples/prepared_dataset_fixture/prepared_dataset.json",
+        "src/sidinspector/contracts/prepared_dataset.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/prepared_dataset.v1.schema.json",
+        "tests/test_prepared_dataset_contract.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/contracts/prepared_dataset.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/prepared_dataset.v1.schema.json"
+      ],
+      "schema_id": "sidscope.prepared_dataset.v1",
+      "verifier_paths": [
+        "tests/test_prepared_dataset_contract.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ]
     },
     {
       "artifact_paths": [],
@@ -2164,11 +2272,13 @@
         "docs/SIDSCOPE_CHANGELOG.md",
         "docs/reproducibility/rpg_non_ar_bridge_smoke.json",
         "examples/rpg_non_ar_bridge_fixture/prepared_dataset.json",
+        "src/sidinspector/contracts/prepared_dataset.py",
         "tools/rpg_non_ar_bridge.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
+        "src/sidinspector/contracts/prepared_dataset.py",
         "tools/rpg_non_ar_bridge.py"
       ],
       "schema_id": "sidscope.rpg_prepared_dataset.v1",
@@ -2400,6 +2510,47 @@
       "artifact_paths": [
         "HANDOFF.md",
         "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/adr/0006-sid-space-and-prepared-dataset-boundary.md",
+        "examples/prepared_dataset_fixture/expected_failure_overlapping_position_vocabulary.json",
+        "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json",
+        "examples/prepared_dataset_fixture/prepared_dataset.json",
+        "examples/prepared_dataset_fixture/sid_space_identity.json"
+      ],
+      "declaration_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
+        "docs/CONTRACT_REGISTRY.md",
+        "docs/SIDSCOPE_CHANGELOG.md",
+        "docs/adr/0006-sid-space-and-prepared-dataset-boundary.md",
+        "examples/prepared_dataset_fixture/expected_failure_overlapping_position_vocabulary.json",
+        "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json",
+        "examples/prepared_dataset_fixture/prepared_dataset.json",
+        "examples/prepared_dataset_fixture/sid_space_identity.json",
+        "src/sidinspector/contracts/sid_space_identity.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/sid_space_identity.v1.schema.json",
+        "tests/test_sid_space_identity_contract.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/contracts/sid_space_identity.py",
+        "src/sidinspector/schemas/contract_registry.v1.json",
+        "src/sidinspector/schemas/sid_space_identity.v1.schema.json"
+      ],
+      "schema_id": "sidscope.sid_space_identity.v1",
+      "verifier_paths": [
+        "tests/test_sid_space_identity_contract.py",
+        "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "HANDOFF.md",
+        "docs/COMPATIBILITY.md",
         "docs/SIDSCOPE_CHANGELOG.md",
         "docs/V1_2_TO_V2_ROADMAP.md",
         "docs/adr/0003-canonical-identity-versioning-hashing.md",
@@ -2461,6 +2612,19 @@
       "verifier_paths": [
         "tools/verify_sidscope_source_inventory.py"
       ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_sprint2_contracts.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.sprint2_contract_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_sprint2_contracts.py"
+      ]
     }
   ],
   "scope": "public_release_manifest_plus_active_route_ledgers",
@@ -2469,6 +2633,8 @@
     "adapter_sdk": "not_released",
     "canonical_schemas": [
       "sidscope.dataset_identity.v1@1.0.0",
+      "sidscope.prepared_dataset.v1@1.0.0",
+      "sidscope.sid_space_identity.v1@1.0.0",
       "sidscope.source_identity.v1@1.0.0"
     ],
     "conformance_profiles": [

@@ -1,6 +1,12 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
 versioning_policy,docs/VERSIONING.md,release_governance,documentation,yes,pass_local,Defines package SDK schema profile bundle and CLI version axes plus release branch and tag policy.
 compatibility_policy,docs/COMPATIBILITY.md,release_governance,documentation,yes,pass_local,Records supported interface versions migration expectations registry authority and current SourceIdentity and DatasetIdentity slices.
+sidspace_prepared_adr,docs/adr/0006-sid-space-and-prepared-dataset-boundary.md,architecture_governance,documentation,yes,pass_local,Separates tokenizer and SID-space semantics from normalized prepared-data bindings with explicit migration rollback and validation.
+prepared_dataset_fixture,examples/prepared_dataset_fixture,example,fully_runnable,yes,pass_local,Canonical DatasetIdentity SIDSpaceIdentity and PreparedDataset triplet with typed overlap and privacy failures.
+sprint2_fixture_builder,tools/build_sidscope_sprint2_fixtures.py,verification,fully_runnable,yes,pass_local,Deterministically regenerates canonical Sprint 2 fixtures from the complete RPG prepared bridge.
+sprint2_contract_verifier,tools/verify_sidscope_sprint2_contracts.py,verification,fully_runnable,yes,pass_local,Checks cross-contract bindings exact RPG migration parity and typed regeneration of incomplete legacy prepared routes.
+sid_space_identity_tests,tests/test_sid_space_identity_contract.py,test,fully_runnable,yes,pass_local,Tests SID structure vocabulary tokenizer cache collision semantics legacy partial migration CLI and typed overlap failure.
+prepared_dataset_tests,tests/test_prepared_dataset_contract.py,test,fully_runnable,yes,pass_local,Tests complete dependency binding RPG parity privacy mismatch incomplete legacy regeneration schema CLI and verifier.
 release_template,docs/SIDSCOPE_RELEASE_TEMPLATE.md,release_governance,documentation,yes,pass_local,Reusable GitHub Release body checklist bound to machine and human release evidence.
 module_dependency_policy,docs/SIDSCOPE_MODULE_DEPENDENCIES.md,architecture_governance,documentation,yes,pass_local,Documents enforceable inward acyclic target-module boundaries and legacy coexistence.
 source_identity_fixture,examples/source_identity_fixture,example,fully_runnable,yes,pass_local,Positive canonical SourceIdentity plus typed content-hash mismatch fixture.

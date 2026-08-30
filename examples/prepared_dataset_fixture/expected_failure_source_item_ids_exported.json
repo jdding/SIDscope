@@ -1,0 +1,75 @@
+{
+  "artifacts": [
+    {
+      "role": "interaction_sequences",
+      "row_count": 5,
+      "sha256": "eeeb064740a78b3c71ae509ce47d571a87b6e6f9f93a0e4601d1ee317dd465e0"
+    },
+    {
+      "role": "item_mapping",
+      "row_count": 4,
+      "sha256": "d7c89610dadfdf34c6f8d1c1c649f6386cebe6fc31dc525acf7807924cdf889d"
+    },
+    {
+      "role": "semantic_id_cache",
+      "row_count": 4,
+      "sha256": "7f67e1b3795fd4800e6c5d29f601d4287b435d08cb5c0a1c8299907b263bdd59"
+    }
+  ],
+  "catalog": {
+    "item_count": 4,
+    "scope": "train_only",
+    "sha256": "d7c89610dadfdf34c6f8d1c1c649f6386cebe6fc31dc525acf7807924cdf889d"
+  },
+  "content_sha256": "23f09bb8eb77cd03d07f35f0e21f1b9ce6ed86404eda6b7597d0582a1ac6d283",
+  "dataset_binding": {
+    "content_sha256": "ae9748ffc42fb388bac607fabcbb7fb229ecc735bef9323fb8539eb85e74875a",
+    "schema_id": "sidscope.dataset_identity.v1",
+    "schema_revision": "1.0.0"
+  },
+  "normalization": {
+    "episode_identity": "pseudonymous_episode_ids",
+    "evaluator_labels_in_generator_input": false,
+    "item_identity": "pseudonymous_normalized_items",
+    "representation": "normalized_item_sequences",
+    "source_item_ids_exported": true,
+    "source_user_ids_exported": false
+  },
+  "prepared_dataset_id": "rpg:rpg-prepared-fixture",
+  "producer": {
+    "name": "sidinspector.contracts",
+    "version": "1.2.0.dev0"
+  },
+  "schema": "sidscope.prepared_dataset.v1",
+  "schema_revision": "1.0.0",
+  "sid_space_binding": {
+    "content_sha256": "f64251974100ad966208a65702b265463165cc9e0fb727fd8d03cdd43e3ff363",
+    "schema_id": "sidscope.sid_space_identity.v1",
+    "schema_revision": "1.0.0"
+  },
+  "splits": [
+    {
+      "role": "train",
+      "row_count": 2,
+      "sha256": "426e275aa3522ba9c46f38bd2d81876c812504b92dedfa37a65a8c41ea1fb5a7",
+      "split_id": "synthetic/frozen/train"
+    },
+    {
+      "role": "validation",
+      "row_count": 1,
+      "sha256": "8f8cce93ad5249604ae6282b8db55bd04dae26186236d22d27b2a0183e624c27",
+      "split_id": "synthetic/frozen/validation"
+    },
+    {
+      "role": "test",
+      "row_count": 2,
+      "sha256": "31ee0fb320ebcdd583997d2b097788b46a95e257b8eaebe45a80796f7a748cdb",
+      "split_id": "synthetic/frozen/test"
+    }
+  ],
+  "target_universe": {
+    "item_count": 4,
+    "scope": "train_only_catalog",
+    "sha256": "7417050d74a02afbaa5c46dce666daf57e6ea8f6b37a7d5f85c97bb187e06ff9"
+  }
+}

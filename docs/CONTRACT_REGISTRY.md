@@ -12,9 +12,10 @@ and result identity field.
 sidscope contract list
 sidscope contract show --type dataset-identity
 sidscope contract validate \
-  --type dataset-identity \
-  --input examples/dataset_identity_fixture/dataset_identity.json
+  --type prepared-dataset \
+  --input examples/prepared_dataset_fixture/prepared_dataset.json
 python3 tools/verify_sidscope_contract_registry.py
+python3 tools/verify_sidscope_sprint2_contracts.py
 ```
 
 Registry order and paths are canonical. Unknown dependencies, dependency
@@ -39,3 +40,22 @@ unbound fields, and makes no split or universe-hash claim. The legacy
 Neither migration mode rewrites historical evidence. Legacy route verifiers
 remain authoritative until their complete prepared-data surfaces are migrated
 and parity-tested.
+
+## SIDSpaceIdentity and PreparedDataset Boundaries
+
+`sidscope.sid_space_identity.v1` owns SID tuple ordering, length/depth,
+hierarchy, position vocabularies and offsets, special tokens, tokenizer/cache
+identity, collision behavior and de-duplication. It does not own dataset splits
+or decoder traces. Legacy adapter manifests become `legacy_partial`: known SID
+depth and cache hash are retained while missing semantics remain enumerated.
+
+`sidscope.prepared_dataset.v1` depends on fully bound DatasetIdentity and
+SIDSpaceIdentity revisions. It binds pseudonymous normalized sequences,
+ordered splits, interaction/mapping/SID-cache artifacts, catalog and target
+universe. Source IDs and evaluator labels are forbidden. Training, checkpoint,
+episode selection and model behavior belong to later contracts.
+
+The RPG bridge is the first complete migration and retains its
+parallel/unordered identity. Existing DiffGRM and LLaDA prepared v1 artifacts
+do not contain all canonical counts and bindings; their typed outcome is
+`legacy_prepared_regeneration_required`, not inferred compatibility.

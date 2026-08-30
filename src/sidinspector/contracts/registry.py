@@ -10,6 +10,8 @@ from typing import Any, Callable, Mapping, Sequence
 
 from .dataset_identity import load_dataset_identity
 from .hashing import SHA256_PATTERN, verify_content_sha256
+from .prepared_dataset import load_prepared_dataset
+from .sid_space_identity import load_sid_space_identity
 from .source_identity import load_source_identity
 
 
@@ -348,6 +350,8 @@ def load_contract_registry(
 
 _LOADERS: Mapping[str, Callable[[Path], Any]] = {
     "dataset-identity": load_dataset_identity,
+    "prepared-dataset": load_prepared_dataset,
+    "sid-space-identity": load_sid_space_identity,
     "source-identity": load_source_identity,
 }
 

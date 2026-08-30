@@ -55,8 +55,9 @@ sidscope contract validate \
 ```
 
 The active `1.2.0.dev0` line now has a versioned contract registry plus complete
-SourceIdentity and DatasetIdentity vertical slices. Registry discovery and the
-second contract can be exercised without optional adapter runtimes:
+SourceIdentity, DatasetIdentity, SIDSpaceIdentity, and PreparedDataset vertical
+slices. Registry discovery and all four contracts run without optional adapter
+runtimes:
 
 ```bash
 sidscope contract list
@@ -64,13 +65,16 @@ sidscope contract show --type dataset-identity
 sidscope contract validate \
   --type dataset-identity \
   --input examples/dataset_identity_fixture/dataset_identity.json
+python3 tools/verify_sidscope_sprint2_contracts.py
 ```
 
 DatasetIdentity binds dataset/category/profile, ordered split identities,
-catalog, target universe, and pseudonymous item identity. Legacy manifests
-with insufficient bindings are explicitly `legacy_partial`; SID depth remains
-deferred to the planned SIDSpaceIdentity. Other 1.2--2.0 interfaces remain
-roadmap items until their vertical slices pass.
+catalog, target universe, and pseudonymous item identity. SIDSpaceIdentity
+separately binds tuple structure, codebooks, offsets, special tokens, tokenizer
+artifacts, collision and de-duplication semantics. PreparedDataset binds both
+identities to normalized splits and artifact hashes. RPG migrates with exact
+fixture parity; incomplete DiffGRM/LLaDA legacy prepared artifacts explicitly
+require regeneration. Other 1.2--2.0 interfaces remain roadmap items.
 
 ### Optional Latte Tokenizer Intake
 

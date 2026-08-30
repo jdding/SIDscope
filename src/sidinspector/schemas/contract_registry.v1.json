@@ -20,6 +20,37 @@
       "result_id_field": "dataset_id"
     },
     {
+      "contract_type": "prepared-dataset",
+      "schema_id": "sidscope.prepared_dataset.v1",
+      "schema_revision": "1.0.0",
+      "owner": "core:contracts",
+      "schema_resource": "prepared_dataset.v1.schema.json",
+      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
+      "canonical_fixture": "examples/prepared_dataset_fixture/prepared_dataset.json",
+      "negative_fixtures": [
+        {"path": "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json", "expected_failure": "normalization_or_privacy_mismatch"}
+      ],
+      "dependencies": [
+        {"schema_id": "sidscope.dataset_identity.v1", "accepted_revisions": ["1.0.0"]},
+        {"schema_id": "sidscope.sid_space_identity.v1", "accepted_revisions": ["1.0.0"]}
+      ],
+      "result_id_field": "prepared_dataset_id"
+    },
+    {
+      "contract_type": "sid-space-identity",
+      "schema_id": "sidscope.sid_space_identity.v1",
+      "schema_revision": "1.0.0",
+      "owner": "core:contracts",
+      "schema_resource": "sid_space_identity.v1.schema.json",
+      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
+      "canonical_fixture": "examples/prepared_dataset_fixture/sid_space_identity.json",
+      "negative_fixtures": [
+        {"path": "examples/prepared_dataset_fixture/expected_failure_overlapping_position_vocabulary.json", "expected_failure": "overlapping_position_vocabulary"}
+      ],
+      "dependencies": [],
+      "result_id_field": "sid_space_id"
+    },
+    {
       "contract_type": "source-identity",
       "schema_id": "sidscope.source_identity.v1",
       "schema_revision": "1.0.0",
@@ -34,5 +65,5 @@
       "result_id_field": "source_id"
     }
   ],
-  "content_sha256": "1e7f94401b90ecd18b8fa292cf36bf39b2b768908229315eda8d663c903c18ea"
+  "content_sha256": "e1dd2a74e732b391e395e4e7e1dcfeddfc7e81b09e5ef6a960a9f202825ce4a9"
 }

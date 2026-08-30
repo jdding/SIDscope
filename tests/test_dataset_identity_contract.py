@@ -79,7 +79,7 @@ class DatasetIdentityContractTest(unittest.TestCase):
                 listed = cli_main(["contract", "list", "--result-json", str(result_path)])
             listing = json.loads(result_path.read_text(encoding="utf-8"))
             self.assertEqual(listed, 0)
-            self.assertEqual(listing["contract_count"], 2)
+            self.assertEqual(listing["contract_count"], 4)
 
             stdout = io.StringIO()
             with contextlib.redirect_stdout(stdout):

@@ -11,6 +11,21 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.2.0.dev0: Sprint 2 SIDSpaceIdentity and PreparedDataset
+
+- Added `sidscope.sid_space_identity.v1` for tuple structure, hierarchy,
+  codebooks, offsets, special tokens, tokenizer/cache identity, collisions, and
+  de-duplication without importing adapter runtimes.
+- Added `sidscope.prepared_dataset.v1` with exact DatasetIdentity and
+  SIDSpaceIdentity dependencies, normalized split/artifact bindings,
+  train-only catalog/target-universe integrity, and privacy enforcement.
+- Added deterministic RPG bridge migration with exact fixture parity and
+  explicit regeneration-required failures for incomplete legacy DiffGRM and
+  LLaDA prepared artifacts.
+- Registered both contracts, added generic CLI dispatch, cross-binding and
+  typed-negative verification, ADR-0006, architecture inventory integration,
+  and focused/full release gates.
+
 ## SIDScope v1.2.0.dev0: Sprint 1 contract registry and DatasetIdentity
 
 - Added the bundled `sidscope.contract_registry.v1` authority with owner,

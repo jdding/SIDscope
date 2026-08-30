@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidscope.dev/schemas/sid_space_identity.v1.schema.json",
+  "title": "SIDScope SIDSpaceIdentity v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_revision", "sid_space_id", "producer", "structure", "vocabulary", "tokenizer", "resolution", "identity_status", "unbound_fields", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.sid_space_identity.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "sid_space_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tuple_kind", "length_kind", "depth", "hierarchy"],
+      "properties": {
+        "tuple_kind": {"enum": ["ordered", "unordered_set", "legacy_unspecified"]},
+        "length_kind": {"enum": ["fixed", "variable", "legacy_unspecified"]},
+        "depth": {"type": ["integer", "null"], "minimum": 1},
+        "hierarchy": {"enum": ["prefix", "position_only", "none", "legacy_unspecified"]}
+      }
+    },
+    "vocabulary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic_code_min", "codebook_sizes", "position_offsets", "position_disjoint", "model_vocabulary_size", "special_tokens"],
+      "properties": {
+        "semantic_code_min": {"type": "integer", "minimum": 0},
+        "codebook_sizes": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+        "position_offsets": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "position_disjoint": {"type": ["boolean", "null"]},
+        "model_vocabulary_size": {"type": ["integer", "null"], "minimum": 1},
+        "special_tokens": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pad", "bos", "eos", "mask", "unknown"],
+          "properties": {
+            "pad": {"type": ["integer", "null"], "minimum": -1},
+            "bos": {"type": ["integer", "null"], "minimum": -1},
+            "eos": {"type": ["integer", "null"], "minimum": -1},
+            "mask": {"type": ["integer", "null"], "minimum": -1},
+            "unknown": {"type": ["integer", "null"], "minimum": -1}
+          }
+        }
+      }
+    },
+    "tokenizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "tokenizer_factor", "configuration_sha256", "artifact_sha256"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "tokenizer_factor": {"type": "string", "minLength": 1},
+        "configuration_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dedup_semantics", "collision_semantics"],
+      "properties": {
+        "dedup_semantics": {"enum": ["preserve_all_item_collisions", "unique_sid_required", "legacy_unspecified"]},
+        "collision_semantics": {"enum": ["many_items_per_sid_allowed", "one_item_per_sid", "legacy_unspecified"]}
+      }
+    },
+    "identity_status": {"enum": ["fully_bound", "legacy_partial"]},
+    "unbound_fields": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "content_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {"name": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}
+    }
+  }
+}

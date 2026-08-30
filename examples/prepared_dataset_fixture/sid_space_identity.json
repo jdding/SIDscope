@@ -1,0 +1,48 @@
+{
+  "content_sha256": "f64251974100ad966208a65702b265463165cc9e0fb727fd8d03cdd43e3ff363",
+  "identity_status": "fully_bound",
+  "producer": {
+    "name": "sidinspector.contracts",
+    "version": "1.2.0.dev0"
+  },
+  "resolution": {
+    "collision_semantics": "many_items_per_sid_allowed",
+    "dedup_semantics": "preserve_all_item_collisions"
+  },
+  "schema": "sidscope.sid_space_identity.v1",
+  "schema_revision": "1.0.0",
+  "sid_space_id": "rpg:rpg-prepared-fixture",
+  "structure": {
+    "depth": 2,
+    "hierarchy": "none",
+    "length_kind": "fixed",
+    "tuple_kind": "unordered_set"
+  },
+  "tokenizer": {
+    "artifact_sha256": "7f67e1b3795fd4800e6c5d29f601d4287b435d08cb5c0a1c8299907b263bdd59",
+    "configuration_sha256": "d934c791b222136f5b7818d0d26927af2da232d1c92a8e2a19476058d8a36bd6",
+    "kind": "rpg_semantic_id_cache",
+    "tokenizer_factor": "official_rpg_opq_cache"
+  },
+  "unbound_fields": [],
+  "vocabulary": {
+    "codebook_sizes": [
+      4,
+      4
+    ],
+    "model_vocabulary_size": 9,
+    "position_disjoint": true,
+    "position_offsets": [
+      1,
+      5
+    ],
+    "semantic_code_min": 0,
+    "special_tokens": {
+      "bos": null,
+      "eos": null,
+      "mask": null,
+      "pad": 0,
+      "unknown": null
+    }
+  }
+}

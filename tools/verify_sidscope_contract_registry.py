@@ -13,7 +13,14 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-from sidinspector.contracts import load_contract_registry, load_registered_contract
+from sidinspector.contracts import (
+    load_contract_registry,
+    load_dataset_identity,
+    load_prepared_dataset,
+    load_registered_contract,
+    load_sid_space_identity,
+    validate_prepared_dataset_bindings,
+)
 
 
 REPORT_SCHEMA = "sidscope.contract_registry_verification.v1"
@@ -38,6 +45,12 @@ def verify_contract_registry() -> dict[str, object]:
             else:
                 raise ValueError(f"negative fixture unexpectedly passed: {fixture.path}")
             negative_count += 1
+    fixture = ROOT / "examples" / "prepared_dataset_fixture"
+    validate_prepared_dataset_bindings(
+        load_prepared_dataset(fixture / "prepared_dataset.json"),
+        load_dataset_identity(fixture / "dataset_identity.json"),
+        load_sid_space_identity(fixture / "sid_space_identity.json"),
+    )
     return {
         "schema": REPORT_SCHEMA,
         "status": "pass",
@@ -46,6 +59,7 @@ def verify_contract_registry() -> dict[str, object]:
         "contract_count": len(registry.contracts),
         "positive_fixture_count": positive_count,
         "negative_fixture_count": negative_count,
+        "dependency_binding_count": 2,
         "schema_ids": [item.schema_id for item in registry.contracts],
     }
 

@@ -230,8 +230,8 @@ def build_inventory() -> dict[str, Any]:
         },
         "canonical_evidence_edges": [
             {"from": "SourceIdentity", "to": "DatasetIdentity", "status": "both_implemented"},
-            {"from": "DatasetIdentity", "to": "SIDSpaceIdentity", "status": "planned"},
-            {"from": "SIDSpaceIdentity", "to": "PreparedDataset", "status": "planned"},
+            {"from": "DatasetIdentity", "to": "PreparedDataset", "status": "both_implemented"},
+            {"from": "SIDSpaceIdentity", "to": "PreparedDataset", "status": "both_implemented"},
             {"from": "PreparedDataset", "to": "TraceBundle", "status": "planned"},
             {"from": "TraceBundle", "to": "DiagnosticReport", "status": "planned"},
             {"from": "DiagnosticReport", "to": "ConformanceReport", "status": "planned"},

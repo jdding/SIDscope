@@ -58,6 +58,21 @@ missing legacy hashes. SID depth is deferred to Sprint 2's SIDSpaceIdentity.
 Focused, full package, archive and isolated-install gates close the sprint; the
 remaining 1.2 canonical entities stay planned.
 
+### Sprint 2 implementation status
+
+Sprint 2 closes SIDSpaceIdentity and PreparedDataset. SID structure,
+vocabulary, offsets, special tokens, tokenizer/cache identity, collisions and
+de-duplication are now a separate registered identity. PreparedDataset depends
+on complete DatasetIdentity and SIDSpaceIdentity artifacts and binds normalized
+splits, artifacts, catalog, target universe and privacy without absorbing
+training, checkpoint or episode-selection concerns.
+
+The RPG prepared bridge migrates with exact canonical fixture parity while
+preserving parallel/unordered semantics. Incomplete DiffGRM and LLaDA legacy
+prepared contracts fail with a typed regeneration requirement. Focused, full
+package, archive and isolated-install gates close the sprint; EpisodeSelection
+is the next 1.2 vertical slice.
+
 ## 2. State Transition
 
 ### Current State

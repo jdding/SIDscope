@@ -12,6 +12,8 @@ from typing import Sequence
 from sidinspector.contracts import (
     ContractRegistryError,
     DatasetIdentityValidationError,
+    PreparedDatasetValidationError,
+    SIDSpaceIdentityValidationError,
     SourceIdentityValidationError,
     load_contract_registry,
     load_registered_contract,
@@ -133,6 +135,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     except (
         ContractRegistryError,
         DatasetIdentityValidationError,
+        PreparedDatasetValidationError,
+        SIDSpaceIdentityValidationError,
         SourceIdentityValidationError,
     ) as exc:
         code = getattr(exc, "code", "contract_validation_error")
