@@ -21,6 +21,7 @@ evidence.
         -> 1.4 immutable evidence and local registry
         -> 1.5 conformance/submission ecosystem
         -> 1.6 compatibility, migration and adoption hardening
+        -> 1.7-1.9 reserved optional pre-2.0 development slots
         -> 2.0 stable public platform contract
 ```
 
@@ -146,9 +147,11 @@ not uniformly registered or dispatched.
 
 ### Interim State
 
-Versions 1.2 through 1.6 run shared and legacy paths side by side. Each adapter
-migrates independently after outcome, metric, binding, hash and typed-failure
-parity. Compatibility wrappers are temporary, owned and reversible.
+Versions 1.2 through the final active 1.x milestone run shared and legacy paths
+side by side. Each adapter migrates independently after outcome, metric,
+binding, hash and typed-failure parity. Compatibility wrappers are temporary,
+owned and reversible. Versions 1.7--1.9 are available but remain inactive until
+an explicitly approved scope assigns deliverables and exit gates.
 
 ### Target State
 
@@ -166,7 +169,8 @@ source of truth; SQLite and public indexes are rebuildable projections.
 | 3 | 1.4 | One evidence-bundle family at a time | Existing evidence files remain authoritative until bundled and verified. | Hash parity, provenance DAG, registry rebuild and privacy scan. | Discard derived SQLite index and rebuild from immutable bundles. | All active evidence types have deterministic bundles and registry entries. |
 | 4 | 1.5 | One conformance profile at a time | Legacy status ledger stays read-only while generated view is compared. | Profile replay, submission checker and generated-ledger parity. | Keep previous profile version active; reject new admissions. | All active status labels derive from versioned reports. |
 | 5 | 1.6 | One supported compatibility interval or legacy route at a time | 1.5 profiles and commands stay active while migration, external-plugin and cross-family parity are hardened. | Multi-version CI, migration replay, external onboarding, cross-family comparison and wrapper-owner audit. | Pin the last passing 1.5 profile/CLI combination and defer 2.0; immutable bundles are never rewritten. | Every supported interval is tested and every wrapper is retired or explicitly archived. |
-| 6 | 2.0 | Stable public interfaces | Only interfaces proven under 1.6 enter the stable support contract; historical CLIs remain replay-only where documented. | Complete architecture criteria, compatibility matrix and public release gates. | Pin the final 1.6 release candidate; immutable bundles require no rollback mutation. | Stable public contract is declared without carrying an unresolved migration backlog. |
+| 6 | 1.7--1.9 (optional) | One approved additive or hardening workstream per activated minor release | The last passing 1.x remains supported while the new slice proves parity; unused reserved versions are skipped. | A scoped design record, positive/negative tests, compatibility delta, full release gates and a repeat of all still-applicable 1.6 hardening checks. | Pin the previous passing 1.x release and deactivate only the new slice. | Activated scope closes with no unowned migration or compatibility debt; the final active 1.x repeats the complete pre-2.0 hardening suite. |
+| 7 | 2.0 | Stable public interfaces | Only interfaces proven by the final passing pre-2.0 1.x baseline enter the stable support contract; historical CLIs remain replay-only where documented. | Complete architecture criteria, compatibility matrix and public release gates. | Pin the final passing 1.x release candidate; immutable bundles require no rollback mutation. | Stable public contract is declared without carrying an unresolved migration backlog. |
 
 No wave moves two independently risky boundaries at once. A schema migration,
 verifier migration and public status promotion are separate cutover units.
@@ -349,14 +353,47 @@ Rollback: retain the last passing 1.5 profile/CLI combination, quarantine only
 new invalid bundles, and defer 2.0. Existing immutable objects, historical
 verifiers and released tags are never mutated to force a hardening gate.
 
+### 1.7.0--1.9.0: Reserved Optional Pre-2.0 Development Slots
+
+Purpose: preserve room for evidence-backed additive development discovered
+after 1.6 without hiding it inside the 2.0 release candidate. These are version
+reservations, not pre-approved features or a requirement to publish every minor
+version.
+
+Activation rules:
+
+- each minor release is activated only by an explicit user-approved scope and
+  synchronized roadmap/compatibility update;
+- the scope names one primary additive or hardening workstream, its owner,
+  compatibility impact, fixtures, migration, rollback and measurable exit
+  gates;
+- unused version numbers may be skipped; placeholder versions never receive an
+  empty tag or synthetic release record;
+- new work must remain inside SIDScope's six owned layers and cannot absorb
+  upstream model/training implementation;
+- the previous passing 1.x surface stays installable and its immutable bundles
+  remain valid while the new slice is tested;
+- the final active 1.x milestone, whether 1.6, 1.7, 1.8 or 1.9, reruns the full
+  compatibility, migration, external-adoption, wrapper and release hardening
+  gates before 2.0.
+
+Possible future work is intentionally unnamed until evidence justifies it.
+Hosted services, dashboards and speculative method expansion are not implicitly
+authorized by reserving these versions.
+
+Rollback: deactivate the new additive slice and pin the previous passing 1.x
+release. Do not mutate earlier schemas, profiles, bundles, tags or migration
+records to preserve the appearance of a sequential release.
+
 ### 2.0.0: Stable Conformance and Observability Platform
 
 Purpose: declare the architecture and extension contract stable for external
 adoption.
 
-2.0 is a stability declaration and final release certification over the 1.6
-hardening baseline. It is not the place to finish unowned migrations, introduce
-a new product subsystem or discover the first external-adoption path.
+2.0 is a stability declaration and final release certification over the final
+passing pre-2.0 1.x baseline, which is at least 1.6 and may be a deliberately
+activated 1.7, 1.8 or 1.9. It is not the place to finish unowned migrations,
+introduce a new product subsystem or discover the first external-adoption path.
 
 Required product surface:
 

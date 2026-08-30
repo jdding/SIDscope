@@ -41,7 +41,8 @@ integration through canonical contracts, native observation, diagnostic
 evaluation, conformance verification, and immutable evidence. The authoritative
 design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 and `docs/V1_2_TO_V2_ROADMAP.md`. Implemented and planned surfaces are marked
-separately; 1.5, 1.6 and 2.0 target features are not claimed by the 1.4 closure.
+separately; 1.5, 1.6, optional 1.7--1.9 and 2.0 target features are not claimed
+by the 1.4 closure.
 
 Architecture Sprint 0 is implemented on the 1.1.1 regression baseline.
 It adds canonical version/hash governance, a machine-readable schema/profile/
@@ -117,8 +118,9 @@ show, compare, supersede, quarantine, export, and rebuild workflows while the
 legacy evidence-package path remains compatible. The next milestone is 1.5
 conformance automation and submission ecosystem work. ADR-0010 then reserves
 1.6 for compatibility, migration and external-adoption hardening before 2.0
-declares the proven interfaces stable; none of those planned surfaces is
-implied by the 1.4 closure.
+declares the proven interfaces stable. Versions 1.7--1.9 are reserved optional
+slots that require separate approved scope and may be skipped; none of those
+planned surfaces is implied by the 1.4 closure.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only

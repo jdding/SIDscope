@@ -191,7 +191,7 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("### 4.1 Current State: 1.1.1 Baseline", architecture)
         self.assertIn("### 4.2 Interim State: 1.2 to 1.5 Coexistence", architecture)
         self.assertIn(
-            "### 4.3 Pre-Stable State: 1.6 Compatibility and Adoption Hardening",
+            "### 4.3 Pre-Stable State: 1.6 Hardening and Optional 1.7--1.9 Evolution",
             architecture,
         )
         self.assertIn("### 4.4 Target State: 2.0", architecture)

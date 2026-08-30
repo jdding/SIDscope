@@ -28,6 +28,9 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
 - Split the post-1.5 transition into a dedicated 1.6 compatibility, migration
   and external-adoption hardening milestone before the 2.0 stability
   declaration; recorded the boundary and rollback policy in ADR-0010.
+- Reserved optional 1.7--1.9 minor versions for later explicitly scoped work;
+  unused versions may be skipped and the final active 1.x must rerun the full
+  pre-2.0 hardening suite.
 - Kept EvidenceIndex v1, route-specific evidence, adapter statuses, upstream
   training, and all frozen TOIS assets unchanged.
 

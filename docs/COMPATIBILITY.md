@@ -45,12 +45,18 @@ compatibility declaration:
 | --- | --- | --- |
 | 1.5 | Add versioned conformance profiles, submission checking and generated registry views. | Additive development surface; legacy authorities remain available until parity passes. |
 | 1.6 | Prove package/SDK/schema/profile/payload/bundle intervals, migrate or archive legacy authorities, and freeze candidate CLI/Python interfaces. | No unresolved breaking change, unowned wrapper or undocumented migration may advance to 2.0. |
-| 2.0 | Declare the interfaces demonstrated under 1.6 stable. | Final release gates reverify the frozen compatibility surface; they do not complete missing migrations. |
+| 1.7--1.9 (reserved optional) | Hold capacity for explicitly approved additive or hardening slices discovered after 1.6. | No compatibility is implied until a version is activated with a scoped matrix delta, migration, rollback and tests; unused versions are skipped. |
+| 2.0 | Declare the interfaces demonstrated by the final passing pre-2.0 1.x baseline stable. | Final release gates reverify the frozen compatibility surface; they do not complete missing migrations. |
 
 If 1.6 hardening fails, the last passing 1.5 profile/CLI combination remains
 the supported development baseline and 2.0 is deferred. Existing bundles,
 historical evidence and published tags are never rewritten to manufacture
 compatibility.
+
+Every activated 1.7--1.9 minor release must preserve the previous passing 1.x
+as a rollback point and rerun all still-applicable 1.6 hardening gates. Merely
+reserving a version creates no supported package, SDK, schema, profile, payload
+or bundle interval.
 
 ## Schema Compatibility
 

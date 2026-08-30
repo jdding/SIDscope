@@ -51,13 +51,21 @@ The roadmap intentionally uses three distinct release responsibilities:
 - 1.5 completes the additive conformance and submission feature surface;
 - 1.6 hardens compatibility, migration, external adoption and candidate API
   stability without adding another owned product layer;
-- 2.0 reruns the final gates and makes the stable public compatibility promise.
+- 1.7--1.9 remain optional reserved slots for later explicitly approved
+  additive or hardening work;
+- 2.0 reruns the final gates against the last passing 1.x baseline and makes the
+  stable public compatibility promise.
 
 A major version is not used as a backlog container. Any unresolved migration,
 first-time external onboarding, unowned wrapper or undocumented breaking change
 blocks 2.0 and remains on the 1.6 line. If additional additive work is later
 required, it receives another 1.x minor version rather than being hidden inside
 the 2.0 release candidate.
+
+Reserved 1.7--1.9 numbers are not placeholder releases. A number is used only
+after its scope, compatibility delta, migration, rollback and exit gates are
+approved and documented. Unused numbers may be skipped, and no empty tag or
+synthetic changelog entry is created merely to keep the sequence contiguous.
 
 ## Release Flow
 

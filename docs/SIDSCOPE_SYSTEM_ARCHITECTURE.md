@@ -153,7 +153,7 @@ During coexistence:
 - rollback means selecting the previous profile/CLI path, not rewriting a
   previously admitted bundle.
 
-### 4.3 Pre-Stable State: 1.6 Compatibility and Adoption Hardening
+### 4.3 Pre-Stable State: 1.6 Hardening and Optional 1.7--1.9 Evolution
 
 The 1.5 feature surface remains active while SIDScope proves multi-version
 compatibility, migrates or archives every legacy authority, completes an
@@ -161,6 +161,12 @@ independent external-plugin onboarding, and verifies a compatible comparison
 across generator families. No new owned product layer is introduced in this
 state. A failing hardening gate returns to the last passing 1.5 profile/CLI
 combination and delays 2.0 without rewriting immutable evidence.
+
+Versions 1.7--1.9 are reserved optional iterations, not additional architecture
+layers. An activated minor release must have an approved bounded scope, retain
+the previous passing 1.x rollback point, and rerun all applicable 1.6 hardening
+criteria. If no further additive work is justified, SIDScope may proceed from
+1.6 directly to 2.0 without publishing placeholder versions.
 
 ### 4.4 Target State: 2.0
 
@@ -509,10 +515,12 @@ The target is realized at 2.0 only when:
 10. every temporary compatibility path has retired or has an explicit archived
     historical status.
 
-These criteria must be implemented and repeatedly demonstrated during the 1.6
-hardening milestone. The 2.0 release reruns them against the final candidate and
-declares the proven interfaces stable; it does not absorb unfinished migration
-or external-adoption development.
+These criteria must first be implemented and repeatedly demonstrated during the
+1.6 hardening milestone. Any activated 1.7--1.9 release repeats the applicable
+suite, and the final active 1.x release becomes the 2.0 input baseline. The 2.0
+release reruns the gates against that final candidate and declares the proven
+interfaces stable; it does not absorb unfinished migration or external-adoption
+development.
 
 The versioned transition waves and rollback gates are defined in
 `V1_2_TO_V2_ROADMAP.md`.
