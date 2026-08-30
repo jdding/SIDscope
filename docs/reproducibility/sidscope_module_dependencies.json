@@ -38,7 +38,7 @@
         "evaluation",
         "trace"
       ],
-      "status": "planned"
+      "status": "active"
     },
     "contracts": {
       "allowed_internal_imports": [
@@ -52,7 +52,7 @@
         "evaluation",
         "trace"
       ],
-      "status": "planned"
+      "status": "active"
     },
     "evidence": {
       "allowed_internal_imports": [
@@ -61,21 +61,21 @@
         "evaluation",
         "evidence"
       ],
-      "status": "planned"
+      "status": "active"
     },
     "sdk": {
       "allowed_internal_imports": [
         "contracts",
         "sdk"
       ],
-      "status": "planned"
+      "status": "active"
     },
     "trace": {
       "allowed_internal_imports": [
         "contracts",
         "trace"
       ],
-      "status": "planned"
+      "status": "active"
     }
   },
   "schema": "sidscope.module_dependency_matrix.v1",

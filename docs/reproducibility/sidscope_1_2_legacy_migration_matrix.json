@@ -1,0 +1,208 @@
+{
+  "contract_registry_sha256": "6994b9c43dca5b245773bd38fb4b578c475fc84cd434848cfb0cf8334db8dca6",
+  "policy": {
+    "historical_evidence_rewritten": false,
+    "legacy_authority_retained": true,
+    "promotion_from_incomplete_migration_allowed": false,
+    "typed_regeneration_is_not_conformance_failure": true
+  },
+  "product_version": "1.2.0.dev0",
+  "route_count": 15,
+  "routes": [
+    {
+      "canonical_trace_required": true,
+      "legacy_authority": "docs/reproducibility/dact_tiger_adapter_status.json",
+      "legacy_status": "named_adapter",
+      "legacy_verifier": "tools/verify_dact_tiger_adapter.py",
+      "missing_canonical_surfaces": [
+        "canonical_1_2_pipeline"
+      ],
+      "route_id": "dact_tiger",
+      "route_kind": "generator",
+      "shared_1_2_disposition": "typed_canonical_pipeline_regeneration_required",
+      "status_equivalence_policy": "legacy status remains authoritative; shared path must not infer a promotion"
+    },
+    {
+      "canonical_trace_required": true,
+      "legacy_authority": "docs/reproducibility/diffgrm_www2026_adapter_status.json",
+      "legacy_status": "named_adapter",
+      "legacy_verifier": "tools/verify_diffgrm_adapter.py",
+      "missing_canonical_surfaces": [
+        "canonical_1_2_pipeline"
+      ],
+      "route_id": "diffgrm_www2026",
+      "route_kind": "generator",
+      "shared_1_2_disposition": "typed_canonical_pipeline_regeneration_required",
+      "status_equivalence_policy": "legacy status remains authoritative; shared path must not infer a promotion"
+    },
+    {
+      "canonical_trace_required": true,
+      "legacy_authority": "docs/reproducibility/isd_adapter_status.json",
+      "legacy_status": "close_named_adapter",
+      "legacy_verifier": "tools/verify_isd_adapter.py",
+      "missing_canonical_surfaces": [
+        "canonical_1_2_pipeline"
+      ],
+      "route_id": "isd",
+      "route_kind": "generator",
+      "shared_1_2_disposition": "typed_canonical_pipeline_regeneration_required",
+      "status_equivalence_policy": "legacy status remains authoritative; shared path must not infer a promotion"
+    },
+    {
+      "canonical_trace_required": true,
+      "legacy_authority": "docs/reproducibility/latte_psid_adapter_status.json",
+      "legacy_status": "named_adapter",
+      "legacy_verifier": "tools/verify_latte_psid_adapter.py",
+      "missing_canonical_surfaces": [
+        "canonical_1_2_pipeline"
+      ],
+      "route_id": "latte_psid",
+      "route_kind": "generator",
+      "shared_1_2_disposition": "typed_canonical_pipeline_regeneration_required",
+      "status_equivalence_policy": "legacy status remains authoritative; shared path must not infer a promotion"
+    },
+    {
+      "canonical_trace_required": true,
+      "legacy_authority": "docs/reproducibility/llada_rec_adapter_status.json",
+      "legacy_status": "named_adapter",
+      "legacy_verifier": "tools/verify_llada_rec_adapter.py",
+      "missing_canonical_surfaces": [
+        "canonical_1_2_pipeline"
+      ],
+      "route_id": "llada_rec",
+      "route_kind": "generator",
+      "shared_1_2_disposition": "typed_canonical_pipeline_regeneration_required",
+      "status_equivalence_policy": "legacy status remains authoritative; shared path must not infer a promotion"
+    },
+    {
+      "canonical_trace_required": true,
+      "legacy_authority": "docs/reproducibility/rpg_kdd2025_adapter_status.json",
+      "legacy_status": "named_adapter",
+      "legacy_verifier": "tools/verify_rpg_non_ar_bridge.py",
+      "missing_canonical_surfaces": [],
+      "route_id": "rpg_kdd2025",
+      "route_kind": "generator",
+      "shared_1_2_disposition": "canonical_end_to_end_fixture_parity",
+      "status_equivalence_policy": "canonical fixture and legacy verifier both pass; method semantics unchanged"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/card_p5_beauty_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "card_p5_beauty",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/diger_beauty_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "diger_beauty",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/diger_yelp_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "diger_yelp",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/grid_p5_beauty_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "grid_p5_beauty",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/lcrec_instruments_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "lcrec_instruments",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/letter_instruments_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "letter_instruments",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/resid_gaoq_video_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "resid_gaoq_video",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/table1_evidence_catalog.csv",
+      "legacy_status": "auditable_snapshot_not_fully_regenerable",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "resid_musical_snapshot",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    },
+    {
+      "canonical_trace_required": false,
+      "legacy_authority": "docs/reproducibility/conformance/resot_instruments_report.json",
+      "legacy_status": "c0_c5_pass",
+      "legacy_verifier": "tools/verify_adapter_conformance_assets.py",
+      "missing_canonical_surfaces": [
+        "canonical_identity_pipeline"
+      ],
+      "route_id": "resot_instruments",
+      "route_kind": "static_mapping",
+      "shared_1_2_disposition": "typed_canonical_identity_regeneration_required",
+      "status_equivalence_policy": "legacy C0-C5 status remains authoritative; runtime trace is not applicable"
+    }
+  ],
+  "schema": "sidscope.legacy_migration_matrix.v1",
+  "status": "pass"
+}

@@ -40,8 +40,8 @@ own the upstream method or training layer. It owns six layers from Adapter SDK
 integration through canonical contracts, native observation, diagnostic
 evaluation, conformance verification, and immutable evidence. The authoritative
 design and gated release sequence are `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`
-and `docs/V1_2_TO_V2_ROADMAP.md`. These documents guide post-1.1.1 work and do
-not claim that planned 1.2--2.0 product surfaces already exist.
+and `docs/V1_2_TO_V2_ROADMAP.md`. Implemented and planned surfaces are marked
+separately; 1.3--2.0 target features are not claimed by the 1.2 closure.
 
 Architecture Sprint 0 is implemented on the 1.1.1 regression baseline.
 It adds canonical version/hash governance, a machine-readable schema/profile/
@@ -62,8 +62,26 @@ vocabulary, tokenizer/cache, collision, and de-duplication semantics, while
 SIDSpaceIdentity artifacts to normalized splits, artifacts, catalog, target
 universe, and privacy. RPG migrates with exact fixture parity. Incomplete
 DiffGRM and LLaDA legacy prepared contracts fail with a typed regeneration
-requirement instead of inferred fields. EpisodeSelection is the next 1.2
-vertical slice.
+requirement instead of inferred fields.
+
+Sprints 3 and 4 are now closed together. EpisodeSelection, RunIdentity,
+CheckpointBinding, TraceEnvelope, DiagnosticReport, ConformanceReport, and
+EvidenceIndex complete the eleven-contract registry and fourteen-edge acyclic
+dependency graph. Adapter SDK `0.1.0-alpha` and the shared adapter, contract,
+trace, evaluate, verify, and evidence CLI paths are active. The common envelope
+binds RPG's native parallel/unordered payload and never substitutes AR ancestry.
+The canonical fixture has eight typed failures; report metrics and partitions
+are independently recomputed; evidence packaging rejects missing dependencies,
+cycles, and privacy violations.
+
+The legacy migration matrix covers all six generator routes and nine static
+mapping routes. RPG is the first exact end-to-end canonical fixture. Other
+routes retain their existing verifier and status authority and receive a typed
+canonical-regeneration disposition; this is not an adapter failure or implicit
+promotion. The six shared command families have an eleven-repeat CPU baseline
+and a 20% review policy. This closes 1.2 development scope, but does not create
+a public 1.2 tag or release. The next milestone is 1.3 plugin discovery and
+native payload registration.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
@@ -313,6 +331,9 @@ python3 -m pytest -q
 python3 tools/verify_sidscope_resource_package.py
 python3 tools/verify_sidscope_contract_registry.py
 python3 tools/verify_sidscope_sprint2_contracts.py
+python3 tools/verify_sidscope_1_2_closure.py
+python3 tools/verify_sidscope_1_2_legacy_migration_matrix.py
+python3 tools/verify_sidscope_1_2_cli_baseline.py
 python3 tools/build_sidscope_release_candidate_archive.py \
   --output /tmp/sidscope-v1.2.0.dev0.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \

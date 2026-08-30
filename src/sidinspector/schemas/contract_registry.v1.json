@@ -1,69 +1,350 @@
 {
-  "schema": "sidscope.contract_registry.v1",
-  "schema_revision": "1.0.0",
-  "registry_id": "sidscope-core-contracts",
-  "producer": {"name": "sidinspector.contracts", "version": "1.2.0.dev0"},
+  "content_sha256": "6994b9c43dca5b245773bd38fb4b578c475fc84cd434848cfb0cf8334db8dca6",
   "contracts": [
     {
-      "contract_type": "dataset-identity",
-      "schema_id": "sidscope.dataset_identity.v1",
-      "schema_revision": "1.0.0",
-      "owner": "core:contracts",
-      "schema_resource": "dataset_identity.v1.schema.json",
-      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
-      "canonical_fixture": "examples/dataset_identity_fixture/dataset_identity.json",
-      "negative_fixtures": [
-        {"path": "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json", "expected_failure": "content_hash_mismatch"},
-        {"path": "examples/dataset_identity_fixture/expected_failure_split_order.json", "expected_failure": "noncanonical_split_order"}
-      ],
-      "dependencies": [],
-      "result_id_field": "dataset_id"
-    },
-    {
-      "contract_type": "prepared-dataset",
-      "schema_id": "sidscope.prepared_dataset.v1",
-      "schema_revision": "1.0.0",
-      "owner": "core:contracts",
-      "schema_resource": "prepared_dataset.v1.schema.json",
-      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
-      "canonical_fixture": "examples/prepared_dataset_fixture/prepared_dataset.json",
-      "negative_fixtures": [
-        {"path": "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json", "expected_failure": "normalization_or_privacy_mismatch"}
-      ],
+      "canonical_fixture": "examples/canonical_pipeline_fixture/checkpoint_binding.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "checkpoint-binding",
       "dependencies": [
-        {"schema_id": "sidscope.dataset_identity.v1", "accepted_revisions": ["1.0.0"]},
-        {"schema_id": "sidscope.sid_space_identity.v1", "accepted_revisions": ["1.0.0"]}
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.run_identity.v1"
+        }
       ],
-      "result_id_field": "prepared_dataset_id"
+      "negative_fixtures": [
+        {
+          "expected_failure": "incomplete_resumable_state",
+          "path": "examples/canonical_pipeline_fixture/expected_failure_incomplete_resumable_state.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "checkpoint_id",
+      "schema_id": "sidscope.checkpoint_binding.v1",
+      "schema_resource": "checkpoint_binding.v1.schema.json",
+      "schema_revision": "1.0.0"
     },
     {
-      "contract_type": "sid-space-identity",
-      "schema_id": "sidscope.sid_space_identity.v1",
-      "schema_revision": "1.0.0",
+      "canonical_fixture": "examples/canonical_pipeline_fixture/conformance_report.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "conformance-report",
+      "dependencies": [
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.diagnostic_report.v1"
+        },
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.trace_envelope.v1"
+        }
+      ],
+      "negative_fixtures": [
+        {
+          "expected_failure": "noncanonical_gate_order",
+          "path": "examples/canonical_pipeline_fixture/expected_failure_gate_order.json"
+        }
+      ],
       "owner": "core:contracts",
-      "schema_resource": "sid_space_identity.v1.schema.json",
-      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
+      "result_id_field": "conformance_report_id",
+      "schema_id": "sidscope.conformance_report.v1",
+      "schema_resource": "conformance_report.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/dataset_identity_fixture/dataset_identity.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "dataset-identity",
+      "dependencies": [],
+      "negative_fixtures": [
+        {
+          "expected_failure": "content_hash_mismatch",
+          "path": "examples/dataset_identity_fixture/expected_failure_content_hash_mismatch.json"
+        },
+        {
+          "expected_failure": "noncanonical_split_order",
+          "path": "examples/dataset_identity_fixture/expected_failure_split_order.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "dataset_id",
+      "schema_id": "sidscope.dataset_identity.v1",
+      "schema_resource": "dataset_identity.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/canonical_pipeline_fixture/diagnostic_report.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "diagnostic-report",
+      "dependencies": [
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.episode_selection.v1"
+        },
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.trace_envelope.v1"
+        }
+      ],
+      "negative_fixtures": [
+        {
+          "expected_failure": "metric_out_of_range",
+          "path": "examples/canonical_pipeline_fixture/expected_failure_metric_mismatch.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "diagnostic_report_id",
+      "schema_id": "sidscope.diagnostic_report.v1",
+      "schema_resource": "diagnostic_report.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/canonical_pipeline_fixture/episode_selection.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "episode-selection",
+      "dependencies": [
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.prepared_dataset.v1"
+        }
+      ],
+      "negative_fixtures": [
+        {
+          "expected_failure": "duplicate_episode_id",
+          "path": "examples/canonical_pipeline_fixture/expected_failure_duplicate_episode.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "selection_id",
+      "schema_id": "sidscope.episode_selection.v1",
+      "schema_resource": "episode_selection.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/canonical_pipeline_fixture/evidence_index.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "evidence-index",
+      "dependencies": [
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.conformance_report.v1"
+        }
+      ],
+      "negative_fixtures": [
+        {
+          "expected_failure": "evidence_cycle",
+          "path": "examples/canonical_pipeline_fixture/expected_failure_evidence_cycle.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "evidence_index_id",
+      "schema_id": "sidscope.evidence_index.v1",
+      "schema_resource": "evidence_index.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/prepared_dataset_fixture/prepared_dataset.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "prepared-dataset",
+      "dependencies": [
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.dataset_identity.v1"
+        },
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.sid_space_identity.v1"
+        }
+      ],
+      "negative_fixtures": [
+        {
+          "expected_failure": "normalization_or_privacy_mismatch",
+          "path": "examples/prepared_dataset_fixture/expected_failure_source_item_ids_exported.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "prepared_dataset_id",
+      "schema_id": "sidscope.prepared_dataset.v1",
+      "schema_resource": "prepared_dataset.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/canonical_pipeline_fixture/run_identity.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "run-identity",
+      "dependencies": [
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.prepared_dataset.v1"
+        },
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.source_identity.v1"
+        }
+      ],
+      "negative_fixtures": [
+        {
+          "expected_failure": "invalid_seed",
+          "path": "examples/canonical_pipeline_fixture/expected_failure_invalid_seed.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "run_id",
+      "schema_id": "sidscope.run_identity.v1",
+      "schema_resource": "run_identity.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
       "canonical_fixture": "examples/prepared_dataset_fixture/sid_space_identity.json",
-      "negative_fixtures": [
-        {"path": "examples/prepared_dataset_fixture/expected_failure_overlapping_position_vocabulary.json", "expected_failure": "overlapping_position_vocabulary"}
-      ],
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "sid-space-identity",
       "dependencies": [],
-      "result_id_field": "sid_space_id"
+      "negative_fixtures": [
+        {
+          "expected_failure": "overlapping_position_vocabulary",
+          "path": "examples/prepared_dataset_fixture/expected_failure_overlapping_position_vocabulary.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "sid_space_id",
+      "schema_id": "sidscope.sid_space_identity.v1",
+      "schema_resource": "sid_space_identity.v1.schema.json",
+      "schema_revision": "1.0.0"
     },
     {
-      "contract_type": "source-identity",
-      "schema_id": "sidscope.source_identity.v1",
-      "schema_revision": "1.0.0",
-      "owner": "core:contracts",
-      "schema_resource": "source_identity.v1.schema.json",
-      "compatibility": {"policy": "exact_major_supported_revision", "supported_revisions": ["1.0.0"]},
       "canonical_fixture": "examples/source_identity_fixture/source_identity.json",
-      "negative_fixtures": [
-        {"path": "examples/source_identity_fixture/expected_failure_content_hash_mismatch.json", "expected_failure": "content_hash_mismatch"}
-      ],
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "source-identity",
       "dependencies": [],
-      "result_id_field": "source_id"
+      "negative_fixtures": [
+        {
+          "expected_failure": "content_hash_mismatch",
+          "path": "examples/source_identity_fixture/expected_failure_content_hash_mismatch.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "source_id",
+      "schema_id": "sidscope.source_identity.v1",
+      "schema_resource": "source_identity.v1.schema.json",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "canonical_fixture": "examples/canonical_pipeline_fixture/trace_envelope.json",
+      "compatibility": {
+        "policy": "exact_major_supported_revision",
+        "supported_revisions": [
+          "1.0.0"
+        ]
+      },
+      "contract_type": "trace-envelope",
+      "dependencies": [
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.checkpoint_binding.v1"
+        },
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.episode_selection.v1"
+        },
+        {
+          "accepted_revisions": [
+            "1.0.0"
+          ],
+          "schema_id": "sidscope.run_identity.v1"
+        }
+      ],
+      "negative_fixtures": [
+        {
+          "expected_failure": "rank_state_mismatch",
+          "path": "examples/canonical_pipeline_fixture/expected_failure_rank_state.json"
+        }
+      ],
+      "owner": "core:contracts",
+      "result_id_field": "trace_envelope_id",
+      "schema_id": "sidscope.trace_envelope.v1",
+      "schema_resource": "trace_envelope.v1.schema.json",
+      "schema_revision": "1.0.0"
     }
   ],
-  "content_sha256": "e1dd2a74e732b391e395e4e7e1dcfeddfc7e81b09e5ef6a960a9f202825ce4a9"
+  "producer": {
+    "name": "sidinspector.contracts",
+    "version": "1.2.0.dev0"
+  },
+  "registry_id": "sidscope-core-contracts",
+  "schema": "sidscope.contract_registry.v1",
+  "schema_revision": "1.0.0"
 }

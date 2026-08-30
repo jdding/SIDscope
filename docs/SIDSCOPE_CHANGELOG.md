@@ -11,6 +11,24 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v1.2.0.dev0: Sprint 3/4 execution, reports, SDK alpha, and CLI closure
+
+- Added EpisodeSelection, RunIdentity, CheckpointBinding, and TraceEnvelope v1
+  with ordered selection, complete/inference-only state typing, common bounded
+  observations, and independent native-payload schema/hash binding.
+- Added deterministic DiagnosticReport, ConformanceReport, and EvidenceIndex v1
+  with metric recomputation, failure decomposition, compute, censoring, gate
+  ordering, privacy, dependency-DAG, and cycle validation.
+- Added Adapter SDK `0.1.0-alpha` capability declarations and registry-enforced
+  producer harness without plugin discovery or upstream runtime imports.
+- Closed shared `sidscope` adapter preflight, contract/trace validation,
+  evaluation, conformance verification, and evidence-index packaging commands.
+- Added a twenty-file canonical pipeline fixture with eight typed failures,
+  complete fifteen-route migration dispositions, a measured six-command CPU
+  baseline, ADR-0007, and integrated package/CI release gates.
+- Kept method training, native trace payloads, plugin discovery, immutable
+  EvidenceBundle storage, and SQLite projection outside the 1.2 boundary.
+
 ## SIDScope v1.2.0.dev0: Sprint 2 SIDSpaceIdentity and PreparedDataset
 
 - Added `sidscope.sid_space_identity.v1` for tuple structure, hierarchy,

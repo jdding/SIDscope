@@ -46,8 +46,10 @@ def verify_inventory(path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
     registry = observed["canonical_contract_registry"]
     if registry["contract_count"] != len(registry["contracts"]):
         raise ValueError("canonical contract registry count mismatch")
-    if registry["contract_count"] < 4:
-        raise ValueError("canonical contract registry missing Sprint 2 contracts")
+    if registry["contract_count"] != 11:
+        raise ValueError("canonical contract registry does not close SIDScope 1.2")
+    if any(edge["status"] != "implemented" for edge in observed["canonical_evidence_edges"]):
+        raise ValueError("canonical 1.2 evidence DAG contains an unimplemented edge")
     return {
         "schema": REPORT_SCHEMA,
         "status": "pass",

@@ -1,0 +1,30 @@
+{
+  "adapter_id": "rpg:fixture-adapter",
+  "content_sha256": "c464bb027e620bb31f4de953c98c892eb2105a879a472e34471f5761200fc68e",
+  "contract_types": [
+    "checkpoint-binding",
+    "episode-selection",
+    "prepared-dataset",
+    "run-identity",
+    "source-identity",
+    "trace-envelope"
+  ],
+  "execution_boundary": "external_runtime",
+  "method_family": "parallel_graph_token_set",
+  "producer": {
+    "name": "sidscope.fixture",
+    "version": "1.2.0.dev0"
+  },
+  "schema": "sidscope.adapter_capabilities.alpha.v1",
+  "sdk_version": "0.1.0",
+  "telemetry": {
+    "supported": [
+      "graph_frontier",
+      "parallel_token_scores",
+      "ranked_items"
+    ],
+    "unavailable": [
+      "autoregressive_prefix_ancestry"
+    ]
+  }
+}

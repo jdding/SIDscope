@@ -33,10 +33,17 @@ class ContractRegistryTest(unittest.TestCase):
         self.assertEqual(
             [item.contract_type for item in registry.contracts],
             [
+                "checkpoint-binding",
+                "conformance-report",
                 "dataset-identity",
+                "diagnostic-report",
+                "episode-selection",
+                "evidence-index",
                 "prepared-dataset",
+                "run-identity",
                 "sid-space-identity",
                 "source-identity",
+                "trace-envelope",
             ],
         )
         for descriptor in registry.contracts:
@@ -56,8 +63,8 @@ class ContractRegistryTest(unittest.TestCase):
 
     def test_dependency_cycle_fails_closed(self) -> None:
         document = self.registry_document()
-        dataset = document["contracts"][0]
-        source = document["contracts"][3]
+        dataset = next(row for row in document["contracts"] if row["contract_type"] == "dataset-identity")
+        source = next(row for row in document["contracts"] if row["contract_type"] == "source-identity")
         dataset["dependencies"] = [
             {"schema_id": source["schema_id"], "accepted_revisions": ["1.0.0"]}
         ]
@@ -68,8 +75,8 @@ class ContractRegistryTest(unittest.TestCase):
 
     def test_incompatible_dependency_revision_fails_closed(self) -> None:
         document = self.registry_document()
-        dataset = document["contracts"][0]
-        source = document["contracts"][3]
+        dataset = next(row for row in document["contracts"] if row["contract_type"] == "dataset-identity")
+        source = next(row for row in document["contracts"] if row["contract_type"] == "source-identity")
         dataset["dependencies"] = [
             {"schema_id": source["schema_id"], "accepted_revisions": ["2.0.0"]}
         ]

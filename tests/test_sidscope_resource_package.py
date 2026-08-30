@@ -209,7 +209,7 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
 
         self.assertEqual(metadata["status"], "pass")
         self.assertEqual(metadata["package_version"], "1.2.0.dev0")
-        self.assertEqual(inventory["canonical_contract_count"], 4)
+        self.assertEqual(inventory["canonical_contract_count"], 11)
         self.assertEqual(inventory["status"], "pass")
 
     def test_public_package_content_scan_is_clean(self) -> None:

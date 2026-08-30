@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidscope.dev/schemas/conformance_report.v1.schema.json",
+  "title": "SIDScope ConformanceReport v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_revision", "conformance_report_id", "producer", "profile", "trace_binding", "diagnostic_binding", "verifier_sha256", "gates", "decision", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.conformance_report.v1"}, "schema_revision": {"const": "1.0.0"},
+    "conformance_report_id": {"type": "string", "minLength": 1}, "producer": {"type": "object"},
+    "profile": {"type": "object"}, "trace_binding": {"type": "object"},
+    "diagnostic_binding": {"type": "object"}, "verifier_sha256": {"type": "string"},
+    "gates": {"type": "array", "minItems": 6, "maxItems": 6}, "decision": {"type": "object"},
+    "content_sha256": {"type": "string"}
+  }
+}

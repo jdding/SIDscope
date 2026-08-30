@@ -1,0 +1,60 @@
+{
+  "censoring": {
+    "exact_rank_count": 1,
+    "not_applicable_rank_count": 0,
+    "right_censored_rank_count": 0
+  },
+  "compute": {
+    "candidate_count": 3,
+    "forward_calls": 1,
+    "latency_ms": 0,
+    "nfe": 1
+  },
+  "content_sha256": "3860afb23855fb2caf93da3d129f79ea2fec2a15c2cb725e45c56ecf5abd9a5f",
+  "diagnostic_report_id": "diagnostic:rpg:fixture-trace-envelope",
+  "episode_selection_binding": {
+    "content_sha256": "40a40c42d09c386ce957c28dc4eeffa78e0bfed9686417068908d630ddacb66e",
+    "schema_id": "sidscope.episode_selection.v1",
+    "schema_revision": "1.0.0"
+  },
+  "evaluation": {
+    "episode_count": 1,
+    "evaluation_cutoff": 10,
+    "hit_at_cutoff": 1.1,
+    "ndcg_at_cutoff": 1.0,
+    "publication_depth": 100
+  },
+  "failure_decomposition": {
+    "catalog_unreachable": 0,
+    "generation_search_miss": 0,
+    "ranking_conversion_miss": 0,
+    "resolution_loss": 0,
+    "success": 1,
+    "typed_failure": 0
+  },
+  "producer": {
+    "name": "sidinspector.evaluation",
+    "version": "1.2.0.dev0"
+  },
+  "schema": "sidscope.diagnostic_report.v1",
+  "schema_revision": "1.0.0",
+  "slices": [
+    {
+      "episode_count": 1,
+      "hit_at_cutoff": 1.0,
+      "ndcg_at_cutoff": 1.0,
+      "slice_id": "overall"
+    },
+    {
+      "episode_count": 1,
+      "hit_at_cutoff": 1.0,
+      "ndcg_at_cutoff": 1.0,
+      "slice_id": "fixture"
+    }
+  ],
+  "trace_binding": {
+    "content_sha256": "1c01baba4d61ed74d0abc2006ab2b40b947d201546d76af80b431b4f5d2da5a2",
+    "schema_id": "sidscope.trace_envelope.v1",
+    "schema_revision": "1.0.0"
+  }
+}

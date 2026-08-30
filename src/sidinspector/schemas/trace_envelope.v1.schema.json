@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidscope.dev/schemas/trace_envelope.v1.schema.json",
+  "title": "SIDScope TraceEnvelope v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_revision", "trace_envelope_id", "producer", "episode_selection_binding", "run_binding", "checkpoint_binding", "method_family", "payload_schema", "payload_sha256", "observations", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.trace_envelope.v1"}, "schema_revision": {"const": "1.0.0"},
+    "trace_envelope_id": {"type": "string", "minLength": 1}, "producer": {"type": "object"},
+    "episode_selection_binding": {"type": "object"}, "run_binding": {"type": "object"},
+    "checkpoint_binding": {"type": "object"}, "method_family": {"type": "string"},
+    "payload_schema": {"type": "string"}, "payload_sha256": {"type": "string"},
+    "observations": {"type": "array", "minItems": 1}, "content_sha256": {"type": "string"}
+  }
+}

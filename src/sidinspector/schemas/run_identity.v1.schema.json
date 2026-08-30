@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidscope.dev/schemas/run_identity.v1.schema.json",
+  "title": "SIDScope RunIdentity v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_revision", "run_id", "producer", "run_kind", "source_binding", "prepared_dataset_binding", "configuration_sha256", "seed", "command_sha256", "environment_sha256", "training_manifest_sha256", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.run_identity.v1"}, "schema_revision": {"const": "1.0.0"},
+    "run_id": {"type": "string", "minLength": 1}, "producer": {"type": "object"},
+    "run_kind": {"enum": ["training", "evaluation", "trace_export", "fixture"]},
+    "source_binding": {"type": "object"}, "prepared_dataset_binding": {"type": "object"},
+    "configuration_sha256": {"type": "string"}, "seed": {"type": "integer", "minimum": 0},
+    "command_sha256": {"type": "string"}, "environment_sha256": {"type": "string"},
+    "training_manifest_sha256": {"type": ["string", "null"]}, "content_sha256": {"type": "string"}
+  }
+}

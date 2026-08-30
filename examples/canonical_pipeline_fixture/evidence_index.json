@@ -1,0 +1,155 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "checkpoint-binding:rpg:fixture-checkpoint-epoch-1",
+      "content_sha256": "3b70ae11696fa0c540453e28abb7076726ede427131547703253c75a50f85abc",
+      "role": "checkpoint-binding",
+      "schema_id": "sidscope.checkpoint_binding.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "conformance-report:rpg:fixture-g0-g5",
+      "content_sha256": "fbfbf28f392fd0bf2ff81b5d3a07682b5ddac56d83e9a313d7781564bebc68b3",
+      "role": "conformance-report",
+      "schema_id": "sidscope.conformance_report.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "dataset-identity:rpg:syntheticrpg:4",
+      "content_sha256": "ae9748ffc42fb388bac607fabcbb7fb229ecc735bef9323fb8539eb85e74875a",
+      "role": "dataset-identity",
+      "schema_id": "sidscope.dataset_identity.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "diagnostic-report:diagnostic:rpg:fixture-trace-envelope",
+      "content_sha256": "fabc7986bb6e1dc0e16afba96f9c564aa4e5b651b61acdb63520f19bb1a2062d",
+      "role": "diagnostic-report",
+      "schema_id": "sidscope.diagnostic_report.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "episode-selection:rpg:explicit-test-b-only",
+      "content_sha256": "40a40c42d09c386ce957c28dc4eeffa78e0bfed9686417068908d630ddacb66e",
+      "role": "episode-selection",
+      "schema_id": "sidscope.episode_selection.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "prepared-dataset:rpg:rpg-prepared-fixture",
+      "content_sha256": "6de5d3cbf4b73896fdd8d186226556d0d552a8f8eef2a9679c8945cb7783b0be",
+      "role": "prepared-dataset",
+      "schema_id": "sidscope.prepared_dataset.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "run-identity:rpg:fixture-training-run",
+      "content_sha256": "fd6bb134cae590cbeae3f9c4736c6017e06a651a766f7d729797f1c89cd3d638",
+      "role": "run-identity",
+      "schema_id": "sidscope.run_identity.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "sid-space-identity:rpg:rpg-prepared-fixture",
+      "content_sha256": "f64251974100ad966208a65702b265463165cc9e0fb727fd8d03cdd43e3ff363",
+      "role": "sid-space-identity",
+      "schema_id": "sidscope.sid_space_identity.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "source-identity:rpg_beauty",
+      "content_sha256": "62b74374a82a2f6797c9a6a8d8215860c6f76cacfeb08e5707a675344ee5616b",
+      "role": "source-identity",
+      "schema_id": "sidscope.source_identity.v1",
+      "schema_revision": "1.0.0"
+    },
+    {
+      "artifact_id": "trace-envelope:rpg:fixture-trace-envelope",
+      "content_sha256": "1c01baba4d61ed74d0abc2006ab2b40b947d201546d76af80b431b4f5d2da5a2",
+      "role": "trace-envelope",
+      "schema_id": "sidscope.trace_envelope.v1",
+      "schema_revision": "1.0.0"
+    }
+  ],
+  "content_sha256": "a2a1560ea6174217eade1c9f7060401dcb19bf0e8db42c82db5d779cfd2e6a1d",
+  "edges": [
+    {
+      "from_artifact": "checkpoint-binding:rpg:fixture-checkpoint-epoch-1",
+      "relation": "depends_on:sidscope.run_identity.v1",
+      "to_artifact": "run-identity:rpg:fixture-training-run"
+    },
+    {
+      "from_artifact": "conformance-report:rpg:fixture-g0-g5",
+      "relation": "depends_on:sidscope.diagnostic_report.v1",
+      "to_artifact": "diagnostic-report:diagnostic:rpg:fixture-trace-envelope"
+    },
+    {
+      "from_artifact": "conformance-report:rpg:fixture-g0-g5",
+      "relation": "depends_on:sidscope.trace_envelope.v1",
+      "to_artifact": "trace-envelope:rpg:fixture-trace-envelope"
+    },
+    {
+      "from_artifact": "diagnostic-report:diagnostic:rpg:fixture-trace-envelope",
+      "relation": "depends_on:sidscope.episode_selection.v1",
+      "to_artifact": "episode-selection:rpg:explicit-test-b-only"
+    },
+    {
+      "from_artifact": "diagnostic-report:diagnostic:rpg:fixture-trace-envelope",
+      "relation": "depends_on:sidscope.trace_envelope.v1",
+      "to_artifact": "trace-envelope:rpg:fixture-trace-envelope"
+    },
+    {
+      "from_artifact": "episode-selection:rpg:explicit-test-b-only",
+      "relation": "depends_on:sidscope.prepared_dataset.v1",
+      "to_artifact": "prepared-dataset:rpg:rpg-prepared-fixture"
+    },
+    {
+      "from_artifact": "prepared-dataset:rpg:rpg-prepared-fixture",
+      "relation": "depends_on:sidscope.dataset_identity.v1",
+      "to_artifact": "dataset-identity:rpg:syntheticrpg:4"
+    },
+    {
+      "from_artifact": "prepared-dataset:rpg:rpg-prepared-fixture",
+      "relation": "depends_on:sidscope.sid_space_identity.v1",
+      "to_artifact": "sid-space-identity:rpg:rpg-prepared-fixture"
+    },
+    {
+      "from_artifact": "run-identity:rpg:fixture-training-run",
+      "relation": "depends_on:sidscope.prepared_dataset.v1",
+      "to_artifact": "prepared-dataset:rpg:rpg-prepared-fixture"
+    },
+    {
+      "from_artifact": "run-identity:rpg:fixture-training-run",
+      "relation": "depends_on:sidscope.source_identity.v1",
+      "to_artifact": "source-identity:rpg_beauty"
+    },
+    {
+      "from_artifact": "trace-envelope:rpg:fixture-trace-envelope",
+      "relation": "depends_on:sidscope.checkpoint_binding.v1",
+      "to_artifact": "checkpoint-binding:rpg:fixture-checkpoint-epoch-1"
+    },
+    {
+      "from_artifact": "trace-envelope:rpg:fixture-trace-envelope",
+      "relation": "depends_on:sidscope.episode_selection.v1",
+      "to_artifact": "episode-selection:rpg:explicit-test-b-only"
+    },
+    {
+      "from_artifact": "trace-envelope:rpg:fixture-trace-envelope",
+      "relation": "depends_on:sidscope.run_identity.v1",
+      "to_artifact": "run-identity:rpg:fixture-training-run"
+    }
+  ],
+  "evidence_index_id": "rpg:fixture-evidence-index",
+  "omissions": [],
+  "privacy": {
+    "absolute_private_paths_exported": false,
+    "source_item_ids_exported": false,
+    "source_user_ids_exported": false
+  },
+  "producer": {
+    "name": "sidinspector.evidence",
+    "version": "1.2.0.dev0"
+  },
+  "schema": "sidscope.evidence_index.v1",
+  "schema_revision": "1.0.0"
+}

@@ -59,6 +59,13 @@ def _schema_owner(schema_id: str) -> str:
     if prefix in {
         "source_identity",
         "dataset_identity",
+        "sid_space_identity",
+        "prepared_dataset",
+        "episode_selection",
+        "run_identity",
+        "checkpoint_binding",
+        "trace_envelope",
+        "evidence_index",
         "contract_registry",
         "contract_validation",
         "module_dependency_matrix",
@@ -183,13 +190,13 @@ def build_inventory() -> dict[str, Any]:
         "product_version": package_version(),
         "version_axes": {
             "product_package": package_version(),
-            "adapter_sdk": "not_released",
+            "adapter_sdk": "0.1.0-alpha",
             "canonical_schemas": [
                 f"{descriptor.schema_id}@{descriptor.schema_revision}"
                 for descriptor in registry.contracts
             ],
             "conformance_profiles": ["static_mapping_c0_c5", "generator_g0_g5", "release_local"],
-            "evidence_bundle": "route_specific_legacy_authorities",
+            "evidence_bundle": "canonical_evidence_index_v1_plus_route_specific_legacy_authorities",
         },
         "profiles": [
             {
@@ -229,13 +236,20 @@ def build_inventory() -> dict[str, Any]:
             "static_mapping": static_mapping_routes(),
         },
         "canonical_evidence_edges": [
-            {"from": "SourceIdentity", "to": "DatasetIdentity", "status": "both_implemented"},
-            {"from": "DatasetIdentity", "to": "PreparedDataset", "status": "both_implemented"},
-            {"from": "SIDSpaceIdentity", "to": "PreparedDataset", "status": "both_implemented"},
-            {"from": "PreparedDataset", "to": "TraceBundle", "status": "planned"},
-            {"from": "TraceBundle", "to": "DiagnosticReport", "status": "planned"},
-            {"from": "DiagnosticReport", "to": "ConformanceReport", "status": "planned"},
-            {"from": "ConformanceReport", "to": "EvidenceBundle", "status": "planned"},
+            {"from": "PreparedDataset", "to": "DatasetIdentity", "status": "implemented"},
+            {"from": "PreparedDataset", "to": "SIDSpaceIdentity", "status": "implemented"},
+            {"from": "EpisodeSelection", "to": "PreparedDataset", "status": "implemented"},
+            {"from": "RunIdentity", "to": "PreparedDataset", "status": "implemented"},
+            {"from": "RunIdentity", "to": "SourceIdentity", "status": "implemented"},
+            {"from": "CheckpointBinding", "to": "RunIdentity", "status": "implemented"},
+            {"from": "TraceEnvelope", "to": "EpisodeSelection", "status": "implemented"},
+            {"from": "TraceEnvelope", "to": "RunIdentity", "status": "implemented"},
+            {"from": "TraceEnvelope", "to": "CheckpointBinding", "status": "implemented"},
+            {"from": "DiagnosticReport", "to": "TraceEnvelope", "status": "implemented"},
+            {"from": "DiagnosticReport", "to": "EpisodeSelection", "status": "implemented"},
+            {"from": "ConformanceReport", "to": "TraceEnvelope", "status": "implemented"},
+            {"from": "ConformanceReport", "to": "DiagnosticReport", "status": "implemented"},
+            {"from": "EvidenceIndex", "to": "ConformanceReport", "status": "implemented"},
         ],
         "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
     }

@@ -1,0 +1,51 @@
+{
+  "checkpoint_binding": {
+    "content_sha256": "3b70ae11696fa0c540453e28abb7076726ede427131547703253c75a50f85abc",
+    "schema_id": "sidscope.checkpoint_binding.v1",
+    "schema_revision": "1.0.0"
+  },
+  "content_sha256": "d3727b4776f511ccd89f3bf10ca0afee924e8e412d3ca8db5c76fdd4cb2378df",
+  "episode_selection_binding": {
+    "content_sha256": "40a40c42d09c386ce957c28dc4eeffa78e0bfed9686417068908d630ddacb66e",
+    "schema_id": "sidscope.episode_selection.v1",
+    "schema_revision": "1.0.0"
+  },
+  "method_family": "parallel_graph_token_set",
+  "observations": [
+    {
+      "attempt_count": 1,
+      "compute": {
+        "candidate_count": 3,
+        "forward_calls": 1,
+        "latency_ms": 0,
+        "nfe": 1
+      },
+      "episode_id": "test-b",
+      "failure_state": null,
+      "selection_order": 0,
+      "target": {
+        "catalog_reachable": true,
+        "exact_rank": null,
+        "generated": true,
+        "rank_lower_bound": null,
+        "rank_state": "exact",
+        "resolved": true
+      },
+      "termination_state": "completed_configured_graph_propagation"
+    }
+  ],
+  "payload_schema": "sidscope.rpg_trained_trace_bundle.v2",
+  "payload_sha256": "911be57327603dbb40b249c22aed01191ea5bc7c955d1263a12b029ba44e1347",
+  "producer": {
+    "name": "sidinspector.trace",
+    "version": "1.2.0.dev0"
+  },
+  "run_binding": {
+    "content_sha256": "fd6bb134cae590cbeae3f9c4736c6017e06a651a766f7d729797f1c89cd3d638",
+    "schema_id": "sidscope.run_identity.v1",
+    "schema_revision": "1.0.0"
+  },
+  "schema": "sidscope.trace_envelope.v1",
+  "schema_revision": "1.0.0",
+  "trace_envelope_id": "rpg:fixture-trace-envelope"
+}

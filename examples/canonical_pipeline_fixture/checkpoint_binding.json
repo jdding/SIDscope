@@ -1,0 +1,27 @@
+{
+  "checkpoint_id": "rpg:fixture-checkpoint-epoch-1",
+  "checkpoint_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "completed_epoch": 1,
+  "content_sha256": "3b70ae11696fa0c540453e28abb7076726ede427131547703253c75a50f85abc",
+  "epoch_ledger_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "global_step": 1,
+  "previous_checkpoint_sha256": null,
+  "producer": {
+    "name": "sidinspector.contracts",
+    "version": "1.2.0.dev0"
+  },
+  "run_binding": {
+    "content_sha256": "fd6bb134cae590cbeae3f9c4736c6017e06a651a766f7d729797f1c89cd3d638",
+    "schema_id": "sidscope.run_identity.v1",
+    "schema_revision": "1.0.0"
+  },
+  "schema": "sidscope.checkpoint_binding.v1",
+  "schema_revision": "1.0.0",
+  "state_kind": "complete_resumable",
+  "state_sha256": {
+    "model": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "optimizer": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "rng": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "scheduler": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  }
+}

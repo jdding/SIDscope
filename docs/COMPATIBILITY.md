@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: Sprint 2 active development baseline
+Status: SIDScope 1.2 development closure baseline
 
 ## Product and Entry Points
 
@@ -9,22 +9,30 @@ Status: Sprint 2 active development baseline
 | 1.0.2 | `sidinspector` | `sidinspector` | route-specific commands | Frozen TOIS-bound release |
 | 1.1.0 | `sidinspector` | `sidinspector` | route-specific commands | Published maintenance release |
 | 1.1.1.dev0 | `sidinspector` | `sidinspector` | `sidscope` facade plus legacy commands | Frozen regression authority |
-| 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Active Sprint 2 baseline |
+| 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Sprint 1--4 development closed; public release not implied |
 
-No import or distribution rename is planned during 1.x. The first implemented
-facade lists and shows registered contracts and validates `SourceIdentity v1`,
-`DatasetIdentity v1`, `SIDSpaceIdentity v1`, and `PreparedDataset v1`. Planned
-commands are not claimed as available until their vertical slices pass.
+No import or distribution rename is planned during 1.x. The facade validates
+all eleven canonical 1.2 contracts and provides adapter preflight, trace
+validation, deterministic evaluation, conformance-report verification, and
+evidence-index packaging. Legacy route commands remain public and authoritative
+during migration.
 
 ## Version-Axis Baseline
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
 | Product/package | `1.2.0.dev0` | PEP 440 development version; not a public 1.2.0 release. |
-| Adapter SDK | not released | No external SDK compatibility promise yet. |
-| Canonical schemas | `sidscope.source_identity.v1`, `sidscope.dataset_identity.v1`, `sidscope.sid_space_identity.v1`, and `sidscope.prepared_dataset.v1` at revision `1.0.0` | Registry-declared exact major and supported revision required. |
+| Adapter SDK | `0.1.0-alpha` | Capability descriptor and harness are usable; plugin discovery and stable compatibility begin later. |
+| Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | legacy C0--C5 and G0--G5 authorities | Existing route verifiers remain authoritative until exact parity migration. |
-| Evidence bundle | route-specific 1.1 schemas | Immutable; no automatic upgrade. |
+| Evidence bundle | deterministic EvidenceIndex v1 plus route-specific 1.1 authorities | Indexes are reproducible; immutable object storage remains a 1.4 feature. |
+
+The canonical schema IDs are `sidscope.source_identity.v1`,
+`sidscope.dataset_identity.v1`, `sidscope.sid_space_identity.v1`,
+`sidscope.prepared_dataset.v1`, `sidscope.episode_selection.v1`,
+`sidscope.run_identity.v1`, `sidscope.checkpoint_binding.v1`,
+`sidscope.trace_envelope.v1`, `sidscope.diagnostic_report.v1`,
+`sidscope.conformance_report.v1`, and `sidscope.evidence_index.v1`.
 
 ## Schema Compatibility
 
@@ -75,3 +83,19 @@ DiffGRM/LLaDA prepared v1 artifacts require regeneration because canonical
 split counts or artifact bindings are absent. No historical evidence is
 rewritten. Rollback removes the two registry entries and resumes the unchanged
 route-specific validators.
+
+## Execution, Report, SDK, and CLI Compatibility
+
+EpisodeSelection, RunIdentity, CheckpointBinding, TraceEnvelope,
+DiagnosticReport, ConformanceReport, and EvidenceIndex use schema major v1 and
+revision `1.0.0`. TraceEnvelope's native `payload_schema` is independently
+versioned: compatibility of the common envelope never implies compatibility of
+AR, parallel graph, masked diffusion, retry, or overlay payload semantics.
+
+Adapter SDK `0.1.0-alpha` is deliberately narrower than the future plugin API.
+The distribution and import remain `sidinspector`; the product command is
+`sidscope`. Legacy CLIs and evidence remain unchanged. The migration matrix
+covers all six generator and nine static-mapping routes. RPG has exact
+canonical fixture parity; other routes receive a typed regeneration disposition
+and retain legacy status authority. An incomplete migration cannot promote an
+adapter or rewrite historical evidence.

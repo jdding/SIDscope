@@ -1,0 +1,61 @@
+{
+  "conformance_report_id": "rpg:fixture-g0-g5",
+  "content_sha256": "fbfbf28f392fd0bf2ff81b5d3a07682b5ddac56d83e9a313d7781564bebc68b3",
+  "decision": {
+    "scope": "contract_fixture_only_no_adapter_promotion",
+    "status": "fixture_pass"
+  },
+  "diagnostic_binding": {
+    "content_sha256": "fabc7986bb6e1dc0e16afba96f9c564aa4e5b651b61acdb63520f19bb1a2062d",
+    "schema_id": "sidscope.diagnostic_report.v1",
+    "schema_revision": "1.0.0"
+  },
+  "gates": [
+    {
+      "failure_code": null,
+      "gate": "G0",
+      "status": "pass"
+    },
+    {
+      "failure_code": null,
+      "gate": "G1",
+      "status": "pass"
+    },
+    {
+      "failure_code": null,
+      "gate": "G2",
+      "status": "pass"
+    },
+    {
+      "failure_code": null,
+      "gate": "G3",
+      "status": "pass"
+    },
+    {
+      "failure_code": null,
+      "gate": "G4",
+      "status": "pass"
+    },
+    {
+      "failure_code": null,
+      "gate": "G5",
+      "status": "pass"
+    }
+  ],
+  "producer": {
+    "name": "sidinspector.conformance",
+    "version": "1.2.0.dev0"
+  },
+  "profile": {
+    "profile_id": "generator_g0_g5_fixture",
+    "profile_revision": "1.0.0"
+  },
+  "schema": "sidscope.conformance_report.v1",
+  "schema_revision": "1.0.0",
+  "trace_binding": {
+    "content_sha256": "1c01baba4d61ed74d0abc2006ab2b40b947d201546d76af80b431b4f5d2da5a2",
+    "schema_id": "sidscope.trace_envelope.v1",
+    "schema_revision": "1.0.0"
+  },
+  "verifier_sha256": "aaaf973134206becbc05ea753bdc748af7190db8b4e12f8d4ac8596cb40f345a"
+}

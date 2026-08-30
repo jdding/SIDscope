@@ -59,7 +59,10 @@ def verify_contract_registry() -> dict[str, object]:
         "contract_count": len(registry.contracts),
         "positive_fixture_count": positive_count,
         "negative_fixture_count": negative_count,
-        "dependency_binding_count": 2,
+        "declared_dependency_count": sum(
+            len(descriptor.dependencies) for descriptor in registry.contracts
+        ),
+        "verified_cross_binding_count": 2,
         "schema_ids": [item.schema_id for item in registry.contracts],
     }
 

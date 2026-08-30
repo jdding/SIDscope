@@ -36,7 +36,9 @@ The accepted product-boundary and topology decisions are recorded in
 ADR 0003 defines canonical identity, versioning and hashing; ADR 0004 defines
 module boundaries and the stable CLI/import identity; ADR 0005 makes the local
 contract registry authoritative and separates complete DatasetIdentity from
-honest legacy-partial migration. The executable dependency
+honest legacy-partial migration; ADR 0006 separates SID space from prepared
+data; ADR 0007 fixes the execution/report boundary and Adapter SDK alpha without
+absorbing upstream training. The executable dependency
 policy is `reproducibility/sidscope_module_dependencies.json`, documented in
 `SIDSCOPE_MODULE_DEPENDENCIES.md` and enforced by architecture tests.
 
@@ -232,10 +234,10 @@ SIDScope a training framework.
 | `EpisodeSelection` | Explicit ordered evaluation episodes and evaluator-only labels; no first-N fallback. |
 | `RunIdentity` | Source, prepared data, configuration, seed, command, environment and training-manifest bindings. |
 | `CheckpointBinding` | Model/optimizer/scheduler/RNG state identity plus epoch/global-step and resumable provenance. |
-| `TraceBundle` | Common envelope plus method-family-native observation payload. |
+| `TraceEnvelope` | Common observation summary plus a hash-bound method-family-native payload. |
 | `DiagnosticReport` | Metrics, failure decomposition, compute and censoring semantics. |
 | `ConformanceReport` | Profile, gate outcomes, typed failures, verifier identity and verified input hashes. |
-| `EvidenceBundle` | Immutable dependency index without embedded excluded private assets. |
+| `EvidenceIndex` | Deterministic dependency index without embedded excluded private assets; immutable storage follows in 1.4. |
 
 Every canonical artifact has a schema ID/version, producer identity, canonical
 content hash and explicit dependency references. Cyclic or unknown dependencies
@@ -246,11 +248,13 @@ contracts. Each entry declares its owner, compatible revisions, JSON Schema
 2020-12 resource, fixtures, dependencies and public CLI type. It is file-first
 and local; it is not a hosted control plane.
 
-The implemented 1.2 Sprint 2 cut follows this boundary directly:
+The completed 1.2 cut follows this boundary directly:
 SourceIdentity and DatasetIdentity remain independent roots;
 SIDSpaceIdentity owns tokenizer/SID semantics; PreparedDataset depends on both
-DatasetIdentity and SIDSpaceIdentity. Training, selection, trace and evaluation
-dependencies are intentionally excluded from PreparedDataset.
+DatasetIdentity and SIDSpaceIdentity. EpisodeSelection, RunIdentity,
+CheckpointBinding, TraceEnvelope, DiagnosticReport, ConformanceReport, and
+EvidenceIndex form the downstream acyclic chain. Training remains external;
+selection, trace, and evaluation dependencies are excluded from PreparedDataset.
 
 ### 6.3 Observation Layer: Trace Protocol
 

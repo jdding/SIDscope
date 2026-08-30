@@ -1,0 +1,26 @@
+{
+  "command_sha256": "55ba3ed6ba9d0c205be7c3b2806242991bdef03e9f14751e686d0ae6df54640b",
+  "configuration_sha256": "382d986e48b01a4192c67f836383c8663bafd4b08a2d95fd34281778867252b7",
+  "content_sha256": "1c6658979f314f45d0974b8282dffba3ab23b7c5a7a6203382f2631c844a7d3b",
+  "environment_sha256": "769217ecd38351ec7c9f2c7f9f3467df7eda4371baae5ef7568f706525f642b3",
+  "prepared_dataset_binding": {
+    "content_sha256": "6de5d3cbf4b73896fdd8d186226556d0d552a8f8eef2a9679c8945cb7783b0be",
+    "schema_id": "sidscope.prepared_dataset.v1",
+    "schema_revision": "1.0.0"
+  },
+  "producer": {
+    "name": "sidinspector.contracts",
+    "version": "1.2.0.dev0"
+  },
+  "run_id": "rpg:fixture-training-run",
+  "run_kind": "training",
+  "schema": "sidscope.run_identity.v1",
+  "schema_revision": "1.0.0",
+  "seed": -1,
+  "source_binding": {
+    "content_sha256": "62b74374a82a2f6797c9a6a8d8215860c6f76cacfeb08e5707a675344ee5616b",
+    "schema_id": "sidscope.source_identity.v1",
+    "schema_revision": "1.0.0"
+  },
+  "training_manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+}

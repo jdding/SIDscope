@@ -1,4 +1,17 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+sprint34_adr,docs/adr/0007-canonical-execution-report-and-sdk-boundary.md,architecture_governance,documentation,yes,pass_local,Defines the common execution and report boundary native payload preservation SDK alpha scope migration and rollback.
+adapter_sdk_alpha_doc,docs/ADAPTER_SDK_ALPHA.md,adapter_sdk,documentation,yes,pass_local,Documents capability descriptors registry-enforced producers and the explicit non-plugin alpha boundary.
+canonical_pipeline_fixture,examples/canonical_pipeline_fixture,example,fully_runnable,yes,pass_local,Deterministic eleven-contract RPG non-AR canonical pipeline plus Adapter SDK descriptor and eight typed failures.
+sprint34_fixture_builder,tools/build_sidscope_1_2_closure_fixtures.py,verification,fully_runnable,yes,pass_local,Deterministically regenerates the complete SIDScope 1.2 canonical pipeline fixture.
+sprint34_closure_verifier,tools/verify_sidscope_1_2_closure.py,verification,fully_runnable,yes,pass_local,Checks all eleven contracts cross-bindings SDK and six shared CLI command families.
+legacy_migration_builder,tools/build_sidscope_1_2_legacy_migration_matrix.py,verification,fully_runnable,yes,pass_local,Builds deterministic shared-path dispositions for all generator and static-mapping routes.
+legacy_migration_verifier,tools/verify_sidscope_1_2_legacy_migration_matrix.py,verification,fully_runnable,yes,pass_local,Rejects route omissions authority drift and untyped incomplete migrations.
+legacy_migration_matrix,docs/reproducibility/sidscope_1_2_legacy_migration_matrix.json,evidence_index,tracked_snapshot,yes,pass_local,Covers all fifteen legacy authorities with exact RPG parity or typed regeneration and no status promotion.
+cli_cpu_benchmark,tools/benchmark_sidscope_1_2_cli.py,verification,fully_runnable,yes,pass_local,Measures eleven-repeat CPU timings for all six shared command families.
+cli_cpu_baseline_verifier,tools/verify_sidscope_1_2_cli_baseline.py,verification,fully_runnable,yes,pass_local,Checks complete baseline coverage and the twenty-percent review policy.
+cli_cpu_baseline,docs/reproducibility/sidscope_1_2_cli_cpu_baseline.json,performance_baseline,tracked_snapshot,yes,pass_local,Records the first machine-specific shared-command CPU baseline without claiming cross-machine equivalence.
+runtime_contract_tests,tests/test_runtime_contracts.py,test,fully_runnable,yes,pass_local,Tests selection run checkpoint trace bindings float latency rank states and typed failures.
+report_sdk_cli_tests,tests/test_report_sdk_cli.py,test,fully_runnable,yes,pass_local,Tests reports evidence DAG SDK harness CLI round trips and fail-closed tampering.
 versioning_policy,docs/VERSIONING.md,release_governance,documentation,yes,pass_local,Defines package SDK schema profile bundle and CLI version axes plus release branch and tag policy.
 compatibility_policy,docs/COMPATIBILITY.md,release_governance,documentation,yes,pass_local,Records supported interface versions migration expectations registry authority and current SourceIdentity and DatasetIdentity slices.
 sidspace_prepared_adr,docs/adr/0006-sid-space-and-prepared-dataset-boundary.md,architecture_governance,documentation,yes,pass_local,Separates tokenizer and SID-space semantics from normalized prepared-data bindings with explicit migration rollback and validation.

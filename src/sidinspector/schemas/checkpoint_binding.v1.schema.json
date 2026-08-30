@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidscope.dev/schemas/checkpoint_binding.v1.schema.json",
+  "title": "SIDScope CheckpointBinding v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_revision", "checkpoint_id", "producer", "run_binding", "checkpoint_sha256", "state_kind", "completed_epoch", "global_step", "state_sha256", "epoch_ledger_sha256", "previous_checkpoint_sha256", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.checkpoint_binding.v1"}, "schema_revision": {"const": "1.0.0"},
+    "checkpoint_id": {"type": "string", "minLength": 1}, "producer": {"type": "object"},
+    "run_binding": {"type": "object"}, "checkpoint_sha256": {"type": "string"},
+    "state_kind": {"enum": ["complete_resumable", "inference_only"]},
+    "completed_epoch": {"type": "integer", "minimum": 0}, "global_step": {"type": "integer", "minimum": 0},
+    "state_sha256": {"type": "object"}, "epoch_ledger_sha256": {"type": ["string", "null"]},
+    "previous_checkpoint_sha256": {"type": ["string", "null"]}, "content_sha256": {"type": "string"}
+  }
+}

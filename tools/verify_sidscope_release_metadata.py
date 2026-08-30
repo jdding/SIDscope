@@ -6,8 +6,15 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
+
+if str(Path(__file__).resolve().parents[1] / "src") not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from sidinspector.contracts import load_contract_registry
+from sidinspector.sdk import ADAPTER_SDK_VERSION
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,6 +59,7 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "sidscope.dataset_identity.v1",
             "sidscope.sid_space_identity.v1",
             "sidscope.prepared_dataset.v1",
+            "0.1.0-alpha",
         ],
         "docs/SIDSCOPE_RELEASE_TEMPLATE.md": ["Adapter SDK version:", "archive SHA-256:"],
         "docs/SIDSCOPE_RELEASE_CHECKLIST.md": ["docs/SIDSCOPE_RELEASE_TEMPLATE.md"],
@@ -62,6 +70,9 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         if missing:
             raise ValueError(f"{rel_path} missing release-governance tokens: {missing}")
 
+    registry = load_contract_registry(repository_root=root)
+    if len(registry.contracts) != 11:
+        raise ValueError("SIDScope 1.2 requires eleven canonical contracts")
     return {
         "schema": REPORT_SCHEMA,
         "status": "pass",
@@ -69,11 +80,9 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         "package_version": project_version,
         "python_import": "sidinspector",
         "console_command": "sidscope",
+        "adapter_sdk_version": ADAPTER_SDK_VERSION,
         "canonical_schemas": [
-            "sidscope.dataset_identity.v1@1.0.0",
-            "sidscope.prepared_dataset.v1@1.0.0",
-            "sidscope.sid_space_identity.v1@1.0.0",
-            "sidscope.source_identity.v1@1.0.0",
+            f"{item.schema_id}@{item.schema_revision}" for item in registry.contracts
         ],
         "contract_registry": "sidscope.contract_registry.v1@1.0.0",
         "governance_documents_checked": len(required_docs),

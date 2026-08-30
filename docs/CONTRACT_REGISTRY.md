@@ -16,6 +16,7 @@ sidscope contract validate \
   --input examples/prepared_dataset_fixture/prepared_dataset.json
 python3 tools/verify_sidscope_contract_registry.py
 python3 tools/verify_sidscope_sprint2_contracts.py
+python3 tools/verify_sidscope_1_2_closure.py
 ```
 
 Registry order and paths are canonical. Unknown dependencies, dependency
@@ -59,3 +60,18 @@ The RPG bridge is the first complete migration and retains its
 parallel/unordered identity. Existing DiffGRM and LLaDA prepared v1 artifacts
 do not contain all canonical counts and bindings; their typed outcome is
 `legacy_prepared_regeneration_required`, not inferred compatibility.
+
+## Complete 1.2 Contract Chain
+
+The registry contains eleven canonical types: SourceIdentity, DatasetIdentity,
+SIDSpaceIdentity, PreparedDataset, EpisodeSelection, RunIdentity,
+CheckpointBinding, TraceEnvelope, DiagnosticReport, ConformanceReport, and
+EvidenceIndex. Dependencies are explicit, acyclic, and hash-bound.
+TraceEnvelope binds a method-native payload instead of flattening it. Reports
+recompute metrics, typed failures, compute, and censoring from common
+observations.
+
+EvidenceIndex is the deterministic 1.2 dependency inventory, not the
+content-addressed EvidenceBundle store or SQLite registry planned for 1.4. The
+route migration disposition is machine-readable in
+`reproducibility/sidscope_1_2_legacy_migration_matrix.json`.

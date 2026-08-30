@@ -1,0 +1,28 @@
+{
+  "artifact_name": "sentence-t5-base_OPQ32,IVF1,PQ32x8.sem_ids",
+  "content_sha256": "62b74374a82a2f6797c9a6a8d8215860c6f76cacfeb08e5707a675344ee5616b",
+  "derivation": "official_code_derived",
+  "license": {
+    "identifier": "CC-BY-NC-4.0 code; Amazon Reviews 2014 redistribution boundary unresolved",
+    "notices": [],
+    "redistribution_policy": "summary_only_no_source_data_text_embeddings_or_sem_ids",
+    "status": "restricted_source_license"
+  },
+  "paper": {
+    "title": "RPG OPQ / Beauty",
+    "url": null
+  },
+  "patches": [],
+  "producer": {
+    "name": "sidinspector.conformance",
+    "version": "sidscope.adapter_manifest.v1"
+  },
+  "repository": {
+    "revision": "7dcf95ce9e08601810efdd1c850ed6dada5f97c2",
+    "revision_kind": "git_commit",
+    "url": "https://github.com/facebookresearch/RPG_KDD2025"
+  },
+  "schema": "sidscope.source_identity.v1",
+  "schema_revision": "1.0.0",
+  "source_id": "rpg_beauty"
+}

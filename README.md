@@ -54,10 +54,9 @@ sidscope contract validate \
   --input examples/source_identity_fixture/source_identity.json
 ```
 
-The active `1.2.0.dev0` line now has a versioned contract registry plus complete
-SourceIdentity, DatasetIdentity, SIDSpaceIdentity, and PreparedDataset vertical
-slices. Registry discovery and all four contracts run without optional adapter
-runtimes:
+The active `1.2.0.dev0` line now closes eleven canonical contracts from source
+identity through evidence index, Adapter SDK `0.1.0-alpha`, and the shared CLI.
+The complete common path runs without optional adapter runtimes:
 
 ```bash
 sidscope contract list
@@ -66,6 +65,7 @@ sidscope contract validate \
   --type dataset-identity \
   --input examples/dataset_identity_fixture/dataset_identity.json
 python3 tools/verify_sidscope_sprint2_contracts.py
+python3 tools/verify_sidscope_1_2_closure.py
 ```
 
 DatasetIdentity binds dataset/category/profile, ordered split identities,
@@ -74,7 +74,29 @@ separately binds tuple structure, codebooks, offsets, special tokens, tokenizer
 artifacts, collision and de-duplication semantics. PreparedDataset binds both
 identities to normalized splits and artifact hashes. RPG migrates with exact
 fixture parity; incomplete DiffGRM/LLaDA legacy prepared artifacts explicitly
-require regeneration. Other 1.2--2.0 interfaces remain roadmap items.
+require regeneration. Episode selection, run/checkpoint provenance, native
+payload-bound traces, diagnostic/conformance reports, and deterministic
+evidence indexing are now registered downstream contracts.
+
+```bash
+sidscope adapter preflight \
+  --descriptor examples/canonical_pipeline_fixture/adapter_capabilities.json
+sidscope trace validate \
+  --input examples/canonical_pipeline_fixture/trace_envelope.json
+sidscope evaluate \
+  --trace examples/canonical_pipeline_fixture/trace_envelope.json \
+  --selection examples/canonical_pipeline_fixture/episode_selection.json \
+  --output /tmp/sidscope-diagnostic.json
+sidscope verify \
+  --report examples/canonical_pipeline_fixture/conformance_report.json
+```
+
+The common TraceEnvelope never substitutes for the bound method-native payload.
+RPG is the first end-to-end canonical fixture. Other current routes retain
+their legacy verifier authority and receive explicit regeneration dispositions;
+no historical evidence or adapter status is rewritten. Plugin discovery starts
+in 1.3, while immutable EvidenceBundle storage and SQLite projection start in
+1.4.
 
 ### Optional Latte Tokenizer Intake
 

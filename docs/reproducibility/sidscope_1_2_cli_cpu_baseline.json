@@ -1,0 +1,55 @@
+{
+  "adapter_sdk_version": "0.1.0",
+  "commands": {
+    "adapter_preflight": {
+      "max_ms": 13.457375,
+      "median_ms": 2.497,
+      "min_ms": 2.3185,
+      "repeats": 11
+    },
+    "contract_validate": {
+      "max_ms": 3.34825,
+      "median_ms": 2.918334,
+      "min_ms": 2.599333,
+      "repeats": 11
+    },
+    "evaluate": {
+      "max_ms": 2.474833,
+      "median_ms": 2.241708,
+      "min_ms": 2.091709,
+      "repeats": 11
+    },
+    "evidence_package": {
+      "max_ms": 7.537833,
+      "median_ms": 6.756666,
+      "min_ms": 6.578125,
+      "repeats": 11
+    },
+    "trace_validate": {
+      "max_ms": 2.361541,
+      "median_ms": 2.076958,
+      "min_ms": 1.931041,
+      "repeats": 11
+    },
+    "verify": {
+      "max_ms": 2.413958,
+      "median_ms": 1.889291,
+      "min_ms": 1.805834,
+      "repeats": 11
+    }
+  },
+  "environment": {
+    "implementation": "CPython",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "processor": "arm",
+    "python": "3.9.6"
+  },
+  "policy": {
+    "comparison_state": "baseline_established_no_prior_shared_command_baseline",
+    "gpu_required": false,
+    "review_threshold_percent": 20
+  },
+  "product_version": "1.2.0.dev0",
+  "schema": "sidscope.cli_cpu_baseline.v1",
+  "status": "pass"
+}

@@ -11,6 +11,17 @@ from typing import Any, Callable, Mapping, Sequence
 from .dataset_identity import load_dataset_identity
 from .hashing import SHA256_PATTERN, verify_content_sha256
 from .prepared_dataset import load_prepared_dataset
+from .report_contracts import (
+    load_conformance_report,
+    load_diagnostic_report,
+    load_evidence_index,
+)
+from .runtime_contracts import (
+    load_checkpoint_binding,
+    load_episode_selection,
+    load_run_identity,
+    load_trace_envelope,
+)
 from .sid_space_identity import load_sid_space_identity
 from .source_identity import load_source_identity
 
@@ -94,6 +105,12 @@ class ContractRegistry:
             if descriptor.contract_type == contract_type:
                 return descriptor
         raise ContractRegistryError("unknown_contract_type", contract_type)
+
+    def by_schema_id(self, schema_id: str) -> ContractDescriptor:
+        for descriptor in self.contracts:
+            if descriptor.schema_id == schema_id:
+                return descriptor
+        raise ContractRegistryError("unknown_schema_id", schema_id)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -349,10 +366,17 @@ def load_contract_registry(
 
 
 _LOADERS: Mapping[str, Callable[[Path], Any]] = {
+    "checkpoint-binding": load_checkpoint_binding,
+    "conformance-report": load_conformance_report,
     "dataset-identity": load_dataset_identity,
+    "diagnostic-report": load_diagnostic_report,
+    "episode-selection": load_episode_selection,
+    "evidence-index": load_evidence_index,
     "prepared-dataset": load_prepared_dataset,
+    "run-identity": load_run_identity,
     "sid-space-identity": load_sid_space_identity,
     "source-identity": load_source_identity,
+    "trace-envelope": load_trace_envelope,
 }
 
 

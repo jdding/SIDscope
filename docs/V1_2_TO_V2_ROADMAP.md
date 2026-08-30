@@ -73,6 +73,26 @@ prepared contracts fail with a typed regeneration requirement. Focused, full
 package, archive and isolated-install gates close the sprint; EpisodeSelection
 is the next 1.2 vertical slice.
 
+### Sprint 3 and Sprint 4 implementation status
+
+Sprint 3 closes EpisodeSelection, RunIdentity, CheckpointBinding, and
+TraceEnvelope. The envelope binds a method-family-native payload by schema and
+SHA instead of converting heterogeneous decoding into a false common ancestry.
+Checkpoint state is typed as complete-resumable or inference-only; SIDScope
+validates provenance but does not own training.
+
+Sprint 4 closes DiagnosticReport, ConformanceReport, EvidenceIndex, Adapter SDK
+`0.1.0-alpha`, and the shared CLI. The complete eleven-contract dependency DAG
+is registered and validated. RPG supplies the canonical end-to-end fixture;
+the fifteen-route migration matrix preserves every legacy authority and records
+typed regeneration where canonical artifacts do not yet exist. Six shared
+commands have a measured CPU baseline and a 20% review policy.
+
+Together Sprints 1--4 close the planned 1.2 development scope. This is a
+development closure, not a public tag or release declaration. Plugin discovery,
+registered native payload families, immutable EvidenceBundle storage, and
+SQLite projections remain assigned to 1.3 and 1.4.
+
 ## 2. State Transition
 
 ### Current State
