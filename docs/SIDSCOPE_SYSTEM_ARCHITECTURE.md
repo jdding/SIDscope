@@ -4,6 +4,11 @@ Status: approved target architecture
 
 Applies to: post-`1.1.1` development through `2.0`
 
+Publication boundary: the architecture is implemented on the local
+`codex/sidscope-v2` line. Public GitHub remains on maintained 1.1.x, and the
+TOIS submission remains an independently frozen package, until separate
+promotion or revision decisions are explicitly authorized.
+
 Product position: conformance and observability for Semantic-ID and generative recommender systems
 
 ## 1. Decision Summary
@@ -49,6 +54,10 @@ content-addressed evidence authoritative and SQLite derived. ADR 0010 separates
 stability declaration. ADR 0011 makes versioned profile reports the status
 authority for new admissions and keeps the submission checker and generated
 views deterministic, offline projections.
+ADR 0015 separates the public 1.1.x maintenance authority, the local pre-2.0
+development authority, and the exact-ref TOIS submission authority. It prevents
+local architecture closure from implying GitHub publication or manuscript
+revision.
 
 ## 2. System Context
 

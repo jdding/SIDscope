@@ -208,6 +208,7 @@ REQUIRED_FILES = [
     "docs/reproducibility/sidscope_1_7_public_surface.json",
     "docs/reproducibility/sidscope_release_profiles.v1.json",
     "docs/adr/0014-tiered-release-profiles.md",
+    "docs/adr/0015-separate-public-maintenance-development-and-tois-lines.md",
     "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
     "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
     "docs/reproducibility/latte_psid_trained_trace_evidence.json",

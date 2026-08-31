@@ -6,7 +6,7 @@ Status: SIDScope 1.7 contract/public-surface stabilization baseline
 
 | Product line | Distribution | Python import | Product CLI | Status |
 | --- | --- | --- | --- | --- |
-| 1.0.2 | `sidinspector` | `sidinspector` | route-specific commands | Frozen TOIS-bound release |
+| 1.0.2 | `sidinspector` | `sidinspector` | route-specific commands | Immutable historical release associated with the submitted TOIS snapshot; not a permanent TOIS revision constraint |
 | 1.1.0 | `sidinspector` | `sidinspector` | route-specific commands | Published maintenance release |
 | 1.1.1.dev0 | `sidinspector` | `sidinspector` | `sidscope` facade plus legacy commands | Frozen regression authority |
 | 1.2.0.dev0 | `sidinspector` | `sidinspector` | registry-backed `sidscope` facade plus legacy commands | Sprint 1--4 development closed; public release not implied |
@@ -15,6 +15,12 @@ Status: SIDScope 1.7 contract/public-surface stabilization baseline
 | 1.5.0.dev0 | `sidinspector` | `sidinspector` | facade plus profile, submission and generated-view commands | Conformance/submission ecosystem development closed locally; public release not implied |
 | 1.6.0.dev0 | `sidinspector` | `sidinspector` | frozen candidate facade plus compatibility/migration verification | Compatibility, migration and external-adoption hardening closed locally; public release not implied |
 | 1.7.0.dev0 | `sidinspector` | `sidinspector` and curated `sidscope` | previous facade plus `schema list` and two-stage `schema validate` | Contract and public-surface stabilization active; public release not implied |
+
+The table records compatibility, not publication. GitHub `main` remains on
+1.1.x, while 1.2--1.7 and the planned 2.0 contract are local-only development.
+The frozen TOIS package selects software by an exact reviewed ref; a later
+authorized revision may select a compatible 1.x ref, but never inherits local
+2.x merely because its development version is newer.
 
 No import or distribution rename is planned during 1.x. The facade validates
 all eleven canonical 1.2 contracts and provides adapter preflight, trace

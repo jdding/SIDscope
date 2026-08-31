@@ -13,6 +13,12 @@ surface. Local verification must close before any tag or push; the final public
 URL smoke is a separate post-publication gate.
 Paper submission readiness remains a separate writing and venue-decision gate.
 
+Current publication boundary: this checklist may verify local 1.2--2.0
+development artifacts, but GitHub `main` remains the 1.1.x maintenance line.
+Passing local gates does not authorize pushing `codex/sidscope-v2`. The TOIS
+submission is governed by its exact frozen ref/package, not by an assumption
+that every future revision must remain on `v1.0.2` or adopt 2.x.
+
 ## Release Candidate Inputs
 
 - Historical G7-lite claim/package boundary:
@@ -67,6 +73,10 @@ external-plugin adoption, cross-family comparison, and the candidate API/
 wrapper inventory to pass. The release body must link
 `docs/MIGRATING_1_X_TO_2_0.md`; no development closure authorizes a tag, push,
 or public release by itself.
+
+Under the active repository policy, these pre-2.0 checks close local
+development only. The public-release steps below are intentionally dormant for
+`codex/sidscope-v2` until the user explicitly authorizes a public-line change.
 
 ## Public Release Gates
 

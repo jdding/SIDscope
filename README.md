@@ -15,6 +15,14 @@ implementation sequence through 2.0 is in `docs/V1_2_TO_V2_ROADMAP.md`.
 Release numbering and compatibility are governed by `docs/VERSIONING.md` and
 `docs/COMPATIBILITY.md`.
 
+Repository exposure is intentionally narrower than local development. The
+public GitHub `main` remains on the maintained 1.1.x line; development from
+1.2 through the planned 2.0 contract stays in the dedicated local
+`SIDScope-v2` worktree until an explicit push or release decision. The TOIS
+submission is governed by its exact frozen repository ref and package. Its
+historical `v1.0.2` software snapshot remains immutable, but no policy requires
+every future authorized TOIS revision to stay on 1.0.2 or to adopt local 2.x.
+
 Implementation note: the distribution and historical import package remain
 `sidinspector` for compatibility. New integrations should use the curated
 `sidscope` Python facade; direct historical imports remain supported for replay.

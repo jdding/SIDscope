@@ -107,6 +107,11 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "generated deterministic",
             "Rollback",
         ],
+        "docs/adr/0015-separate-public-maintenance-development-and-tois-lines.md": [
+            "public GitHub `main` is the 1.1.x maintenance line",
+            "Local commits do not imply publication",
+            "future authorized TOIS revision",
+        ],
         "docs/MIGRATING_1_X_TO_2_0.md": [
             "immutable_historical_record",
             "canonical_replay_retained",

@@ -1,6 +1,7 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
 release_profiles_doc,docs/SIDSCOPE_RELEASE_PROFILES.md,release_governance,documentation,yes,pass_local,Documents the additive runtime conformance and evidence-full packaging views without activating a new product version.
 release_profiles_adr,docs/adr/0014-tiered-release-profiles.md,architecture_governance,documentation,yes,pass_local,Chooses one repository and manifest authority with three hash-bound release views and an additive rollback.
+publication_line_adr,docs/adr/0015-separate-public-maintenance-development-and-tois-lines.md,architecture_governance,documentation,yes,pass_local,Separates public 1.1.x local pre-2.0 development and exact-ref TOIS authorities without rewriting history.
 release_profile_registry,docs/reproducibility/sidscope_release_profiles.v1.json,release_governance,tracked_snapshot,yes,pass_local,Defines the default profile ordered profile set selection roots exclusions required paths and smoke suites.
 release_profile_core,tools/sidscope_release_profiles.py,release_tooling,fully_runnable,yes,pass_local,Validates profile definitions resolves strict public-manifest subsets and creates or verifies deterministic receipts.
 runtime_release_verifier,tools/verify_sidscope_runtime_release.py,verification,fully_runnable,yes,pass_local,Verifies the installable runtime profile version schemas facade receipt privacy and absence of tests fixtures and evidence.

@@ -19,6 +19,7 @@ earlier ADR rather than editing its rationale or consequences in place.
 | [0012](0012-freeze-pre-2-0-candidate-surface.md) | Freeze the pre-2.0 candidate surface through executable inventories | Accepted | 2026-08-30 |
 | [0013](0013-unify-public-contract-authority.md) | Unify public contract authority before stable 2.0 | Accepted | 2026-08-31 |
 | [0014](0014-tiered-release-profiles.md) | Publish additive runtime, conformance, and evidence-full assets | Accepted | 2026-08-31 |
+| [0015](0015-separate-public-maintenance-development-and-tois-lines.md) | Separate the public maintenance, local 2.0 development, and TOIS lines | Accepted | 2026-08-31 |
 
 New ADRs must include context, decision drivers, viable options, the decision,
 positive and negative consequences, migration, validation and rollback. Accepted

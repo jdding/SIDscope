@@ -6,6 +6,12 @@ Regression baseline: `1.1.1.dev0`; active development: `1.7.0.dev0`
 
 Architecture authority: `SIDSCOPE_SYSTEM_ARCHITECTURE.md`
 
+Publication topology: GitHub `sidscope/main` remains on 1.1.x. Milestones
+1.2--1.9 and the 2.0 target are developed only in the local `SIDScope-v2`
+worktree until explicitly authorized for publication. The TOIS repository is
+an independent frozen authority; a future revision may select a reviewed 1.x
+software ref but does not inherit this local 2.x line.
+
 ## 1. Goal and Sequencing
 
 By 2.0, SIDScope will be a stable, local-first conformance and observability
@@ -44,7 +50,9 @@ already exist.
 After this sprint is committed, implementation from 1.2 through 2.0 moves to
 the dedicated `SIDScope-v2` worktree and `codex/sidscope-v2` branch. The
 `SIDScope-v1.1` worktree remains the 1.1.x maintenance surface, and the frozen
-TOIS repository remains an independent, non-merge target.
+TOIS repository remains an independent, non-merge target. This development
+branch is local-only: a closed milestone or clean commit is not authorization
+to push it to GitHub.
 
 ### Sprint 1 implementation status
 

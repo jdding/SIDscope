@@ -50,6 +50,8 @@ SHA-256. Smoke and G8 reject a missing, mismatched, or tampered receipt.
 ## Release policy
 
 - GitHub/PyPI users should be directed to the wheel or `runtime` asset.
+- This guidance becomes public only after an explicitly authorized release;
+  current 1.7/pre-2.0 profile builds remain local while GitHub stays on 1.1.x.
 - Adapter developers may download `conformance` without the full trained
   evidence surface.
 - `evidence-full` remains a separately named, immutable Release asset.

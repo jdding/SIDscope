@@ -17,6 +17,11 @@ profiles under one version and one manifest authority; they are not additional
 minor releases. ADR-0014 and `docs/SIDSCOPE_RELEASE_PROFILES.md` define the
 selection, receipt, migration and rollback rules.
 
+ADR-0015 separately governs exposure: GitHub stays on the 1.1.x maintenance
+line, this 1.7/pre-2.0 worktree remains local-only, and TOIS revisions select
+their own reviewed 1.x software ref. Local gate closure is not a push, public
+release, or manuscript-update authorization.
+
 The mandatory order is Draft 2020-12 structural validation followed by the
 owning Python semantic validator.
 

@@ -13,6 +13,10 @@ drafts, AutoDL payloads, large caches, and planning records stay out of it.
 Public `v1.0.2` remains the immutable SIDScope software/resource version bound
 to the submitted TOIS package. Version 1.1.0 is a post-submission maintenance
 release and does not modify that frozen paper or submission snapshot.
+This sentence records the historical submission/release relationship; it does
+not require every future authorized TOIS revision to use `v1.0.2`. A revision
+must bind its own reviewed software ref and package, while local 2.x development
+remains excluded by default.
 
 ## Candidate Release Identity
 

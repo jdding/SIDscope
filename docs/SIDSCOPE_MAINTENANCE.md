@@ -1,7 +1,7 @@
 # SIDScope Maintenance And Versioning
 
 Status: current maintenance plan for standalone SIDScope public repository
-Last updated: 2026-08-29
+Last updated: 2026-08-31
 
 ## Release Policy
 
@@ -23,10 +23,11 @@ are reviewed every release but made only when the public entrypoint changes.
 Release refs:
 
 - `main`: current clean SIDScope public repository surface at
-  `https://github.com/jdding/sidscope`.
-- `v1.0.2`: immutable public SIDScope software/resource version bound to the
-  submitted TOIS package; later maintenance releases do not revise that
-  submission snapshot or its claims.
+  `https://github.com/jdding/sidscope`; it remains the 1.1.x maintenance line
+  until a different public line is explicitly authorized.
+- `v1.0.2`: immutable historical public SIDScope software/resource release
+  associated with the submitted TOIS snapshot. It is not a permanent version
+  constraint on a future authorized TOIS revision.
 - `sidscope-v1-tois-submission`: frozen journal-submission package.
 - `sidscope-v1-tois-revision-N`: revised journal packages when requested by
   the editor; each tag must bind a verifier record and archive checksum.
@@ -36,8 +37,15 @@ Workspace policy:
 - the `SIDScope-v1.1` worktree is the 1.1.x maintenance surface;
 - after Architecture Sprint 0 is committed, 1.2--2.0 development uses a
   separate `SIDScope-v2` worktree on `codex/sidscope-v2`;
+- that pre-2.0 worktree remains local-only until an explicit push or release
+  authorization; local commits and passing gates do not change GitHub `main`;
 - the frozen TOIS repository and refs are never a merge target for either
   worktree.
+
+For any editorial revision, choose the software ref explicitly after a
+claim/package compatibility review. A compatible 1.x maintenance snapshot may
+be selected; the local 2.x development line is excluded unless a separate
+future decision supersedes this policy.
 
 Version 1.1.0 was released from `codex/sidscope-v1.1` as annotated tag
 `v1.1.0` at `a1a1226d0ee106cd98dac1cc2169dcd4fbb146a3`. The public URL smoke

@@ -35,6 +35,11 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
   the complete `evidence-full` audit surface. Each deterministic archive embeds
   a hash-bound profile receipt; smoke and G8 verify the selected profile, and
   the three large trained traces remain available only in `evidence-full`.
+- Added ADR-0015 and synchronized version-governance documentation: GitHub
+  remains on the public 1.1.x maintenance line, pre-2.0 engineering stays local
+  until explicitly authorized, and a future TOIS revision selects an exact
+  reviewed 1.x ref instead of being permanently fixed to `v1.0.2` or
+  implicitly upgraded to 2.x.
 
 ## SIDScope v1.6.0.dev0: compatibility, migration and adoption hardening
 

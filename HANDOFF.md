@@ -31,8 +31,14 @@ configuration-bound named adapter through compact hash/count/metric evidence;
 the full traces and upstream assets remain external.
 
 The submitted TOIS manuscript is a frozen, separate repository. Nothing in
-SIDScope 1.1 may be written back into that submission before an explicitly
-authorized revision phase.
+the 1.1 maintenance or local pre-2.0 development lines may be written back into
+that submission before an explicitly authorized revision phase. Its authority is the frozen
+`codex/tois-submitted-20260821` branch at
+`6bc58f457194e34b785d50d746a3498c6cf47faa`, tagged
+`tois-2026-0745-submitted-20260821`; it is not permanently defined by the
+SIDScope `v1.0.2` product label. A future authorized revision may select a
+reviewed, claim-compatible 1.x software ref, but it must not absorb local 2.x
+development automatically.
 
 The approved long-term product position is a conformance and observability
 platform for Semantic-ID and generative recommender systems. SIDScope does not
@@ -162,12 +168,15 @@ validation, validates all 19 CLI result envelopes, introduces a curated
 enforces cross-module facade imports. ADR-0014 keeps release-view separation in
 the same 1.7 workstream: `runtime`, `conformance`, and `evidence-full` are
 strict additive profiles under one version and manifest authority. Versions
-1.8--1.9 remain optional.
+1.8--1.9 remain optional. ADR-0015 keeps GitHub on the 1.1.x maintenance line,
+keeps pre-2.0 engineering local, and treats the TOIS package as an independent
+exact-ref authority rather than a permanent product-version constraint.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
-1.2--2.0 development surface. The independent frozen TOIS repository remains
-a non-merge target.
+1.2--2.0 development surface. GitHub `sidscope/main` remains on 1.1.x; the
+local pre-2.0 commits are not authorized for push. The independent frozen TOIS
+repository remains a non-merge target.
 
 On 2026-08-29, the first authors of DIGER, LETTER, and ReSOT supplied direct
 email clarifications for research use. DIGER's author states that the code is
@@ -189,8 +198,14 @@ remain unchanged until repository-level terms make redistribution explicit.
   `SIDInspector` workspace.
 - Branch: `codex/sidscope-v2`.
 - Upstream tracking branch: `sidscope/main`.
-- TOIS-submission software/resource base, public `v1.0.2`:
+- Current GitHub main version: `1.1.1.dev0`; latest public release tag:
+  `v1.1.0`.
+- Historical software/resource release associated with the submitted TOIS
+  snapshot, public `v1.0.2`:
   `6ae5c4f02da3eae0cf187683d9af4c7c66e8cfa0`.
+- Frozen TOIS source authority: branch `codex/tois-submitted-20260821`, commit
+  `6bc58f457194e34b785d50d746a3498c6cf47faa`, tag
+  `tois-2026-0745-submitted-20260821`.
 - RPG P0 implementation commit before this handoff update:
   `60e421fb2736ceeead3cff0f7ac9e2cd23a04b95`.
 - Regression authority: `1.1.1.dev0` in the separate `SIDScope-v1.1` worktree.
@@ -212,8 +227,8 @@ is still HEAD after handoff or release work.
    submission repository.
 3. Do not commit checkpoints, raw datasets, embeddings, real `.sem_ids`
    caches, private paths, remote payloads, credentials, or source item IDs.
-4. Do not create a formal release tag or push `main` without explicit user
-   authorization.
+4. Do not push `codex/sidscope-v2`, change the public 1.1.x line, create a
+   formal release tag, or push `main` without explicit user authorization.
 5. Static item-to-SID admission is C0--C5. Generator and decoder admission is
    independently G0--G5. Passing one protocol never implies passing the other.
 6. Do not promote a route to `named_adapter` unless all G0--G5 gates pass with
@@ -422,13 +437,13 @@ stabilization tree has now completed its source-tree and archive/G8 gates:
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
 - manifest: 330 rows, 327 public rows, 0 pending;
-- resource-package verifier: 357 required files, 548 public files, and 551
+- resource-package verifier: 358 required files, 549 public files, and 552
   tracked files checked with no forbidden-content findings;
 - release-profile verifier: PASS with strict `runtime < conformance <
   evidence-full` containment, receipt/path tamper rejection, and large trained
   traces admitted only to `evidence-full`;
-- current profile surfaces including the generated receipt: 113 runtime files,
-  428 conformance files, and 549 evidence-full files;
+- current profile surfaces including the generated receipt: 114 runtime files,
+  429 conformance files, and 550 evidence-full files;
 
 The additive 1.7 focused verifier passes with 45 public schema IDs,
 27 schema resources, 19 CLI result schema IDs, 39 curated facade symbols, two
@@ -532,8 +547,10 @@ immutable 1.1.0 claim.
 Expected status at this handoff:
 
 ```text
-LOCAL_DEVELOPMENT_READY_1_5_DEV0: PASS
+LOCAL_DEVELOPMENT_READY_1_7_DEV0: PASS
 LOCAL_DEVELOPMENT_READY_1_1_1_DEV0: PASS
+LOCAL_PRE_2_0_BRANCH_PUSHED: NO
+PUBLIC_GITHUB_MAIN_LINE: 1.1.x
 PUBLIC_RELEASED_1_1_1: NO
 PUBLIC_RELEASED_1_1_0: YES
 PUBLIC_RELEASE_TAG_1_1_0: v1.1.0
@@ -543,5 +560,6 @@ RPG_NAMED_ADAPTER: PASS_G0_G5
 DIFFGRM_VG_NAMED_ADAPTER: PASS_G0_G5
 DIFFGRM_STEAM_NAMED_ADAPTER: PASS_G0_G5
 DACT_TIGER_NAMED_ADAPTER: PASS_G0_G5
-TOIS_FROZEN_SUBMISSION: UNCHANGED_OUT_OF_SCOPE
+TOIS_FROZEN_SUBMISSION: UNCHANGED_EXACT_REF_AUTHORITY
+TOIS_FUTURE_REVISION_VERSION: NOT_PRECOMMITTED_SELECT_EXPLICIT_COMPATIBLE_1_X
 ```

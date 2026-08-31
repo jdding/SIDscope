@@ -44,6 +44,23 @@ records supported combinations.
 and must carry the same distribution name, version, package data, and console
 entry point until retired by an ADR.
 
+## Repository and Publication Lines
+
+Product versions do not by themselves identify where a change is published or
+which manuscript package uses it. The current authorities are deliberately
+separate:
+
+| Surface | Current authority | Promotion rule |
+| --- | --- | --- |
+| Public GitHub | `sidscope/main` on the 1.1.x maintenance line | Remains 1.1.x until an explicit user-authorized push or release changes the public line. |
+| Local pre-2.0 development | `SIDScope-v2` on `codex/sidscope-v2` | Local commits may advance through 1.2--1.9 toward 2.0, but do not imply a tag, push, GitHub release, or public compatibility promise. |
+| TOIS submission/revision | Exact frozen manuscript branch, commit, tag, and archived package | The submitted package remains untouched. A future revision chooses and verifies an explicit claim-compatible 1.x software snapshot; local 2.x is never inherited automatically. |
+
+`v1.0.2` remains an immutable historical release associated with the submitted
+TOIS snapshot. It is not a permanent prospective version constraint for every
+future editorial revision. Historical tags and release records are never moved
+or rewritten.
+
 ## Pre-2.0 Stabilization Sequence
 
 The roadmap intentionally uses three distinct release responsibilities:
@@ -100,7 +117,9 @@ short-lived feature branch
 `main` is the current releasable line. A long-lived maintenance branch is used
 only when an older line must receive fixes while newer development continues.
 Tag creation, push, and public publication always require explicit release
-authorization.
+authorization. Under the current repository policy, this generic flow applies
+to public 1.1.x maintenance only; the local pre-2.0 branch stops before the
+`reviewed main candidate` step unless separately authorized.
 
 ## Required Release Record
 
