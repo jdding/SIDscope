@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-Status: SIDScope 1.6 development closure baseline
+Status: SIDScope 1.7 contract/public-surface stabilization baseline
 
 ## Product and Entry Points
 
@@ -14,6 +14,7 @@ Status: SIDScope 1.6 development closure baseline
 | 1.4.0.dev0 | `sidinspector` | `sidinspector` | facade plus evidence bundle and registry commands | Immutable evidence-system development closed; public release not implied |
 | 1.5.0.dev0 | `sidinspector` | `sidinspector` | facade plus profile, submission and generated-view commands | Conformance/submission ecosystem development closed locally; public release not implied |
 | 1.6.0.dev0 | `sidinspector` | `sidinspector` | frozen candidate facade plus compatibility/migration verification | Compatibility, migration and external-adoption hardening closed locally; public release not implied |
+| 1.7.0.dev0 | `sidinspector` | `sidinspector` and curated `sidscope` | previous facade plus `schema list` and two-stage `schema validate` | Contract and public-surface stabilization active; public release not implied |
 
 No import or distribution rename is planned during 1.x. The facade validates
 all eleven canonical 1.2 contracts and provides adapter preflight, trace
@@ -25,12 +26,14 @@ during migration.
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `1.6.0.dev0` | PEP 440 development version; not a public 1.6.0 release. |
+| Product/package | `1.7.0.dev0` | PEP 440 development version; not a public 1.7.0 release. |
 | Adapter SDK | `0.2.0-alpha` | Versioned capability descriptors and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | governed `static_mapping_c0_c5`, `generator_g0_g5`, `overlay_g0_g5`, `release_local` at `1.0.0`; legacy `common.generator.v1` and five family profiles remain supported | Profile reports bind the exact catalog hash; legacy-only routes retain read-only authority until migration. |
 | Evidence bundle | `sidscope.evidence_bundle.v1@1.0.0` | Immutable canonical JSON; SHA-256 object directory authoritative; SQLite and static views are derived. |
 | Submission | `sidscope.evidence_submission.v1@1.0.0` and `sidscope.submission_check_report.v1@1.0.0` | Root-relative canonical package; unknown roles revisions bindings or claims fail closed. |
+| Public schema catalog | 45 schema IDs across 27 bundled Draft 2020-12 resources | `sidscope schema validate` runs the selected JSON Schema before the owning Python semantic validator. |
+| CLI result envelope | 19 result schema IDs in `cli_result.v1.schema.json` | Every CLI envelope requires recognized schema, pass/fail status, and status-consistent failure state; domain artifacts retain their own schema/status semantics. |
 
 The executable matrix is
 `docs/reproducibility/sidscope_1_6_compatibility_matrix.json`. Every axis has a
@@ -55,7 +58,8 @@ compatibility declaration:
 | --- | --- | --- |
 | 1.5 | Add versioned conformance profiles, submission checking and generated registry views. | Additive development surface; legacy authorities remain available until parity passes. |
 | 1.6 | Prove package/SDK/schema/profile/payload/bundle intervals, migrate or archive legacy authorities, and freeze candidate CLI/Python interfaces. | No unresolved breaking change, unowned wrapper or undocumented migration may advance to 2.0. |
-| 1.7--1.9 (reserved optional) | Hold capacity for explicitly approved additive or hardening slices discovered after 1.6. | No compatibility is implied until a version is activated with a scoped matrix delta, migration, rollback and tests; unused versions are skipped. |
+| 1.7 | Unify public schema ownership and validation, validate every CLI result envelope, introduce the curated `sidscope` facade, and enforce cross-module facade imports. | The delta is additive; 1.6 historical replay, artifact hashes and `sidinspector` imports remain intact. |
+| 1.8--1.9 (reserved optional) | Hold capacity for explicitly approved additive or hardening slices discovered after 1.7. | No compatibility is implied until a version is activated with a scoped matrix delta, migration, rollback and tests; unused versions are skipped. |
 | 2.0 | Declare the interfaces demonstrated by the final passing pre-2.0 1.x baseline stable. | Final release gates reverify the frozen compatibility surface; they do not complete missing migrations. |
 
 If 1.6 hardening fails, the last passing 1.5 profile/CLI combination remains
@@ -63,7 +67,7 @@ the supported development baseline and 2.0 is deferred. Existing bundles,
 historical evidence and published tags are never rewritten to manufacture
 compatibility.
 
-Every activated 1.7--1.9 minor release must preserve the previous passing 1.x
+Every activated 1.8--1.9 minor release must preserve the previous passing 1.x
 as a rollback point and rerun all still-applicable 1.6 hardening gates. Merely
 reserving a version creates no supported package, SDK, schema, profile, payload
 or bundle interval.

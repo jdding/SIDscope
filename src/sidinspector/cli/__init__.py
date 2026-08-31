@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from importlib import metadata
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -61,6 +60,15 @@ from sidinspector.trace import (
     load_native_payload_registry,
     load_trace_envelope,
 )
+from sidinspector.version import PRODUCT_VERSION
+from sidinspector.schemas import (
+    CLI_RESULT_SCHEMA_IDS,
+    PublicSchemaValidationError,
+    load_public_schema_catalog,
+    validate_cli_result,
+    validate_public_document,
+)
+
 
 
 VALIDATION_REPORT_SCHEMA = "sidscope.contract_validation.v1"
@@ -69,10 +77,7 @@ REGISTRY_ENTRY_SCHEMA = "sidscope.contract_registry_entry.v1"
 
 
 def package_version() -> str:
-    try:
-        return metadata.version("sidinspector")
-    except metadata.PackageNotFoundError:
-        return "1.6.0.dev0+source"
+    return PRODUCT_VERSION
 
 
 def _file_sha256(path: Path) -> str:
@@ -113,6 +118,16 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("--type", required=True)
     validate.add_argument("--input", required=True, type=Path)
     validate.add_argument("--result-json", type=Path, default=None)
+
+    schema = commands.add_parser("schema", help="inspect and validate all public JSON schemas")
+    schema_commands = schema.add_subparsers(dest="schema_command", required=True)
+    schema_list = schema_commands.add_parser("list", help="list every public schema authority")
+    schema_list.add_argument("--result-json", type=Path, default=None)
+    schema_validate = schema_commands.add_parser(
+        "validate", help="run structural then semantic validation"
+    )
+    schema_validate.add_argument("--input", required=True, type=Path)
+    schema_validate.add_argument("--result-json", type=Path, default=None)
 
     trace = commands.add_parser("trace", help="validate a canonical trace envelope")
     trace_commands = trace.add_subparsers(dest="trace_command", required=True)
@@ -237,6 +252,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _write_result(result: dict[str, object], result_json: Path | None) -> None:
+    if result.get("schema") in CLI_RESULT_SCHEMA_IDS:
+        validate_cli_result(result)
+    else:
+        validate_public_document(result)
     payload = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if result_json is not None:
         result_json.parent.mkdir(parents=True, exist_ok=True)
@@ -276,6 +295,47 @@ def _adapter_preflight(args: argparse.Namespace) -> int:
         code = 0
     except (AdapterSDKError, ContractRegistryError, OSError, json.JSONDecodeError) as exc:
         result = _failure_result("adapter preflight", exc)
+        code = 2
+    _write_result(result, args.result_json)
+    return code
+
+
+def _schema_command(args: argparse.Namespace) -> int:
+    try:
+        if args.schema_command == "list":
+            catalog = load_public_schema_catalog()
+            result = {
+                "schema": "sidscope.public_schema_catalog_listing.v1",
+                "status": "pass",
+                "schema_count": len(catalog),
+                "schemas": [descriptor.to_dict() for descriptor in catalog],
+                "failure": None,
+            }
+        elif args.schema_command == "validate":
+            value = json.loads(args.input.read_text(encoding="utf-8"))
+            descriptor = validate_public_document(value)
+            result = {
+                "schema": "sidscope.public_schema_validation.v1",
+                "status": "pass",
+                "document_schema": descriptor.schema_id,
+                "schema_resource": descriptor.schema_resource,
+                "semantic_validator": descriptor.semantic_validator,
+                "input_file_sha256": _file_sha256(args.input),
+                "validation_layers": ["json_schema_draft_2020_12", "python_semantic"],
+                "failure": None,
+            }
+        else:
+            raise AssertionError("unreachable schema command")
+        code = 0
+    except (PublicSchemaValidationError, OSError, json.JSONDecodeError) as exc:
+        result = {
+            "schema": "sidscope.public_schema_validation.v1",
+            "status": "fail",
+            "failure": {
+                "code": getattr(exc, "code", "input_error"),
+                "detail": getattr(exc, "detail", f"{type(exc).__name__}: {exc}"),
+            },
+        }
         code = 2
     _write_result(result, args.result_json)
     return code
@@ -739,6 +799,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _adapter_preflight(args)
     if args.command == "plugin":
         return _plugin_command(args)
+    if args.command == "schema":
+        return _schema_command(args)
     if args.command == "trace":
         if args.trace_command == "payload":
             return _trace_payload_command(args)

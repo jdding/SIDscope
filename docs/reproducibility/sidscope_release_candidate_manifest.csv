@@ -1,4 +1,15 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+stabilization_1_7_doc,docs/SIDSCOPE_1_7_STABILIZATION.md,release_governance,documentation,yes,pass_local,Defines unified schema CLI facade producer version and rollback boundaries.
+public_contract_authority_adr,docs/adr/0013-unify-public-contract-authority.md,architecture_governance,documentation,yes,pass_local,Chooses ordered structural and semantic validation plus a curated integration facade.
+public_1_7_surface,docs/reproducibility/sidscope_1_7_public_surface.json,compatibility,tracked_snapshot,yes,pass_local,Binds every public schema owner validator CLI result and curated Python symbol.
+public_schema_catalog,src/sidinspector/schemas/catalog.py,runnable_code,fully_runnable,yes,pass_local,Discovers and validates all bundled public schemas in structural then semantic order.
+cli_result_contract,src/sidinspector/schemas/result_contracts.py,runnable_code,fully_runnable,yes,pass_local,Fail closes every public CLI JSON result envelope.
+curated_sidscope_facade,src/sidscope,runnable_code,fully_runnable,yes,pass_local,Provides the small candidate Python integration surface while historical imports remain available.
+stabilization_1_7_builder,tools/build_sidscope_1_7_stabilization_fixture.py,fixture_builder,fully_runnable,yes,pass_local,Deterministically rebuilds the public surface authority.
+stabilization_1_7_verifier,tools/verify_sidscope_1_7_stabilization.py,verification,fully_runnable,yes,pass_local,Verifies schema validation CLI envelopes facade and historical compatibility on CPU.
+public_schema_tests,tests/test_public_schema_catalog.py,test,fully_runnable,yes,pass_local,Tests catalog completeness two stage validation and typed semantic rejection.
+cli_result_tests,tests/test_cli_result_contracts.py,test,fully_runnable,yes,pass_local,Tests positive and typed negative CLI envelope behavior.
+stabilization_1_7_tests,tests/test_sidscope_1_7_stabilization.py,test,fully_runnable,yes,pass_local,Replays the complete deterministic 1.7 stabilization gate.
 hardening_1_6_doc,docs/SIDSCOPE_1_6_HARDENING.md,release_governance,documentation,yes,pass_local,Defines executable compatibility migration adoption comparison API and rollback gates.
 migration_1_x_to_2_0,docs/MIGRATING_1_X_TO_2_0.md,migration,documentation,yes,pass_local,Defines user and adapter actions for honest 1.x to 2.0 migration.
 candidate_surface_adr,docs/adr/0012-freeze-pre-2-0-candidate-surface.md,architecture_governance,documentation,yes,pass_local,Freezes the pre stable CLI Python wrapper and evidence surface through executable inventories.

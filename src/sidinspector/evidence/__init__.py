@@ -8,6 +8,7 @@ from typing import Any, Mapping, Sequence
 
 from sidinspector.contracts import (
     ContractRegistryError,
+    EVIDENCE_PRODUCER_VERSION,
     load_contract_registry,
     load_registered_contract,
     validate_evidence_index,
@@ -24,7 +25,12 @@ from .bundle import (
     scan_evidence_content,
     validate_evidence_bundle,
 )
-from .comparison import compare_evidence_bundles
+from .comparison import (
+    EVIDENCE_COMPARISON_SCHEMA,
+    EVIDENCE_COMPARISON_SCHEMA_REVISION,
+    compare_evidence_bundles,
+    validate_evidence_comparison,
+)
 from .object_store import ObjectStore
 from .registry import EvidenceRegistry, EvidenceRegistryError
 
@@ -82,7 +88,10 @@ def build_evidence_index(
             "schema": "sidscope.evidence_index.v1",
             "schema_revision": "1.0.0",
             "evidence_index_id": index_id,
-            "producer": {"name": "sidinspector.evidence", "version": "1.2.0.dev0"},
+            "producer": {
+                "name": "sidinspector.evidence",
+                "version": EVIDENCE_PRODUCER_VERSION,
+            },
             "artifacts": artifacts,
             "edges": edges,
             "omissions": [],
@@ -100,6 +109,8 @@ def build_evidence_index(
 __all__ = [
     "EVIDENCE_BUNDLE_SCHEMA",
     "EVIDENCE_BUNDLE_SCHEMA_REVISION",
+    "EVIDENCE_COMPARISON_SCHEMA",
+    "EVIDENCE_COMPARISON_SCHEMA_REVISION",
     "EvidenceBundle",
     "EvidenceBundleValidationError",
     "EvidenceRegistry",
@@ -111,4 +122,5 @@ __all__ = [
     "load_evidence_bundle",
     "scan_evidence_content",
     "validate_evidence_bundle",
+    "validate_evidence_comparison",
 ]

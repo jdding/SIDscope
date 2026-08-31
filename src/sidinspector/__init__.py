@@ -1,5 +1,7 @@
 """SIDInspector toolkit interface contracts."""
 
+from .version import PRODUCT_VERSION as __version__
+
 from .interface import (
     GENERATOR_OUTPUTS_REQUIRED,
     INTERACTIONS_REQUIRED,
@@ -20,6 +22,7 @@ __all__ = [
     "missing_columns",
     "preflight_inputs",
     "validate_columns",
+    "__version__",
 ]
 
 

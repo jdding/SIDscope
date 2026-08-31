@@ -20,23 +20,63 @@ def allowed_target_imports() -> dict[str, set[str]]:
     }
 
 
-def internal_target_imports(path: Path) -> set[str]:
-    allowed = allowed_target_imports()
+def _module_name(path: Path) -> str:
+    relative = path.relative_to(PACKAGE_ROOT).with_suffix("")
+    parts = list(relative.parts)
+    if parts[-1] == "__init__":
+        parts.pop()
+    return ".".join(("sidinspector", *parts))
+
+
+def _resolved_import_names(path: Path) -> set[str]:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    current = _module_name(path).split(".")
+    current_package = current if path.name == "__init__.py" else current[:-1]
     imports: set[str] = set()
     for node in ast.walk(tree):
-        names: list[str] = []
         if isinstance(node, ast.Import):
-            names = [alias.name for alias in node.names]
-        elif isinstance(node, ast.ImportFrom) and node.module:
-            names = [node.module]
-        for name in names:
-            if not name.startswith("sidinspector."):
-                continue
-            module = name.split(".", 2)[1]
-            if module in allowed:
-                imports.add(module)
+            imports.update(alias.name for alias in node.names)
+            continue
+        if not isinstance(node, ast.ImportFrom):
+            continue
+        if node.level == 0:
+            if node.module:
+                imports.add(node.module)
+            continue
+        remove = node.level - 1
+        if remove > len(current_package):
+            imports.add("<invalid-relative-import>")
+            continue
+        base = current_package[: len(current_package) - remove]
+        suffix = node.module.split(".") if node.module else []
+        imports.add(".".join((*base, *suffix)))
     return imports
+
+
+def internal_target_imports(path: Path) -> set[str]:
+    targets = allowed_target_imports()
+    imports: set[str] = set()
+    for name in _resolved_import_names(path):
+        if not name.startswith("sidinspector."):
+            continue
+        module = name.split(".", 2)[1]
+        if module in targets:
+            imports.add(module)
+    return imports
+
+
+def private_cross_module_imports(path: Path) -> set[str]:
+    targets = allowed_target_imports()
+    current = _module_name(path).split(".")[1]
+    failures: set[str] = set()
+    for name in _resolved_import_names(path):
+        parts = name.split(".")
+        if len(parts) < 3 or parts[0] != "sidinspector":
+            continue
+        target = parts[1]
+        if target in targets and target != current:
+            failures.add(name)
+    return failures
 
 
 class ArchitectureBoundaryTest(unittest.TestCase):
@@ -61,6 +101,7 @@ class ArchitectureBoundaryTest(unittest.TestCase):
         expected = {
             "contracts",
             "sdk",
+            "schemas",
             "trace",
             "evaluation",
             "conformance_core",
@@ -93,6 +134,18 @@ class ArchitectureBoundaryTest(unittest.TestCase):
 
         for module in graph:
             visit(module)
+
+    def test_cross_module_imports_use_public_package_facades(self) -> None:
+        failures: list[str] = []
+        for module in allowed_target_imports():
+            module_root = PACKAGE_ROOT / module
+            for path in sorted(module_root.rglob("*.py")):
+                private = sorted(private_cross_module_imports(path))
+                if private:
+                    failures.append(
+                        f"{path.relative_to(ROOT)} imports private cross-module paths {private}"
+                    )
+        self.assertEqual(failures, [])
 
     def test_contracts_never_import_legacy_or_optional_adapter_runtime(self) -> None:
         forbidden_prefixes = (

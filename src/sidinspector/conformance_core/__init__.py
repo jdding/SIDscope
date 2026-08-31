@@ -36,6 +36,7 @@ from .profile_engine import (
     load_profile_conformance_report,
     profile_catalog_content_sha256,
     validate_dataset_profile_descriptor,
+    validate_profile_catalog,
     validate_profile_conformance_report,
 )
 
@@ -71,5 +72,6 @@ __all__ = [
     "load_profile_conformance_report",
     "profile_catalog_content_sha256",
     "validate_dataset_profile_descriptor",
+    "validate_profile_catalog",
     "validate_profile_conformance_report",
 ]

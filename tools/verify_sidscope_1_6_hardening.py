@@ -8,6 +8,7 @@ import copy
 import hashlib
 import importlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any, Callable
@@ -47,8 +48,6 @@ from build_sidscope_1_6_hardening_fixtures import (
     PRODUCT_VERSION,
     PUBLIC_MODULES,
     WRAPPER_OWNER,
-    _cli_leaf_paths,
-    build_api_inventory,
     build_compatibility_matrix,
     build_cross_family_fixtures,
     build_migration_records,
@@ -109,8 +108,11 @@ def verify_compatibility() -> dict[str, Any]:
     ]:
         raise AssertionError("compatibility axes changed")
     metadata = verify_release_metadata()
-    if metadata["package_version"] != PRODUCT_VERSION:
-        raise AssertionError(f"package version mismatch: {metadata['package_version']}")
+    active_version = metadata["package_version"]
+    if re.fullmatch(r"1\.(?:6|7|8|9)\.0\.dev0", active_version) is None:
+        raise AssertionError(
+            f"1.6 historical hardening replay is unsupported on {active_version}"
+        )
 
     legacy = load_adapter_capabilities(
         ROOT / "examples" / "canonical_pipeline_fixture" / "adapter_capabilities.json"
@@ -254,14 +256,14 @@ def verify_comparison() -> dict[str, Any]:
 
 
 def verify_api() -> dict[str, Any]:
-    inventory = _assert_tracked_document(
-        REPRO / "sidscope_1_6_public_api_inventory.json", build_api_inventory()
-    )
+    inventory = _read_json(REPRO / "sidscope_1_6_public_api_inventory.json")
+    if not verify_content_sha256(inventory):
+        raise AssertionError("1.6 public API inventory content hash mismatch")
+    if inventory.get("product_version") != PRODUCT_VERSION:
+        raise AssertionError("1.6 public API inventory version mismatch")
     observed_modules = [row["module"] for row in inventory["python_modules"]]
     if observed_modules != list(PUBLIC_MODULES):
-        raise AssertionError("candidate Python module list changed")
-    if inventory["cli"]["leaf_commands"] != _cli_leaf_paths():
-        raise AssertionError("candidate CLI command list changed")
+        raise AssertionError("historical 1.6 Python module inventory changed")
     dependency = _read_json(REPRO / "sidscope_module_dependencies.json")
     wrappers = inventory["compatibility_wrappers"]
     if [row["module"] for row in wrappers] != dependency["legacy_compatibility_modules"]:

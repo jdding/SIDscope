@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from sidinspector.contracts.hashing import canonical_json_bytes, with_content_sha256
+from sidinspector.contracts import canonical_json_bytes, with_content_sha256
 
 from .checker import ValidatedSubmission
 from .contracts import SubmissionValidationError

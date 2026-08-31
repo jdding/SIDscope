@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidscope.org/schemas/evidence_comparison.v1.schema.json",
+  "title": "SIDScope Evidence Comparison",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_revision",
+    "left_bundle_sha256",
+    "right_bundle_sha256",
+    "status",
+    "contract_compatibility",
+    "method_difference"
+  ],
+  "properties": {
+    "schema": {"const": "sidscope.evidence_comparison.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "left_bundle_sha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "right_bundle_sha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "status": {"enum": ["compatible", "incompatible", "rejected"]},
+    "contract_compatibility": {"type": "object"},
+    "method_difference": {"oneOf": [{"type": "object"}, {"type": "null"}]}
+  },
+  "additionalProperties": false
+}

@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from sidinspector.contracts.hashing import (
+from sidinspector.contracts import (
     SHA256_PATTERN,
     verify_content_sha256,
     with_content_sha256,

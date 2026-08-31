@@ -160,7 +160,7 @@ owned layers. It orchestrates public contract, conformance and evidence APIs,
 but owns none of their semantics and does not add a seventh product layer or a
 deployable service.
 
-### 4.3 Pre-Stable State: 1.6 Hardening and Optional 1.7--1.9 Evolution
+### 4.3 Pre-Stable State: 1.6 Hardening, 1.7 Surface Stabilization, and Optional 1.8--1.9 Evolution
 
 The 1.5 feature surface remains active while SIDScope proves multi-version
 compatibility, migrates or archives every legacy authority, completes an
@@ -177,11 +177,18 @@ Python/CLI/wrapper inventory. No service, method runtime, mutable authority, or
 additional product layer was introduced. These proofs must be rerun by the
 final active 1.x release before 2.0.
 
-Versions 1.7--1.9 are reserved optional iterations, not additional architecture
-layers. An activated minor release must have an approved bounded scope, retain
-the previous passing 1.x rollback point, and rerun all applicable 1.6 hardening
-criteria. If no further additive work is justified, SIDScope may proceed from
-1.6 directly to 2.0 without publishing placeholder versions.
+Version 1.7 is activated as a bounded contract/public-surface stabilization
+iteration, not an additional architecture layer. It makes every public schema
+discoverable, orders structural before semantic validation, validates CLI
+result envelopes, adds the curated `sidscope` integration facade, centralizes
+semantic producer identities, and strengthens module-boundary fitness tests.
+The runtime remains the same local-first modular monolith and all changes are
+additive over the passing 1.6 rollback point.
+
+Versions 1.8--1.9 remain reserved optional iterations. An activated minor
+release must have an approved bounded scope, retain the previous passing 1.x
+rollback point, and rerun all applicable hardening criteria. If no further work
+is justified after 1.7, SIDScope may proceed to 2.0 without placeholder tags.
 
 ### 4.4 Target State: 2.0
 

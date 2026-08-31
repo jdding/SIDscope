@@ -10,7 +10,7 @@ from importlib import resources
 from pathlib import Path
 from typing import Any
 
-from sidinspector.contracts.hashing import (
+from sidinspector.contracts import (
     SHA256_PATTERN,
     verify_content_sha256,
     with_content_sha256,
@@ -172,13 +172,11 @@ def _validate_gate_order(gates: tuple[SharedGateDefinition, ...], profile_id: st
         emitted.add(gate.gate_id)
 
 
-def load_profile_catalog() -> tuple[SharedProfileDefinition, ...]:
-    """Load and strictly validate the packaged shared profile catalog."""
+def validate_profile_catalog(
+    value: Mapping[str, Any],
+) -> tuple[SharedProfileDefinition, ...]:
+    """Strictly validate an arbitrary shared profile catalog document."""
 
-    path = resources.files("sidinspector.schemas").joinpath(
-        "conformance_profile_catalog.v1.json"
-    )
-    value = json.loads(path.read_text(encoding="utf-8"))
     _exact_object(
         value, {"schema", "schema_revision", "profiles", "content_sha256"}, "catalog"
     )
@@ -187,7 +185,7 @@ def load_profile_catalog() -> tuple[SharedProfileDefinition, ...]:
     if value.get("schema_revision") != PROFILE_CATALOG_REVISION:
         _fail("profile_catalog_revision_mismatch", str(value.get("schema_revision")))
     if not verify_content_sha256(value):
-        _fail("profile_catalog_hash_mismatch", str(path))
+        _fail("profile_catalog_hash_mismatch", "catalog content hash mismatch")
 
     profiles: list[SharedProfileDefinition] = []
     for index, raw in enumerate(_sequence(value.get("profiles"), "catalog.profiles")):
@@ -302,6 +300,18 @@ def load_profile_catalog() -> tuple[SharedProfileDefinition, ...]:
     if set(profile.profile_kind for profile in profiles) != PROFILE_KINDS:
         _fail("missing_profile_kind", str(sorted(set(profile.profile_kind for profile in profiles))))
     return tuple(profiles)
+
+
+def load_profile_catalog() -> tuple[SharedProfileDefinition, ...]:
+    """Load and strictly validate the packaged shared profile catalog."""
+
+    path = resources.files("sidinspector.schemas").joinpath(
+        "conformance_profile_catalog.v1.json"
+    )
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, Mapping):
+        _fail("invalid_type", f"{path} must contain an object")
+    return validate_profile_catalog(value)
 
 
 def profile_catalog_content_sha256() -> str:

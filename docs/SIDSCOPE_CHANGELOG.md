@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-30
+Last updated: 2026-08-31
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -10,6 +10,26 @@ release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
+
+## SIDScope v1.7.0.dev0: contract and public-surface stabilization
+
+- Added a unified catalog for all 45 public schema IDs across 27 bundled Draft
+  2020-12 resources, with one owning module and Python semantic validator per
+  schema.
+- Added `sidscope schema list` and `sidscope schema validate`; validation is
+  explicitly two-stage, so structurally permissive native-payload schemas
+  cannot bypass method-specific semantic checks.
+- Added one shared machine-readable CLI result envelope and fail-closed runtime
+  validation for all 19 public CLI result schema IDs. Domain artifacts emitted
+  by commands retain and validate their own schema/status semantics.
+- Added a curated `sidscope` Python facade for new integrations while retaining
+  the `sidinspector` distribution/import as historical compatibility surface.
+- Centralized semantic producer versions independently from the product package
+  version; unchanged 1.2 contract/evaluation/evidence bytes remain unchanged.
+- Strengthened architecture fitness tests to resolve relative imports and reject
+  direct cross-module implementation imports. Added ADR-0013 and deterministic
+  1.7 stabilization evidence. No method, training runtime, service, tag, public
+  release, or frozen TOIS artifact is added or changed.
 
 ## SIDScope v1.6.0.dev0: compatibility, migration and adoption hardening
 

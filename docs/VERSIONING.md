@@ -1,6 +1,6 @@
 # SIDScope Versioning and Release Governance
 
-Status: active; current development baseline `1.6.0.dev0`
+Status: active; current development baseline `1.7.0.dev0`
 
 ## Sources of Truth
 
@@ -51,27 +51,35 @@ The roadmap intentionally uses three distinct release responsibilities:
 - 1.5 completes the additive conformance and submission feature surface;
 - 1.6 hardens compatibility, migration, external adoption and candidate API
   stability without adding another owned product layer;
-- 1.7--1.9 remain optional reserved slots for later explicitly approved
+- 1.7 is activated for contract and public-surface stabilization: unified
+  schema discovery, structural-to-semantic validation, CLI result envelopes,
+  a curated Python facade, and executable module boundaries;
+- 1.8--1.9 remain optional reserved slots for later explicitly approved
   additive or hardening work;
 - 2.0 reruns the final gates against the last passing 1.x baseline and makes the
   stable public compatibility promise.
 
 A major version is not used as a backlog container. Any unresolved migration,
 first-time external onboarding, unowned wrapper or undocumented breaking change
-blocks 2.0 and remains on the 1.6 line. If additional additive work is later
+blocks 2.0 and remains on the active 1.x line. If additional additive work is later
 required, it receives another 1.x minor version rather than being hidden inside
 the 2.0 release candidate.
 
-Reserved 1.7--1.9 numbers are not placeholder releases. A number is used only
+Reserved 1.8--1.9 numbers are not placeholder releases. A number is used only
 after its scope, compatibility delta, migration, rollback and exit gates are
 approved and documented. Unused numbers may be skipped, and no empty tag or
 synthetic changelog entry is created merely to keep the sequence contiguous.
 
-The 1.6 candidate surface is machine-readable in
+The historical 1.6 candidate surface is machine-readable in
 `docs/reproducibility/sidscope_1_6_public_api_inventory.json`. Any change to a
 listed CLI leaf command, Python export, compatibility wrapper owner, support
 interval, or archive decision requires a compatibility review and an updated
 migration action before 2.0.
+
+The additive 1.7 delta and current candidate surface are machine-readable in
+`docs/reproducibility/sidscope_1_7_public_surface.json`. Semantic producer
+versions remain independent of package-only releases so unchanged canonical
+artifact bytes do not drift merely because the distribution version advances.
 
 ## Release Flow
 

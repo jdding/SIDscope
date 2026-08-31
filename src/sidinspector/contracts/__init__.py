@@ -1,11 +1,18 @@
 """Canonical SIDScope contracts introduced by the 1.2 migration facade."""
 
 from .hashing import (
+    SHA256_PATTERN,
     canonical_artifact_sha256,
     canonical_json_bytes,
     canonical_sha256,
     verify_content_sha256,
     with_content_sha256,
+)
+from .method_families import METHOD_FAMILIES, METHOD_FAMILY_PAYLOAD_SCHEMAS
+from .producer_versions import (
+    CONTRACT_PRODUCER_VERSION,
+    EVALUATION_PRODUCER_VERSION,
+    EVIDENCE_PRODUCER_VERSION,
 )
 from .dataset_identity import (
     DATASET_IDENTITY_SCHEMA,
@@ -99,6 +106,12 @@ from .source_identity import (
 )
 
 __all__ = [
+    "SHA256_PATTERN",
+    "METHOD_FAMILIES",
+    "METHOD_FAMILY_PAYLOAD_SCHEMAS",
+    "CONTRACT_PRODUCER_VERSION",
+    "EVALUATION_PRODUCER_VERSION",
+    "EVIDENCE_PRODUCER_VERSION",
     "SOURCE_IDENTITY_SCHEMA",
     "SOURCE_IDENTITY_SCHEMA_REVISION",
     "SourceIdentity",

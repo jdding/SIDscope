@@ -17,6 +17,7 @@ earlier ADR rather than editing its rationale or consequences in place.
 | [0010](0010-separate-hardening-from-2-0-stability.md) | Separate 1.6 hardening from the 2.0 stability declaration | Accepted; partially supersedes ADR-0004 timing | 2026-08-30 |
 | [0011](0011-profile-governed-submission-admission.md) | Govern evidence admission through versioned profiles and reports | Accepted | 2026-08-30 |
 | [0012](0012-freeze-pre-2-0-candidate-surface.md) | Freeze the pre-2.0 candidate surface through executable inventories | Accepted | 2026-08-30 |
+| [0013](0013-unify-public-contract-authority.md) | Unify public contract authority before stable 2.0 | Accepted | 2026-08-31 |
 
 New ADRs must include context, decision drivers, viable options, the decision,
 positive and negative consequences, migration, validation and rollback. Accepted

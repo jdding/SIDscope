@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from sidinspector.contracts.hashing import canonical_json_bytes
+from sidinspector.contracts import canonical_json_bytes
 from sidinspector.conformance_core import (
     DATASET_PROFILE_DESCRIPTOR_SCHEMA,
     PROFILE_CONFORMANCE_REPORT_SCHEMA,
@@ -17,7 +17,7 @@ from sidinspector.conformance_core import (
     validate_dataset_profile_descriptor,
     validate_profile_conformance_report,
 )
-from sidinspector.evidence.bundle import (
+from sidinspector.evidence import (
     EvidenceBundle,
     EvidenceBundleValidationError,
     scan_evidence_content,

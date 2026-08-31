@@ -23,6 +23,7 @@ from .sid_space_identity import (
     validate_sid_space_identity,
 )
 from .source_identity import ProducerIdentity
+from .producer_versions import CONTRACT_PRODUCER_VERSION
 
 
 PREPARED_DATASET_SCHEMA = "sidscope.prepared_dataset.v1"
@@ -384,7 +385,10 @@ def from_rpg_prepared_dataset(value: Mapping[str, Any]) -> PreparedDatasetMigrat
             "schema": DATASET_IDENTITY_SCHEMA,
             "schema_revision": DATASET_IDENTITY_SCHEMA_REVISION,
             "dataset_id": f"rpg:{normalized_name}:{catalog_count}",
-            "producer": {"name": "sidinspector.contracts", "version": "1.2.0.dev0"},
+            "producer": {
+                "name": "sidinspector.contracts",
+                "version": CONTRACT_PRODUCER_VERSION,
+            },
             "dataset": {
                 "name": dataset_raw["name"],
                 "normalized_name": normalized_name,
@@ -424,7 +428,10 @@ def from_rpg_prepared_dataset(value: Mapping[str, Any]) -> PreparedDatasetMigrat
             "schema": SID_SPACE_IDENTITY_SCHEMA,
             "schema_revision": SID_SPACE_IDENTITY_SCHEMA_REVISION,
             "sid_space_id": f"rpg:{value.get('contract_id')}",
-            "producer": {"name": "sidinspector.contracts", "version": "1.2.0.dev0"},
+            "producer": {
+                "name": "sidinspector.contracts",
+                "version": CONTRACT_PRODUCER_VERSION,
+            },
             "structure": {
                 "tuple_kind": "unordered_set",
                 "length_kind": "fixed",
@@ -479,7 +486,10 @@ def from_rpg_prepared_dataset(value: Mapping[str, Any]) -> PreparedDatasetMigrat
             "schema": PREPARED_DATASET_SCHEMA,
             "schema_revision": PREPARED_DATASET_SCHEMA_REVISION,
             "prepared_dataset_id": f"rpg:{value.get('contract_id')}",
-            "producer": {"name": "sidinspector.contracts", "version": "1.2.0.dev0"},
+            "producer": {
+                "name": "sidinspector.contracts",
+                "version": CONTRACT_PRODUCER_VERSION,
+            },
             "dataset_binding": {
                 "schema_id": dataset.schema,
                 "schema_revision": dataset.schema_revision,

@@ -8,12 +8,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Protocol
 
-from sidinspector.contracts.hashing import verify_content_sha256
-from sidinspector.contracts.method_families import (
+from sidinspector.contracts import (
     METHOD_FAMILIES,
     METHOD_FAMILY_PAYLOAD_SCHEMAS,
+    load_contract_registry,
+    load_registered_contract,
+    verify_content_sha256,
 )
-from sidinspector.contracts.registry import load_contract_registry, load_registered_contract
 
 
 LEGACY_ADAPTER_CAPABILITIES_SCHEMA = "sidscope.adapter_capabilities.alpha.v1"

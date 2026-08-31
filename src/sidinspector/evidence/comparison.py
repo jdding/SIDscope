@@ -10,6 +10,11 @@ from sidinspector.evidence.bundle import (
     EvidenceBundleValidationError,
     validate_evidence_bundle,
 )
+from sidinspector.contracts import SHA256_PATTERN
+
+
+EVIDENCE_COMPARISON_SCHEMA = "sidscope.evidence_comparison.v1"
+EVIDENCE_COMPARISON_SCHEMA_REVISION = "1.0.0"
 
 
 _COMPATIBILITY_FIELDS = (
@@ -172,8 +177,8 @@ def compare_evidence_bundles(
     left_hash = raw_left.get("content_sha256")
     right_hash = raw_right.get("content_sha256")
     base = {
-        "schema": "sidscope.evidence_comparison.v1",
-        "schema_revision": "1.0.0",
+        "schema": EVIDENCE_COMPARISON_SCHEMA,
+        "schema_revision": EVIDENCE_COMPARISON_SCHEMA_REVISION,
         "left_bundle_sha256": left_hash,
         "right_bundle_sha256": right_hash,
     }
@@ -266,4 +271,62 @@ def compare_evidence_bundles(
     }
 
 
-__all__ = ["compare_evidence_bundles"]
+def validate_evidence_comparison(value: Mapping[str, Any]) -> Mapping[str, Any]:
+    """Validate the stable derived comparison document without its inputs."""
+
+    fields = {
+        "schema",
+        "schema_revision",
+        "left_bundle_sha256",
+        "right_bundle_sha256",
+        "status",
+        "contract_compatibility",
+        "method_difference",
+    }
+    if not isinstance(value, Mapping) or set(value) != fields:
+        raise EvidenceBundleValidationError(
+            "comparison_fields_mismatch", str(sorted(value) if isinstance(value, Mapping) else type(value).__name__)
+        )
+    if value.get("schema") != EVIDENCE_COMPARISON_SCHEMA:
+        raise EvidenceBundleValidationError("schema_mismatch", str(value.get("schema")))
+    if value.get("schema_revision") != EVIDENCE_COMPARISON_SCHEMA_REVISION:
+        raise EvidenceBundleValidationError(
+            "schema_revision_mismatch", str(value.get("schema_revision"))
+        )
+    for field in ("left_bundle_sha256", "right_bundle_sha256"):
+        digest = value.get(field)
+        if digest is not None and (
+            not isinstance(digest, str) or SHA256_PATTERN.fullmatch(digest) is None
+        ):
+            raise EvidenceBundleValidationError("invalid_sha256", field)
+    status = value.get("status")
+    if status not in {"compatible", "incompatible", "rejected"}:
+        raise EvidenceBundleValidationError("invalid_comparison_status", str(status))
+    compatibility = value.get("contract_compatibility")
+    expected_fields = (
+        {"status", "reasons", "shared_contract"}
+        if status == "compatible"
+        else {"status", "reasons"}
+    )
+    if not isinstance(compatibility, Mapping) or set(compatibility) != expected_fields:
+        raise EvidenceBundleValidationError("comparison_contract_fields_mismatch", str(status))
+    if compatibility.get("status") != status:
+        raise EvidenceBundleValidationError("comparison_status_mismatch", str(status))
+    reasons = compatibility.get("reasons")
+    if not isinstance(reasons, list) or any(not isinstance(row, Mapping) for row in reasons):
+        raise EvidenceBundleValidationError("invalid_comparison_reasons", str(status))
+    difference = value.get("method_difference")
+    if status == "compatible":
+        if reasons or not isinstance(difference, Mapping):
+            raise EvidenceBundleValidationError("compatible_comparison_mismatch", str(status))
+    elif difference is not None:
+        raise EvidenceBundleValidationError("incompatible_comparison_has_difference", str(status))
+    return value
+
+
+__all__ = [
+    "EVIDENCE_COMPARISON_SCHEMA",
+    "EVIDENCE_COMPARISON_SCHEMA_REVISION",
+    "compare_evidence_bundles",
+    "validate_evidence_comparison",
+]

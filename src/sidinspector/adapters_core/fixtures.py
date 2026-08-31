@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from sidinspector.contracts import validate_trace_envelope
-from sidinspector.sdk.alpha import validate_adapter_capabilities
+from sidinspector.sdk import validate_adapter_capabilities
 from sidinspector.trace import load_native_payload, validate_payload_binding
 
 

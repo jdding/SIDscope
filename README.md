@@ -15,8 +15,9 @@ implementation sequence through 2.0 is in `docs/V1_2_TO_V2_ROADMAP.md`.
 Release numbering and compatibility are governed by `docs/VERSIONING.md` and
 `docs/COMPATIBILITY.md`.
 
-Implementation note: the Python import package remains `sidinspector` for
-compatibility with the released diagnostic code.
+Implementation note: the distribution and historical import package remain
+`sidinspector` for compatibility. New integrations should use the curated
+`sidscope` Python facade; direct historical imports remain supported for replay.
 
 ## What It Reports
 
@@ -54,7 +55,7 @@ sidscope contract validate \
   --input examples/source_identity_fixture/source_identity.json
 ```
 
-The active `1.6.0.dev0` line retains the eleven canonical contracts from source
+The active `1.7.0.dev0` line retains the eleven canonical contracts from source
 identity through evidence index, Adapter SDK `0.2.0-alpha`, lazy external
 plugins, five registered native payload families, and composable profiles. It
 adds immutable EvidenceBundle v1 objects, a rebuildable SQLite registry,
@@ -67,6 +68,13 @@ records for every 1.1.1 route, a frozen candidate Python/CLI inventory,
 independent external-plugin onboarding proof, and a compatible cross-family
 EvidenceBundle comparison. It is a hardening release: no method or training API
 enters SIDScope.
+Version 1.7 stabilizes the public contract surface: all 45 published schema IDs
+are discoverable with an owner and semantic validator, every CLI JSON output
+uses either the validated CLI envelope or its domain artifact contract, JSON
+Schema validation always precedes Python
+semantic validation, and the deliberately small `sidscope` Python facade is
+machine-inventoried. Existing artifact bytes and historical imports are not
+rewritten.
 The complete common path runs without optional adapter runtimes:
 
 ```bash
@@ -80,6 +88,15 @@ python3 tools/verify_sidscope_1_2_closure.py
 python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
 python3 tools/verify_sidscope_1_5_conformance_ecosystem.py
 python3 tools/verify_sidscope_1_6_hardening.py
+python3 tools/verify_sidscope_1_7_stabilization.py
+```
+
+Public schema discovery and two-stage validation are available directly:
+
+```bash
+sidscope schema list
+sidscope schema validate \
+  --input examples/dataset_identity_fixture/dataset_identity.json
 ```
 
 DatasetIdentity binds dataset/category/profile, ordered split identities,

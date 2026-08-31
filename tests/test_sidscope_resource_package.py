@@ -196,7 +196,7 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("### 4.1 Current State: 1.1.1 Baseline", architecture)
         self.assertIn("### 4.2 Interim State: 1.2 to 1.5 Coexistence", architecture)
         self.assertIn(
-            "### 4.3 Pre-Stable State: 1.6 Hardening and Optional 1.7--1.9 Evolution",
+            "### 4.3 Pre-Stable State: 1.6 Hardening, 1.7 Surface Stabilization, and Optional 1.8--1.9 Evolution",
             architecture,
         )
         self.assertIn("### 4.4 Target State: 2.0", architecture)
@@ -217,7 +217,7 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         inventory = verify_inventory()
 
         self.assertEqual(metadata["status"], "pass")
-        self.assertEqual(metadata["package_version"], "1.6.0.dev0")
+        self.assertEqual(metadata["package_version"], "1.7.0.dev0")
         self.assertEqual(inventory["canonical_contract_count"], 11)
         self.assertEqual(inventory["status"], "pass")
         document = json.loads(

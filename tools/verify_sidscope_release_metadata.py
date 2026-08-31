@@ -16,6 +16,7 @@ if str(Path(__file__).resolve().parents[1] / "src") not in sys.path:
 from sidinspector.contracts import load_contract_registry
 from sidinspector.conformance_core import load_profile_catalog
 from sidinspector.sdk import ADAPTER_SDK_VERSION
+from sidinspector.version import PRODUCT_VERSION
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +42,10 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         raise ValueError(
             "pyproject/setup metadata mismatch: "
             f"{project_name}=={project_version} != {setup_name}=={setup_version}"
+        )
+    if project_version != PRODUCT_VERSION:
+        raise ValueError(
+            f"runtime/package version mismatch: {PRODUCT_VERSION} != {project_version}"
         )
     if 'sidscope = "sidinspector.cli:main"' not in pyproject:
         raise ValueError("pyproject missing the sidscope console facade")
@@ -85,6 +90,12 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "sidscope_1_6_legacy_migration_records.json",
             "sidscope_1_6_public_api_inventory.json",
             "without core edits",
+        ],
+        "docs/SIDSCOPE_1_7_STABILIZATION.md": [
+            "sidscope schema validate",
+            "sidscope_1_7_public_surface.json",
+            "Draft 2020-12",
+            "Python semantic",
         ],
         "docs/MIGRATING_1_X_TO_2_0.md": [
             "immutable_historical_record",

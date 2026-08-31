@@ -7,7 +7,7 @@ from importlib import metadata
 from typing import Any, Mapping
 
 from sidinspector.sdk import AdapterCapabilities, AdapterSDKError, validate_adapter_capabilities
-from sidinspector.sdk.plugin_api import PLUGIN_API_VERSION, PLUGIN_ENTRY_POINT_GROUP
+from sidinspector.sdk import PLUGIN_API_VERSION, PLUGIN_ENTRY_POINT_GROUP
 from sidinspector.trace import NativePayload, NativePayloadValidationError, validate_native_payload
 
 

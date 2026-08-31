@@ -11,8 +11,11 @@ from pathlib import Path
 from pathlib import PurePosixPath
 from typing import Any, Callable, Mapping, Sequence
 
-from sidinspector.contracts.hashing import SHA256_PATTERN, verify_content_sha256
-from sidinspector.contracts.method_families import METHOD_FAMILY_PAYLOAD_SCHEMAS
+from sidinspector.contracts import (
+    METHOD_FAMILY_PAYLOAD_SCHEMAS,
+    SHA256_PATTERN,
+    verify_content_sha256,
+)
 
 
 PAYLOAD_REGISTRY_SCHEMA = "sidscope.trace_payload_registry.v1"

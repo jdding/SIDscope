@@ -10,7 +10,7 @@ from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any, Union
 
-from sidinspector.contracts.hashing import SHA256_PATTERN, canonical_json_bytes
+from sidinspector.contracts import SHA256_PATTERN, canonical_json_bytes
 
 from .bundle import (
     EvidenceBundle,

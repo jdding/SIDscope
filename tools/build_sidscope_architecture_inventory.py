@@ -71,10 +71,11 @@ def _schema_owner(schema_id: str) -> str:
         "checkpoint_binding",
         "trace_envelope",
         "evidence_index",
-        "evidence_bundle",
         "contract_registry",
         "contract_validation",
         "module_dependency_matrix",
+        "public_schema_catalog_listing",
+        "public_schema_validation",
     }:
         return "core:contracts"
     if prefix in {"adapter_capabilities", "adapter_fixture_manifest"}:
@@ -91,6 +92,8 @@ def _schema_owner(schema_id: str) -> str:
     }:
         return "core:conformance"
     if prefix in {
+        "evidence_bundle",
+        "evidence_comparison",
         "evidence_submission",
         "submission_check_report",
         "submission_index_export",
@@ -123,6 +126,8 @@ def _schema_owner(schema_id: str) -> str:
         "public_api_inventory",
         "1_6_fixture_build",
         "1_6_hardening_verification",
+        "public_surface_stabilization",
+        "1_7_stabilization_verification",
     }:
         return "core:release"
     return "core:diagnostics"

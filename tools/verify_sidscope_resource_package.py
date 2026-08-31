@@ -189,6 +189,7 @@ REQUIRED_FILES = [
     "docs/adr/0010-separate-hardening-from-2-0-stability.md",
     "docs/adr/0011-profile-governed-submission-admission.md",
     "docs/adr/0012-freeze-pre-2-0-candidate-surface.md",
+    "docs/adr/0013-unify-public-contract-authority.md",
     ".github/CODEOWNERS",
     "docs/RESOT_RESOURCE_WALKTHROUGH.md",
     "docs/reproducibility_matrix.csv",
@@ -202,6 +203,8 @@ REQUIRED_FILES = [
     "docs/reproducibility/sidscope_1_6_legacy_migration_records.json",
     "docs/reproducibility/sidscope_1_6_legacy_status_index.json",
     "docs/reproducibility/sidscope_1_6_public_api_inventory.json",
+    "docs/SIDSCOPE_1_7_STABILIZATION.md",
+    "docs/reproducibility/sidscope_1_7_public_surface.json",
     "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
     "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
     "docs/reproducibility/latte_psid_trained_trace_evidence.json",
@@ -304,6 +307,8 @@ REQUIRED_FILES = [
     "tools/verify_sidscope_1_4_cli_baseline.py",
     "tools/build_sidscope_1_6_hardening_fixtures.py",
     "tools/verify_sidscope_1_6_hardening.py",
+    "tools/build_sidscope_1_7_stabilization_fixture.py",
+    "tools/verify_sidscope_1_7_stabilization.py",
     "tools/verify_dact_tiger_adapter.py",
     "tools/verify_rpg_generator_adapter.py",
     "tools/run_rpg_resumable_training.py",
@@ -422,6 +427,9 @@ PUBLIC_CONTENT_TOKEN_DECLARATION_ALLOWLIST = {
     "tools/verify_sidscope_resource_package.py",
     "tools/verify_sidscope_1_5_conformance_ecosystem.py",
     "tests/test_sidscope_1_6_hardening.py",
+    "tests/test_cli_result_contracts.py",
+    "tests/test_public_schema_catalog.py",
+    "tests/test_sidscope_1_7_stabilization.py",
 }
 
 
@@ -683,6 +691,7 @@ def main() -> None:
         run([sys.executable, "tools/verify_sidscope_1_4_cli_baseline.py"]),
         run([sys.executable, "tools/verify_sidscope_1_5_conformance_ecosystem.py"]),
         run([sys.executable, "tools/verify_sidscope_1_6_hardening.py"]),
+        run([sys.executable, "tools/verify_sidscope_1_7_stabilization.py"]),
         run([sys.executable, "tools/verify_sidscope_architecture_inventory.py"]),
         run([sys.executable, "tools/verify_reproducibility_matrix.py"]),
         run([sys.executable, "tools/verify_sidscope_paper_tables.py"]),

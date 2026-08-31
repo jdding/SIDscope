@@ -7,8 +7,7 @@ from dataclasses import dataclass
 from importlib import resources
 from typing import Any, Mapping, Sequence
 
-from sidinspector.contracts.hashing import verify_content_sha256
-from sidinspector.contracts.method_families import METHOD_FAMILIES
+from sidinspector.contracts import METHOD_FAMILIES, verify_content_sha256
 
 
 PROFILE_REGISTRY_SCHEMA = "sidscope.conformance_profile_registry.v1"

@@ -11,6 +11,7 @@ from typing import Any, Mapping, Sequence
 
 from .hashing import SHA256_PATTERN, verify_content_sha256, with_content_sha256
 from .runtime_contracts import RuntimeContract
+from .producer_versions import EVALUATION_PRODUCER_VERSION
 
 
 DIAGNOSTIC_REPORT_SCHEMA = "sidscope.diagnostic_report.v1"
@@ -283,7 +284,10 @@ def diagnostic_report_document(
             "schema": DIAGNOSTIC_REPORT_SCHEMA,
             "schema_revision": REPORT_SCHEMA_REVISION,
             "diagnostic_report_id": report_id or f"diagnostic:{trace.artifact_id}",
-            "producer": {"name": "sidinspector.evaluation", "version": "1.2.0.dev0"},
+            "producer": {
+                "name": "sidinspector.evaluation",
+                "version": EVALUATION_PRODUCER_VERSION,
+            },
             "trace_binding": {
                 "schema_id": trace.schema,
                 "schema_revision": trace.schema_revision,
