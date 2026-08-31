@@ -58,7 +58,7 @@ compatibility declaration:
 | --- | --- | --- |
 | 1.5 | Add versioned conformance profiles, submission checking and generated registry views. | Additive development surface; legacy authorities remain available until parity passes. |
 | 1.6 | Prove package/SDK/schema/profile/payload/bundle intervals, migrate or archive legacy authorities, and freeze candidate CLI/Python interfaces. | No unresolved breaking change, unowned wrapper or undocumented migration may advance to 2.0. |
-| 1.7 | Unify public schema ownership and validation, validate every CLI result envelope, introduce the curated `sidscope` facade, and enforce cross-module facade imports. | The delta is additive; 1.6 historical replay, artifact hashes and `sidinspector` imports remain intact. |
+| 1.7 | Unify public schema ownership and validation, validate every CLI result envelope, introduce the curated `sidscope` facade, enforce cross-module facade imports, and separate runtime/conformance/evidence-full release views. | The delta is additive; 1.6 historical replay, artifact hashes and `sidinspector` imports remain intact, while evidence-full preserves the prior reviewer surface. |
 | 1.8--1.9 (reserved optional) | Hold capacity for explicitly approved additive or hardening slices discovered after 1.7. | No compatibility is implied until a version is activated with a scoped matrix delta, migration, rollback and tests; unused versions are skipped. |
 | 2.0 | Declare the interfaces demonstrated by the final passing pre-2.0 1.x baseline stable. | Final release gates reverify the frozen compatibility surface; they do not complete missing migrations. |
 

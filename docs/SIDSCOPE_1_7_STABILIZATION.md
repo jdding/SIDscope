@@ -1,7 +1,7 @@
 # SIDScope 1.7 Contract and Public-Surface Stabilization
 
-Status: implementation complete on `1.7.0.dev0`; release gates pending; no tag
-or public release implied
+Status: implementation and local release gates complete on `1.7.0.dev0`; no
+tag or public release implied
 
 ## Scope
 
@@ -10,6 +10,12 @@ review: make the pre-2.0 contract and integration surface discoverable,
 two-stage validated, deliberately small, and mechanically enforced. It adds no
 method implementation, training runtime, hosted service, mutable authority or
 new scientific evidence.
+
+The same 1.7 workstream also separates the release view from the evidence
+volume. `runtime`, `conformance`, and `evidence-full` are additive packaging
+profiles under one version and one manifest authority; they are not additional
+minor releases. ADR-0014 and `docs/SIDSCOPE_RELEASE_PROFILES.md` define the
+selection, receipt, migration and rollback rules.
 
 The mandatory order is Draft 2020-12 structural validation followed by the
 owning Python semantic validator.
@@ -24,6 +30,7 @@ owning Python semantic validator.
 | CLI JSON | CLI envelope validator or the emitted domain-artifact validator | CLI envelopes require pass/fail consistency; domain artifacts retain their own status semantics. |
 | Python integration | `sidscope` | Curated new-integration facade; `sidinspector` remains historical compatibility. |
 | Producer identity | `contracts/producer_versions.py` | Advances only when artifact semantics change, not for package-only releases. |
+| Release profiles | `sidscope_release_profiles.v1.json` | Runtime is default; conformance adds compact fixtures; evidence-full retains the complete audit surface. |
 
 The deterministic inventory is
 `docs/reproducibility/sidscope_1_7_public_surface.json`. It currently binds 45
@@ -37,6 +44,7 @@ sidscope schema list
 sidscope schema validate \
   --input examples/dataset_identity_fixture/dataset_identity.json
 python3 tools/verify_sidscope_1_7_stabilization.py
+python3 tools/verify_sidscope_release_profiles.py
 ```
 
 ## Compatibility and Rollback
@@ -47,6 +55,8 @@ remain valid. Rollback pins the 1.6 surface and removes only additive 1.7 code;
 it never rewrites a bundle, release tag, adapter status or frozen TOIS asset.
 
 ## Exit Gates
+
+All local exit gates pass on the current 1.7 development tree:
 
 - focused positive and typed-negative schema/CLI/architecture tests;
 - historical 1.6 hardening replay;

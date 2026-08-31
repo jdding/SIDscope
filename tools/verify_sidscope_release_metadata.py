@@ -97,6 +97,16 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "Draft 2020-12",
             "Python semantic",
         ],
+        "docs/SIDSCOPE_RELEASE_PROFILES.md": [
+            "runtime < conformance < evidence-full",
+            "sidscope-release-profile.json",
+            "A profile change is a release-surface change inside 1.7",
+        ],
+        "docs/adr/0014-tiered-release-profiles.md": [
+            "one repository",
+            "generated deterministic",
+            "Rollback",
+        ],
         "docs/MIGRATING_1_X_TO_2_0.md": [
             "immutable_historical_record",
             "canonical_replay_retained",

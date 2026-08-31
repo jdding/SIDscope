@@ -170,7 +170,7 @@ source of truth; SQLite and public indexes are rebuildable projections.
 | 3 | 1.4 | One evidence-bundle family at a time | Existing evidence files remain authoritative until bundled and verified. | Hash parity, provenance DAG, registry rebuild and privacy scan. | Discard derived SQLite index and rebuild from immutable bundles. | All active evidence types have deterministic bundles and registry entries. |
 | 4 | 1.5 | One conformance profile at a time | Legacy status ledger stays read-only while generated view is compared. | Profile replay, submission checker and generated-ledger parity. | Keep previous profile version active; reject new admissions. | All active status labels derive from versioned reports. |
 | 5 | 1.6 | One supported compatibility interval or legacy route at a time | 1.5 profiles and commands stay active while migration, external-plugin and cross-family parity are hardened. | Multi-version CI, migration replay, external onboarding, cross-family comparison and wrapper-owner audit. | Pin the last passing 1.5 profile/CLI combination and defer 2.0; immutable bundles are never rewritten. | Every supported interval is tested and every wrapper is retired or explicitly archived. |
-| 6 | 1.7 | Contract and public-surface stabilization | The passing 1.6 surface, producer identities and artifacts remain valid while schema/CLI/Python authority becomes explicit. | Unified schema catalog, ordered structural/semantic validation, CLI result envelope, curated `sidscope` facade, stronger architecture tests and 1.6 replay. | Pin 1.6 and remove only additive 1.7 code. | Every public schema/result/API entry is inventoried and fail-closed; complete release gates pass. |
+| 6 | 1.7 | Contract, public-surface and release-view stabilization | The passing 1.6 surface, producer identities and artifacts remain valid while schema/CLI/Python authority and release audiences become explicit. | Unified schema catalog, ordered structural/semantic validation, CLI result envelope, curated `sidscope` facade, strict runtime/conformance/evidence-full profiles, stronger architecture tests and 1.6 replay. | Pin 1.6 or publish only evidence-full; immutable evidence is not rewritten. | Every public schema/result/API entry and release profile is inventoried and fail-closed; complete release gates pass. |
 | 7 | 1.8--1.9 (optional) | One approved additive or hardening workstream per activated minor release | The last passing 1.x remains supported while the new slice proves parity; unused reserved versions are skipped. | A scoped design record, positive/negative tests, compatibility delta, full release gates and a repeat of all still-applicable hardening checks. | Pin the previous passing 1.x release and deactivate only the new slice. | Activated scope closes with no unowned migration or compatibility debt; the final active 1.x repeats the complete pre-2.0 hardening suite. |
 | 7 | 2.0 | Stable public interfaces | Only interfaces proven by the final passing pre-2.0 1.x baseline enter the stable support contract; historical CLIs remain replay-only where documented. | Complete architecture criteria, compatibility matrix and public release gates. | Pin the final passing 1.x release candidate; immutable bundles require no rollback mutation. | Stable public contract is declared without carrying an unresolved migration backlog. |
 
@@ -365,19 +365,22 @@ verifiers and released tags are never mutated to force a hardening gate.
 
 ### 1.7.0: Contract and Public-Surface Stabilization
 
-Implementation status: code and focused verification complete on
-`1.7.0.dev0`; full release gates are pending.
+Implementation status: code and local release verification complete on
+`1.7.0.dev0`; no tag or public release is implied.
 
-Purpose: close the contract-authority and candidate-API risks found by the
+Purpose: close the contract-authority, candidate-API and undifferentiated
+release-surface risks found by the
 post-1.6 architecture review without changing method semantics or historical
 evidence. The slice adds a catalog for every bundled public schema ID, ordered
 Draft 2020-12 then Python semantic validation, one validated CLI result
 envelope, a curated `sidscope` Python facade, centralized semantic producer
-versions, and relative/private import fitness checks.
+versions, relative/private import fitness checks, and three additive release
+profiles under the same `1.7.0.dev0` product version.
 
-Admission requires the deterministic 1.7 public-surface record, positive and
+Admission requires the deterministic 1.7 public-surface and release-profile
+records, positive and
 typed-negative tests, exact 1.6 historical replay, full tests, resource
-verification, archive smoke and G8. The change is additive: no 1.6 command,
+verification, all profile smokes and runtime G8. The change is additive: no 1.6 command,
 historical symbol, schema ID/revision or artifact byte may be removed or
 rewritten.
 

@@ -30,6 +30,11 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
   direct cross-module implementation imports. Added ADR-0013 and deterministic
   1.7 stabilization evidence. No method, training runtime, service, tag, public
   release, or frozen TOIS artifact is added or changed.
+- Added three additive 1.7 release profiles without changing the product
+  version: a default installable `runtime`, an adapter-facing `conformance`, and
+  the complete `evidence-full` audit surface. Each deterministic archive embeds
+  a hash-bound profile receipt; smoke and G8 verify the selected profile, and
+  the three large trained traces remain available only in `evidence-full`.
 
 ## SIDScope v1.6.0.dev0: compatibility, migration and adoption hardening
 

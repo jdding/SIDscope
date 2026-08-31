@@ -1,0 +1,80 @@
+{
+  "default_profile": "runtime",
+  "profiles": [
+    {
+      "description": "Default installable SIDScope runtime with public schemas and essential release documentation only.",
+      "exclude_roots": [],
+      "include_roots": [
+        "LICENSE",
+        "README.md",
+        "docs/COMPATIBILITY.md",
+        "docs/MIGRATING_1_X_TO_2_0.md",
+        "docs/SECURITY_AND_PRIVACY.md",
+        "docs/SIDSCOPE_1_7_STABILIZATION.md",
+        "docs/SIDSCOPE_RELEASE_PROFILES.md",
+        "docs/VERSIONING.md",
+        "docs/adr/0014-tiered-release-profiles.md",
+        "pyproject.toml",
+        "requirements.txt",
+        "setup.py",
+        "src",
+        "tools/sidscope_release_profiles.py",
+        "tools/verify_sidscope_runtime_release.py"
+      ],
+      "profile_id": "runtime",
+      "required_paths": [
+        "LICENSE",
+        "README.md",
+        "pyproject.toml",
+        "src/sidinspector/__init__.py",
+        "src/sidscope/__init__.py",
+        "tools/verify_sidscope_runtime_release.py"
+      ],
+      "smoke_suite": "runtime"
+    },
+    {
+      "description": "Runtime plus source, tests, tools, documentation and compact positive/negative conformance fixtures; trained traces and tracked evidence are excluded.",
+      "exclude_roots": [
+        "docs/reproducibility",
+        "examples/latte_psid_trained_trace_real_smoke",
+        "examples/rpg_generator_trained_trace_real_smoke"
+      ],
+      "include_roots": [
+        "LICENSE",
+        "README.md",
+        "docs",
+        "examples",
+        "pyproject.toml",
+        "requirements.txt",
+        "setup.py",
+        "src",
+        "tests",
+        "tools"
+      ],
+      "profile_id": "conformance",
+      "required_paths": [
+        "examples/conformance_ecosystem_fixture/profile/dataset_profile_descriptor.json",
+        "examples/native_trace_payload_fixtures/fixture_manifest.json",
+        "tools/verify_sidscope_1_3_plugin_ecosystem.py",
+        "tools/verify_sidscope_1_5_conformance_ecosystem.py",
+        "tools/verify_sidscope_runtime_release.py"
+      ],
+      "smoke_suite": "conformance"
+    },
+    {
+      "description": "Complete hash-bound audit and reproducibility surface selected by the public release manifest.",
+      "exclude_roots": [],
+      "include_roots": [],
+      "profile_id": "evidence-full",
+      "required_paths": [
+        "docs/reproducibility/sidscope_release_candidate_manifest.csv",
+        "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
+        "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
+        "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
+        "tools/verify_sidscope_resource_package.py"
+      ],
+      "smoke_suite": "evidence-full"
+    }
+  ],
+  "schema": "sidscope.release_profile_registry.v1"
+}

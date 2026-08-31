@@ -260,6 +260,7 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
             result = build_archive(
                 manifest_path=ROOT / "docs" / "reproducibility" / "sidscope_release_candidate_manifest.csv",
                 output_path=archive_path,
+                profile_id="evidence-full",
             )
 
             self.assertEqual(result["status"], "pass")
@@ -340,7 +341,8 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
             result = smoke_archive(archive_path)
 
         self.assertEqual(result["status"], "pass")
-        self.assertEqual(len(result["commands"]), 2)
+        self.assertEqual(result["profile_id"], "runtime")
+        self.assertEqual(len(result["commands"]), 1)
 
     def test_realistic_tutorial_validator_runs_reviewer_workflow(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

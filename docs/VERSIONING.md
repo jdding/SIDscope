@@ -53,7 +53,8 @@ The roadmap intentionally uses three distinct release responsibilities:
   stability without adding another owned product layer;
 - 1.7 is activated for contract and public-surface stabilization: unified
   schema discovery, structural-to-semantic validation, CLI result envelopes,
-  a curated Python facade, and executable module boundaries;
+  a curated Python facade, executable module boundaries, and additive
+  runtime/conformance/evidence-full release profiles;
 - 1.8--1.9 remain optional reserved slots for later explicitly approved
   additive or hardening work;
 - 2.0 reruns the final gates against the last passing 1.x baseline and makes the
@@ -80,6 +81,8 @@ The additive 1.7 delta and current candidate surface are machine-readable in
 `docs/reproducibility/sidscope_1_7_public_surface.json`. Semantic producer
 versions remain independent of package-only releases so unchanged canonical
 artifact bytes do not drift merely because the distribution version advances.
+Release-profile IDs select assets inside one product version and never consume
+a new minor version by themselves.
 
 ## Release Flow
 

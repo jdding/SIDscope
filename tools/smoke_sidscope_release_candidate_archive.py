@@ -12,6 +12,21 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
+try:
+    from tools.sidscope_release_profiles import (
+        PROFILE_IDS,
+        PROFILE_RECEIPT_PATH,
+        ReleaseProfileError,
+        validate_profile_receipt,
+    )
+except ModuleNotFoundError:
+    from sidscope_release_profiles import (
+        PROFILE_IDS,
+        PROFILE_RECEIPT_PATH,
+        ReleaseProfileError,
+        validate_profile_receipt,
+    )
+
 
 def safe_extract_zip(archive_path: Path, target_dir: Path) -> None:
     with zipfile.ZipFile(archive_path) as archive:
@@ -45,43 +60,75 @@ def run(cmd: list[str], *, cwd: Path) -> dict[str, Any]:
     }
 
 
-def smoke_archive(archive_path: Path) -> dict[str, Any]:
+def read_archive_profile(archive_path: Path, *, expected_profile: str | None = None) -> str:
+    with zipfile.ZipFile(archive_path) as archive:
+        names = sorted(archive.namelist())
+        if PROFILE_RECEIPT_PATH not in names:
+            raise ReleaseProfileError("missing_profile_receipt", str(archive_path))
+        receipt = json.loads(archive.read(PROFILE_RECEIPT_PATH))
+    profile_id = validate_profile_receipt(
+        receipt,
+        content_paths=[name for name in names if name != PROFILE_RECEIPT_PATH],
+    )
+    if expected_profile is not None and profile_id != expected_profile:
+        raise ReleaseProfileError(
+            "unexpected_release_profile", f"expected={expected_profile} observed={profile_id}"
+        )
+    return profile_id
+
+
+def smoke_archive(archive_path: Path, *, expected_profile: str | None = None) -> dict[str, Any]:
+    profile_id = read_archive_profile(archive_path, expected_profile=expected_profile)
     with tempfile.TemporaryDirectory(prefix="sidscope-archive-smoke-") as tmp:
         root = Path(tmp).resolve()
         safe_extract_zip(archive_path, root)
-        commands = [
-            run([sys.executable, "tools/verify_sidscope_resource_package.py"], cwd=root),
-            run(
-                [
-                    sys.executable,
-                    "tools/run_sidscope_sampled_regeneration.py",
-                    "--output-dir",
-                    str(root / "_smoke_sampled_regeneration"),
-                ],
-                cwd=root,
-            ),
-        ]
+        if profile_id == "runtime":
+            commands = [run([sys.executable, "tools/verify_sidscope_runtime_release.py"], cwd=root)]
+        elif profile_id == "conformance":
+            commands = [
+                run([sys.executable, "tools/verify_sidscope_runtime_release.py"], cwd=root),
+                run([sys.executable, "tools/verify_sidscope_1_3_plugin_ecosystem.py"], cwd=root),
+                run([sys.executable, "tools/verify_sidscope_1_5_conformance_ecosystem.py"], cwd=root),
+            ]
+        else:
+            commands = [
+                run([sys.executable, "tools/verify_sidscope_resource_package.py"], cwd=root),
+                run(
+                    [
+                        sys.executable,
+                        "tools/run_sidscope_sampled_regeneration.py",
+                        "--output-dir",
+                        str(root / "_smoke_sampled_regeneration"),
+                    ],
+                    cwd=root,
+                ),
+            ]
 
     return {
         "schema": "sidscope.release_archive_smoke.v1",
         "status": "pass",
         "gpu_required": False,
         "archive_path": str(archive_path),
+        "profile_id": profile_id,
         "commands": commands,
-        "boundary": "Smoke test extracts the release archive without .git and runs verifier plus sampled regeneration from the extracted package.",
+        "boundary": (
+            "Smoke test extracts the release archive without .git, verifies its hash-bound "
+            "profile receipt, and runs the profile-specific CPU smoke suite."
+        ),
     }
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Smoke-test a SIDScope release-candidate archive.")
     parser.add_argument("archive", type=Path)
+    parser.add_argument("--profile", choices=PROFILE_IDS, default=None)
     parser.add_argument("--result-json", type=Path, default=None)
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    result = smoke_archive(args.archive.resolve())
+    result = smoke_archive(args.archive.resolve(), expected_profile=args.profile)
     if args.result_json:
         args.result_json.parent.mkdir(parents=True, exist_ok=True)
         args.result_json.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

@@ -660,7 +660,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 200,
+  "schema_count": 204,
   "schemas": [
     {
       "artifact_paths": [],
@@ -3562,7 +3562,8 @@
         "docs/reproducibility/sidscope_1_7_public_surface.json",
         "src/sidinspector/cli/__init__.py",
         "src/sidinspector/schemas/cli_result.v1.schema.json",
-        "src/sidinspector/schemas/result_contracts.py"
+        "src/sidinspector/schemas/result_contracts.py",
+        "tools/verify_sidscope_runtime_release.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:contracts",
@@ -3572,7 +3573,9 @@
         "src/sidinspector/schemas/result_contracts.py"
       ],
       "schema_id": "sidscope.public_schema_catalog_listing.v1",
-      "verifier_paths": []
+      "verifier_paths": [
+        "tools/verify_sidscope_runtime_release.py"
+      ]
     },
     {
       "artifact_paths": [
@@ -3700,7 +3703,7 @@
         "tools/build_sidscope_release_candidate_archive.py",
         "tools/run_sidscope_g8_fresh_env_smoke.py"
       ],
-      "schema_id": "sidscope.release_candidate_archive.v1",
+      "schema_id": "sidscope.release_candidate_archive.v2",
       "verifier_paths": []
     },
     {
@@ -3714,6 +3717,51 @@
       "schema_id": "sidscope.release_metadata_verification.v1",
       "verifier_paths": [
         "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tests/test_sidscope_release_profiles.py",
+        "tools/sidscope_release_profiles.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/sidscope_release_profiles.py"
+      ],
+      "schema_id": "sidscope.release_profile_receipt.v1",
+      "verifier_paths": [
+        "tests/test_sidscope_release_profiles.py"
+      ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_release_profiles.v1.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_release_profiles.v1.json",
+        "tools/sidscope_release_profiles.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/sidscope_release_profiles.py"
+      ],
+      "schema_id": "sidscope.release_profile_registry.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_release_profiles.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [],
+      "schema_id": "sidscope.release_profile_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_release_profiles.py"
       ]
     },
     {
@@ -4289,6 +4337,19 @@
       "schema_id": "sidscope.run_identity.v1",
       "verifier_paths": [
         "tests/test_submission_ecosystem.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_runtime_release.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [],
+      "schema_id": "sidscope.runtime_release_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_runtime_release.py"
       ]
     },
     {

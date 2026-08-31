@@ -14,11 +14,13 @@ from typing import Any
 
 try:
     from tools.build_sidscope_release_candidate_archive import DEFAULT_OUTPUT, build_archive
-    from tools.smoke_sidscope_release_candidate_archive import safe_extract_zip
+    from tools.sidscope_release_profiles import PROFILE_IDS
+    from tools.smoke_sidscope_release_candidate_archive import read_archive_profile, safe_extract_zip
     from tools.verify_sidscope_resource_package import ROOT
 except ModuleNotFoundError:
     from build_sidscope_release_candidate_archive import DEFAULT_OUTPUT, build_archive
-    from smoke_sidscope_release_candidate_archive import safe_extract_zip
+    from sidscope_release_profiles import PROFILE_IDS
+    from smoke_sidscope_release_candidate_archive import read_archive_profile, safe_extract_zip
     from verify_sidscope_resource_package import ROOT
 
 
@@ -51,17 +53,21 @@ def venv_python(venv_dir: Path) -> Path:
     return venv_dir / "bin" / "python"
 
 
-def ensure_archive(archive_path: Path) -> dict[str, Any]:
+def ensure_archive(archive_path: Path, *, expected_profile: str | None) -> dict[str, Any]:
     if archive_path.exists():
+        profile_id = read_archive_profile(archive_path, expected_profile=expected_profile)
         return {
-            "schema": "sidscope.release_candidate_archive.v1",
+            "schema": "sidscope.release_candidate_archive.v2",
             "status": "existing",
             "archive_path": str(archive_path),
+            "profile_id": profile_id,
             "boundary": "Using existing archive supplied to G8 smoke.",
         }
+    profile_id = expected_profile or "runtime"
     return build_archive(
         manifest_path=ROOT / "docs" / "reproducibility" / "sidscope_release_candidate_manifest.csv",
         output_path=archive_path,
+        profile_id=profile_id,
     )
 
 
@@ -81,8 +87,11 @@ def fresh_env_install_commands(py: Path) -> list[list[str]]:
     ]
 
 
-def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
-    archive_result = ensure_archive(archive_path)
+def run_fresh_env_smoke(
+    archive_path: Path, *, expected_profile: str | None = None
+) -> dict[str, Any]:
+    archive_result = ensure_archive(archive_path, expected_profile=expected_profile)
+    profile_id = str(archive_result["profile_id"])
 
     with tempfile.TemporaryDirectory(prefix="sidscope-g8-fresh-env-") as tmp:
         tmp_root = Path(tmp).resolve()
@@ -94,48 +103,64 @@ def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
         venv.EnvBuilder(with_pip=True, clear=True).create(venv_dir)
         py = venv_python(venv_dir)
         commands = [run(command, cwd=package_root) for command in fresh_env_install_commands(py)]
-        commands.extend(
-            [
-            run([str(py), "tools/verify_sidscope_resource_package.py"], cwd=package_root),
-            run(
+        if profile_id == "runtime":
+            commands.append(run([str(py), "tools/verify_sidscope_runtime_release.py"], cwd=package_root))
+        elif profile_id == "conformance":
+            commands.extend(
                 [
-                    str(py),
-                    "tools/build_sidscope_release_candidate_archive.py",
-                    "--output",
-                    str(tmp_root / "rebuilt-sidscope-v1-release-candidate.zip"),
-                ],
-                cwd=package_root,
-            ),
-            run(
+                    run([str(py), "tools/verify_sidscope_runtime_release.py"], cwd=package_root),
+                    run([str(py), "tools/verify_sidscope_1_3_plugin_ecosystem.py"], cwd=package_root),
+                    run([str(py), "tools/verify_sidscope_1_5_conformance_ecosystem.py"], cwd=package_root),
+                ]
+            )
+        else:
+            commands.extend(
                 [
-                    str(py),
-                    "tools/smoke_sidscope_release_candidate_archive.py",
-                    str(tmp_root / "rebuilt-sidscope-v1-release-candidate.zip"),
-                ],
-                cwd=package_root,
-            ),
-            run(
-                [
-                    str(py),
-                    "tools/run_sidscope_sampled_regeneration.py",
-                    "--output-dir",
-                    str(tmp_root / "sampled_regeneration"),
-                ],
-                cwd=package_root,
-            ),
-            ]
-        )
+                    run([str(py), "tools/verify_sidscope_resource_package.py"], cwd=package_root),
+                    run(
+                        [
+                            str(py),
+                            "tools/build_sidscope_release_candidate_archive.py",
+                            "--profile",
+                            "evidence-full",
+                            "--output",
+                            str(tmp_root / "rebuilt-sidscope-v1-release-candidate.zip"),
+                        ],
+                        cwd=package_root,
+                    ),
+                    run(
+                        [
+                            str(py),
+                            "tools/smoke_sidscope_release_candidate_archive.py",
+                            str(tmp_root / "rebuilt-sidscope-v1-release-candidate.zip"),
+                            "--profile",
+                            "evidence-full",
+                        ],
+                        cwd=package_root,
+                    ),
+                    run(
+                        [
+                            str(py),
+                            "tools/run_sidscope_sampled_regeneration.py",
+                            "--output-dir",
+                            str(tmp_root / "sampled_regeneration"),
+                        ],
+                        cwd=package_root,
+                    ),
+                ]
+            )
 
     return {
         "schema": "sidscope.g8_fresh_env_smoke.v1",
         "status": "pass",
         "gpu_required": False,
         "archive_path": str(archive_path),
+        "profile_id": profile_id,
         "archive_result": archive_result,
         "commands": commands,
         "install_boundary": (
-            "Local clean-extract smoke with a temporary isolated venv that installs the package and "
-            "its declared dependencies; public URL/tag accessibility remains a separate gate."
+            "Local clean-extract smoke with a temporary isolated venv that installs the selected "
+            "release profile and its declared dependencies; public URL/tag accessibility remains a separate gate."
         ),
         "boundary": "G8 local fresh-environment evidence; does not verify public URL, release tag, or hosted archive access.",
     }
@@ -144,13 +169,14 @@ def run_fresh_env_smoke(archive_path: Path) -> dict[str, Any]:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run SIDScope G8 local fresh-environment smoke.")
     parser.add_argument("--archive", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--profile", choices=PROFILE_IDS, default=None)
     parser.add_argument("--result-json", type=Path, default=DEFAULT_RESULT_JSON)
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    result = run_fresh_env_smoke(args.archive.resolve())
+    result = run_fresh_env_smoke(args.archive.resolve(), expected_profile=args.profile)
     if args.result_json:
         args.result_json.parent.mkdir(parents=True, exist_ok=True)
         args.result_json.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

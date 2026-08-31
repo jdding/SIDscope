@@ -204,7 +204,10 @@ REQUIRED_FILES = [
     "docs/reproducibility/sidscope_1_6_legacy_status_index.json",
     "docs/reproducibility/sidscope_1_6_public_api_inventory.json",
     "docs/SIDSCOPE_1_7_STABILIZATION.md",
+    "docs/SIDSCOPE_RELEASE_PROFILES.md",
     "docs/reproducibility/sidscope_1_7_public_surface.json",
+    "docs/reproducibility/sidscope_release_profiles.v1.json",
+    "docs/adr/0014-tiered-release-profiles.md",
     "examples/compatibility_hardening_fixture/parallel_graph_bundle.json",
     "examples/compatibility_hardening_fixture/masked_diffusion_bundle.json",
     "docs/reproducibility/latte_psid_trained_trace_evidence.json",
@@ -309,6 +312,9 @@ REQUIRED_FILES = [
     "tools/verify_sidscope_1_6_hardening.py",
     "tools/build_sidscope_1_7_stabilization_fixture.py",
     "tools/verify_sidscope_1_7_stabilization.py",
+    "tools/sidscope_release_profiles.py",
+    "tools/verify_sidscope_runtime_release.py",
+    "tools/verify_sidscope_release_profiles.py",
     "tools/verify_dact_tiger_adapter.py",
     "tools/verify_rpg_generator_adapter.py",
     "tools/run_rpg_resumable_training.py",
@@ -368,6 +374,7 @@ REQUIRED_FILES = [
     "tests/test_sid_space_identity_contract.py",
     "tests/test_prepared_dataset_contract.py",
     "tests/test_architecture_boundaries.py",
+    "tests/test_sidscope_release_profiles.py",
 ]
 
 
@@ -425,6 +432,7 @@ PUBLIC_CONTENT_FORBIDDEN_TOKENS = (
 PUBLIC_CONTENT_TOKEN_DECLARATION_ALLOWLIST = {
     "tools/verify_sidscope_claim_ledger.py",
     "tools/verify_sidscope_resource_package.py",
+    "tools/verify_sidscope_runtime_release.py",
     "tools/verify_sidscope_1_5_conformance_ecosystem.py",
     "tests/test_sidscope_1_6_hardening.py",
     "tests/test_cli_result_contracts.py",
@@ -692,6 +700,7 @@ def main() -> None:
         run([sys.executable, "tools/verify_sidscope_1_5_conformance_ecosystem.py"]),
         run([sys.executable, "tools/verify_sidscope_1_6_hardening.py"]),
         run([sys.executable, "tools/verify_sidscope_1_7_stabilization.py"]),
+        run([sys.executable, "tools/verify_sidscope_release_profiles.py"]),
         run([sys.executable, "tools/verify_sidscope_architecture_inventory.py"]),
         run([sys.executable, "tools/verify_reproducibility_matrix.py"]),
         run([sys.executable, "tools/verify_sidscope_paper_tables.py"]),

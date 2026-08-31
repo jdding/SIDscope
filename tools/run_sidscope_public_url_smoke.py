@@ -54,11 +54,19 @@ def smoke_commands(py: Path, archive_path: Path) -> list[list[str]]:
         [
             str(py),
             "tools/build_sidscope_release_candidate_archive.py",
+            "--profile",
+            "runtime",
             "--output",
             str(archive_path),
         ],
-        [str(py), "tools/smoke_sidscope_release_candidate_archive.py", str(archive_path)],
-        [str(py), "tools/run_sidscope_g8_fresh_env_smoke.py", "--archive", str(archive_path)],
+        [
+            str(py), "tools/smoke_sidscope_release_candidate_archive.py",
+            str(archive_path), "--profile", "runtime",
+        ],
+        [
+            str(py), "tools/run_sidscope_g8_fresh_env_smoke.py",
+            "--archive", str(archive_path), "--profile", "runtime",
+        ],
         [
             str(py),
             "tools/run_sidscope_sampled_regeneration.py",
@@ -101,6 +109,7 @@ def run_public_url_smoke(repo_url: str, ref: str) -> dict[str, Any]:
         "schema": "sidscope.public_url_smoke.v1",
         "status": "pass",
         "gpu_required": False,
+        "profile_id": "runtime",
         "repo_url": repo_url,
         "ref": ref,
         "commit": commit,

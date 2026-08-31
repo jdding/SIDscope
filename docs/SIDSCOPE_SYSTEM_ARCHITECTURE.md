@@ -185,6 +185,14 @@ semantic producer identities, and strengthens module-boundary fitness tests.
 The runtime remains the same local-first modular monolith and all changes are
 additive over the passing 1.6 rollback point.
 
+Release packaging is also stabilized inside 1.7. One machine-readable registry
+projects the same public manifest into strict `runtime < conformance <
+evidence-full` views. This is a packaging boundary, not another runtime or
+repository: the default installable view excludes tests, fixtures and evidence;
+the conformance view adds compact development assets; the complete evidence
+view preserves the audit corpus. Every archive binds its selected path set in a
+deterministic receipt, so separation cannot silently drop or relabel evidence.
+
 Versions 1.8--1.9 remain reserved optional iterations. An activated minor
 release must have an approved bounded scope, retain the previous passing 1.x
 rollback point, and rerun all applicable hardening criteria. If no further work

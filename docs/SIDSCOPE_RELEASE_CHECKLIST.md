@@ -45,9 +45,14 @@ python3 tools/verify_sidscope_architecture_inventory.py
 python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
 python3 tools/verify_sidscope_1_5_conformance_ecosystem.py
 python3 tools/verify_sidscope_1_6_hardening.py
-python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
-python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
-python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1.1.0.zip
+python3 tools/verify_sidscope_release_profiles.py
+python3 tools/build_sidscope_release_candidate_archive.py --profile runtime --output /tmp/sidscope-runtime.zip
+python3 tools/build_sidscope_release_candidate_archive.py --profile conformance --output /tmp/sidscope-conformance.zip
+python3 tools/build_sidscope_release_candidate_archive.py --profile evidence-full --output /tmp/sidscope-evidence-full.zip
+python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-runtime.zip --profile runtime
+python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-conformance.zip --profile conformance
+python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-evidence-full.zip --profile evidence-full
+python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-runtime.zip --profile runtime
 python3 -m pytest -q
 ```
 
@@ -91,15 +96,12 @@ smoke. The clean `jdding/sidscope` public surface must pass a fresh
 unauthenticated public URL smoke after the current package surface is pushed
 or otherwise hosted.
 
-Minimum commands:
+Minimum commands for the default runtime asset:
 
 ```bash
 python3 -m pip install --upgrade "pip>=21.3"
 python3 -m pip install -e .
-python3 tools/verify_sidscope_resource_package.py
-python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
-python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
-python3 tools/run_sidscope_sampled_regeneration.py --output-dir /tmp/sidscope_sampled_regeneration
+python3 tools/verify_sidscope_runtime_release.py
 ```
 
 Expected result: all commands pass on CPU, and the output JSON records

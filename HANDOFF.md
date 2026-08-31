@@ -159,7 +159,10 @@ for contract and public-surface stabilization. It catalogs 45 public schema
 IDs across 27 resources, orders Draft 2020-12 before Python semantic
 validation, validates all 19 CLI result envelopes, introduces a curated
 39-symbol `sidscope` facade, centralizes semantic producer versions, and
-enforces cross-module facade imports. Versions 1.8--1.9 remain optional.
+enforces cross-module facade imports. ADR-0014 keeps release-view separation in
+the same 1.7 workstream: `runtime`, `conformance`, and `evidence-full` are
+strict additive profiles under one version and manifest authority. Versions
+1.8--1.9 remain optional.
 
 The verified workspace policy keeps `SIDScope-v1.1` as the 1.1.x maintenance
 surface and this `SIDScope-v2` worktree on `codex/sidscope-v2` as the only
@@ -370,7 +373,7 @@ stabilization tree has now completed its source-tree and archive/G8 gates:
 - 1.2--1.3 focused code-review regression: `29 passed`; the review hardened
   dependency revisions, report/status cross-bindings, exact-rank resolution,
   SDK type failures, native ancestry/episode uniqueness, and registry safety;
-- full tests: `276 passed, 6 skipped` on the 1.7 tree;
+- full tests: `283 passed, 6 skipped` on the 1.7 tree;
 - resource-package verifier: PASS;
 - contract-registry verifier: PASS with 11 canonical contracts, 11 positive
   fixtures, 12 typed-negative fixtures, and 14 declared dependency edges;
@@ -402,7 +405,7 @@ stabilization tree has now completed its source-tree and archive/G8 gates:
 - profile result-index SHA-256:
   `71ee3ea7c485a0885c65ac66e4a9b7e5a938dd954f3a5a1e0b2601b9e69e66af`;
 - release-metadata verifier: PASS;
-- architecture inventory verifier: PASS with 200 schema IDs, 11 canonical
+- architecture inventory verifier: PASS with 204 schema IDs, 11 canonical
   contracts, 10 profiles, 6 generator routes, 9 static-mapping routes, and 15
   canonical evidence edges;
 - release archive build: PASS;
@@ -418,10 +421,14 @@ stabilization tree has now completed its source-tree and archive/G8 gates:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest: 323 rows, 320 public rows, 0 pending;
-- resource-package verifier: 350 required files, 541 public files, and 544
+- manifest: 330 rows, 327 public rows, 0 pending;
+- resource-package verifier: 357 required files, 548 public files, and 551
   tracked files checked with no forbidden-content findings;
-- current release archive surface: 541 files;
+- release-profile verifier: PASS with strict `runtime < conformance <
+  evidence-full` containment, receipt/path tamper rejection, and large trained
+  traces admitted only to `evidence-full`;
+- current profile surfaces including the generated receipt: 113 runtime files,
+  428 conformance files, and 549 evidence-full files;
 
 The additive 1.7 focused verifier passes with 45 public schema IDs,
 27 schema resources, 19 CLI result schema IDs, 39 curated facade symbols, two
@@ -431,6 +438,9 @@ verifier, architecture inventory verifier, archive build, and extracted archive
 smoke all pass after the final 1.7 implementation and manifest update. The
 post-handoff deterministic double-build reproduces identical bytes, and the G8
 fresh-environment install/replay passes with `sidinspector==1.7.0.dev0`.
+The default G8 target is now the installable `runtime` profile; the
+`conformance` and `evidence-full` profiles retain their own extracted archive
+smokes.
 
 The development archive SHA-256 is intentionally reported by the final build
 command rather than embedded in this hash-sensitive source tree. Rebuild it
@@ -458,12 +468,21 @@ python3 tools/verify_sidscope_1_4_cli_baseline.py
 python3 tools/verify_sidscope_1_5_conformance_ecosystem.py
 python3 tools/verify_sidscope_1_6_hardening.py
 python3 tools/verify_sidscope_1_7_stabilization.py
+python3 tools/verify_sidscope_release_profiles.py
 python3 tools/build_sidscope_release_candidate_archive.py \
-  --output /tmp/sidscope-v1.7.0.dev0.zip
+  --profile runtime --output /tmp/sidscope-v1.7.0.dev0-runtime.zip
+python3 tools/build_sidscope_release_candidate_archive.py \
+  --profile conformance --output /tmp/sidscope-v1.7.0.dev0-conformance.zip
+python3 tools/build_sidscope_release_candidate_archive.py \
+  --profile evidence-full --output /tmp/sidscope-v1.7.0.dev0-evidence-full.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-v1.7.0.dev0.zip
+  /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
+python3 tools/smoke_sidscope_release_candidate_archive.py \
+  /tmp/sidscope-v1.7.0.dev0-conformance.zip --profile conformance
+python3 tools/smoke_sidscope_release_candidate_archive.py \
+  /tmp/sidscope-v1.7.0.dev0-evidence-full.zip --profile evidence-full
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.7.0.dev0.zip
+  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
 ```
 
 The release checks are CPU-only. A new GPU run is not required to reverify the

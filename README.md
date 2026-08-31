@@ -392,19 +392,23 @@ Run the claim-ledger boundary verifier:
 python3 tools/verify_sidscope_claim_ledger.py --result-json /tmp/sidscope_claim_ledger_verification.json
 ```
 
-Build a release-clean local archive from the manifest-approved package paths:
+Build the default installable 1.7 runtime archive and run its profile-specific
+smoke/G8 gates:
 
 ```bash
-python3 tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-v1.1.0.zip
-python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-v1.1.0.zip
-python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1.1.0.zip
+python3 tools/build_sidscope_release_candidate_archive.py \
+  --profile runtime --output /tmp/sidscope-v1.7.0.dev0-runtime.zip
+python3 tools/smoke_sidscope_release_candidate_archive.py \
+  /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
+python3 tools/run_sidscope_g8_fresh_env_smoke.py \
+  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
 ```
 
-These checks validate the reviewer quickstart, compact evidence snapshots,
-release-candidate manifest, package boundary, and local clean-extract install
-smoke. They do not regenerate raw upstream tokenizer artifacts or large local
-experiment caches, and they do not replace the final public URL/tag
-accessibility check.
+Adapter authors can build `--profile conformance`; auditors can build
+`--profile evidence-full`. The default runtime contains no tests, examples,
+tracked evidence, or trained traces. See `docs/SIDSCOPE_RELEASE_PROFILES.md`.
+These checks do not regenerate raw upstream tokenizer artifacts or large local
+experiment caches, and they do not replace the final public URL/tag check.
 
 After a public reviewer URL or release tag exists, run the final public URL
 smoke:
