@@ -7,7 +7,7 @@ from typing import Any
 
 from sidinspector.contracts import canonical_json_bytes, with_content_sha256
 
-from .checker import ValidatedSubmission
+from .checker import ValidatedSubmission, require_verified_admission
 from .contracts import SubmissionValidationError
 
 
@@ -70,12 +70,16 @@ def _identity_row(submission: ValidatedSubmission) -> dict[str, Any]:
 
 def generate_status_index(
     submissions: Sequence[ValidatedSubmission],
+    *, historical_replay: bool = False,
 ) -> dict[str, Any]:
     """Generate the active status view solely from conformance decisions."""
 
+    if type(historical_replay) is not bool:
+        _fail("invalid_historical_replay_mode", "historical_replay must be boolean")
+
     entries = []
     for submission in _active_submissions(submissions):
-        decision = submission.conformance_report["decision"]
+        decision = submission.conformance_report["decision"] if historical_replay else {"status": "pass", "status_label": require_verified_admission(submission)["status_label"]}
         entries.append(
             {
                 **_identity_row(submission),
@@ -87,7 +91,7 @@ def generate_status_index(
         {
             "schema": STATUS_INDEX_SCHEMA,
             "schema_revision": INDEX_SCHEMA_REVISION,
-            "authority": INDEX_AUTHORITY,
+            "authority": INDEX_AUTHORITY if historical_replay else "recomputed_diagnostics",
             "entries": entries,
         }
     )
@@ -95,11 +99,17 @@ def generate_status_index(
 
 def generate_result_index(
     submissions: Sequence[ValidatedSubmission],
+    *, historical_replay: bool = False,
 ) -> dict[str, Any]:
     """Generate active result cards without reinterpreting bundle metrics."""
 
+    if type(historical_replay) is not bool:
+        _fail("invalid_historical_replay_mode", "historical_replay must be boolean")
+
     entries = []
     for submission in _active_submissions(submissions):
+        if not historical_replay:
+            require_verified_admission(submission)
         entries.append(
             {
                 **_identity_row(submission),
@@ -118,8 +128,12 @@ def generate_result_index(
 
 def generate_submission_indexes(
     submissions: Sequence[ValidatedSubmission],
+    *, historical_replay: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    return generate_status_index(submissions), generate_result_index(submissions)
+    return (
+        generate_status_index(submissions, historical_replay=historical_replay),
+        generate_result_index(submissions, historical_replay=historical_replay),
+    )
 
 
 def canonical_index_bytes(index: Mapping[str, Any]) -> bytes:

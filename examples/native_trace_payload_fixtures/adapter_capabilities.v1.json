@@ -1,6 +1,6 @@
 {
   "adapter_id": "fixture:parallel-plugin",
-  "content_sha256": "90e66ba36748f9f9d907fb56b7fca1591f28e3010cfc8be9514490263758cfc7",
+  "content_sha256": "f960c620bca16e695bd124037d5bdf129bf4fd9e025abbc01c08bddf104bc106",
   "contract_types": [
     "trace-envelope"
   ],
@@ -15,8 +15,8 @@
   "schema": "sidscope.adapter_capabilities.v1",
   "schema_revision": "1.0.0",
   "sdk_compatibility": {
-    "maximum_exclusive": "0.3.0",
-    "minimum": "0.2.0"
+    "maximum_exclusive": "2.0.0",
+    "minimum": "1.0.0"
   },
   "telemetry": {
     "supported": [

@@ -25,6 +25,7 @@ from sidinspector.contracts import (
     with_content_sha256,
 )
 from sidinspector.schemas.catalog import load_public_schema_catalog
+from sidinspector.sdk import ADAPTER_SDK_VERSION, PLUGIN_API_VERSION
 
 
 PRODUCT_VERSION = "1.7.0.dev0"
@@ -78,6 +79,21 @@ def build_stabilization_record() -> dict[str, Any]:
             "symbols": list(sidscope.__all__),
             "historical_namespace": "sidinspector",
         },
+        "adapter_sdk": {
+            "version": ADAPTER_SDK_VERSION,
+            "plugin_api_version": PLUGIN_API_VERSION,
+            "supported_capability_api_levels": ["0.2.0", "1.0.0"],
+            "current_descriptor_interval": ">=1.0.0,<2.0.0",
+        },
+        "opt_in_workflows": {
+            "sidscope.workflows": ["audit", "compare", "evaluate"],
+            "sidscope.mapping_check": ["preflight"],
+            "sidscope.pipeline": ["run"],
+            "sidscope.regression": ["compare_runs"],
+            "sidscope.diagnostic_review": ["write_review"],
+            "sidscope.refresh": ["bind_evaluation", "compare_snapshots", "write_report"],
+        },
+        "candidate_exclusions": ["hosted_service", "method_training", "N09_notebook_api", "N10_static_review_bundle"],
         "producer_versions": {
             "contract": CONTRACT_PRODUCER_VERSION,
             "evaluation": EVALUATION_PRODUCER_VERSION,
@@ -90,6 +106,8 @@ def build_stabilization_record() -> dict[str, Any]:
             "removed_cli_commands": [],
             "removed_historical_symbols": [],
             "artifact_bytes_rewritten": False,
+            "adapter_sdk_stabilized": "1.0.0",
+            "additive_opt_in_modules": ["sidscope.diagnostic_review", "sidscope.mapping_check", "sidscope.pipeline", "sidscope.refresh", "sidscope.regression", "sidscope.workflows"],
         },
     }
 

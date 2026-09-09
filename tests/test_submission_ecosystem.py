@@ -20,6 +20,7 @@ from sidinspector.submission import (
     validate_submission_package,
 )
 from sidinspector.submission.contracts import build_evidence_submission
+from sidinspector.submission.checker import replay_submission_check
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -305,17 +306,18 @@ def _apply_negative(root: Path, mutation: str) -> None:
         raise AssertionError(mutation)
 
 
-def test_external_adapter_submission_onboards_without_project_verifier(tmp_path: Path) -> None:
+def test_legacy_structure_replay_is_not_new_admission(tmp_path: Path) -> None:
     _build_package(tmp_path)
     validated = validate_submission_package(tmp_path)
     assert validated.evidence_bundle.subject["adapter_id"] == "external-parallel"
-    report = check_submission(tmp_path)
+    assert check_submission(tmp_path).failures[0]["code"] == "independent_gate_verification_required"
+    report = replay_submission_check(tmp_path)
     assert report.status == "accepted"
     assert report.bindings is not None
     profile = next(item for item in load_profile_catalog() if item.profile_kind == "generator")
     assert report.bindings["status_label"] == profile.status_label_policy["pass"]
     assert validate_submission_check_report(report.to_dict()) == report
-    assert check_submission(tmp_path).to_dict() == report.to_dict()
+    assert replay_submission_check(tmp_path).to_dict() == report.to_dict()
     checked_in = validate_submission_package(POSITIVE_PACKAGE)
     assert checked_in.evidence_bundle.content_sha256 == validated.evidence_bundle.content_sha256
     for relative in (
@@ -381,8 +383,8 @@ def test_status_and_result_indexes_are_rebuild_deterministic(tmp_path: Path) -> 
     _build_package(right_root, adapter_id="external-b", partial=True, hit=0.3)
     left = validate_submission_package(left_root)
     right = validate_submission_package(right_root)
-    first_status, first_result = generate_submission_indexes([right, left])
-    second_status, second_result = generate_submission_indexes([left, right])
+    first_status, first_result = generate_submission_indexes([right, left], historical_replay=True)
+    second_status, second_result = generate_submission_indexes([left, right], historical_replay=True)
     assert canonical_index_bytes(first_status) == canonical_index_bytes(second_status)
     assert canonical_index_bytes(first_result) == canonical_index_bytes(second_result)
     assert [row["adapter_id"] for row in first_status["entries"]] == ["external-a", "external-b"]
@@ -406,7 +408,7 @@ def test_superseded_submission_is_not_active_and_legacy_is_comparison_only(tmp_p
         supersedes=[first_built["bundle"].content_sha256],
     )
     corrected = validate_submission_package(corrected_root)
-    status_index, result_index = generate_submission_indexes([first, corrected])
+    status_index, result_index = generate_submission_indexes([first, corrected], historical_replay=True)
     assert len(status_index["entries"]) == 1
     assert status_index["entries"][0]["evidence_bundle_sha256"] == corrected.evidence_bundle.content_sha256
     assert result_index["entries"][0]["result_card"]["overall_metrics"]["hit_at_10"] == 0.4

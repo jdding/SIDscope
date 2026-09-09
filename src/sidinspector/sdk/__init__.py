@@ -1,4 +1,4 @@
-"""Dependency-light SIDScope Adapter SDK alpha."""
+"""Dependency-light SIDScope Adapter SDK 1.0 stable surface."""
 
 from .alpha import (
     ADAPTER_CAPABILITIES_SCHEMA,

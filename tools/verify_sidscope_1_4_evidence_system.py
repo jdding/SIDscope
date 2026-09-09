@@ -19,9 +19,9 @@ from sidinspector.evidence import (
     EvidenceBundleValidationError,
     EvidenceRegistry,
     ObjectStore,
-    compare_evidence_bundles,
     load_evidence_bundle,
 )
+from sidinspector.evidence.comparison import compare_legacy_evidence_bundles as compare_evidence_bundles
 
 
 FIXTURE = ROOT / "examples" / "evidence_system_fixture"

@@ -97,12 +97,17 @@ def build_archive(
     if output_path.exists():
         output_path.unlink()
 
+    # Receipt and ZIP must describe the very same byte snapshot, even when the
+    # source checkout is dirty. Do not re-read files after computing digests.
+    contents = {path: (ROOT / path).read_bytes() for path in sorted(package_paths)}
+    content_hashes = {path: hashlib.sha256(data).hexdigest() for path, data in contents.items()}
     receipt = build_profile_receipt(
         profile=profile,
         content_paths=package_paths,
         registry_path=profile_registry_path,
         source_manifest_path=manifest_path,
         product_version=PRODUCT_VERSION,
+        content_hashes=content_hashes,
     )
     receipt_bytes = canonical_json_bytes(receipt) + b"\n"
 
@@ -119,7 +124,7 @@ def build_archive(
             info.external_attr = FIXED_FILE_MODE << 16
             archive.writestr(
                 info,
-                (ROOT / rel_path).read_bytes(),
+                contents[rel_path],
                 compress_type=zipfile.ZIP_DEFLATED,
                 compresslevel=9,
             )

@@ -38,6 +38,8 @@ def _fail(code: str, detail: str) -> None:
 
 
 def _owner_and_validator(resource_name: str) -> tuple[str, str]:
+    if resource_name == "evaluation_protocol.v1.schema.json":
+        return "sidinspector.contracts", "sidinspector.contracts.evaluation_protocol.validate_evaluation_protocol"
     if resource_name == "cli_result.v1.schema.json":
         return "sidinspector.schemas", "sidinspector.schemas.result_contracts.validate_cli_result"
     if resource_name.startswith("adapter_capabilities"):
@@ -142,6 +144,7 @@ def get_public_schema_descriptor(schema_id: str) -> PublicSchemaDescriptor:
 
 
 def _semantic_validators() -> Mapping[str, Callable[[Mapping[str, Any]], Any]]:
+    from sidinspector.contracts import validate_evaluation_protocol
     from sidinspector.schemas.result_contracts import validate_cli_result
     from sidinspector.conformance_core import (
         validate_dataset_profile_descriptor,
@@ -171,6 +174,7 @@ def _semantic_validators() -> Mapping[str, Callable[[Mapping[str, Any]], Any]]:
     from sidinspector.trace import validate_native_payload
 
     return {
+        "sidinspector.contracts.evaluation_protocol.validate_evaluation_protocol": validate_evaluation_protocol,
         "sidinspector.schemas.result_contracts.validate_cli_result": validate_cli_result,
         "sidinspector.conformance_core.validate_dataset_profile_descriptor": validate_dataset_profile_descriptor,
         "sidinspector.conformance_core.validate_profile_catalog": validate_profile_catalog,

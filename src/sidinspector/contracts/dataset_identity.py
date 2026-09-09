@@ -345,7 +345,8 @@ def validate_dataset_identity(value: Mapping[str, Any]) -> DatasetIdentity:
 
 
 def load_dataset_identity(path: Path) -> DatasetIdentity:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    from .json_io import load_json
+    value = load_json(path)
     if not isinstance(value, Mapping):
         _fail("invalid_type", f"{path} must contain a JSON object")
     return validate_dataset_identity(value)

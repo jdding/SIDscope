@@ -19,6 +19,24 @@ Passing local gates does not authorize pushing `codex/sidscope-v2`. The TOIS
 submission is governed by its exact frozen ref/package, not by an assumption
 that every future revision must remain on `v1.0.2` or adopt 2.x.
 
+## Current 2.0 candidate closeout
+
+The local engineering candidate remains `1.7.0.dev0`. Adapter SDK 1.0 and the
+compatibility surface are frozen; N02-N08 engineering scope is verified. Run:
+
+```bash
+python3 tools/verify_sidscope_2_0_candidate.py --require-engineering-ready
+python3 tools/verify_sidscope_2_0_candidate.py --require-certification-ready
+```
+
+The engineering command passes. The certification command remains blocked only
+on F09 until an independent user completes the own-producer workflow. The local
+engineering packet has already executed a clean commit gate, Linux/Python
+3.9-3.12, wheel/sdist consumers, all three profile archives and smoke tests, G8,
+and a fresh external exact-source record. Do not change to `2.0.0rc1` before F09;
+a separately authorized RC commit must rerun the same gates. Push, tag and GitHub Release still require separate explicit approval.
+See `docs/SIDSCOPE_2_0_RC_PACKET.md`.
+
 ## Release Candidate Inputs
 
 - Historical G7-lite claim/package boundary:
@@ -58,7 +76,9 @@ python3 tools/build_sidscope_release_candidate_archive.py --profile evidence-ful
 python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-runtime.zip --profile runtime
 python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-conformance.zip --profile conformance
 python3 tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-evidence-full.zip --profile evidence-full
-python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-runtime.zip --profile runtime
+python3 tools/run_sidscope_g8_fresh_env_smoke.py \
+  --archive /tmp/sidscope-runtime.zip --profile runtime \
+  --result-json /tmp/sidscope_g8_fresh_env_smoke.json
 python3 -m pytest -q
 ```
 

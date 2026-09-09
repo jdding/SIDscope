@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -15,16 +16,16 @@ from typing import Any
 try:
     from tools.build_sidscope_release_candidate_archive import DEFAULT_OUTPUT, build_archive
     from tools.sidscope_release_profiles import PROFILE_IDS
-    from tools.smoke_sidscope_release_candidate_archive import read_archive_profile, safe_extract_zip
+    from tools.smoke_sidscope_release_candidate_archive import read_archive_profile, safe_extract_zip, verify_archive_digest
     from tools.verify_sidscope_resource_package import ROOT
 except ModuleNotFoundError:
     from build_sidscope_release_candidate_archive import DEFAULT_OUTPUT, build_archive
     from sidscope_release_profiles import PROFILE_IDS
-    from smoke_sidscope_release_candidate_archive import read_archive_profile, safe_extract_zip
+    from smoke_sidscope_release_candidate_archive import read_archive_profile, safe_extract_zip, verify_archive_digest
     from verify_sidscope_resource_package import ROOT
 
 
-DEFAULT_RESULT_JSON = ROOT / "experiments" / "v1_evidence_chain" / "runs" / "R603_sidscope_g8_fresh_env_smoke.json"
+DEFAULT_RESULT_JSON: Path | None = None
 
 
 def run(cmd: list[str], *, cwd: Path) -> dict[str, Any]:
@@ -74,23 +75,23 @@ def ensure_archive(archive_path: Path, *, expected_profile: str | None) -> dict[
 def fresh_env_install_commands(py: Path) -> list[list[str]]:
     """Return the isolated install sequence used by the local G8 smoke.
 
-    Apple Command Line Tools Python 3.9 can seed a venv with pip 21.2, whose
-    editable-install fallback invokes ``setup.py develop`` and then loses pip
-    inside its PEP 517 subprocess. Upgrade pip before the editable install so
-    the same standards-based path is exercised locally and by the public URL
-    smoke.
+    Upgrade old seeded pip, then exercise a regular wheel-backed installation.
+    Editable installation cannot prove that installed package resources work.
     """
 
     return [
         [str(py), "-m", "pip", "install", "--upgrade", "pip>=21.3"],
-        [str(py), "-m", "pip", "install", "-e", "."],
+        [str(py), "-m", "pip", "install", "."],
     ]
 
 
 def run_fresh_env_smoke(
-    archive_path: Path, *, expected_profile: str | None = None
+    archive_path: Path, *, expected_profile: str | None = None, expected_sha256: str | None = None
 ) -> dict[str, Any]:
+    if archive_path.exists() and expected_sha256 is not None:
+        verify_archive_digest(archive_path, expected_sha256)
     archive_result = ensure_archive(archive_path, expected_profile=expected_profile)
+    digest = verify_archive_digest(archive_path, expected_sha256)
     profile_id = str(archive_result["profile_id"])
 
     with tempfile.TemporaryDirectory(prefix="sidscope-g8-fresh-env-") as tmp:
@@ -100,12 +101,42 @@ def run_fresh_env_smoke(
         package_root.mkdir()
         safe_extract_zip(archive_path, package_root)
 
+        install_root = tmp_root / "install-source"
+        shutil.copytree(package_root, install_root)
+
         venv.EnvBuilder(with_pip=True, clear=True).create(venv_dir)
         py = venv_python(venv_dir)
-        commands = [run(command, cwd=package_root) for command in fresh_env_install_commands(py)]
+        commands = [run(command, cwd=install_root) for command in fresh_env_install_commands(py)]
+        commands.append(run([str(py), "-I", "-c", "import pathlib, sidscope; p = pathlib.Path(sidscope.__file__).resolve(); assert 'site-packages' in p.parts, p; print(p)"], cwd=tmp_root))
+        demo_root = tmp_root / "runtime-demo"
+        commands.append(run([str(py), "-I", "-m", "sidinspector.runtime_demo", "--output-dir", str(demo_root)], cwd=tmp_root))
+        commands.append(run([str(py), "-I", "-m", "sidinspector.cli", "contract", "validate", "--type", "source-identity", "--input", str(demo_root / "source_identity.json")], cwd=tmp_root))
+        commands.append(run([str(py), "-m", "pip", "freeze"], cwd=tmp_root))
+        commands.append(run([str(py), "-I", "-c",
+            "import json; from pathlib import Path; from sidscope.workflows import main,evaluate,compare; p=Path('own-mapping.csv'); p.write_text('item_id,sid_level_0,sid_level_1\\n1,0,1\\n2,0,1\\n'); assert main(['audit','--input',str(p),'--output','own-audit.json'])==0; assert json.loads(Path('own-audit.json').read_text())['findings'][0]['normalized_items']==[1,2]; r=evaluate([{'episode_id':'a','ranked_items':[None,2]}],[{'episode_id':'a','target_item_id':2,'slice':'cold'}],dataset='consumer',cutoff=2); assert r['records'][0]['rank']==2; assert compare(r,r)['status']=='qualified'; print('public workflow consumer: pass')"], cwd=tmp_root))
+        commands.append(run([str(py), "-I", "-c",
+            "from pathlib import Path; from sidscope.workflows import evaluate; from sidscope.regression import compare_runs; from sidscope.diagnostic_review import write_review; labels=[{'episode_id':str(i),'target_item_id':i,'slice':'test'} for i in range(4)]; r=evaluate([{'episode_id':str(i),'ranked_items':[i]} for i in range(4)],labels,dataset='installed',cutoff=1); a={'run_id':'left','pair_id':'p','seed':1,'controls':{'fixture':'synthetic'},'report':r}; b=dict(a,run_id='right'); d=compare_runs([a],[b],clusters={str(i):str(i) for i in range(4)},degradation_budget={'hit_at_cutoff':0,'ndcg_at_cutoff':0},replicates=200); assert d['results'][0]['metrics']['hit_at_cutoff']['interval_unavailable']=='insufficient_paired_runs'; write_review(Path('offline-review'),r); assert Path('offline-review/index.html').is_file(); print('installed regression and review: pass')"], cwd=tmp_root))
         if profile_id == "runtime":
             commands.append(run([str(py), "tools/verify_sidscope_runtime_release.py"], cwd=package_root))
         elif profile_id == "conformance":
+            fixture = package_root / "examples" / "canonical_pipeline_fixture"
+            submission_root = tmp_root / "recomputed-submission"
+            commands.append(run([
+                str(py), "-I", "-m", "sidinspector.submission.recomputed",
+                "--source", str(package_root / "examples/conformance_ecosystem_fixture/submission/positive"),
+                "--trace", str(fixture / "trace_envelope.json"),
+                "--selection", str(fixture / "episode_selection.json"),
+                "--output", str(submission_root),
+            ], cwd=tmp_root))
+            commands.append(run([str(py), "-I", "-c",
+                "import sys; from pathlib import Path; from sidinspector.submission.checker import validate_submission_package; from sidinspector.submission.indexes import generate_status_index, generate_result_index; p=validate_submission_package(Path(sys.argv[1])); assert generate_status_index([p])['entries'][0]['status_label']=='diagnostics_verified'; assert generate_result_index([p])['entries'][0]['result_card']==p.evidence_bundle.result_card; print('computed admission and indexes: pass')", str(submission_root)], cwd=tmp_root))
+            commands.append(run([
+                str(py), "-I", "-m", "sidinspector.cli", "verify",
+                "--report", str(fixture / "conformance_report.json"),
+                "--diagnostic", str(fixture / "diagnostic_report.json"),
+                "--trace", str(fixture / "trace_envelope.json"),
+                "--selection", str(fixture / "episode_selection.json"),
+            ], cwd=tmp_root))
             commands.extend(
                 [
                     run([str(py), "tools/verify_sidscope_runtime_release.py"], cwd=package_root),
@@ -155,6 +186,8 @@ def run_fresh_env_smoke(
         "status": "pass",
         "gpu_required": False,
         "archive_path": str(archive_path),
+        "archive_sha256": digest,
+        "expected_digest_supplied": expected_sha256 is not None,
         "profile_id": profile_id,
         "archive_result": archive_result,
         "commands": commands,
@@ -170,13 +203,22 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run SIDScope G8 local fresh-environment smoke.")
     parser.add_argument("--archive", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--profile", choices=PROFILE_IDS, default=None)
-    parser.add_argument("--result-json", type=Path, default=DEFAULT_RESULT_JSON)
+    parser.add_argument("--expected-sha256", default=None, help="Digest obtained through a separately trusted channel.")
+    parser.add_argument(
+        "--result-json",
+        type=Path,
+        default=DEFAULT_RESULT_JSON,
+        help=(
+            "Optional result path. By default the report is printed only and "
+            "the source tree is not modified."
+        ),
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    result = run_fresh_env_smoke(args.archive.resolve(), expected_profile=args.profile)
+    result = run_fresh_env_smoke(args.archive.resolve(), expected_profile=args.profile, expected_sha256=args.expected_sha256)
     if args.result_json:
         args.result_json.parent.mkdir(parents=True, exist_ok=True)
         args.result_json.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

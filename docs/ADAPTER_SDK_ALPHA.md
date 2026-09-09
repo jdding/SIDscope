@@ -1,12 +1,12 @@
-# SIDScope Adapter SDK Alpha
+# SIDScope Adapter SDK Alpha (historical)
 
-Status: `0.2.0-alpha` in `1.3.0.dev0`; `0.1.0-alpha` descriptors remain accepted
+Status: superseded by Adapter SDK `1.0.0`; retained as pre-2.0 migration history
 
 The Adapter SDK is the method-facing boundary for declaring capabilities and
 returning registered artifacts. It does not train models, import optional
 upstream runtimes during core startup, or grant conformance status.
 
-SDK `0.2.0` adds the versioned `sidscope.adapter_capabilities.v1` descriptor.
+SDK `0.2.0` introduced the versioned `sidscope.adapter_capabilities.v1` descriptor.
 It declares an SDK compatibility interval, adapter and producer identities,
 one native method family and payload schema, canonical contract types,
 supported and unavailable telemetry, external-runtime boundary, and explicit
@@ -30,7 +30,8 @@ The external reference package in `examples/reference_adapter_plugin/` proves
 installation and discovery without placing adapter code in the trusted core.
 It is a contract example, not a named-method adapter or scientific result.
 
-Legacy `sidscope.adapter_capabilities.alpha.v1` / SDK `0.1.0` descriptors
+For current publisher instructions see `ADAPTER_SDK.md`. Legacy
+`sidscope.adapter_capabilities.alpha.v1` / SDK `0.1.0` descriptors
 remain accepted during the 1.x coexistence period. They do not declare a
 registered native payload schema and therefore cannot serve as a 1.3 plugin
 capability descriptor. Rollback disables a plugin package or entry point;

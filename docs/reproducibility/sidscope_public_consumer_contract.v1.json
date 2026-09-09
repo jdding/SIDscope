@@ -1,0 +1,433 @@
+{
+  "format": "sidscope.public_consumer_contract.v1",
+  "signatures": {
+    "ADAPTER_SDK_VERSION": {
+      "constant": "1.0.0"
+    },
+    "AdapterCapabilities": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "schema",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "adapter_id",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "method_family",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "contract_types",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "payload_schema",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "telemetry_supported",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "telemetry_unavailable",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "runtime_requirements",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "document",
+        "required": true
+      }
+    ],
+    "AdapterHarness": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "capabilities",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "producer",
+        "required": true
+      }
+    ],
+    "AdapterPlugin": [
+      {
+        "default": null,
+        "kind": "VAR_POSITIONAL",
+        "name": "args",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "VAR_KEYWORD",
+        "name": "kwargs",
+        "required": true
+      }
+    ],
+    "AdapterPluginError": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "code",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "detail",
+        "required": true
+      }
+    ],
+    "AdapterSDKError": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "code",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "detail",
+        "required": true
+      }
+    ],
+    "EvidenceBundleValidationError": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "code",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "detail",
+        "required": true
+      }
+    ],
+    "EvidenceRegistry": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "db_path",
+        "required": true
+      }
+    ],
+    "NativePayloadValidationError": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "code",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "detail",
+        "required": true
+      }
+    ],
+    "ObjectStore": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "root",
+        "required": true
+      }
+    ],
+    "PLUGIN_API_VERSION": {
+      "constant": "1.0"
+    },
+    "PublicSchemaDescriptor": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "schema_id",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "schema_resource",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "owner",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "semantic_validator",
+        "required": true
+      }
+    ],
+    "PublicSchemaValidationError": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "code",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "detail",
+        "required": true
+      }
+    ],
+    "__version__": {
+      "constant": "1.7.0.dev0"
+    },
+    "canonical_json_bytes": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "value",
+        "required": true
+      }
+    ],
+    "canonical_sha256": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "value",
+        "required": true
+      }
+    ],
+    "check_submission": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "root",
+        "required": true
+      },
+      {
+        "default": "'submission.json'",
+        "kind": "KEYWORD_ONLY",
+        "name": "manifest_path",
+        "required": false
+      }
+    ],
+    "compare_evidence_bundles": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "left",
+        "required": true
+      },
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "right",
+        "required": true
+      },
+      {
+        "default": "None",
+        "kind": "KEYWORD_ONLY",
+        "name": "left_objects",
+        "required": false
+      },
+      {
+        "default": "None",
+        "kind": "KEYWORD_ONLY",
+        "name": "right_objects",
+        "required": false
+      }
+    ],
+    "discover_adapter_plugins": [],
+    "get_public_schema_descriptor": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "schema_id",
+        "required": true
+      }
+    ],
+    "load_adapter_capabilities": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_checkpoint_binding": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_dataset_identity": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_episode_selection": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_evidence_bundle": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_native_payload": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_prepared_dataset": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_public_schema_catalog": [],
+    "load_run_identity": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_sid_space_identity": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_source_identity": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "load_trace_envelope": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "path",
+        "required": true
+      }
+    ],
+    "preflight_adapter_plugin": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "name",
+        "required": true
+      }
+    ],
+    "validate_adapter_capabilities": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "value",
+        "required": true
+      }
+    ],
+    "validate_evidence_bundle": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "value",
+        "required": true
+      }
+    ],
+    "validate_native_payload": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "value",
+        "required": true
+      }
+    ],
+    "validate_public_document": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "value",
+        "required": true
+      }
+    ],
+    "verify_content_sha256": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "document",
+        "required": true
+      },
+      {
+        "default": "'content_sha256'",
+        "kind": "KEYWORD_ONLY",
+        "name": "hash_field",
+        "required": false
+      }
+    ],
+    "with_content_sha256": [
+      {
+        "default": null,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "document",
+        "required": true
+      },
+      {
+        "default": "'content_sha256'",
+        "kind": "KEYWORD_ONLY",
+        "name": "hash_field",
+        "required": false
+      }
+    ]
+  },
+  "support_interval": "local 1.7 candidate through reviewed 2.0 compatibility declaration"
+}

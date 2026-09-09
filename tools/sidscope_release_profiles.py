@@ -144,9 +144,10 @@ def build_profile_receipt(
     registry_path: Path,
     source_manifest_path: Path,
     product_version: str,
+    content_hashes: Mapping[str, str],
 ) -> dict[str, Any]:
     return {
-        "schema": "sidscope.release_profile_receipt.v1",
+        "schema": "sidscope.release_profile_receipt.v2",
         "profile_id": profile.profile_id,
         "product_version": product_version,
         "smoke_suite": profile.smoke_suite,
@@ -154,11 +155,16 @@ def build_profile_receipt(
         "content_paths_sha256": path_set_sha256(content_paths),
         "profile_registry_sha256": file_sha256(registry_path),
         "source_manifest_sha256": file_sha256(source_manifest_path),
+        "content_sha256": dict(sorted(content_hashes.items())),
+        "source_snapshot_sha256": hashlib.sha256(canonical_json_bytes(content_hashes)).hexdigest(),
     }
 
 
-def validate_profile_receipt(value: Mapping[str, Any], *, content_paths: Sequence[str]) -> str:
-    if value.get("schema") != "sidscope.release_profile_receipt.v1":
+def validate_profile_receipt(
+    value: Mapping[str, Any], *, content_paths: Sequence[str],
+    content_hashes: Mapping[str, str] | None = None,
+) -> str:
+    if value.get("schema") not in {"sidscope.release_profile_receipt.v1", "sidscope.release_profile_receipt.v2"}:
         raise ReleaseProfileError("invalid_profile_receipt", str(value.get("schema")))
     profile_id = value.get("profile_id")
     if profile_id not in PROFILE_IDS:
@@ -173,4 +179,12 @@ def validate_profile_receipt(value: Mapping[str, Any], *, content_paths: Sequenc
         digest = value.get(field)
         if not isinstance(digest, str) or len(digest) != 64:
             raise ReleaseProfileError("invalid_profile_receipt", field)
+    if value["schema"] != "sidscope.release_profile_receipt.v2":
+        raise ReleaseProfileError("legacy_receipt_requires_rebuild", profile_id)
+    if content_hashes is None or set(content_hashes) != set(content_paths):
+        raise ReleaseProfileError("missing_content_hashes", profile_id)
+    if value.get("content_sha256") != dict(content_hashes):
+        raise ReleaseProfileError("profile_content_binding_mismatch", profile_id)
+    if value.get("source_snapshot_sha256") != hashlib.sha256(canonical_json_bytes(content_hashes)).hexdigest():
+        raise ReleaseProfileError("source_snapshot_binding_mismatch", profile_id)
     return profile_id

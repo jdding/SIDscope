@@ -1,5 +1,15 @@
 # SIDScope
 
+<!-- SIDSCOPE:CURRENT:BEGIN -->
+Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
+Unclosed SDLC requirements: F09.
+Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
+Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
+Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+<!-- SIDSCOPE:CURRENT:END -->
+
 SIDScope is evolving into the conformance and observability layer for
 Semantic-ID and generative recommender systems. It owns the evidence pipeline
 from adapter integration through canonical contracts, native trace capture,
@@ -12,6 +22,10 @@ adapters, and publishes artifact-level diagnostics, candidate-exposure probes,
 method-faithful trace accounting, and bounded evidence. The approved target
 architecture is documented in `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`; the
 implementation sequence through 2.0 is in `docs/V1_2_TO_V2_ROADMAP.md`.
+The source/conformance package includes an updated
+[current implementation diagram and code map](docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md#current-implementation-view--2026-09-09).
+It separates the six-layer core from local engineering workflows and pending
+acceptance; it is not a public 2.0 release declaration.
 Release numbering and compatibility are governed by `docs/VERSIONING.md` and
 `docs/COMPATIBILITY.md`.
 
@@ -27,7 +41,27 @@ Implementation note: the distribution and historical import package remain
 `sidinspector` for compatibility. New integrations should use the curated
 `sidscope` Python facade; direct historical imports remain supported for replay.
 
+For your own CSV/Parquet mapping and ranked-item outputs, start with
+[the algorithm-engineer quickstart](docs/SIDSCOPE_USER_WORKFLOWS.md).
+Its public `sidscope.workflows` API/CLI covers audit, evaluate and qualified
+comparison without internal imports or manual hash construction.
+For mapping refreshes, [the SID refresh guide](docs/SIDSCOPE_SID_REFRESH.md)
+defines explicit ordered-prefix, parallel-position and unordered-set semantics.
+The [2.0 engineering candidate freeze](docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md)
+keeps engineering readiness separate from F09 independent-user acceptance.
+
 ## What It Reports
+
+Current pre-2.0 trust boundary: new diagnostic admission and default indexes
+require bound input objects and independent diagnostic recomputation. Profile
+checks alone validate structure; comparisons require matching evaluation protocols.
+Historical route evidence below remains unchanged. See
+`docs/SIDSCOPE_SDLC_HARDENING.md` for implemented checks and open acceptance gates.
+
+Verification uses executable checks, not maintainer sign-off. With a diagnostic,
+trace and selection available, `sidscope verify` can recompute and compare the
+diagnostics on CPU; without them it explicitly reports no fact verification.
+Neither mode claims to reproduce upstream training.
 
 - D1 utilization: per-level code usage, entropy, and imbalance.
 - D2 aliasing: full-code and prefix collision profile.
@@ -42,29 +76,38 @@ Implementation note: the distribution and historical import package remain
 
 The release verifier is CPU-only. It was checked with Python 3.9, and should run
 on Python 3.9+ with the dependencies in `pyproject.toml` / `requirements.txt`.
-Editable installation uses the PEP 660 path and requires pip 21.3 or newer;
-stock Python 3.9 installations with older pip should upgrade it first.
+Use a regular installation for consumption; editable installation is only for
+development. Stock Python installations with older pip should upgrade it first.
 No GPU is required for the bundled verifier, quickstart, or D1-D7 audits;
 GPU use belongs to external tokenizer training pipelines, not to SIDScope's
 artifact inspection step.
 
 ```bash
 python3 -m pip install --upgrade "pip>=21.3"
-python3 -m pip install -e .
+python3 -m pip install .
 ```
 
 This installs the `sidinspector` package from the repository's `src/` layout.
 It also installs the stable `sidscope` command facade. The first shared
 contract slice can be checked without loading any optional adapter runtime:
 
+The installed runtime includes a synthetic first-run example and does not need
+the repository's excluded fixture directories:
+
 ```bash
+SIDScope_DEMO_DIR=$(mktemp -d)
+python3 -m sidinspector.runtime_demo --output-dir "$SIDScope_DEMO_DIR"
 sidscope contract validate \
   --type source-identity \
-  --input examples/source_identity_fixture/source_identity.json
+  --input "$SIDScope_DEMO_DIR/source_identity.json"
 ```
 
+This validates a contract, not an upstream method or independent admission.
+The fixture-based commands below require a source checkout or the appropriate
+conformance/evidence-full release profile; they are not runtime quickstart steps.
+
 The active `1.7.0.dev0` line retains the eleven canonical contracts from source
-identity through evidence index, Adapter SDK `0.2.0-alpha`, lazy external
+identity through evidence index, stable Adapter SDK `1.0.0`, lazy external
 plugins, five registered native payload families, and composable profiles. It
 adds immutable EvidenceBundle v1 objects, a rebuildable SQLite registry,
 supersession, privacy-gated admission, and compatibility-aware comparison.
@@ -76,7 +119,7 @@ records for every 1.1.1 route, a frozen candidate Python/CLI inventory,
 independent external-plugin onboarding proof, and a compatible cross-family
 EvidenceBundle comparison. It is a hardening release: no method or training API
 enters SIDScope.
-Version 1.7 stabilizes the public contract surface: all 45 published schema IDs
+Version 1.7 stabilizes the public contract surface: all 46 published schema IDs
 are discoverable with an owner and semantic validator, every CLI JSON output
 uses either the validated CLI envelope or its domain artifact contract, JSON
 Schema validation always precedes Python
@@ -287,10 +330,11 @@ PYTHONPATH=src python3 tools/verify_rpg_generator_adapter.py
 ```
 
 See `docs/RPG_GENERATOR_ADAPTER.md`. The real cache, raw Amazon data, metadata,
-embeddings, and normalized tables remain external. This is static mapping and
-interoperability evidence, not a trained checkpoint result or a complete named
-adapter; the official code remains CC BY-NC 4.0 and is not vendored into
-SIDScope.
+embeddings, and normalized tables remain external. The command above checks
+static interoperability only. The historical route ledger separately records
+RPG's configuration-bound G0-G5 admission and trained native trace evidence;
+that historical decision is not a new-admission check. Official code remains
+CC BY-NC 4.0 and is not vendored into SIDScope.
 
 Latte/PSID now has a pinned source and asset audit, a real
 official-code-derived Musical Instruments `.sem_ids` cache bound by hashes, a
@@ -349,9 +393,10 @@ The audit found that the pinned inference implementation monotonically fills
 confidence-selected masked positions; it does not remask filled positions.
 The official repository has no released model, tokenizer cache, or training
 output. Its `NOASSERTION` license state is retained as a non-redistribution
-marker rather than an experiment gate. SIDScope therefore ships only its
-independent contract and compact evidence and does not yet label this route a
-complete named adapter. See `docs/LLADA_REC_DIFFUSION_ADAPTER.md`.
+marker rather than an experiment gate. SIDScope ships its independent contract
+and compact evidence. The historical route ledger separately records downstream
+VG training and configuration-bound G0-G5 admission; the source smoke above
+does not establish that decision. See `docs/LLADA_REC_DIFFUSION_ADAPTER.md`.
 
 DACT/TIGER now has a released-asset G0--G5 report, an ordered-prefix and
 parent-beam fixture, and a bounded replay of the official Tools `0.6_cf`
@@ -409,7 +454,8 @@ python3 tools/build_sidscope_release_candidate_archive.py \
 python3 tools/smoke_sidscope_release_candidate_archive.py \
   /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
+  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime \
+  --result-json /tmp/sidscope_g8_fresh_env_smoke.json
 ```
 
 Adapter authors can build `--profile conformance`; auditors can build

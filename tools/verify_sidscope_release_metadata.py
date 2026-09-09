@@ -57,6 +57,8 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         raise ValueError("setup.py missing bundled JSON schemas")
 
     required_docs = {
+        "docs/SIDSCOPE_SDLC_HARDENING.md": ["diagnostics_verified", "baseline", "sidscope_sdlc_requirements.csv", "no maintainer sign-off", "diagnostics_from_supplied_trace"],
+        "docs/adr/0016-quarantine-unverified-admission.md": ["independent_gate_verification_required", "## Exit and rollback", "structure_only"],
         "README.md": ["docs/VERSIONING.md", "docs/COMPATIBILITY.md"],
         "docs/VERSIONING.md": ["five independent compatibility axes", "GitHub Release"],
         "docs/COMPATIBILITY.md": [
@@ -65,7 +67,7 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "sidscope.dataset_identity.v1",
             "sidscope.sid_space_identity.v1",
             "sidscope.prepared_dataset.v1",
-            "0.2.0-alpha",
+            "1.0.0",
             "sidscope.trace_payload.masked_diffusion.v1",
         ],
         "docs/SIDSCOPE_RELEASE_TEMPLATE.md": ["Adapter SDK version:", "archive SHA-256:"],
@@ -116,6 +118,37 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "immutable_historical_record",
             "canonical_replay_retained",
             "Never modify frozen TOIS software",
+        ],
+        "docs/ADAPTER_SDK.md": [
+            "Adapter SDK `1.0.0`",
+            "sdk_compatibility",
+            "including `2.0.0`",
+            "never ignores `maximum_exclusive`",
+        ],
+        "docs/SIDSCOPE_SID_REFRESH.md": [
+            "parallel_positions",
+            "same-input controls",
+            "not a before/after refresh experiment",
+        ],
+        "docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md": [
+            "engineering candidate only",
+            "F09 independent-user actual use",
+            "No RC, tag, push or release authorized",
+        ],
+        "docs/SIDSCOPE_2_0_RC_PACKET.md": [
+            "RC transition blocked only by F09",
+            "Linux CPython 3.9, 3.10, 3.11 and 3.12",
+            "No public action is authorized",
+        ],
+        "docs/adr/0023-stabilize-adapter-sdk-1-0.md": [
+            "Adapter SDK at 1.0",
+            "honor declared intervals exactly",
+            "Rollback",
+        ],
+        "docs/adr/0024-freeze-2-0-engineering-candidate.md": [
+            "Engineering completion and certification",
+            "certification_ready",
+            "Rollback",
         ],
     }
     for rel_path, tokens in required_docs.items():

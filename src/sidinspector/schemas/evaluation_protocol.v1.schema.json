@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SIDScope computed diagnostic protocol",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_revision", "evaluator", "metrics", "aggregation", "non_exact_policy", "slice_definition", "compute_unit", "dataset_identity_sha256", "target_universe_sha256", "episode_selection_sha256", "evaluation_cutoff", "publication_depth", "rank_semantics", "compute_environment_sha256", "content_sha256"],
+  "properties": {
+    "schema": {"const": "sidscope.evaluation_protocol.v1"},
+    "schema_revision": {"const": "1.0.0"},
+    "evaluator": {"const": "sidscope.diagnostic_report.v1@1.0.0"},
+    "metrics": {"const": ["single_target_hit", "single_target_ndcg"]},
+    "aggregation": {"const": "macro_per_selected_episode"},
+    "non_exact_policy": {"const": "count_as_miss"},
+    "slice_definition": {"const": "selection.evaluator_labels.dormancy_bucket.v1"},
+    "compute_unit": {"const": "milliseconds_total"},
+    "dataset_identity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "target_universe_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "episode_selection_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evaluation_cutoff": {"type": "integer", "minimum": 1},
+    "publication_depth": {"type": "integer", "minimum": 1},
+    "rank_semantics": {"enum": ["exact_with_censoring", "cutoff_only"]},
+    "compute_environment_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

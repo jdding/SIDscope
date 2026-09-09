@@ -359,7 +359,8 @@ def validate_native_payload(value: Mapping[str, Any]) -> NativePayload:
 
 
 def load_native_payload(path: Path) -> NativePayload:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    from sidinspector.contracts import load_json
+    value = load_json(path)
     if not isinstance(value, Mapping):
         _fail("invalid_type", str(path))
     return validate_native_payload(value)

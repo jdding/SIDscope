@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import re
 import sys
@@ -235,9 +236,14 @@ def build_inventory() -> dict[str, Any]:
         "status": "pass",
         "scope": "public_release_manifest_plus_active_route_ledgers",
         "product_version": package_version(),
+        "current_diagram_files": {
+            "docs/figures/sidscope-current-architecture" + suffix:
+                hashlib.sha256((ROOT / ("docs/figures/sidscope-current-architecture" + suffix)).read_bytes()).hexdigest()
+            for suffix in (".json", "-prompt.md", ".png")
+        },
         "version_axes": {
             "product_package": package_version(),
-            "adapter_sdk": "0.2.0-alpha",
+            "adapter_sdk": "1.0.0",
             "canonical_schemas": [
                 f"{descriptor.schema_id}@{descriptor.schema_revision}"
                 for descriptor in registry.contracts

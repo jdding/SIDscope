@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build deterministic native-payload, profile, and SDK 0.2 fixtures."""
+"""Build deterministic native-payload/profile fixtures and current SDK descriptors."""
 
 from __future__ import annotations
 
@@ -287,7 +287,7 @@ def main() -> None:
         {
             "schema": "sidscope.adapter_capabilities.v1",
             "schema_revision": "1.0.0",
-            "sdk_compatibility": {"minimum": "0.2.0", "maximum_exclusive": "0.3.0"},
+            "sdk_compatibility": {"minimum": "1.0.0", "maximum_exclusive": "2.0.0"},
             "adapter_id": "fixture:parallel-plugin",
             "producer": {"name": "sidscope.fixture", "version": "1.3.0.dev0"},
             "method_family": "parallel_graph_token_set",

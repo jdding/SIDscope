@@ -22,7 +22,7 @@ class ReferenceAdapterPlugin:
             {
                 "schema": "sidscope.adapter_capabilities.v1",
                 "schema_revision": "1.0.0",
-                "sdk_compatibility": {"minimum": "0.2.0", "maximum_exclusive": "0.3.0"},
+                "sdk_compatibility": {"minimum": "1.0.0", "maximum_exclusive": "2.0.0"},
                 "adapter_id": "reference:parallel-plugin",
                 "producer": {"name": "sidscope-reference-adapter", "version": "0.1.0"},
                 "method_family": "parallel_graph_token_set",

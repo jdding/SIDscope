@@ -1,6 +1,6 @@
 # SIDScope Adapter Plugin Ecosystem
 
-Status: implemented in `1.3.0.dev0`
+Status: plugin API `1.0`; Adapter SDK `1.0.0` stable candidate
 
 ## Boundary
 
@@ -12,7 +12,7 @@ verification never requires the producing plugin to be installed.
 
 An entry point returns an object with `plugin_api_version = "1.0"` and two
 methods: `get_capabilities()` and `get_payload_fixture()`. The capability
-descriptor must use `sidscope.adapter_capabilities.v1`, support SDK `0.2.0`,
+descriptor must use `sidscope.adapter_capabilities.v1`, support SDK `1.0.0`,
 and bind its method family to the exact registered payload schema. The payload
 fixture must pass its native family validator and canonical content hash.
 

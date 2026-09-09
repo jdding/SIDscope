@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from .hashing import SHA256_PATTERN, verify_content_sha256, with_content_sha256
-from .runtime_contracts import RuntimeContract
+from .runtime_contracts import RuntimeContract, validate_trace_envelope, validate_episode_selection
 from .producer_versions import EVALUATION_PRODUCER_VERSION
 
 
@@ -148,6 +148,8 @@ def validate_diagnostic_report(value: Mapping[str, Any]) -> ReportContract:
     )
     if sum(_count(failures.get(field), f"failure_decomposition.{field}") for field in failures) != episode_count:
         _fail("failure_partition_mismatch", str(dict(failures)))
+    if not math.isclose(evaluation["hit_at_cutoff"] * episode_count, failures["success"], abs_tol=1e-9):
+        _fail("success_hit_mismatch", "success count and Hit denominator disagree")
     compute = _object(
         value, "compute", {"nfe", "forward_calls", "candidate_count", "latency_ms"}
     )
@@ -217,8 +219,12 @@ def diagnostic_report_document(
     publication_depth: int = 100,
     report_id: str | None = None,
 ) -> dict[str, Any]:
-    trace_doc = trace.to_dict()
-    selection_doc = selection.to_dict()
+    trace_doc = validate_trace_envelope(trace.to_dict()).to_dict()
+    selection_doc = validate_episode_selection(selection.to_dict()).to_dict()
+    if trace_doc["episode_selection_binding"]["content_sha256"] != selection.content_sha256:
+        _fail("diagnostic_selection_binding_mismatch", "selection")
+    if [row["episode_id"] for row in trace_doc["observations"]] != [row["episode_id"] for row in selection_doc["rows"]]:
+        _fail("trace_selection_episode_mismatch", "selection")
     observations = trace_doc["observations"]
     hit, ndcg = _metric_rows(observations, evaluation_cutoff)
     failures = {
@@ -495,7 +501,8 @@ def validate_report_bindings(
 
 
 def _load(path: Path, validator: Any) -> ReportContract:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    from .json_io import load_json
+    value = load_json(path)
     if not isinstance(value, Mapping):
         _fail("invalid_type", f"{path} must contain an object")
     return validator(value)

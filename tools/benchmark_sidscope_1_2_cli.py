@@ -42,7 +42,8 @@ def timed(argv: list[str], repeats: int = 11) -> dict[str, object]:
     }
 
 
-def main() -> None:
+def measure() -> dict[str, object]:
+    """Execute the shared workload without changing its frozen baseline."""
     with tempfile.TemporaryDirectory(prefix="sidscope-cli-benchmark-") as tmp:
         tmp_path = Path(tmp)
         artifacts = [
@@ -78,6 +79,11 @@ def main() -> None:
         },
         "commands": measurements,
     }
+    return payload
+
+
+def main() -> None:
+    payload = measure()
     OUTPUT.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(payload, indent=2, sort_keys=True))
 

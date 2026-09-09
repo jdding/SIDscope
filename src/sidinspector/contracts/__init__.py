@@ -9,6 +9,8 @@ from .hashing import (
     with_content_sha256,
 )
 from .method_families import METHOD_FAMILIES, METHOD_FAMILY_PAYLOAD_SCHEMAS
+from .json_io import JSONInputError, bounded_bytes, load_json, loads_json
+from .evaluation_protocol import build_evaluation_protocol, validate_evaluation_protocol
 from .producer_versions import (
     CONTRACT_PRODUCER_VERSION,
     EVALUATION_PRODUCER_VERSION,

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 import tempfile
 import unittest
 import zipfile
@@ -15,7 +16,11 @@ from sidinspector.adapters import (
 )
 from tools.build_sidscope_release_candidate_archive import FIXED_ZIP_TIMESTAMP, build_archive
 from tools.run_sidscope_public_url_smoke import clone_command, smoke_commands
-from tools.run_sidscope_g8_fresh_env_smoke import fresh_env_install_commands
+from tools.run_sidscope_g8_fresh_env_smoke import (
+    DEFAULT_RESULT_JSON,
+    fresh_env_install_commands,
+    parse_args as parse_g8_args,
+)
 from tools.run_sidscope_realistic_tutorial import run_tutorial
 from tools.smoke_sidscope_release_candidate_archive import smoke_archive
 from tools.verify_sidscope_claim_ledger import verify_ledger
@@ -193,7 +198,8 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
 
         self.assertIn("does not own or reimplement upstream recommendation methods", architecture)
         self.assertIn("## 3. Options Considered", architecture)
-        self.assertIn("### 4.1 Current State: 1.1.1 Baseline", architecture)
+        self.assertIn("### 4.1 Historical Starting State: 1.1.1 Baseline", architecture)
+        self.assertIn("## Current implementation view", architecture)
         self.assertIn("### 4.2 Interim State: 1.2 to 1.5 Coexistence", architecture)
         self.assertIn(
             "### 4.3 Pre-Stable State: 1.6 Hardening, 1.7 Surface Stabilization, and Optional 1.8--1.9 Evolution",
@@ -317,13 +323,35 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         self.assertIn("tools/verify_sidscope_resource_package.py", commands[2])
         self.assertIn("tools/run_sidscope_g8_fresh_env_smoke.py", commands[5])
 
-    def test_local_g8_upgrades_pip_before_editable_install(self) -> None:
+    def test_local_g8_upgrades_pip_before_regular_install(self) -> None:
         py = Path("/tmp/venv/bin/python")
         commands = fresh_env_install_commands(py)
 
         self.assertEqual(commands[0][-2:], ["--upgrade", "pip>=21.3"])
-        self.assertEqual(commands[1][-2:], ["-e", "."])
+        self.assertEqual(commands[1][-2:], ["install", "."])
+        self.assertNotIn("-e", commands[1])
         self.assertNotIn("--no-deps", commands[1])
+
+    def test_local_g8_defaults_to_stdout_without_repository_write(self) -> None:
+        self.assertIsNone(DEFAULT_RESULT_JSON)
+        with patch.object(sys, "argv", ["run_sidscope_g8_fresh_env_smoke.py"]):
+            args = parse_g8_args()
+        self.assertIsNone(args.result_json)
+
+    def test_documented_local_g8_commands_write_results_outside_the_repository(self) -> None:
+        for rel_path in (
+            "README.md",
+            "HANDOFF.md",
+            "docs/SIDSCOPE_RELEASE_CHECKLIST.md",
+            "docs/SIDSCOPE_RELEASE_PROFILES.md",
+            "docs/SIDSCOPE_RESOURCE_PACKAGE.md",
+        ):
+            text = (ROOT / rel_path).read_text(encoding="utf-8")
+            self.assertIn(
+                "--result-json /tmp/sidscope_g8_fresh_env_smoke.json",
+                text,
+                rel_path,
+            )
 
     def test_scanned_package_files_excludes_runtime_cache(self) -> None:
         scanned = scanned_package_files()

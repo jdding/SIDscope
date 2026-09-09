@@ -1,5 +1,15 @@
 # SIDScope 1.7 Contract and Public-Surface Stabilization
 
+<!-- SIDSCOPE:CURRENT:BEGIN -->
+Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
+Unclosed SDLC requirements: F09.
+Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
+Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
+Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+<!-- SIDSCOPE:CURRENT:END -->
+
 Status: implementation and local release gates complete on `1.7.0.dev0`; no
 tag or public release implied
 
@@ -38,9 +48,13 @@ owning Python semantic validator.
 | Release profiles | `sidscope_release_profiles.v1.json` | Runtime is default; conformance adds compact fixtures; evidence-full retains the complete audit surface. |
 
 The deterministic inventory is
-`docs/reproducibility/sidscope_1_7_public_surface.json`. It currently binds 45
-schema IDs, 27 schema resources, 19 CLI result IDs, 31 CLI leaf commands and 39
+`docs/reproducibility/sidscope_1_7_public_surface.json`. It currently binds 46
+schema IDs, 28 schema resources, 19 CLI result IDs, 31 CLI leaf commands and 39
 curated Python symbols.
+It additionally freezes Adapter SDK `1.0.0`, plugin API `1.0`, the exact current
+capability interval and the approved opt-in workflow functions. These modules do
+not add curated facade symbols. ADR-0024 uses this same record as the 2.0
+engineering candidate authority; F09 remains an independent certification gate.
 
 ## Commands
 
@@ -61,7 +75,11 @@ it never rewrites a bundle, release tag, adapter status or frozen TOIS asset.
 
 ## Exit Gates
 
-All local exit gates pass on the current 1.7 development tree:
+The original stabilization milestone passed the regression gates below.
+Current readiness is additionally governed by ADR-0016 and
+`SIDSCOPE_SDLC_HARDENING.md`: diagnostic admission is computation-bound and the
+original six-command performance gate passes; independent user acceptance remains open. Historical gate
+PASS does not close these current blockers.
 
 - focused positive and typed-negative schema/CLI/architecture tests;
 - historical 1.6 hardening replay;

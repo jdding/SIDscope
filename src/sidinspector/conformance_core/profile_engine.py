@@ -442,7 +442,8 @@ def validate_dataset_profile_descriptor(value: Mapping[str, Any]) -> DatasetProf
 
 def load_dataset_profile_descriptor(path: Path) -> DatasetProfileDescriptor:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
+        from sidinspector.contracts import load_json
+        value = load_json(path)
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         _fail("descriptor_load_failed", f"{path}: {error}")
     if not isinstance(value, Mapping):
@@ -640,7 +641,8 @@ def load_profile_conformance_report(
     descriptor: DatasetProfileDescriptor | Mapping[str, Any] | None = None,
 ) -> ProfileConformanceReport:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
+        from sidinspector.contracts import load_json
+        value = load_json(path)
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         _fail("report_load_failed", f"{path}: {error}")
     if not isinstance(value, Mapping):

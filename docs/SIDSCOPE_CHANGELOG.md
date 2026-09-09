@@ -13,6 +13,11 @@ include paper drafts, local provenance, AutoDL payloads, or large caches.
 
 ## SIDScope v1.7.0.dev0: contract and public-surface stabilization
 
+- Promoted the already exercised Adapter SDK contract from pre-stable 0.2 to
+  stable `1.0.0` without changing plugin API 1.0, producer execution or native
+  payload semantics. Current descriptors use the exact `>=1.0.0,<2.0.0`
+  compatibility interval; historical SDK 0.1 descriptors remain replay-only.
+
 - Added a unified catalog for all 45 public schema IDs across 27 bundled Draft
   2020-12 resources, with one owning module and Python semantic validator per
   schema.

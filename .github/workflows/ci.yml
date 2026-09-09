@@ -16,9 +16,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - run: python -m pip install --upgrade pip
+      - run: python -m pip install --upgrade pip "setuptools>=68" wheel
       - run: python -m pip install -e . pytest
       - run: python -m pytest -q
+      - name: Regular wheel and sdist consumers with offline hash-lock replay
+        run: python tools/verify_sidscope_distribution_install.py --output-dir /tmp/sidscope-install-matrix
       - run: python tools/verify_sidscope_contract_registry.py
       - run: python tools/verify_sidscope_sprint2_contracts.py
       - run: python tools/verify_sidscope_1_2_closure.py
@@ -29,6 +31,12 @@ jobs:
       - run: python tools/verify_sidscope_1_4_cli_baseline.py
       - run: python tools/verify_sidscope_1_5_conformance_ecosystem.py
       - run: python tools/verify_sidscope_1_6_hardening.py
+      - run: python tools/verify_sidscope_1_7_stabilization.py
+      - run: python tools/verify_sidscope_sdlc_hardening.py --require-engineering-ready
+      - run: python tools/verify_sidscope_sdlc_acceptance.py
+      - run: python tools/verify_sidscope_release_profiles.py
+      - run: python tools/verify_sidscope_architecture_inventory.py
+      - run: python tools/verify_sidscope_2_0_candidate.py --require-engineering-ready
       - run: python tools/verify_sidscope_release_metadata.py
 
   compatibility-matrix:
@@ -42,7 +50,7 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: python -m pip install --upgrade pip
+      - run: python -m pip install --upgrade pip "setuptools>=68" wheel
       - run: python -m pip install -e . pytest
       - name: Run contract-surface gate
         run: |
@@ -77,7 +85,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - run: python -m pip install --upgrade pip
+      - run: python -m pip install --upgrade pip "setuptools>=68" wheel
       - run: python -m pip install -e .
       - run: python tools/build_sidscope_release_candidate_archive.py --output /tmp/sidscope-ci.zip
       - run: python tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-ci.zip
@@ -90,6 +98,6 @@ jobs:
         with:
           python-version: "3.9"
           cache: pip
-      - run: python -m pip install --upgrade pip
+      - run: python -m pip install --upgrade pip "setuptools>=68" wheel
       - run: python -m pip install -e .
       - run: python tools/verify_sidscope_resource_package.py

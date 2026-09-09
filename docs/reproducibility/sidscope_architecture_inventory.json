@@ -423,6 +423,11 @@
       "to": "EvidenceIndex"
     }
   ],
+  "current_diagram_files": {
+    "docs/figures/sidscope-current-architecture-prompt.md": "ff8d8f6949e0e197ffa1189d3f1f34d34deedb23b5fba95fff826dc546e58687",
+    "docs/figures/sidscope-current-architecture.json": "2b7f5e8fe4f8c111e10ecee3abb08322cf2cfc477aeaa445d98883ed6ac57a09",
+    "docs/figures/sidscope-current-architecture.png": "b0dfb3e0c060211c71a212902067012cda6016c51f2b3597cd2f6a336296920b"
+  },
   "legacy_profile_authorities": [
     {
       "authority": "docs/ADAPTER_CONFORMANCE.md",
@@ -660,7 +665,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 204,
+  "schema_count": 232,
   "schemas": [
     {
       "artifact_paths": [],
@@ -702,27 +707,44 @@
       ]
     },
     {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_2_0_candidate.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.2_0_candidate_verification.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_2_0_candidate.py"
+      ]
+    },
+    {
       "artifact_paths": [
+        "docs/ADAPTER_SDK.md",
         "docs/ADAPTER_SDK_ALPHA.md",
         "docs/reproducibility/sidscope_1_7_public_surface.json",
         "examples/canonical_pipeline_fixture/adapter_capabilities.json",
         "examples/canonical_pipeline_fixture/expected_failure_telemetry_overlap.json"
       ],
       "declaration_paths": [
+        "docs/ADAPTER_SDK.md",
         "docs/ADAPTER_SDK_ALPHA.md",
         "docs/reproducibility/sidscope_1_7_public_surface.json",
         "examples/canonical_pipeline_fixture/adapter_capabilities.json",
         "examples/canonical_pipeline_fixture/expected_failure_telemetry_overlap.json",
         "src/sidinspector/schemas/adapter_capabilities.alpha.schema.json",
         "src/sidinspector/sdk/alpha.py",
-        "tools/build_sidscope_1_2_closure_fixtures.py"
+        "tools/build_sidscope_1_2_closure_fixtures.py",
+        "tools/build_sidscope_native_submission.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:sdk",
       "producer_paths": [
         "src/sidinspector/schemas/adapter_capabilities.alpha.schema.json",
         "src/sidinspector/sdk/alpha.py",
-        "tools/build_sidscope_1_2_closure_fixtures.py"
+        "tools/build_sidscope_1_2_closure_fixtures.py",
+        "tools/build_sidscope_native_submission.py"
       ],
       "schema_id": "sidscope.adapter_capabilities.alpha.v1",
       "verifier_paths": []
@@ -730,10 +752,12 @@
     {
       "artifact_paths": [
         "docs/ADAPTER_PLUGIN_ECOSYSTEM.md",
+        "docs/ADAPTER_SDK.md",
         "docs/ADAPTER_SDK_ALPHA.md",
         "docs/COMPATIBILITY.md",
         "docs/SIDSCOPE_CHANGELOG.md",
         "docs/adr/0008-plugin-and-native-trace-ecosystem.md",
+        "docs/adr/0023-stabilize-adapter-sdk-1-0.md",
         "docs/reproducibility/sidscope_1_7_public_surface.json",
         "examples/native_trace_payload_fixtures/adapter_capabilities.v1.json",
         "examples/native_trace_payload_fixtures/expected_failure_capability.json",
@@ -741,10 +765,12 @@
       ],
       "declaration_paths": [
         "docs/ADAPTER_PLUGIN_ECOSYSTEM.md",
+        "docs/ADAPTER_SDK.md",
         "docs/ADAPTER_SDK_ALPHA.md",
         "docs/COMPATIBILITY.md",
         "docs/SIDSCOPE_CHANGELOG.md",
         "docs/adr/0008-plugin-and-native-trace-ecosystem.md",
+        "docs/adr/0023-stabilize-adapter-sdk-1-0.md",
         "docs/reproducibility/sidscope_1_7_public_surface.json",
         "examples/native_trace_payload_fixtures/adapter_capabilities.v1.json",
         "examples/native_trace_payload_fixtures/expected_failure_capability.json",
@@ -752,6 +778,7 @@
         "src/sidinspector/schemas/adapter_capabilities.v1.schema.json",
         "src/sidinspector/sdk/alpha.py",
         "src/sidinspector/sdk/plugin_api.py",
+        "tests/test_report_sdk_cli.py",
         "tools/build_sidscope_1_3_ecosystem_fixtures.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
@@ -763,7 +790,9 @@
         "tools/build_sidscope_1_3_ecosystem_fixtures.py"
       ],
       "schema_id": "sidscope.adapter_capabilities.v1",
-      "verifier_paths": []
+      "verifier_paths": [
+        "tests/test_report_sdk_cli.py"
+      ]
     },
     {
       "artifact_paths": [
@@ -1656,22 +1685,54 @@
         "examples/canonical_pipeline_fixture/expected_failure_gate_order.json",
         "examples/canonical_pipeline_fixture/expected_failure_metric_mismatch.json",
         "examples/conformance_ecosystem_fixture/submission/positive/evidence/bundle.json",
+        "src/sidinspector/contracts/evaluation_protocol.py",
         "src/sidinspector/contracts/report_contracts.py",
+        "src/sidinspector/evidence/recomputation.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/diagnostic_report.v1.schema.json",
+        "src/sidinspector/schemas/evaluation_protocol.v1.schema.json",
         "tests/test_submission_ecosystem.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
+        "src/sidinspector/contracts/evaluation_protocol.py",
         "src/sidinspector/contracts/report_contracts.py",
+        "src/sidinspector/evidence/recomputation.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
-        "src/sidinspector/schemas/diagnostic_report.v1.schema.json"
+        "src/sidinspector/schemas/diagnostic_report.v1.schema.json",
+        "src/sidinspector/schemas/evaluation_protocol.v1.schema.json"
       ],
       "schema_id": "sidscope.diagnostic_report.v1",
       "verifier_paths": [
         "tests/test_submission_ecosystem.py"
       ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/diagnostic_review.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/diagnostic_review.py"
+      ],
+      "schema_id": "sidscope.diagnostic_review.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/diagnostic_review.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/diagnostic_review.py"
+      ],
+      "schema_id": "sidscope.diagnostic_review_completion.v1",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [
@@ -2015,6 +2076,19 @@
       "verifier_paths": []
     },
     {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_distribution_install.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.distribution_install_matrix.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_distribution_install.py"
+      ]
+    },
+    {
       "artifact_paths": [
         "docs/COMPATIBILITY.md",
         "docs/reproducibility/sidscope_1_7_public_surface.json",
@@ -2042,6 +2116,7 @@
         "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "src/sidinspector/contracts/report_contracts.py",
         "src/sidinspector/contracts/runtime_contracts.py",
+        "src/sidinspector/evidence/recomputation.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/episode_selection.v1.schema.json",
         "tools/build_sidscope_1_2_closure_fixtures.py"
@@ -2051,11 +2126,36 @@
       "producer_paths": [
         "src/sidinspector/contracts/report_contracts.py",
         "src/sidinspector/contracts/runtime_contracts.py",
+        "src/sidinspector/evidence/recomputation.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/episode_selection.v1.schema.json",
         "tools/build_sidscope_1_2_closure_fixtures.py"
       ],
       "schema_id": "sidscope.episode_selection.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/SIDSCOPE_SDLC_HARDENING.md",
+        "docs/adr/0016-quarantine-unverified-admission.md",
+        "docs/reproducibility/sidscope_1_7_public_surface.json"
+      ],
+      "declaration_paths": [
+        "docs/SIDSCOPE_SDLC_HARDENING.md",
+        "docs/adr/0016-quarantine-unverified-admission.md",
+        "docs/reproducibility/sidscope_1_7_public_surface.json",
+        "src/sidinspector/contracts/evaluation_protocol.py",
+        "src/sidinspector/evidence/recomputation.py",
+        "src/sidinspector/schemas/evaluation_protocol.v1.schema.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidinspector/contracts/evaluation_protocol.py",
+        "src/sidinspector/evidence/recomputation.py",
+        "src/sidinspector/schemas/evaluation_protocol.v1.schema.json"
+      ],
+      "schema_id": "sidscope.evaluation_protocol.v1",
       "verifier_paths": []
     },
     {
@@ -2876,15 +2976,22 @@
         "examples/latte_psid_trained_trace_real_smoke/README.md",
         "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
         "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
-        "src/sidinspector/adapters/latte.py"
+        "src/sidinspector/adapters/latte.py",
+        "tests/test_native_canonical_submission.py",
+        "tools/inspect_sidscope_native_export.py",
+        "tools/project_sidscope_native_export.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "src/sidinspector/adapters/latte.py"
+        "src/sidinspector/adapters/latte.py",
+        "tools/inspect_sidscope_native_export.py",
+        "tools/project_sidscope_native_export.py"
       ],
       "schema_id": "sidscope.latte_psid_trained_trace_bundle.v2",
-      "verifier_paths": []
+      "verifier_paths": [
+        "tests/test_native_canonical_submission.py"
+      ]
     },
     {
       "artifact_paths": [
@@ -3353,6 +3460,58 @@
       ]
     },
     {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/sidscope_local_release_record.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/sidscope_local_release_record.py"
+      ],
+      "schema_id": "sidscope.local_release_record.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/benchmark_sidscope_local_workflows.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/benchmark_sidscope_local_workflows.py"
+      ],
+      "schema_id": "sidscope.local_workflow_scale.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/workflows.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/workflows.py"
+      ],
+      "schema_id": "sidscope.mapping.D1-D2-D5.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/mapping_check.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/mapping_check.py"
+      ],
+      "schema_id": "sidscope.mapping.preflight.v1",
+      "verifier_paths": []
+    },
+    {
       "artifact_paths": [
         "docs/reproducibility/sidscope_module_dependencies.json"
       ],
@@ -3364,6 +3523,76 @@
       "producer_paths": [],
       "schema_id": "sidscope.module_dependency_matrix.v1",
       "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/build_sidscope_native_submission.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_sidscope_native_submission.py"
+      ],
+      "schema_id": "sidscope.native_canonical_completion.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/build_sidscope_native_submission.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_sidscope_native_submission.py"
+      ],
+      "schema_id": "sidscope.native_canonical_origin.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tests/test_native_canonical_submission.py",
+        "tools/build_sidscope_native_submission.py",
+        "tools/observe_sidscope_native_runtime.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/build_sidscope_native_submission.py",
+        "tools/observe_sidscope_native_runtime.py"
+      ],
+      "schema_id": "sidscope.native_checkpoint_metadata.v1",
+      "verifier_paths": [
+        "tests/test_native_canonical_submission.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/inspect_sidscope_native_export.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/inspect_sidscope_native_export.py"
+      ],
+      "schema_id": "sidscope.native_inspection.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_native_observation.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.native_observation_receipt.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_native_observation.py"
+      ]
     },
     {
       "artifact_paths": [
@@ -3384,6 +3613,55 @@
       ],
       "schema_id": "sidscope.native_payload_validation.v1",
       "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/project_sidscope_native_export.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/project_sidscope_native_export.py"
+      ],
+      "schema_id": "sidscope.native_rank_comparison.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/project_sidscope_native_export.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/project_sidscope_native_export.py"
+      ],
+      "schema_id": "sidscope.native_rank_projection.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/SIDSCOPE_USER_WORKFLOWS.md"
+      ],
+      "declaration_paths": [
+        "docs/SIDSCOPE_USER_WORKFLOWS.md",
+        "tests/test_native_canonical_submission.py",
+        "tests/test_native_export_projection.py",
+        "tools/observe_sidscope_native_runtime.py",
+        "tools/project_sidscope_native_export.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/observe_sidscope_native_runtime.py",
+        "tools/project_sidscope_native_export.py"
+      ],
+      "schema_id": "sidscope.native_selection.v1",
+      "verifier_paths": [
+        "tests/test_native_canonical_submission.py",
+        "tests/test_native_export_projection.py"
+      ]
     },
     {
       "artifact_paths": [
@@ -3407,6 +3685,45 @@
         "src/sidinspector/adapters/latte.py"
       ],
       "schema_id": "sidscope.normalized_item_sid_universe.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/benchmark_sidscope_observed_review.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/benchmark_sidscope_observed_review.py"
+      ],
+      "schema_id": "sidscope.observed_review_benchmark.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_sidscope_observed_review.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_sidscope_observed_review.py"
+      ],
+      "schema_id": "sidscope.observed_review_completion.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/regression.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/regression.py"
+      ],
+      "schema_id": "sidscope.paired_regression.v1",
       "verifier_paths": []
     },
     {
@@ -3447,6 +3764,7 @@
         "examples/prepared_dataset_fixture/prepared_dataset.json",
         "src/sidinspector/contracts/prepared_dataset.py",
         "src/sidinspector/contracts/runtime_contracts.py",
+        "src/sidinspector/evidence/bundle.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/prepared_dataset.v1.schema.json",
         "tests/test_prepared_dataset_contract.py",
@@ -3458,6 +3776,7 @@
       "producer_paths": [
         "src/sidinspector/contracts/prepared_dataset.py",
         "src/sidinspector/contracts/runtime_contracts.py",
+        "src/sidinspector/evidence/bundle.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/prepared_dataset.v1.schema.json"
       ],
@@ -3552,6 +3871,19 @@
         "tools/build_sidscope_1_6_hardening_fixtures.py"
       ],
       "schema_id": "sidscope.public_api_inventory.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_public_consumer_contract.v1.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_public_consumer_contract.v1.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.public_consumer_contract.v1",
       "verifier_paths": []
     },
     {
@@ -3734,6 +4066,19 @@
       "verifier_paths": [
         "tests/test_sidscope_release_profiles.py"
       ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/sidscope_release_profiles.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:release",
+      "producer_paths": [
+        "tools/sidscope_release_profiles.py"
+      ],
+      "schema_id": "sidscope.release_profile_receipt.v2",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [
@@ -4199,12 +4544,16 @@
       "declaration_paths": [
         "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
         "tools/export_rpg_trained_trace.py",
+        "tools/inspect_sidscope_native_export.py",
+        "tools/project_sidscope_native_export.py",
         "tools/verify_rpg_trained_trace_bundle.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/export_rpg_trained_trace.py"
+        "tools/export_rpg_trained_trace.py",
+        "tools/inspect_sidscope_native_export.py",
+        "tools/project_sidscope_native_export.py"
       ],
       "schema_id": "sidscope.rpg_trained_trace_bundle.v1",
       "verifier_paths": [
@@ -4366,6 +4715,58 @@
       "verifier_paths": []
     },
     {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/refresh.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/refresh.py"
+      ],
+      "schema_id": "sidscope.sid_refresh_completion.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/refresh.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/refresh.py"
+      ],
+      "schema_id": "sidscope.sid_refresh_evaluation_binding.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/verify_sidscope_sid_refresh.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.sid_refresh_real_control.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_sid_refresh.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/refresh.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/refresh.py"
+      ],
+      "schema_id": "sidscope.sid_refresh_report.v1",
+      "verifier_paths": []
+    },
+    {
       "artifact_paths": [
         "HANDOFF.md",
         "docs/COMPATIBILITY.md",
@@ -4454,6 +4855,7 @@
         "examples/source_identity_fixture/source_identity.json",
         "src/sidinspector/contracts/runtime_contracts.py",
         "src/sidinspector/contracts/source_identity.py",
+        "src/sidinspector/runtime_demo.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/source_identity.v1.schema.json",
         "tests/test_source_identity_contract.py",
@@ -4465,6 +4867,7 @@
       "producer_paths": [
         "src/sidinspector/contracts/runtime_contracts.py",
         "src/sidinspector/contracts/source_identity.py",
+        "src/sidinspector/runtime_demo.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/source_identity.v1.schema.json"
       ],
@@ -4605,6 +5008,7 @@
         "examples/native_trace_payload_fixtures/expected_failure_censoring.json",
         "src/sidinspector/contracts/report_contracts.py",
         "src/sidinspector/contracts/runtime_contracts.py",
+        "src/sidinspector/evidence/recomputation.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/trace_envelope.v1.schema.json",
         "tests/test_submission_ecosystem.py",
@@ -4615,6 +5019,7 @@
       "producer_paths": [
         "src/sidinspector/contracts/report_contracts.py",
         "src/sidinspector/contracts/runtime_contracts.py",
+        "src/sidinspector/evidence/recomputation.py",
         "src/sidinspector/schemas/contract_registry.v1.json",
         "src/sidinspector/schemas/trace_envelope.v1.schema.json",
         "tools/build_sidscope_1_2_closure_fixtures.py"
@@ -4812,12 +5217,38 @@
       ],
       "schema_id": "sidscope.trace_payload_registry_listing.v1",
       "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/workflows.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/workflows.py"
+      ],
+      "schema_id": "sidscope.workflow_comparison.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "src/sidscope/workflows.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "src/sidscope/workflows.py"
+      ],
+      "schema_id": "sidscope.workflow_report.v1",
+      "verifier_paths": []
     }
   ],
   "scope": "public_release_manifest_plus_active_route_ledgers",
   "status": "pass",
   "version_axes": {
-    "adapter_sdk": "0.2.0-alpha",
+    "adapter_sdk": "1.0.0",
     "canonical_schemas": [
       "sidscope.checkpoint_binding.v1@1.0.0",
       "sidscope.conformance_report.v1@1.0.0",

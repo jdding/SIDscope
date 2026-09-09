@@ -1,6 +1,148 @@
 # SIDScope System Architecture
 
+## Current implementation view — 2026-09-09
+
+This is the **local `1.7.0.dev0` implementation toward 2.0**, not a published
+2.0 compatibility claim. The six owned layers are implemented; a diagram of
+their existence does not establish every route, workload or user acceptance.
+Requirement states come from `reproducibility/sidscope_sdlc_requirements.csv`.
+
+![SIDScope current local architecture](figures/sidscope-current-architecture.png)
+
+[Architecture content map](figures/sidscope-current-architecture.json) ·
+[Image-generation prompt](figures/sidscope-current-architecture-prompt.md).
+The raster overview was produced with built-in image generation, not draw.io.
+The interface does not expose a model version; no specific "image 2.5" model
+claim is made. Solid arrows show logical artifact flow, not Python imports or
+separate services. Dashed arrows show shared canonical identity/contract binding.
+Contracts are drawn as the foundation, not a sequential processing stage.
+The dependency matrix remains the authority for allowed imports. Workflow
+consumers use existing APIs; they do not add a seventh product layer. Numbering
+is local to the visual layout, not a new dependency or compatibility ordering.
+
+### From user workflow to delivered code
+
+| Surface | Current code | Responsibility and boundary |
+| --- | --- | --- |
+| Explicit native execution | `tools/observe_sidscope_native_runtime.py` | Caller-authorized scratch observation; imports upstream code only in its own environment. No training or submission-selected execution. |
+| Generic producer entry | `src/sidscope/pipeline.py`, `src/sidinspector/sdk/` | Caller selects an AdapterHarness producer; provenance/run/family bindings are checked. A run spec supplies paths, not executable code. |
+| RPG/PSID observed-data bridge | `tools/build_sidscope_native_submission.py` | Existing observations and extracted metadata become canonical objects and diagnostic submissions; no model or key access. |
+| Canonical identity and trace | `src/sidinspector/contracts/`, `schemas/`, `trace/` | Versioned identity, EvaluationProtocol, TraceEnvelope and native payloads. Never invent AR order for RPG or erase masked/latent state. |
+| Mapping-first audit (N06) | `src/sidscope/mapping_check.py` | Catalog/split/target/SID joins; conditional diagnostics use explicit train interactions. Missing prerequisites stay unavailable. |
+| Evaluation and admission | `src/sidinspector/evaluation/`, `evidence/recomputation.py`, `conformance_core/`, `submission/` | Recompute input-bound diagnostics and result cards. Current diagnostic admission says `diagnostics_verified`, not training verification or named-adapter promotion. |
+| Immutable evidence | `src/sidinspector/evidence/` | Bundles and content-addressed files are authoritative; SQLite and static indexes are rebuildable projections. Corrections supersede, never rewrite history. |
+| Matched-run comparison (N05) | `src/sidscope/regression.py` | Matched runs and shared user clusters; bounded uncertainty and degradation budgets. One observation is not multiple seeds. |
+| Actionable offline report (N04) | `src/sidscope/diagnostic_review.py` | Recomputed findings, slices, pseudonymous examples, evidence pointers and next checks; no server or causal promotion. |
+| One-command observed workflow (N01 technical path) | `tools/run_sidscope_observed_review.py` | Canonical/mapping admission → original-input rebuild → rank evaluation → offline review. Unsupported duplicate ranked slots fail explicitly, without changing native evidence. |
+| CPU cost measurement (N08) | `tools/benchmark_sidscope_observed_review.py` | Fresh subprocesses measure phase time, process RSS and output bytes; native NFE retains its separate observation scope. Not a new persistent worker service. |
+| SID refresh lifecycle (N07) | `src/sidscope/refresh.py`, `tools/verify_sidscope_sid_refresh.py` | Explicit ordered-prefix, parallel-position or unordered-set comparison; separates raw churn from common-item structure and optionally binds recomputed downstream evidence. No repair or causal claim. |
+
+`src/sidscope/workflows.py` exposes local audit/evaluate/compare workflows.
+These opt-in modules do not silently enlarge the curated facade compatibility
+promise. Core verification does not import a producer merely because it is named
+in an input artifact.
+
+### Acceptance snapshot and next boundary
+
+- N02-N08 have verified engineering implementations in the ledger. N08 is closed
+  at exactly 100 episodes per approved RPG/PSID route: transferred inputs passed
+  hash/validation checks and three local postprocessing repeats. No model rerun,
+  1000-episode trace or production SLO is in scope.
+- N07 is delivered under ADR-0022. Actual-shape same-input controls pass on the
+  12,101-item RPG parallel-position mapping and 17,396-item PSID ordered-prefix
+  mapping. They verify the zero-change invariant, not a real refresh experiment.
+- Adapter SDK 1.0 and the pre-2.0 compatibility surface are frozen by ADR-0023/0024.
+  N09/N10 remain deferred and no hosted/training surface is introduced.
+- N01/F09 independent actual use is the sole certification blocker. Automated
+  tests, maintainer reruns and synthetic installed consumers do not satisfy it.
+
+### Maintaining this view
+
+Architecture documentation and diagram ownership stays with the core/Evidence
+maintainer in `CODE_OWNERSHIP.md`. This view documents ADR-0019–0024; it changes
+no topology, contracts, runtime defaults or public authority, so no new topology
+ADR or migration is needed. Sections 3 and 8–11 retain alternatives, concrete
+technology, operations, failure modes and rollback decisions. No hosted service,
+automatic SID repair, new algorithm or streaming subsystem is added here.
+
+The content map carries code paths, six owned layers and the logical edge types.
+`tools/verify_sidscope_architecture_inventory.py` checks paths, layer coverage,
+local-development scope, edge structure and map/prompt/image checksums in the
+existing architecture inventory. These checks cannot prove that generated pixels
+match the content map: `pixel_semantics_checked` remains false. Requirement
+states belong to the ledger and prose, not to the illustration. To refresh the
+image, use the saved prompt with image generation, inspect every label and arrow,
+then replace the PNG and run:
+
+```sh
+python3 tools/build_sidscope_architecture_inventory.py
+python3 tools/verify_sidscope_architecture_inventory.py
+```
+
+Inspect the generated preview before accepting a refresh. No image-generation
+runtime dependency is added to SIDScope. Figure map/prompt/preview ship in
+conformance/evidence-full, not the minimal runtime profile; the existing inventory
+is included through the established conformance tooling dependency. Source or
+documentation edits invalidate earlier exact-source delivery receipts; perform
+new delivery checks before making a new release-ready claim.
+
+## Historical integration notes (superseded by the current view above)
+
+ADR-0021 adds opt-in local `sidscope.regression` and `sidscope.diagnostic_review`
+modules: paired run/user-cluster statistics, recomputed evidence-addressed HTML,
+and a one-command observed-input workflow. NumPy and standard-library rendering
+stay in the same process; CPU benchmark workers isolate peak RSS. No new service,
+stable facade symbol or canonical schema is introduced. Existing five-episode
+observations cannot establish larger-trace scale or independent user adoption.
+
+The chronological integration notes below are historical; ADR-0020/0021 supersede
+earlier statements that the two canonical bridges are unimplemented.
+
+ADR-0020 adds the optional pure-data native canonical bridge, reusing SDK and
+existing contracts/admission/comparison. Actual RPG and PSID observations now
+export canonical envelopes and diagnostic EvidenceBundle submissions. Full data
+remain external; named-adapter/independent-use claims remain separate. The only
+core repairs are exact boolean validation and contract-validated normalization
+privacy declarations; no public schema, facade, payload or runtime topology changes.
+
+The caller-authorized CPU scratch observer is separate from the offline native
+observation verifier (ADR-0019). Only the former imports external runtime code and
+uses private assets; public submissions cannot select or invoke it. The latter
+binds normalized exports, targets, measurements and full mapping joins through
+existing kernels. Its developmental receipt is not canonical bundle admission.
+No public schema/facade, service topology or upstream generation semantics change.
+
+Native rank projection remains a synchronous evidence-full tool reusing native
+validators and the existing diagnostic metric kernel (ADR-0019). It executes no
+producer code and opens no cache or identity key. Absent generation/compute facts
+are not coerced into TraceEnvelope fields. Real observation and canonical bundle
+integration remain separate uncompleted work; no runtime topology is added.
+
+ADR-0019 adds synchronous caller-selected producer orchestration and normalized
+mapping preflight within the existing modular monolith. No executable code may
+be selected by a submission/run spec. D3/D4 consume only explicit train events;
+missing joins remain unavailable. The two real canonical producer integrations
+are not established by generic orchestration or fixture-based installed tests.
+
+Local input policy (ADR-0018): trusted local workflow and export inspection use
+optional caller budgets, independent of bounded untrusted submission intake.
+Structural validation and native generation semantics remain unchanged. Existing
+in-memory metric kernels and the modular monolith are retained. Independent
+subprocess profiling records CPU phase times, peak RSS and output bytes; evidence
+of an actual workload bottleneck, not arbitrary row caps, governs future streaming.
+
 Status: approved target architecture
+
+Implementation warning: the target trust chain is not yet independently closed.
+ADR-0016 separates structural replay from computation-bound diagnostic admission.
+The fixed EvaluationProtocol binds population and metric definitions to recomputed
+result cards. `SIDSCOPE_SDLC_HARDENING.md` tracks remaining independent-user acceptance work. No new service
+or upstream training responsibility is introduced.
+
+Verification is computation-only: execute necessary feasible input-bound checks;
+otherwise leave the claim unverified. CPU is sufficient for trace-based metric
+recomputation; Fudan is an execution venue for necessary native inference, not a
+new service or evidence authority. Human signatures do not replace computation.
 
 Applies to: post-`1.1.1` development through `2.0`
 
@@ -137,7 +279,7 @@ profiles, checkers and evidence packages. None is a required runtime dependency.
 
 ## 4. Current, Interim and Target States
 
-### 4.1 Current State: 1.1.1 Baseline
+### 4.1 Historical Starting State: 1.1.1 Baseline
 
 Method-specific modules and CLIs are the regression authorities. Shared
 diagnostic utilities, release manifests and package gates exist, but schema
@@ -218,7 +360,7 @@ exports from that same source.
 Legacy route-specific verifiers may remain available for historical replay, but
 they no longer define new status transitions after their profiles have migrated.
 
-## 5. Target Solution Topology
+## 5. Logical Six-Layer Topology
 
 ### 5.1 End-to-End Flow
 
@@ -245,8 +387,10 @@ External method / training runtime / private assets
 6. Evidence: immutable bundle -> local registry -> deterministic public index
 ```
 
-SIDScope owns layers 1 through 6. A completed upstream run or computed metric
-does not enter the Evidence Layer until the applicable profile passes.
+SIDScope owns layers 1 through 6. This is the product-level flow; current
+diagnostic admission is input-bound and scope-limited. A completed upstream run,
+hash-only training record or computed metric alone cannot promote an adapter or
+certify training. See the current implementation view for actual entrypoints.
 
 ### 5.2 Integration Styles
 
@@ -348,8 +492,9 @@ duplicates, invalidity and resolution; constructs the actually published
 ranking; computes declared metrics; decomposes generation/search, reachability,
 resolution and ranking-conversion outcomes; and reports compute and censoring.
 
-Metric plugins declare their input contract, denominator, cutoff, publication
-depth, censoring behavior and implementation identity.
+A future supported metric/slice extension API must declare its input contract,
+denominator, cutoff, publication depth, censoring and implementation identity.
+That candidate extension surface is not implied by today's fixed metric kernels.
 
 ### 6.5 Conformance Layer: Profiles and Verifiers
 
@@ -426,7 +571,7 @@ contracts, the maintainer group is small, and no component needs independent
 deployment or scaling. Microservices, queues, service mesh and a hosted control
 plane would add failure domains without satisfying a demonstrated requirement.
 
-Target module shape:
+Current owned module shape (logical layer names are not always directory names):
 
 ```text
 src/sidinspector/
@@ -434,10 +579,21 @@ src/sidinspector/
   contracts/       canonical models, hashing and schema registry
   trace/           common envelope and family payload codecs
   evaluation/      resolution, ranking, metrics and decomposition
-  conformance/     profiles, verifier engine and typed failures
+  conformance_core/ profiles, verifier engine and typed failures
   evidence/        bundle, registry, comparison and static export
+  submission/      application orchestration; not a seventh layer
+  schemas/         bundled schemas and catalogs
   cli/             thin command facade
-  adapters/        bundled reference adapters only
+  adapters_core/   lazy plugin discovery and shared fixtures
+  adapters/        legacy route adapters
+
+src/sidscope/
+  __init__.py      curated facade
+  workflows.py    opt-in audit/evaluate/compare
+  mapping_check.py catalog/split/target/SID preflight
+  pipeline.py     explicit producer orchestration
+  regression.py   matched run/user-cluster comparison
+  diagnostic_review.py offline evidence-addressed reports
 ```
 
 Dependencies flow from CLI and adapters toward stable interfaces; evidence may

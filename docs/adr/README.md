@@ -20,6 +20,15 @@ earlier ADR rather than editing its rationale or consequences in place.
 | [0013](0013-unify-public-contract-authority.md) | Unify public contract authority before stable 2.0 | Accepted | 2026-08-31 |
 | [0014](0014-tiered-release-profiles.md) | Publish additive runtime, conformance, and evidence-full assets | Accepted | 2026-08-31 |
 | [0015](0015-separate-public-maintenance-development-and-tois-lines.md) | Separate the public maintenance, local 2.0 development, and TOIS lines | Accepted | 2026-08-31 |
+| [0016](0016-quarantine-unverified-admission.md) | Quarantine unverified admission instead of treating declarations as facts | Accepted | 2026-09-08 |
+| [0017](0017-executable-sdlc-acceptance-and-consumer-workflows.md) | Make SDLC acceptance and public consumers executable | Accepted | 2026-09-08 |
+| [0018](0018-separate-local-input-budgets-from-submission-policy.md) | Separate optional local budgets from untrusted submission limits | Accepted | 2026-09-08 |
+| [0019](0019-local-producer-orchestration-and-mapping-preflight.md) | Add local producer orchestration and mapping preflight | Accepted | 2026-09-08 |
+| [0020](0020-observed-native-canonical-admission.md) | Admit observed native exports through canonical diagnostic evidence | Accepted | 2026-09-08 |
+| [0021](0021-paired-regression-and-offline-review.md) | Add paired regression and offline diagnostic review | Accepted | 2026-09-09 |
+| [0022](0022-bounded-sid-refresh-lifecycle.md) | Add bounded SID refresh lifecycle diagnostics | Accepted | 2026-09-09 |
+| [0023](0023-stabilize-adapter-sdk-1-0.md) | Stabilize the Adapter SDK at 1.0 | Accepted | 2026-09-09 |
+| [0024](0024-freeze-2-0-engineering-candidate.md) | Freeze the 2.0 engineering candidate before certification | Accepted | 2026-09-09 |
 
 New ADRs must include context, decision drivers, viable options, the decision,
 positive and negative consequences, migration, validation and rollback. Accepted

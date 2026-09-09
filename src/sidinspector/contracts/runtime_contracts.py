@@ -332,6 +332,10 @@ def validate_trace_envelope(value: Mapping[str, Any]) -> RuntimeContract:
             _fail("rank_state_mismatch", episode_id)
         if rank_state == "exact" and target.get("resolved") is not True:
             _fail("exact_rank_without_resolution", episode_id)
+        if target["resolved"] and not (target["catalog_reachable"] and target["generated"]):
+            _fail("inconsistent_target_state", episode_id)
+        if rank_state == "exact" and row["failure_state"] is not None:
+            _fail("inconsistent_target_state", episode_id)
         compute = row.get("compute")
         compute_fields = {"nfe", "forward_calls", "candidate_count", "latency_ms"}
         if not isinstance(compute, Mapping) or set(compute) != compute_fields:
@@ -380,7 +384,8 @@ def validate_runtime_bindings(
 
 
 def _load(path: Path, validator: Any) -> RuntimeContract:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    from .json_io import load_json
+    value = load_json(path)
     if not isinstance(value, Mapping):
         _fail("invalid_type", f"{path} must contain an object")
     return validator(value)

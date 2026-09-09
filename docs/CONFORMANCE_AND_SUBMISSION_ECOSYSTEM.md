@@ -2,6 +2,12 @@
 
 Status: SIDScope `1.5.0.dev0` development contract
 
+Current 1.7 override: ADR-0016 requires recomputation for diagnostic admission and
+default indexes; missing inputs remain rejected. The flow and acceptance
+examples below describe historical structural replay only. A caller-written
+pass row, receipt or self-hash does not verify gate execution. Profile CLI
+output explicitly distinguishes the declared label from structure-only checks.
+
 SIDScope 1.5 connects four independently versioned surfaces:
 
 ```text

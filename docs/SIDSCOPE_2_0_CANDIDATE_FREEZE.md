@@ -1,0 +1,44 @@
+# SIDScope 2.0 engineering candidate freeze
+
+Status: engineering candidate only; package `1.7.0.dev0`; certification blocked
+only by F09 independent-user actual use. No RC, tag, push or release authorized.
+
+## Frozen compatibility inputs
+
+- 46 public schema IDs backed by 28 schema resources;
+- 19 CLI result schema IDs and 31 CLI leaf commands;
+- 39 curated `sidscope` facade symbols;
+- stable Adapter SDK `1.0.0`, plugin API `1.0`, and exact current descriptor
+  interval `>=1.0.0,<2.0.0`;
+- opt-in local workflows for audit/evaluate/compare, mapping preflight,
+  producer admission, paired regression, diagnostic review and SID refresh;
+- additive `runtime < conformance < evidence-full` release profiles.
+
+The machine authority is
+`docs/reproducibility/sidscope_1_7_public_surface.json`; this document does not
+replace it. N09 notebook specialization, N10 additional static review packaging,
+hosted services, training frameworks and method implementation are excluded.
+Existing HTML diagnostic review is retained; N10 does not reopen it.
+
+## Two-stage verdict
+
+```bash
+python3 tools/verify_sidscope_2_0_candidate.py --require-engineering-ready
+python3 tools/verify_sidscope_2_0_candidate.py --require-certification-ready
+```
+
+The first command must pass once all technical gates are green. The second must
+return a typed blocked result while F09 remains partial. Automation, a maintainer
+rerun or a synthetic installed consumer cannot satisfy F09. After an independent
+user completes the documented own-producer journey, update the requirement
+ledger from that evidence, regenerate the seven current-status blocks, and rerun
+the second command.
+
+## RC transition
+
+The engineering candidate runs wheel/sdist, all three profile archives, the
+Linux/Python matrix and a detached exact-source record before F09 so delivery
+defects do not hide behind human acceptance. Only after certification readiness
+is true may a separately authorized change set `2.0.0rc1`; that RC commit must
+rerun the same gates and populate a new public release packet. Push, tag and GitHub Release remain separate
+explicit actions.

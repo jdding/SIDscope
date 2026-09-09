@@ -8,7 +8,7 @@ from pathlib import Path
 
 from sidinspector.contracts import canonical_json_bytes, with_content_sha256
 from sidinspector.evidence.bundle import build_evidence_bundle
-from sidinspector.evidence.comparison import compare_evidence_bundles
+from sidinspector.evidence.comparison import compare_legacy_evidence_bundles as compare_evidence_bundles
 from sidinspector.evidence.registry import EvidenceRegistry, EvidenceRegistryError
 
 

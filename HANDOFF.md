@@ -1,8 +1,311 @@
 # SIDScope 1.7 Development Handoff
 
-Last updated: 2026-08-31
+<!-- SIDSCOPE:CURRENT:BEGIN -->
+Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
+Unclosed SDLC requirements: F09.
+Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
+Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
+Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+<!-- SIDSCOPE:CURRENT:END -->
 
-## Executive status
+Last updated: 2026-09-09
+
+## Current 2.0 engineering-candidate closeout
+
+The authorized technical closeout is complete except for the deliberately human
+F09 condition. Adapter SDK is stable at `1.0.0` with current descriptors bound
+to `>=1.0.0,<2.0.0`; plugin API stays `1.0`, the curated facade remains 39
+symbols, and the public contract counts remain 46 schema IDs, 28 schema
+resources, 19 CLI result schemas and 31 CLI leaf commands. ADR-0023 and
+ADR-0024 freeze these boundaries while the package remains `1.7.0.dev0`.
+
+N07 is implemented in `src/sidscope/refresh.py` with explicit
+`ordered_prefix`, `parallel_positions` and `unordered_set` semantics, typed
+fail-closed negatives, bounded pseudonymous examples and optional recomputed
+downstream comparison. Actual-shape same-input controls passed for RPG 12,101
+items and PSID 17,396 items; these controls establish zero fabricated churn,
+not a real before/after refresh effect. N08 is closed at the user-authorized
+limit of exactly 100 episodes per frozen route. Three local postprocessing
+repeats produced medians of 50.2044 s / 1,791,819,776 bytes peak RSS for RPG
+and 9.5620 s / 1,048,821,760 bytes for PSID. No model rerun, 1000-episode
+expansion or production SLO is planned. Private receipts remain under
+`.local_artifacts/reviews/2026-09-09/`.
+
+The local macOS CPU suite passes with 571 tests and 6 external-input skips.
+The Linux arm64 Docker matrix passed on CPython 3.9, 3.10, 3.11 and 3.12. Each
+cell ran the full suite (544 passed, 29 optional/external skips, 65 subtests)
+and the metadata, architecture, SDLC acceptance/hardening, profile, candidate
+and resource-package verifiers. The 3.10 run exposed and closed a global import
+mock portability defect. The 3.12 run made the declared `setuptools>=68` build
+backend explicit in CI; no runtime dependency was added.
+
+The frozen six-command CPU baseline remains immutable. A fresh macOS 26.6.2 run
+correctly returned `environment_review_required` because the baseline was recorded
+on 26.5.2. The review is closed without overriding that guard: implementation,
+Python and processor match; all six advisory median ratios are below 0.90; and the
+separate Linux matrix is green. This is not relabeled as a same-environment PASS
+or a production SLO.
+
+The current architecture assets are
+`docs/figures/sidscope-current-architecture.png`, its verified content map JSON
+and prompt record. The raster overview was generated with the built-in image
+generator, not draw.io; the content map now includes the N07 refresh path. Pixel
+review remains visual, while the architecture verifier checks six layers, module
+paths, logical edges and asset hashes.
+
+Engineering readiness is fail-closed and green. Certification readiness remains
+blocked only by F09: an independent SID algorithm engineer must complete the
+documented own-producer workflow without core edits or hand-built internal JSON.
+Automation and maintainer execution do not satisfy it. N09/N10 remain excluded.
+No push, tag, GitHub Release, public-main change or TOIS mutation is authorized.
+A clean local candidate commit and its detached exact-source record are the final
+delivery artifacts for this handoff; their immutable identifiers belong in the
+post-commit receipt rather than being predicted in source text.
+
+## Earlier algorithm-engineer workflow continuation (ADR-0021)
+
+2026-09-09 bounded N08 update: the user authorized exactly 100 episodes per
+existing frozen route, not 1000 or further scale expansion. Both new CPU
+observations finished successfully (RPG 106.79 s; PSID 45.06 s), each with two
+threads and a 7200 s guard; no training or automatic retries. The initial RPG
+attempt failed on dependency import before inference and is retained separately.
+The successful run used an existing dependency environment read-only with
+bytecode writing disabled. All new remote outputs are in the SIDScope-v2 workspace.
+
+Security review blocked transfer of native/preflight/selection/observations JSON
+to the private local evidence directory pending explicit export authorization.
+Do not bypass that restriction. No successful native model observation needs
+rerunning: retrieve the existing authorized outputs after approval, then perform
+canonical admission, original-input recheck, offline report and three CPU
+postprocessing repeats. N08 remains partial only for that pending validation,
+not a new larger-scale/SLO requirement. Local tests: 549 passed, 6 skipped.
+The earlier delivery record remains historical; no current new distribution/G8
+receipt is claimed. Private execution handoff is under
+`.local_artifacts/reviews/2026-09-09/n08-100-evidence/`.
+N07 is the next recommended new feature, not yet authorized for implementation.
+
+The following workflow overview predates the bounded 100-episode authorization.
+
+Approved order N05 → N04 → N08 was implemented as opt-in local modules and
+tools, keeping 1.7.0.dev0 and the 39-symbol facade unchanged. N05 computes paired
+run/user-cluster effects and approximate pointwise intervals from recomputed
+reports; missing pairs, protocol/depth/control drift and insufficient evidence
+fail closed or remain inconclusive. N04 creates escaped offline reviews with
+slice-level findings, pseudonymous examples, evidence pointers and bounded next
+checks, without causal claims. See `docs/SIDSCOPE_REGRESSION_WORKFLOWS.md`.
+
+`tools/run_sidscope_observed_review.py` connects existing real observations to
+canonical admission, original-input recheck, ranked evaluation and static review
+in one command. `tools/benchmark_sidscope_observed_review.py` repeats this in fresh
+CPU processes. New evidence is under
+`.local_artifacts/reviews/2026-09-09/algorithm-workflows/`; old evidence unchanged.
+The existing observed mappings/splits are full, but both traces have five episodes.
+N08 is therefore partial for larger representative traces and a user acceptance
+target. Existing NFE is reported as prior observed compute, not new inference.
+
+N01/F09 independent actual user use is still pending. Do not simulate a user or
+clone observations into seeds. Complete current tests/install/archive/G8 evidence
+must be bound in a new exact-source record. Perform final readiness review with
+these remaining gaps visible; no push, tag, release, new model execution or frozen
+repository write is authorized by this continuation.
+
+The following 2026-09-08 notes are historical, superseded where noted above.
+
+## Latest native-integration continuation
+
+Canonical bridge continuation (ADR-0020): `tools/build_sidscope_native_submission.py`
+now builds real source/data/SID/prepared/selection/run/checkpoint/trace/diagnostic/
+protocol/profile/EvidenceBundle objects without fixture provenance. SDK export,
+diagnostic admission and same-export comparison passed for both observed routes;
+`--verify-submission` rebuilds from original inputs, not caller-provided flags.
+New local evidence is under `.local_artifacts/reviews/2026-09-08/canonical-native-evidence/`.
+`rpg-current/` and `psid-current/` are current; earlier outputs are retained.
+
+New records bind best checkpoint progress, not final training progress: PSID
+epoch 12 / step 9372 (final run 10000), RPG epoch 107 / step 10807 (final run 12827).
+Existing records were read only; no new inference, training or key access was
+needed in this continuation. The extraction tool's `--metadata-only` mode automates
+that read-only operation. Training remains unverified; no historical evidence changed.
+
+The canonical profile remains partial while diagnostic admission is accepted as
+`diagnostics_verified`. N03's technical bridge is implemented and exercised;
+F09 still requires actual independent use. Full current delivery results belong
+to the new exact-source receipt, not the older 501-test record. Next development
+is N05 comparison, then N04 reports, then N08 scale. No push/tag/release authorized.
+
+The observation-only paragraphs below record the preceding batch and are
+superseded on canonical-integration status by this continuation.
+
+RPG Beauty and PSID Video Games are the chosen engineering acceptance tracks;
+compare within each frozen protocol, not across datasets. Read-only Fudan checks
+matched both actual checkpoint digests and the RPG model-file digest to historical
+evidence. This does not certify training or all source files.
+
+`tools/project_sidscope_native_export.py` now validates existing native exports,
+projects faithful ranked slots and identity-bound optional target labels, and
+recomputes same-protocol comparisons. Missing PSID labels stay unavailable;
+same-file comparison is explicitly recomputation. Fifteen new focused regressions
+passed at implementation time; record current full gates separately. This is NOT
+the complete native-to-TraceEnvelope/EvidenceBundle integration.
+
+The user subsequently explicitly approved the CPU scratch observer. Both frozen
+checkpoints have now executed five episodes on Fudan with two CPU threads and no
+training/GPU. Only normalized exports returned locally; the existing identity key
+was used in place, never displayed/copied/returned. Original source/cache hashes
+were unchanged. Two failed RPG observation attempts are retained separately: one
+stopped before inference, one completed inference but double-counted a multiline
+trace event. The fixed observer then completed; PSID was not rerun.
+
+`tools/verify_sidscope_native_observation.py` checks native/label/measurement
+bindings and full catalog/split/target/SID/interaction joins. RPG covers 12,101
+mapping items and 67,089 split rows; PSID covers 17,396 items and 42,756 split rows.
+Both have five actual selected targets. Forward calls per episode are RPG 1 and
+PSID 4. Same-export comparisons mean recomputation, not independent run evidence.
+Category purity, vocabulary-capacity utilization and temporal split authenticity
+remain unavailable. These are explicit limitations, not passing checks.
+
+Local ignored evidence: `.local_artifacts/reviews/2026-09-08/native-runtime-evidence/`.
+Raw outputs and previous receipts are immutable; latest verified outputs are in
+each method's `verified-current/` directory. Do not package private runtime specs,
+normalized full data, caches, checkpoints or runtime logs. F09/N03 remain partial:
+canonical source/prepared/run/checkpoint/TraceEnvelope/EvidenceBundle integration
+and actual independent user use are still unfinished. The next technical work is
+that canonical bridge, followed by N05, N04, N08. No further runtime authorization
+is needed for the already approved same-scope CPU observation work.
+
+## Current two-step batch (ADR-0019)
+
+`sidscope.mapping_check.preflight` implements catalog/split/target/SID joins,
+explicit missing-input dispositions and conditional D3/D4/weighted D2 using only
+training interactions. Held-out-only events never trigger the legacy kernel's
+all-events fallback. Existing audit/evaluate/compare outputs are unchanged.
+`sidscope.pipeline.run` calls an explicitly chosen AdapterHarness producer,
+validates trace/run/checkpoint/family bindings, builds recomputed submission
+evidence and compares it. Installed tests execute this generic chain on synthetic
+inputs. They are NOT two real producer acceptances.
+
+F09/N03 remain partial: RPG/PSID native-to-canonical export bindings still need
+connection; actual CPU execution and full mapping checks are now recorded above.
+No independent actual user is claimed. Historical public evidence has a
+43-row RPG mapping subset (not its full 12,101-item universe) and target-free
+PSID exports. Never fill absent facts from fixtures. Existing Fudan assets are now
+located and the approved observation supplies real normalized labels and compute.
+N05/N04/N08 (the later three plan items) are deferred; no GPU work was launched.
+
+## Current local input policy and acceptance correction
+
+ADR-0018 removes arbitrary 10k-row/8-MiB defaults from trusted local workflows
+and real-export inspection. `LocalInputBudget` and CLI flags allow explicit
+caller budgets; canonical/SDK defaults and untrusted submission limits remain
+unchanged. JSON structural checks, native semantics, version and authority
+boundaries are preserved. JSON/CSV/Parquet mapping and evaluate/compare passed
+the separate 10k/100k/1M CPU smoke; its logs are not a real-workload SLO.
+
+F09 and N03 are partial, not closed: existing export consumers are not the
+original external producer-to-bundle/comparison chain or an independent actual
+user trial. N08 is partial after synthetic scale measurement. Generated status
+above supersedes earlier narrower closure wording. No signature policy is added.
+Next work and acceptance criteria: `docs/SIDSCOPE_NEXT_DEVELOPMENT_PLAN.md`.
+All new evidence must be written to a fresh local receipt; historical receipts,
+TOIS materials and native verifier bytes must not be rewritten.
+
+## Current computation-path implementation (supersedes the earlier observations below)
+
+Version remains `1.7.0.dev0`, local-only. Positive diagnostic admission now
+recomputes embedded protocol/trace/selection/report objects and the complete
+result card. Default status/result indexes repeat this check and emit only
+`diagnostics_verified`, never named-adapter or training certification.
+Missing inputs and rehashed inconsistent metrics fail closed. Comparisons bind
+fixed metric definitions and full selection identity; unknown measurement
+conditions suppress compute deltas. Historical evidence remains unchanged.
+
+The six-command CPU performance gate passes on the original environment:
+latest median ratios 0.1622-0.7468 of the immutable baseline. Selected-command
+parser construction preserves parameter/help behavior without caching or relaxed
+thresholds. This is not representative scale/memory/cold-start acceptance.
+
+Two real compact export consumers execute native validators and deterministic
+input-bound reports: RPG recomputes Hit@10=0.2 on five exported episodes; PSID
+checks five target-free AR exports and leaves Hit/NDCG null. No label fabrication,
+retraining, native execution authenticity or independent user adoption is claimed.
+All required checks here are CPU-only; no cluster job or GPU was started.
+
+The active catalog is 46 public schemas / 28 resources; 19 CLI result schemas
+and 39 curated facade symbols remain unchanged. The previous batch ran 327
+passing tests / 6 external-input skips and 39 resource checks. Current evidence
+is produced by the detached local release-record gate; it additionally exercises
+all three workflow entry points, regular wheel/sdist consumers, offline hashed
+dependency replay and all ZIP profiles. Never reuse the previous count as the
+current receipt. The original six external-input skips remain explicitly scoped.
+Delivery checks and actual scope are governed by
+`docs/SIDSCOPE_SDLC_HARDENING.md`, ADR-0016 and the requirement ledger.
+Current finding states are generated above from the requirement ledger.
+F03/F06/F07/F10/F11/F12/F13/F14 now have executable implementation and acceptance
+gates; candidate delivery is valid only when the current exact-source record
+finishes successfully. 2.0 certification is not claimed. Necessary feasible
+recomputation is performed; unnecessary/unavailable claims remain unverified,
+with no maintainer sign-off policy. Changes remain local and uncommitted.
+
+New public guide: `docs/SIDSCOPE_USER_WORKFLOWS.md`. Actual installed matrix:
+Darwin arm64 Python 3.9.6/3.10.19/3.11.15/3.12.13. Only recorded environments
+are tested; configured Linux CI has not run. ADR-0017 keeps the modular monolith
+and existing metric kernels. Four hash-pinned historical native verifier files
+were preserved unchanged; untrusted input uses bounded canonical entry points,
+while caller-owned local workflow/export input uses the ADR-0018 policy.
+The release-record gate binds HEAD, branch, dirty public bytes, test logs,
+distribution resolution/lock replay and runtime/conformance/evidence-full hashes.
+No backup reviewer or independent actual user has been invented or signed off.
+
+## Earlier SDLC observations (historical; superseded above)
+
+The milestone summaries below are historical implementation/replay records,
+not current certification or independent admission claims. Version remains
+`1.7.0.dev0`; no push, tag, public release or TOIS change is authorized.
+See `docs/SIDSCOPE_SDLC_HARDENING.md`, ADR-0016 and the requirement ledger.
+
+Current new submission admission and default index publication are deliberately
+quarantined with `independent_gate_verification_required`. There is no verified
+positive admission path yet. Profile CLI checks say structure-only; historical
+fixtures replay unchanged through an explicit non-admission path. Metric ranges,
+target-state consistency and bounded submission parsing have new regressions.
+
+Receipt v2 binds content bytes. Runtime has a self-contained synthetic first
+contract example; G8 now uses regular installation and isolated out-of-source
+consumers. Live CPU performance checks do not overwrite the historical baseline;
+the first current run requires performance review (all six medians above 20%).
+Full metric/protocol binding,
+remaining parser/API checks and independent user acceptance are still open.
+Regression PASS must not be reported as certification readiness. Two real
+external integration acceptances have not been performed.
+
+Validation for this hardening batch: complete CPU suite `313 passed, 6 skipped`;
+metadata, architecture inventory, all three release profiles and resource
+verification pass. Runtime has 117 archive members; clean extraction and regular
+G8 installation pass, including isolated site-packages import and the synthetic
+consumer. The six skips retain the existing external ReSOT/DACT/AutoDL input
+boundaries. `--require-ready` exits 2 with the open requirement list; the live
+performance result remains review-required. These are deliberately different
+closure surfaces. Changes remain local and uncommitted; existing work and
+untracked desktop metadata are preserved.
+
+Subsequent correction: the project owner rejected maintainer sign-off. Necessary
+feasible computations run locally or on Fudan when needed; unnecessary or
+unavailable computations are not run and the associated claims stay unverified.
+There is no outstanding signature-policy decision. Candidate N01-N10 features
+are no longer automatically counted as certification blockers. Technical F
+findings remain open until their actual implementation/acceptance is complete.
+
+The `verify` CLI now has an executable CPU diagnostic recomputation path with
+`--diagnostic --trace --selection`; rehashed metric tampering is rejected.
+Without these inputs it explicitly reports that no verification was performed.
+The bounded recomputation does not verify native execution or training and does
+not yet complete the new-admission positive path. No cluster job was needed or
+started for this correction.
+Complete CPU regression after the correction: `314 passed, 6 skipped`.
+
+## Historical milestone executive status (not current verification authority)
 
 SIDScope 1.1.0 is locally release-ready and publicly released. The verified
 `1.1.1.dev0` tree is the frozen regression authority; active development is
@@ -197,7 +500,7 @@ remain unchanged until repository-level terms make redistribution explicit.
 - Repository: the standalone `SIDScope-v2` worktree, not the historical
   `SIDInspector` workspace.
 - Branch: `codex/sidscope-v2`.
-- Upstream tracking branch: `sidscope/main`.
+- Upstream tracking branch: none for the local `codex/sidscope-v2` branch.
 - Current GitHub main version: `1.1.1.dev0`; latest public release tag:
   `v1.1.0`.
 - Historical software/resource release associated with the submitted TOIS
@@ -358,7 +661,7 @@ changes the beam/graph experiment.
 
 See `docs/RPG_NON_AR_BRIDGE.md`.
 
-## Generator-route gate status
+## Historical generator-route gate status (configuration-bound records)
 
 The machine-readable authority is
 `docs/reproducibility/generator_adapter_coverage.csv`.
@@ -380,7 +683,7 @@ DiffGRM must retain forward noising and adaptive masked-position filling; RPG's
 32-position OPQ cache is not compatible with DiffGRM's four-position OPQ4
 identity and must never be cropped or silently converted.
 
-## Last verified local release evidence
+## Historical milestone release evidence (current checks are recorded above)
 
 The last complete release-gate baseline was the 1.6 development tree. The 1.7
 stabilization tree has now completed its source-tree and archive/G8 gates:
@@ -388,7 +691,7 @@ stabilization tree has now completed its source-tree and archive/G8 gates:
 - 1.2--1.3 focused code-review regression: `29 passed`; the review hardened
   dependency revisions, report/status cross-bindings, exact-rank resolution,
   SDK type failures, native ancestry/episode uniqueness, and registry safety;
-- full tests: `283 passed, 6 skipped` on the 1.7 tree;
+- full tests: `285 passed, 6 skipped` on the 1.7 tree;
 - resource-package verifier: PASS;
 - contract-registry verifier: PASS with 11 canonical contracts, 11 positive
   fixtures, 12 typed-negative fixtures, and 14 declared dependency edges;
@@ -436,7 +739,7 @@ stabilization tree has now completed its source-tree and archive/G8 gates:
 - LLaDA-Rec verifier: PASS, including the formal tokenizer, recoverable
   10,000-step generator, five-bucket checkpoint smoke, typed ancestry failure,
   and external 250-episode native v2 diagnostic;
-- manifest: 330 rows, 327 public rows, 0 pending;
+- manifest: 331 rows, 328 public rows, 0 pending;
 - resource-package verifier: 358 required files, 549 public files, and 552
   tracked files checked with no forbidden-content findings;
 - release-profile verifier: PASS with strict `runtime < conformance <
@@ -497,7 +800,8 @@ python3 tools/smoke_sidscope_release_candidate_archive.py \
 python3 tools/smoke_sidscope_release_candidate_archive.py \
   /tmp/sidscope-v1.7.0.dev0-evidence-full.zip --profile evidence-full
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
+  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime \
+  --result-json /tmp/sidscope_g8_fresh_env_smoke.json
 ```
 
 The release checks are CPU-only. A new GPU run is not required to reverify the

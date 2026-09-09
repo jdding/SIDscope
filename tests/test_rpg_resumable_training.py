@@ -2,7 +2,8 @@ import copy
 import json
 
 import pytest
-import torch
+
+torch = pytest.importorskip("torch", reason="external RPG training tooling requires optional PyTorch")
 
 from tests import local_test_bootstrap  # noqa: F401
 from tools.run_rpg_resumable_training import (

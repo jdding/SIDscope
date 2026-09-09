@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -17,6 +18,7 @@ from sidinspector.contracts import (
     SIDSpaceIdentityValidationError,
     SourceIdentityValidationError,
     load_contract_registry,
+    load_diagnostic_report,
     load_episode_selection,
     load_registered_contract,
 )
@@ -35,7 +37,7 @@ from sidinspector.adapters_core import (
     discover_adapter_plugins,
     preflight_adapter_plugin,
 )
-from sidinspector.evaluation import diagnostic_report_document, validate_diagnostic_report
+from sidinspector.evaluation import diagnostic_report_document, validate_diagnostic_report, validate_report_bindings
 from sidinspector.evidence import (
     EvidenceBundleValidationError,
     EvidenceRegistry,
@@ -88,10 +90,23 @@ def _file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def build_parser() -> argparse.ArgumentParser:
+class _UnusedParser:
+    """Skip construction of unrelated command branches, not their validation."""
+    def add_argument(self, *args, **kwargs):
+        return None
+    def add_parser(self, *args, **kwargs):
+        return self
+    def add_subparsers(self, *args, **kwargs):
+        return self
+
+
+def build_parser(selected_command: str | None = None) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="sidscope")
     parser.add_argument("--version", action="version", version=f"%(prog)s {package_version()}")
     commands = parser.add_subparsers(dest="command", required=True)
+    if selected_command is not None:
+        original_add = commands.add_parser
+        commands.add_parser = lambda name, *args, **kwargs: original_add(name, *args, **kwargs) if name == selected_command else _UnusedParser()
 
     adapter = commands.add_parser("adapter", help="inspect adapter SDK declarations")
     adapter_commands = adapter.add_subparsers(dest="adapter_command", required=True)
@@ -151,6 +166,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     verify = commands.add_parser("verify", help="validate a canonical conformance report")
     verify.add_argument("--report", required=True, type=Path)
+    verify.add_argument("--diagnostic", type=Path, default=None, help="Recompute this diagnostic using --trace and --selection.")
+    verify.add_argument("--trace", type=Path, default=None)
+    verify.add_argument("--selection", type=Path, default=None)
+    verify.add_argument("--native-payload", type=Path, default=None, help="Additionally check the native fields actually exported; absent native ranks remain unverified.")
     verify.add_argument("--result-json", type=Path, default=None)
 
     evidence = commands.add_parser("evidence", help="build indexes and immutable bundles")
@@ -312,7 +331,8 @@ def _schema_command(args: argparse.Namespace) -> int:
                 "failure": None,
             }
         elif args.schema_command == "validate":
-            value = json.loads(args.input.read_text(encoding="utf-8"))
+            from sidinspector.contracts import load_json
+            value = load_json(args.input)
             descriptor = validate_public_document(value)
             result = {
                 "schema": "sidscope.public_schema_validation.v1",
@@ -487,7 +507,9 @@ def _profile_command(args: argparse.Namespace) -> int:
                 "profile_id": report.profile_id,
                 "profile_revision": report.profile_revision,
                 "decision_status": report.decision_status,
-                "status_label": report.status_label,
+                "status_label": "unverified",
+                "declared_status_label": report.status_label,
+                "verification_level": "structure_only",
                 "failure": None,
             }
         else:
@@ -571,7 +593,29 @@ def _evaluate(args: argparse.Namespace) -> int:
 
 def _verify(args: argparse.Namespace) -> int:
     try:
+        inputs = (args.diagnostic, args.trace, args.selection)
+        if args.native_payload is not None and not all(path is not None for path in inputs):
+            raise ReportContractValidationError("incomplete_native_projection_inputs", "Native projection also requires diagnostic, trace and selection.")
+        if any(path is not None for path in inputs) and not all(path is not None for path in inputs):
+            raise ReportContractValidationError("incomplete_recomputation_inputs", "Supply --diagnostic, --trace and --selection together.")
         report = load_conformance_report(args.report)
+        recomputed = all(path is not None for path in inputs)
+        bindings = None
+        projection = None
+        if recomputed:
+            diagnostic = load_diagnostic_report(args.diagnostic)
+            trace = load_trace_envelope(args.trace)
+            selection = load_episode_selection(args.selection)
+            validate_report_bindings(diagnostic, report, trace, selection)
+            if args.native_payload is not None:
+                from sidinspector.contracts import load_json
+                from sidinspector.trace import validate_native_projection
+                projection = validate_native_projection(load_json(args.native_payload), trace.to_dict(), selection.to_dict())
+            bindings = {
+                "diagnostic_sha256": diagnostic.content_sha256,
+                "trace_sha256": trace.content_sha256,
+                "selection_sha256": selection.content_sha256,
+            }
         result = {
             "schema": VALIDATION_REPORT_SCHEMA,
             "status": "pass",
@@ -579,10 +623,15 @@ def _verify(args: argparse.Namespace) -> int:
             "conformance_report_id": report.artifact_id,
             "content_sha256": report.content_sha256,
             "input_file_sha256": _file_sha256(args.report),
+            "verification_performed": recomputed,
+            "verification_scope": "diagnostics_from_supplied_trace" if recomputed else "structure_only",
+            "recomputation_bindings": bindings,
+            "native_projection": projection,
+            "unverified_claims": ["native_trace_authenticity", "training_reproducibility", "adapter_admission"],
             "failure": None,
         }
         code = 0
-    except (ReportContractValidationError, OSError, json.JSONDecodeError) as exc:
+    except (ReportContractValidationError, RuntimeContractValidationError, NativePayloadValidationError, OSError, json.JSONDecodeError) as exc:
         result = _failure_result("verify", exc)
         code = 2
     _write_result(result, args.result_json)
@@ -613,7 +662,8 @@ def _evidence_package(args: argparse.Namespace) -> int:
 def _evidence_bundle(args: argparse.Namespace) -> int:
     try:
         if args.bundle_command == "build":
-            spec = json.loads(args.spec.read_text(encoding="utf-8"))
+            from sidinspector.contracts import load_json
+            spec = load_json(args.spec)
             if not isinstance(spec, Mapping):
                 raise EvidenceBundleValidationError("invalid_type", "bundle spec")
             document = build_evidence_bundle(**dict(spec)).to_dict()
@@ -727,8 +777,13 @@ def _registry_command(args: argparse.Namespace) -> int:
                 "failure": None,
             }
         elif command == "compare":
+            left_bundle, right_bundle = registry.show(args.left), registry.show(args.right)
+            def verification_objects(bundle):
+                from sidinspector.contracts import bounded_bytes
+                return {row["object_sha256"]: bounded_bytes(store.object_path(row["object_sha256"])) for row in bundle["artifacts"] if row["availability"] == "embedded_public" and row["role"] in {"evaluation_protocol", "selection", "trace", "diagnostics"}}
             result = compare_evidence_bundles(
-                registry.show(args.left), registry.show(args.right)
+                left_bundle, right_bundle,
+                left_objects=verification_objects(left_bundle), right_objects=verification_objects(right_bundle),
             )
         elif command == "supersede":
             bundle = load_evidence_bundle(args.bundle)
@@ -794,7 +849,19 @@ def _registry_command(args: argparse.Namespace) -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    from sidinspector.contracts import JSONInputError
+    try:
+        return _main(argv)
+    except JSONInputError as error:
+        _write_result(_failure_result("input", error), None)
+        return 2
+
+
+def _main(argv: Sequence[str] | None = None) -> int:
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    known = {"adapter", "plugin", "contract", "schema", "trace", "evaluate", "verify", "evidence", "registry", "profile", "submission"}
+    selected = arguments[0] if arguments and arguments[0] in known else None
+    args = build_parser(selected).parse_args(arguments)
     if args.command == "adapter":
         return _adapter_preflight(args)
     if args.command == "plugin":

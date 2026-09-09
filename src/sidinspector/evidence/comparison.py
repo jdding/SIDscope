@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+import re
 from typing import Any
 
 from sidinspector.evidence.bundle import (
@@ -110,11 +111,17 @@ def _numeric_delta(left: Any, right: Any) -> dict[str, Any] | None:
     return {"left": left, "right": right, "delta": right - left}
 
 
-def _mapping_deltas(left: Any, right: Any) -> dict[str, Any]:
+def _mapping_deltas(left: Any, right: Any, *, metrics: bool = False) -> dict[str, Any]:
     left_values = left if isinstance(left, Mapping) else {}
     right_values = right if isinstance(right, Mapping) else {}
     result: dict[str, Any] = {}
     for name in sorted(set(left_values) | set(right_values)):
+        if metrics and re.fullmatch(r"(?:hit|recall|ndcg)_at_[1-9][0-9]*", str(name)) is None:
+            result[str(name)] = {
+                "left": left_values.get(name), "right": right_values.get(name),
+                "delta": None, "status": "unregistered_metric_definition",
+            }
+            continue
         if name not in left_values or name not in right_values:
             result[str(name)] = {
                 "left": left_values.get(name),
@@ -141,13 +148,13 @@ def _slice_deltas(left: Any, right: Any) -> dict[str, Any]:
     right_slices = right if isinstance(right, Mapping) else {}
     return {
         str(slice_id): _mapping_deltas(
-            left_slices.get(slice_id, {}), right_slices.get(slice_id, {})
+            left_slices.get(slice_id, {}), right_slices.get(slice_id, {}), metrics=True
         )
         for slice_id in sorted(set(left_slices) | set(right_slices))
     }
 
 
-def compare_evidence_bundles(
+def compare_legacy_evidence_bundles(
     left: EvidenceBundle | Mapping[str, Any],
     right: EvidenceBundle | Mapping[str, Any],
 ) -> dict[str, Any]:
@@ -250,11 +257,14 @@ def compare_evidence_bundles(
             "shared_contract": left_contract,
         },
         "method_difference": {
+            "verification_level": "declared_metrics_not_recomputed",
+            "boundary": "Contract compatibility is not independent metric verification or cohort equivalence.",
             "left_subject": left_document["subject"],
             "right_subject": right_document["subject"],
             "overall_metrics": _mapping_deltas(
                 left_card.get("overall_metrics", {}),
                 right_card.get("overall_metrics", {}),
+                metrics=True,
             ),
             "slice_metrics": _slice_deltas(
                 left_card.get("slice_metrics", {}),
@@ -269,6 +279,34 @@ def compare_evidence_bundles(
             ),
         },
     }
+
+
+def compare_evidence_bundles(left, right, *, left_objects=None, right_objects=None):
+    """Require recomputed metrics and identical population/metric definitions."""
+    from .recomputation import recompute_bundle
+    result = compare_legacy_evidence_bundles(left, right)
+    if result["status"] != "compatible":
+        return result
+    verified = []
+    for side, bundle, objects in (("left", left, left_objects), ("right", right, right_objects)):
+        try:
+            verified.append(recompute_bundle(bundle, objects or {}))
+        except EvidenceBundleValidationError as error:
+            result.update(status="incompatible", contract_compatibility={"status": "incompatible", "reasons": [{"code": error.code, "side": side}]}, method_difference=None)
+            return result
+    a, b = [row["evaluation_protocol"] for row in verified]
+    differences = [key for key in a if key not in {"content_sha256", "compute_environment_sha256"} and a[key] != b[key]]
+    if differences:
+        result.update(status="incompatible", contract_compatibility={"status": "incompatible", "reasons": [{"code": "evaluation_protocol_mismatch", "fields": sorted(differences)}]}, method_difference=None)
+        return result
+    result["method_difference"]["verification_level"] = "recomputed_diagnostics"
+    result["method_difference"]["boundary"] = "Metrics recomputed on one protocol/population; native execution and training remain unverified."
+    from sidinspector.contracts import with_content_sha256
+    accuracy_protocol = {key: value for key, value in a.items() if key not in {"content_sha256", "compute_environment_sha256"}}
+    result["contract_compatibility"]["shared_contract"]["accuracy_protocol_sha256"] = with_content_sha256(accuracy_protocol)["content_sha256"]
+    if a["compute_environment_sha256"] is None or a["compute_environment_sha256"] != b["compute_environment_sha256"]:
+        result["method_difference"]["compute"] = {"status": "unverified_measurement_conditions", "delta": None}
+    return result
 
 
 def validate_evidence_comparison(value: Mapping[str, Any]) -> Mapping[str, Any]:

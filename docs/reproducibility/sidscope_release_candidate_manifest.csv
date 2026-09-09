@@ -1,4 +1,55 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+paired_regression,src/sidscope/regression.py,library,fully_runnable,yes,pass_local,Matched run and user-cluster effects with approximate pointwise uncertainty and typed insufficient evidence.
+diagnostic_review,src/sidscope/diagnostic_review.py,library,fully_runnable,yes,pass_local,Recomputed diagnostics with pseudonymous examples evidence pointers and escaped offline HTML.
+observed_review,tools/run_sidscope_observed_review.py,tool,fully_runnable,yes,pass_local,Single command on existing observations; no new native execution or invented seeds.
+observed_review_benchmark,tools/benchmark_sidscope_observed_review.py,tool,fully_runnable,yes,pass_local,Repeated real-input CPU postprocessing; only recorded shapes not full trace scale.
+paired_regression_tests,tests/test_paired_regression.py,test,fully_runnable,yes,pass_local,Known effects independent resampling reference clustered invariance and typed negatives.
+diagnostic_review_tests,tests/test_diagnostic_review.py,test,fully_runnable,yes,pass_local,Three degradation types privacy HTML escaping and CLI parity.
+observed_review_tests,tests/test_observed_review.py,test,fully_runnable,yes,pass_local,Synthetic single command repeated execution timeout and no overwrite.
+regression_workflow_docs,docs/SIDSCOPE_REGRESSION_WORKFLOWS.md,documentation,documentation,yes,pass_local,Local API run spec evidence interpretation and actual user trial instructions.
+regression_review_adr,docs/adr/0021-paired-regression-and-offline-review.md,architecture_governance,documentation,yes,pass_local,Statistical identity limits offline reports and exact workload acceptance; current architecture view maps implementations without topology changes.
+current_architecture_diagram,docs/figures/sidscope-current-architecture.json,architecture_governance,documentation,yes,pass_local,Content map for six owned layers and logical artifact and contract edges; code-path checks do not verify image pixels or public certification.
+current_architecture_prompt,docs/figures/sidscope-current-architecture-prompt.md,architecture_governance,documentation,yes,pass_local,Exact built-in image generation prompt and visual review scope; model version not exposed by the interface.
+current_architecture_preview,docs/figures/sidscope-current-architecture.png,architecture_governance,documentation,yes,pass_local,Image-generated architecture overview; visually reviewed upstream and contract boundaries; no private execution artifacts.
+native_canonical_bridge,tools/build_sidscope_native_submission.py,tool,fully_runnable,yes,pass_local,Observed native inputs to canonical identities SDK envelope diagnostic admission and same-export comparison; original-input rebuild rejects rehashed forgeries.
+native_canonical_tests,tests/test_native_canonical_submission.py,test,fully_runnable,yes,pass_local,Synthetic full chain and typed identity privacy metadata and native-semantic regressions; not independent user adoption.
+native_canonical_adr,docs/adr/0020-observed-native-canonical-admission.md,architecture_governance,documentation,yes,pass_local,Existing canonical contract reuse and diagnostic-only admission with best-checkpoint progress and validated privacy declarations.
+native_runtime_observer,tools/observe_sidscope_native_runtime.py,tool,provenance_only,yes,pass_local,Explicit CPU scratch observer with authorized episode count and workspace parent; balanced PSID selection and incomplete or duplicate count rejection; trusted runtime spec and external assets excluded.
+native_observation_verifier,tools/verify_sidscope_native_observation.py,verification,fully_runnable,yes,pass_local,Offline native-label-measurement consistency and complete mapping joins; not canonical admission or training certification.
+native_runtime_observer_tests,tests/test_native_runtime_observer.py,test,fully_runnable,yes,pass_local,Frozen exporter anchor compatibility and typed observation binding measurement and target negatives.
+native_projection_tool,tools/project_sidscope_native_export.py,tool,fully_runnable,yes,pass_local,Pure native rank projection with bound optional labels; no runtime execution or full canonical admission claim.
+native_projection_tests,tests/test_native_export_projection.py,test,fully_runnable,yes,pass_local,Real export regressions and explicitly synthetic PSID labels with typed binding and comparison negatives.
+two_step_1,docs/adr/0019-local-producer-orchestration-and-mapping-preflight.md,documentation,tracked_snapshot,yes,pass_local,Local preflight and generic producer orchestration; real two-family integration remains partial.
+two_step_2,tests/test_mapping_preflight.py,test,fully_runnable,yes,pass_local,Normalized joins and train-only conditional existing metrics.
+two_step_3,tests/test_producer_pipeline.py,test,fully_runnable,yes,pass_local,Synthetic SDK orchestration only; not real producer or independent user acceptance.
+local_input_policy_1,docs/adr/0018-separate-local-input-budgets-from-submission-policy.md,documentation,tracked_snapshot,yes,pass_local,Trusted local caller budgets remain separate from submission policy.
+local_input_policy_2,docs/SIDSCOPE_NEXT_DEVELOPMENT_PLAN.md,documentation,tracked_snapshot,yes,pass_local,Remaining deliverables with original acceptance scope and local-only authority.
+local_input_policy_3,tests/test_local_input_policy.py,test,fully_runnable,yes,pass_local,Former-limit positive paths and explicit-budget typed negatives.
+local_input_policy_4,tests/test_local_input_scale.py,test,fully_runnable,yes,pass_local,CPU scale harness correctness and fail-closed measurement checks.
+local_input_policy_5,tools/benchmark_sidscope_local_workflows.py,tool,fully_runnable,yes,pass_local,Independent synthetic CPU scale measurement without native execution claims.
+sdlc_closure_1,docs/SIDSCOPE_USER_WORKFLOWS.md,documentation,tracked_snapshot,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_2,docs/adr/0017-executable-sdlc-acceptance-and-consumer-workflows.md,documentation,tracked_snapshot,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_3,docs/reproducibility/sidscope_public_consumer_contract.v1.json,documentation,tracked_snapshot,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_4,tests/test_local_release_record.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_5,tests/test_native_projection_states.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_6,tests/test_public_consumer_contract.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_7,tests/test_public_input_budgets.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_8,tests/test_sdlc_acceptance.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_9,tests/test_workflow_consumers.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_10,tools/sidscope_local_release_record.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_11,tools/sidscope_public_consumer.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_12,tools/verify_sidscope_distribution_install.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_13,tools/verify_sidscope_sdlc_acceptance.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+recomputed_admission_tests,tests/test_recomputed_admission.py,test,fully_runnable,yes,pass_local,Positive computed admission and indexes plus object metric protocol and population tamper failures.
+real_native_consumer_tests,tests/test_real_native_consumers.py,test,fully_runnable,yes,pass_local,Real RPG and PSID export inspection with deterministic reports and typed negative inputs.
+real_native_consumer,tools/inspect_sidscope_native_export.py,verification,fully_runnable,yes,pass_local,CPU-only native export consumer without training or invented target labels.
+sdlc_hardening_doc,docs/SIDSCOPE_SDLC_HARDENING.md,release_governance,documentation,yes,pass_local,Records containment and remaining trust performance and independent acceptance blockers without claiming certification.
+sdlc_trust_adr,docs/adr/0016-quarantine-unverified-admission.md,architecture_governance,documentation,yes,pass_local,Computed diagnostic admission and protocol comparison; native authenticity and hash-only training stay unverified without sign-off.
+sdlc_requirements,docs/reproducibility/sidscope_sdlc_requirements.csv,release_governance,tracked_snapshot,yes,pass_local,Tracks all SDLC findings and candidate user requirements with explicit nonpassing states.
+sdlc_hardening_verifier,tools/verify_sidscope_sdlc_hardening.py,verification,fully_runnable,yes,pass_local,Checks containment and separates technical blockers from candidate feature backlog without claiming readiness.
+sdlc_performance_gate,tools/check_sidscope_current_performance.py,verification,fully_runnable,yes,pass_local,Runs current CPU commands and reports review-required drift without rewriting frozen baseline.
+sdlc_trust_tests,tests/test_sdlc_trust_hardening.py,test,fully_runnable,yes,pass_local,Adversarial metric target-state admission and bounded parser regressions.
+sdlc_delivery_tests,tests/test_sdlc_delivery.py,test,fully_runnable,yes,pass_local,Self-contained runtime demo and performance decision regressions.
 release_profiles_doc,docs/SIDSCOPE_RELEASE_PROFILES.md,release_governance,documentation,yes,pass_local,Documents the additive runtime conformance and evidence-full packaging views without activating a new product version.
 release_profiles_adr,docs/adr/0014-tiered-release-profiles.md,architecture_governance,documentation,yes,pass_local,Chooses one repository and manifest authority with three hash-bound release views and an additive rollback.
 publication_line_adr,docs/adr/0015-separate-public-maintenance-development-and-tois-lines.md,architecture_governance,documentation,yes,pass_local,Separates public 1.1.x local pre-2.0 development and exact-ref TOIS authorities without rewriting history.
@@ -59,7 +110,7 @@ native_trace_payload_doc,docs/NATIVE_TRACE_PAYLOADS.md,trace_protocol,documentat
 adapter_core,src/sidinspector/adapters_core,runnable_code,fully_runnable,yes,pass_local,Implements lazy plugin discovery explicit preflight and reusable fixture harnesses.
 native_payload_core,src/sidinspector/trace/native_payloads.py,runnable_code,fully_runnable,yes,pass_local,Validates five family native payloads without semantic flattening.
 profile_composition_core,src/sidinspector/conformance_core/profiles.py,runnable_code,fully_runnable,yes,pass_local,Loads hash bound profile registry and composes deterministic gate dependencies.
-sdk_plugin_surface,src/sidinspector/sdk,runnable_code,fully_runnable,yes,pass_local,Provides SDK 0.2 plugin protocol optional backend probe and SDK 0.1 compatibility.
+sdk_plugin_surface,src/sidinspector/sdk,runnable_code,fully_runnable,yes,pass_local,Provides stable SDK 1.0 plugin protocol exact 0.2 interval replay optional backend probe and historical SDK 0.1 compatibility.
 native_payload_schemas,src/sidinspector/schemas,contract_schema,fully_runnable,yes,pass_local,Bundles capability payload and profile schema and registry resources.
 native_payload_fixtures,examples/native_trace_payload_fixtures,example,fully_runnable,yes,pass_local,Provides five positive and seven typed negative ecosystem cases.
 reference_adapter_plugin,examples/reference_adapter_plugin,example,fully_runnable,yes,pass_local,Proves separately packaged entry point installation without trusted core edits.
@@ -67,7 +118,20 @@ plugin_ecosystem_builder,tools/build_sidscope_1_3_ecosystem_fixtures.py,fixture_
 plugin_ecosystem_verifier,tools/verify_sidscope_1_3_plugin_ecosystem.py,verification,fully_runnable,yes,pass_local,Verifies fixtures profiles SDK compatibility plugin absence external install and RecBole no import boundary.
 plugin_ecosystem_tests,tests/test_native_payload_ecosystem.py,test,fully_runnable,yes,pass_local,Tests payload semantics profile composition lazy discovery typed incompatibility CLI and backend boundary.
 sprint34_adr,docs/adr/0007-canonical-execution-report-and-sdk-boundary.md,architecture_governance,documentation,yes,pass_local,Defines the common execution and report boundary native payload preservation SDK alpha scope migration and rollback.
-adapter_sdk_alpha_doc,docs/ADAPTER_SDK_ALPHA.md,adapter_sdk,documentation,yes,pass_local,Documents capability descriptors registry-enforced producers and the explicit non-plugin alpha boundary.
+adapter_sdk_stable_doc,docs/ADAPTER_SDK.md,adapter_sdk,documentation,yes,pass_local,Defines the stable 1.0 capability producer and plugin boundary plus exact pre-stable migration.
+adapter_sdk_alpha_doc,docs/ADAPTER_SDK_ALPHA.md,adapter_sdk,documentation,yes,pass_local,Retains historical pre-stable capability and migration context without a stable claim.
+sid_refresh_module,src/sidscope/refresh.py,runnable_code,fully_runnable,yes,pass_local,Bounded N07 SID lifecycle comparison with ordered-prefix parallel-position and unordered-set semantics.
+sid_refresh_doc,docs/SIDSCOPE_SID_REFRESH.md,documentation,documentation,yes,pass_local,Documents opt-in SID refresh comparison identity semantics limits and downstream evidence binding.
+sid_refresh_verifier,tools/verify_sidscope_sid_refresh.py,verification,fully_runnable,yes,pass_local,Replays actual-shape RPG and PSID same-input zero-change controls without executing either model.
+sid_refresh_tests,tests/test_sid_refresh.py,test,fully_runnable,yes,pass_local,Exercises lifecycle partitions relabeling typed negatives downstream evidence and CLI parity.
+sid_refresh_real_control_tests,tests/test_sid_refresh_real_control.py,test,fully_runnable,yes,pass_local,Exercises route-specific real-shape controls source immutability and no-overwrite behavior.
+candidate_freeze_doc,docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md,release_gate,documentation,yes,pass_local,Defines the exact engineering-versus-certification boundary and deferred candidate exclusions.
+candidate_rc_packet,docs/SIDSCOPE_2_0_RC_PACKET.md,release_gate,documentation,yes,pass_local,Records the local evidence surfaces and keeps the RC transition blocked on F09 without overwriting v1.1 history.
+candidate_freeze_verifier,tools/verify_sidscope_2_0_candidate.py,release_gate,fully_runnable,yes,pass_local,Enforces frozen surface SDK profiles engineering readiness and F09-only certification block.
+candidate_freeze_tests,tests/test_sidscope_2_0_candidate.py,test,fully_runnable,yes,pass_local,Ensures engineering readiness passes while certification remains fail-closed on F09.
+adapter_sdk_stability_adr,docs/adr/0023-stabilize-adapter-sdk-1-0.md,architecture_decision,documentation,yes,pass_local,Freezes Adapter SDK 1.0 while preserving exact pre-stable interval replay.
+sid_refresh_adr,docs/adr/0022-bounded-sid-refresh-lifecycle.md,architecture_decision,documentation,yes,pass_local,Defines N07 semantics identity downstream evidence limits validation and rollback.
+candidate_freeze_adr,docs/adr/0024-freeze-2-0-engineering-candidate.md,architecture_decision,documentation,yes,pass_local,Separates engineering readiness from F09 certification and public-release authorization.
 canonical_pipeline_fixture,examples/canonical_pipeline_fixture,example,fully_runnable,yes,pass_local,Deterministic eleven-contract RPG non-AR canonical pipeline plus Adapter SDK descriptor and eight typed failures.
 sprint34_fixture_builder,tools/build_sidscope_1_2_closure_fixtures.py,verification,fully_runnable,yes,pass_local,Deterministically regenerates the complete SIDScope 1.2 canonical pipeline fixture.
 sprint34_closure_verifier,tools/verify_sidscope_1_2_closure.py,verification,fully_runnable,yes,pass_local,Checks all eleven contracts cross-bindings SDK and six shared CLI command families.

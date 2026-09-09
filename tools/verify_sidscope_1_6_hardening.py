@@ -31,7 +31,8 @@ from sidinspector.conformance_core import (
     load_profile_catalog,
     load_profile_registry,
 )
-from sidinspector.evidence import compare_evidence_bundles, validate_evidence_bundle
+from sidinspector.evidence import validate_evidence_bundle
+from sidinspector.evidence.comparison import compare_legacy_evidence_bundles as compare_evidence_bundles
 from sidinspector.sdk import (
     AdapterSDKError,
     load_adapter_capabilities,

@@ -177,7 +177,9 @@ python3 tools/run_sidscope_realistic_tutorial.py --output-dir /tmp/sidscope_real
 Run the local G8 clean-extract smoke:
 
 ```bash
-python3 tools/run_sidscope_g8_fresh_env_smoke.py --archive /tmp/sidscope-v1-release-candidate.zip
+python3 tools/run_sidscope_g8_fresh_env_smoke.py \
+  --archive /tmp/sidscope-v1-release-candidate.zip \
+  --result-json /tmp/sidscope_g8_fresh_env_smoke.json
 ```
 
 This extracts the release archive into a temporary directory, creates a

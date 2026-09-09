@@ -218,7 +218,11 @@ def validate_prepared_dataset(value: Mapping[str, Any]) -> PreparedDataset:
         "source_user_ids_exported": False,
         "evaluator_labels_in_generator_input": False,
     }
-    if dict(normalization) != expected_normalization:
+    if dict(normalization) != expected_normalization or any(
+        normalization[name] is not False for name in (
+            "source_item_ids_exported", "source_user_ids_exported", "evaluator_labels_in_generator_input"
+        )
+    ):
         _fail("normalization_or_privacy_mismatch", str(dict(normalization)))
 
     splits_raw = value.get("splits")
@@ -326,7 +330,8 @@ def validate_prepared_dataset_bindings(
 
 
 def load_prepared_dataset(path: Path) -> PreparedDataset:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    from .json_io import load_json
+    value = load_json(path)
     if not isinstance(value, Mapping):
         _fail("invalid_type", f"{path} must contain a JSON object")
     return validate_prepared_dataset(value)

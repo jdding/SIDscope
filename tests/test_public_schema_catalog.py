@@ -24,7 +24,7 @@ class PublicSchemaCatalogTest(unittest.TestCase):
             path.name
             for path in (ROOT / "src/sidinspector/schemas").glob("*.schema.json")
         )
-        self.assertEqual(len(catalog), 45)
+        self.assertEqual(len(catalog), 46)
         self.assertEqual(
             sorted(set(item.schema_resource for item in catalog)), schema_resources
         )

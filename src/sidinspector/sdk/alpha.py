@@ -1,4 +1,8 @@
-"""Backward-compatible adapter capability contracts for SDK 0.1 and 0.2."""
+"""Stable adapter capability contracts with the historical SDK 0.1 reader.
+
+The module name is retained to avoid breaking pre-2.0 imports. Public users
+import from :mod:`sidinspector.sdk`; the supported stable SDK version is 1.0.0.
+"""
 
 from __future__ import annotations
 
@@ -19,7 +23,8 @@ from sidinspector.contracts import (
 
 LEGACY_ADAPTER_CAPABILITIES_SCHEMA = "sidscope.adapter_capabilities.alpha.v1"
 ADAPTER_CAPABILITIES_SCHEMA = "sidscope.adapter_capabilities.v1"
-ADAPTER_SDK_VERSION = "0.2.0"
+ADAPTER_SDK_VERSION = "1.0.0"
+_SUPPORTED_API_VERSIONS = ("0.2.0", ADAPTER_SDK_VERSION)
 ADAPTER_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 
 
@@ -146,9 +151,10 @@ def _validate_v1_capabilities(value: Mapping[str, Any]) -> AdapterCapabilities:
         _fail("invalid_sdk_compatibility", str(compatibility))
     minimum = _text(compatibility.get("minimum"), "sdk_compatibility.minimum")
     maximum = _text(compatibility.get("maximum_exclusive"), "sdk_compatibility.maximum_exclusive")
-    current = _version(ADAPTER_SDK_VERSION)
-    if not (_version(minimum) <= current < _version(maximum)):
-        _fail("sdk_version_incompatible", f"{minimum} <= {ADAPTER_SDK_VERSION} < {maximum}")
+    lower, upper = _version(minimum), _version(maximum)
+    compatible = [version for version in _SUPPORTED_API_VERSIONS if lower <= _version(version) < upper]
+    if not compatible:
+        _fail("sdk_version_incompatible", f"{minimum} <= one of {_SUPPORTED_API_VERSIONS} < {maximum}")
     adapter_id = _text(value.get("adapter_id"), "adapter_id")
     if ADAPTER_ID_PATTERN.fullmatch(adapter_id) is None:
         _fail("invalid_adapter_id", adapter_id)
@@ -203,7 +209,8 @@ def validate_adapter_capabilities(value: Mapping[str, Any]) -> AdapterCapabiliti
 
 
 def load_adapter_capabilities(path: Path) -> AdapterCapabilities:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    from sidinspector.contracts import load_json
+    value = load_json(path)
     if not isinstance(value, Mapping):
         _fail("invalid_type", str(path))
     return validate_adapter_capabilities(value)

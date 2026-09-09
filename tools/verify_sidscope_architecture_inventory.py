@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -17,6 +18,77 @@ from tools.build_sidscope_architecture_inventory import DEFAULT_OUTPUT, ROOT, bu
 
 
 REPORT_SCHEMA = "sidscope.architecture_inventory_verification.v1"
+DIAGRAM_BASE = "docs/figures/sidscope-current-architecture"
+
+
+def validate_diagram(document: dict[str, Any]) -> dict[str, Any]:
+    """Check the illustration's content map, not its pixels or acceptance."""
+    sys.path.insert(0, str(ROOT / "src"))
+    from sidinspector.version import PRODUCT_VERSION
+    if document.get("product_version") != PRODUCT_VERSION:
+        raise ValueError("architecture_diagram_version_drift")
+    if (document.get("format") != "sidscope-architecture-content-map"
+            or document.get("view") != "local_implementation_not_public_certification"):
+        raise ValueError("architecture_diagram_scope_drift")
+    layers, surfaces = document.get("layers"), document.get("surfaces")
+    if not isinstance(layers, list) or not isinstance(surfaces, list):
+        raise ValueError("architecture_diagram_invalid_nodes")
+    nodes = layers + surfaces
+    if any(not isinstance(node, dict) or not isinstance(node.get("id"), str) for node in nodes):
+        raise ValueError("architecture_diagram_invalid_nodes")
+    by_id = {node["id"]: node for node in nodes}
+    if len(by_id) != len(nodes):
+        raise ValueError("architecture_diagram_duplicate_or_missing_id")
+    if {node["id"] for node in layers} != {"integration", "contracts", "observation", "evaluation", "conformance", "evidence"}:
+        raise ValueError("architecture_diagram_layer_drift")
+    if {node["id"] for node in surfaces} != {"upstream", "workflows", "review", "indexes"}:
+        raise ValueError("architecture_diagram_surface_drift")
+    paths = set()
+    for node in nodes:
+        code_paths = node.get("code_paths")
+        if not isinstance(code_paths, list) or not code_paths or not node.get("label"):
+            raise ValueError("architecture_diagram_missing_code_path")
+        for relative in code_paths:
+            if not isinstance(relative, str) or not relative:
+                raise ValueError("architecture_diagram_missing_code_path")
+            path = Path(relative)
+            if path.is_absolute() or ".." in path.parts or not (ROOT / path).exists():
+                raise ValueError("architecture_diagram_missing_code_path: " + relative)
+            paths.add(relative)
+    edges = document.get("edges")
+    if not isinstance(edges, list):
+        raise ValueError("architecture_diagram_broken_edge")
+    observed_edges = []
+    for edge in edges:
+        if (not isinstance(edge, dict)
+                or any(not isinstance(edge.get(key), str) for key in ("source", "target", "kind"))
+                or edge["source"] not in by_id or edge["target"] not in by_id):
+            raise ValueError("architecture_diagram_broken_edge")
+        observed_edges.append((edge["source"], edge["target"], edge["kind"]))
+    expected_edges = {
+        (source, target, "artifact_flow") for source, target in (
+            ("upstream", "integration"), ("integration", "observation"),
+            ("observation", "evaluation"), ("evaluation", "conformance"),
+            ("conformance", "evidence"), ("evidence", "review"), ("evidence", "indexes"))
+    } | {("contracts", target, "contract_binding") for target in (
+        "integration", "observation", "evaluation", "conformance", "evidence")}
+    if set(observed_edges) != expected_edges or len(observed_edges) != len(expected_edges):
+        raise ValueError("architecture_diagram_flow_drift")
+    return {"owned_layers": len(layers), "code_paths_checked": len(paths),
+        "logical_edges_checked": len(observed_edges), "pixel_semantics_checked": False}
+
+
+def verify_diagram(inventory_path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
+    expected_paths = {DIAGRAM_BASE + suffix for suffix in (".json", "-prompt.md", ".png")}
+    observed = json.loads(inventory_path.read_text())["current_diagram_files"]
+    if set(observed) != expected_paths:
+        raise ValueError("architecture_diagram_checksum_paths")
+    for name, digest in observed.items():
+        if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest:
+            raise ValueError("architecture_diagram_content_drift: " + name)
+    if not (ROOT / (DIAGRAM_BASE + ".png")).read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
+        raise ValueError("architecture_diagram_invalid_preview")
+    return validate_diagram(json.loads((ROOT / (DIAGRAM_BASE + ".json")).read_text()))
 
 
 def verify_inventory(path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
@@ -64,6 +136,7 @@ def verify_inventory(path: Path = DEFAULT_OUTPUT) -> dict[str, Any]:
         "static_mapping_route_count": len(routes["static_mapping"]),
         "canonical_evidence_edge_count": len(observed["canonical_evidence_edges"]),
         "canonical_contract_count": registry["contract_count"],
+        "current_diagram": verify_diagram(path),
     }
 
 

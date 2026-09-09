@@ -34,6 +34,7 @@ from sidinspector.submission import (
     legacy_status_parity,
     validate_submission_package,
 )
+from sidinspector.submission.checker import replay_submission_check
 
 
 PROFILE_ROOT = ROOT / "examples" / "conformance_ecosystem_fixture" / "profile"
@@ -224,9 +225,12 @@ def verify_profiles() -> dict[str, Any]:
 
 def verify_submissions() -> dict[str, Any]:
     positive = validate_submission_package(POSITIVE_SUBMISSION)
-    accepted = check_submission(POSITIVE_SUBMISSION)
+    accepted = replay_submission_check(POSITIVE_SUBMISSION)
     if accepted.status != "accepted":
         raise AssertionError(accepted.to_dict())
+    current = check_submission(POSITIVE_SUBMISSION)
+    if current.status != "rejected" or current.failures[0]["code"] != "independent_gate_verification_required":
+        raise AssertionError("historical gate declarations acquired new admission authority")
     inventory = _json(SUBMISSION_NEGATIVES)
     with tempfile.TemporaryDirectory(prefix="sidscope-1-5-negatives-") as tmp:
         temporary_root = Path(tmp)
@@ -242,6 +246,8 @@ def verify_submissions() -> dict[str, Any]:
                 )
     return {
         "positive_submission_count": 1,
+        "positive_scope": "historical_structure_replay_only",
+        "new_admission": "blocked_pending_independent_verification",
         "submission_negative_count": len(inventory["cases"]),
         "adapter_id": positive.evidence_bundle.subject["adapter_id"],
         "status_label": positive.conformance_report["decision"]["status_label"],
@@ -250,8 +256,8 @@ def verify_submissions() -> dict[str, Any]:
 
 def verify_indexes() -> dict[str, Any]:
     submission = validate_submission_package(POSITIVE_SUBMISSION)
-    first_status, first_result = generate_submission_indexes([submission])
-    second_status, second_result = generate_submission_indexes([submission])
+    first_status, first_result = generate_submission_indexes([submission], historical_replay=True)
+    second_status, second_result = generate_submission_indexes([submission], historical_replay=True)
     if canonical_index_bytes(first_status) != canonical_index_bytes(second_status):
         raise AssertionError("status index rebuild mismatch")
     if canonical_index_bytes(first_result) != canonical_index_bytes(second_result):

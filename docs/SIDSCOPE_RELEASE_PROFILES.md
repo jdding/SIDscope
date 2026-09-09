@@ -38,14 +38,26 @@ python3 tools/build_sidscope_release_candidate_archive.py \
 python3 tools/smoke_sidscope_release_candidate_archive.py \
   /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
+  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime \
+  --result-json /tmp/sidscope_g8_fresh_env_smoke.json
 python3 tools/verify_sidscope_release_profiles.py
 ```
 
 Every archive contains a deterministic `sidscope-release-profile.json`
 receipt. It binds the product version, profile ID, profile-registry SHA-256,
 source-manifest SHA-256, content-file count, and canonical content-path-set
-SHA-256. Smoke and G8 reject a missing, mismatched, or tampered receipt.
+SHA-256. Receipt v2 additionally binds every member's actual SHA-256 and the
+canonical content-map digest. Smoke and G8 reject altered bytes even when paths
+do not change. Old v1 receipts require rebuilding, not mutation. These checks
+establish consistency, not publisher authenticity; publication still needs an
+independently trusted archive digest. G8 uses a regular installation from a
+separate build copy and runs the synthetic runtime consumer outside the source
+tree with isolated imports; dependency versions are recorded.
+
+Both smoke commands accept `--expected-sha256` to check a separately trusted
+digest before executing archive code. They record the observed digest and
+whether an expected digest was supplied. Hashing an untrusted download locally
+and passing its own hash is not publisher authentication.
 
 ## Release policy
 

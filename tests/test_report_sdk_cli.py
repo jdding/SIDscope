@@ -20,6 +20,7 @@ from sidinspector.contracts import (
     with_content_sha256,
 )
 from sidinspector.sdk import (
+    ADAPTER_SDK_VERSION,
     AdapterHarness,
     AdapterSDKError,
     load_adapter_capabilities,
@@ -40,6 +41,40 @@ class FixtureProducer:
 
 
 class ReportSDKCLITest(unittest.TestCase):
+    def test_verify_recomputes_only_when_all_inputs_are_available(self) -> None:
+        def invoke(arguments):
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                code = cli_main(arguments)
+            return code, json.loads(output.getvalue())
+
+        command = ["verify", "--report", str(FIXTURE / "conformance_report.json")]
+        code, result = invoke(command)
+        self.assertEqual(code, 0)
+        self.assertFalse(result["verification_performed"])
+        self.assertEqual(result["verification_scope"], "structure_only")
+        code, result = invoke(command + ["--trace", str(FIXTURE / "trace_envelope.json")])
+        self.assertEqual(code, 2)
+        self.assertEqual(result["failure"]["code"], "incomplete_recomputation_inputs")
+        complete = ["--trace", str(FIXTURE / "trace_envelope.json"), "--selection", str(FIXTURE / "episode_selection.json")]
+        code, result = invoke(command + complete + ["--diagnostic", str(FIXTURE / "diagnostic_report.json")])
+        self.assertEqual(code, 0)
+        self.assertTrue(result["verification_performed"])
+        self.assertEqual(result["verification_scope"], "diagnostics_from_supplied_trace")
+        self.assertIn("training_reproducibility", result["unverified_claims"])
+
+        with tempfile.TemporaryDirectory() as tmp:
+            document = json.loads((FIXTURE / "diagnostic_report.json").read_text())
+            document["evaluation"]["hit_at_cutoff"] = 0.0
+            document["slices"][0]["hit_at_cutoff"] = 0.0
+            document["failure_decomposition"]["success"] = 0
+            document["failure_decomposition"]["generation_search_miss"] = 1
+            path = Path(tmp) / "rehashed.json"
+            path.write_text(json.dumps(with_content_sha256(document)))
+            code, result = invoke(command + complete + ["--diagnostic", str(path)])
+            self.assertEqual(code, 2)
+            self.assertEqual(result["failure"]["code"], "metric_mismatch")
+
     def test_reports_and_cross_metrics_pass(self) -> None:
         diagnostic = load_diagnostic_report(FIXTURE / "diagnostic_report.json")
         conformance = load_conformance_report(FIXTURE / "conformance_report.json")
@@ -77,12 +112,21 @@ class ReportSDKCLITest(unittest.TestCase):
         document = diagnostic.to_dict()
         document["evaluation"]["hit_at_cutoff"] = 0.5
         document["slices"][0]["hit_at_cutoff"] = 0.5
+        with self.assertRaises(ReportContractValidationError) as captured:
+            validate_diagnostic_report(with_content_sha256(document))
+        self.assertEqual(captured.exception.code, "success_hit_mismatch")
+        # A self-consistent falsification still needs the independent replay.
+        document["evaluation"]["hit_at_cutoff"] = 0.0
+        document["slices"][0]["hit_at_cutoff"] = 0.0
+        document["failure_decomposition"]["success"] = 0
+        document["failure_decomposition"]["generation_search_miss"] = 1
         tampered = validate_diagnostic_report(with_content_sha256(document))
         with self.assertRaises(ReportContractValidationError) as captured:
             validate_report_bindings(tampered, conformance, trace, selection)
         self.assertEqual(captured.exception.code, "metric_mismatch")
 
     def test_sdk_capability_and_producer_harness(self) -> None:
+        self.assertEqual(ADAPTER_SDK_VERSION, "1.0.0")
         capabilities = load_adapter_capabilities(FIXTURE / "adapter_capabilities.json")
         with self.assertRaises(AdapterSDKError) as captured:
             load_adapter_capabilities(FIXTURE / "expected_failure_telemetry_overlap.json")
@@ -98,6 +142,21 @@ class ReportSDKCLITest(unittest.TestCase):
         with self.assertRaises(AdapterSDKError) as captured:
             validate_adapter_capabilities([])  # type: ignore[arg-type]
         self.assertEqual(captured.exception.code, "invalid_type")
+
+        stable = json.loads(
+            (ROOT / "examples/native_trace_payload_fixtures/adapter_capabilities.v1.json").read_text()
+        )
+        self.assertEqual(validate_adapter_capabilities(stable).schema, "sidscope.adapter_capabilities.v1")
+        replay = dict(stable)
+        replay["sdk_compatibility"] = {"minimum": "0.2.0", "maximum_exclusive": "0.3.0"}
+        replay = with_content_sha256(replay)
+        self.assertEqual(validate_adapter_capabilities(replay).schema, "sidscope.adapter_capabilities.v1")
+        unsupported = dict(stable)
+        unsupported["sdk_compatibility"] = {"minimum": "0.1.0", "maximum_exclusive": "0.2.0"}
+        unsupported = with_content_sha256(unsupported)
+        with self.assertRaises(AdapterSDKError) as captured:
+            validate_adapter_capabilities(unsupported)
+        self.assertEqual(captured.exception.code, "sdk_version_incompatible")
 
     def test_report_decision_and_overall_slice_are_derived(self) -> None:
         conformance = load_conformance_report(FIXTURE / "conformance_report.json")

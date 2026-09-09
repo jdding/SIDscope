@@ -17,6 +17,8 @@ if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 
 import sidscope
+import importlib
+from sidinspector.sdk import ADAPTER_SDK_VERSION, PLUGIN_API_VERSION
 from build_sidscope_1_7_stabilization_fixture import (
     DEFAULT_OUTPUT,
     PRODUCT_VERSION,
@@ -92,6 +94,18 @@ def verify() -> dict[str, Any]:
 
     if tuple(record["python_facade"]["symbols"]) != tuple(sidscope.__all__):
         raise AssertionError("curated sidscope facade changed")
+    if record["adapter_sdk"] != {
+        "version": ADAPTER_SDK_VERSION,
+        "plugin_api_version": PLUGIN_API_VERSION,
+        "supported_capability_api_levels": ["0.2.0", "1.0.0"],
+        "current_descriptor_interval": ">=1.0.0,<2.0.0",
+    }:
+        raise AssertionError("stable Adapter SDK candidate surface changed")
+    for module_name, names in record["opt_in_workflows"].items():
+        module = importlib.import_module(module_name)
+        for name in names:
+            if not callable(getattr(module, name, None)):
+                raise AssertionError(f"missing opt-in workflow: {module_name}.{name}")
     return {
         "schema": "sidscope.1_7_stabilization_verification.v1",
         "status": "pass",

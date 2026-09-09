@@ -197,9 +197,9 @@ def _finite_number(value: Any, field: str, *, nonnegative: bool = False) -> floa
 def scan_evidence_content(value: Any, *, location: str = "$") -> None:
     """Reject identifying fields, private paths, and credential-like material.
 
-    The four mandatory privacy declarations are intentionally permitted only at
-    the exact top-level privacy location. Their values are independently
-    required to be ``False`` by :func:`validate_evidence_bundle`.
+    Privacy declarations must be false. PreparedDataset v1 additionally places
+    two declarations in normalization; admit those only after full contract
+    validation, never by allowing arbitrary normalization-shaped dictionaries.
     """
 
     if isinstance(value, Mapping):
@@ -208,6 +208,15 @@ def scan_evidence_content(value: Any, *, location: str = "$") -> None:
                 _fail("forbidden_content", f"non-text key at {location}")
             key = raw_key.casefold()
             child_location = f"{location}.{raw_key}"
+            if raw_key == "normalization" and value.get("schema") == "sidscope.prepared_dataset.v1":
+                from sidinspector.contracts import validate_prepared_dataset
+                try:
+                    validate_prepared_dataset(value)
+                except ValueError as error:
+                    _fail(getattr(error, "code", "invalid_prepared_dataset"), str(error))
+                scan_evidence_content({name: item for name, item in child.items()
+                    if name not in {"source_user_ids_exported", "source_item_ids_exported"}}, location=child_location)
+                continue
             privacy_declaration = (
                 (location == "$.privacy" or location.endswith(".privacy"))
                 and raw_key in _PRIVACY_FIELDS
@@ -234,7 +243,9 @@ def _validate_metric_map(value: Any, field: str, *, nonempty: bool = False) -> N
         _fail("invalid_metrics", field)
     for key, metric in value.items():
         _text(key, f"{field}.key")
-        _finite_number(metric, f"{field}.{key}")
+        number = _finite_number(metric, f"{field}.{key}")
+        if re.fullmatch(r"(?:hit|recall|ndcg)_at_[1-9][0-9]*", key) and not 0 <= number <= 1:
+            _fail("standard_metric_out_of_range", f"{field}.{key}")
 
 
 def _validate_result_card(value: Any, compatibility: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -503,7 +514,8 @@ def validate_evidence_bundle(value: Mapping[str, Any]) -> EvidenceBundle:
 
 def load_evidence_bundle(path: Path) -> EvidenceBundle:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
+        from sidinspector.contracts import load_json
+        value = load_json(path)
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         _fail("bundle_load_failed", f"{path}: {exc}")
     if not isinstance(value, Mapping):

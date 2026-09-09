@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import tempfile
 import zipfile
@@ -44,8 +45,9 @@ def _archive_inventory(path: Path) -> tuple[set[str], dict[str, Any]]:
     with zipfile.ZipFile(path) as archive:
         names = set(archive.namelist())
         receipt = json.loads(archive.read(PROFILE_RECEIPT_PATH))
+        hashes = {name: hashlib.sha256(archive.read(name)).hexdigest() for name in names if name != PROFILE_RECEIPT_PATH}
     content = sorted(names - {PROFILE_RECEIPT_PATH})
-    validate_profile_receipt(receipt, content_paths=content)
+    validate_profile_receipt(receipt, content_paths=content, content_hashes=hashes)
     return names, receipt
 
 

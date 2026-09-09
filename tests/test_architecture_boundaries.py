@@ -80,6 +80,50 @@ def private_cross_module_imports(path: Path) -> set[str]:
 
 
 class ArchitectureBoundaryTest(unittest.TestCase):
+    def test_current_diagram_matches_code_and_inventory(self) -> None:
+        from tools.verify_sidscope_architecture_inventory import verify_diagram
+        self.assertEqual(verify_diagram()["owned_layers"], 6)
+
+    def test_diagram_rejects_certification_promotion(self) -> None:
+        from tools.verify_sidscope_architecture_inventory import DIAGRAM_BASE, validate_diagram
+        document = json.loads((ROOT / (DIAGRAM_BASE + ".json")).read_text())
+        document["view"] = "public_2_0_certified"
+        with self.assertRaisesRegex(ValueError, "scope_drift"):
+            validate_diagram(document)
+
+    def test_diagram_rejects_nonexistent_implementation(self) -> None:
+        from tools.verify_sidscope_architecture_inventory import DIAGRAM_BASE, validate_diagram
+        document = json.loads((ROOT / (DIAGRAM_BASE + ".json")).read_text())
+        document["layers"][0]["code_paths"] = ["src/nonexistent_service"]
+        with self.assertRaisesRegex(ValueError, "missing_code_path"):
+            validate_diagram(document)
+
+    def test_diagram_rejects_broken_edge(self) -> None:
+        from tools.verify_sidscope_architecture_inventory import DIAGRAM_BASE, validate_diagram
+        document = json.loads((ROOT / (DIAGRAM_BASE + ".json")).read_text())
+        document["edges"][0]["target"] = "missing"
+        with self.assertRaisesRegex(ValueError, "broken_edge"):
+            validate_diagram(document)
+
+    def test_diagram_rejects_wrong_version_layers_and_flow(self) -> None:
+        from tools.verify_sidscope_architecture_inventory import DIAGRAM_BASE, validate_diagram
+        import copy
+        original = json.loads((ROOT / (DIAGRAM_BASE + ".json")).read_text())
+        mutations = [
+            ("version_drift", lambda d: d.update(product_version="2.0.0")),
+            ("layer_drift", lambda d: d["layers"].pop()),
+            ("duplicate_or_missing_id", lambda d: d["layers"].append(d["layers"][0])),
+            ("flow_drift", lambda d: d["edges"][0].update(target="evidence")),
+            ("flow_drift", lambda d: d["edges"].append(d["edges"][0])),
+            ("missing_code_path", lambda d: d["layers"][0].update(code_paths=[])),
+        ]
+        for error, mutate in mutations:
+            with self.subTest(error=error):
+                document = copy.deepcopy(original)
+                mutate(document)
+                with self.assertRaisesRegex(ValueError, error):
+                    validate_diagram(document)
+
     def test_target_modules_follow_allowed_dependency_matrix(self) -> None:
         matrix = allowed_target_imports()
         failures: list[str] = []

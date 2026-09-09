@@ -88,7 +88,8 @@ class EvidenceCLITest(unittest.TestCase):
                 ]
             )
             self.assertEqual(code, 0)
-            self.assertEqual(comparison["status"], "compatible")
+            self.assertEqual(comparison["status"], "incompatible")
+            self.assertIsNone(comparison["method_difference"])
 
             code, quarantine = invoke(
                 [

@@ -1,6 +1,50 @@
 # SIDScope Compatibility Matrix
 
+The local `1.7.0.dev0` engineering candidate is frozen by ADR-0024. N03-N08
+technical scope is verified; N01/F09 independent actual use is the sole
+certification blocker. This does not create an RC, public 2.0 compatibility
+promise or release authorization.
+
+Adapter SDK `1.0.0` is the stable extension boundary with plugin API `1.0`.
+The runtime preserves exact interval-based 0.2 replay and historical SDK 0.1
+descriptors; it does not silently reinterpret their claims. The 39-symbol
+curated facade remains unchanged. Approved new workflows are opt-in modules,
+including mapping preflight, native admission, paired regression, diagnostic
+review and SID refresh.
+
+Local workflow policy (ADR-0018) keeps trusted input budgets caller-configured.
+Untrusted submission and canonical loader safeguards remain bounded and typed.
+N07 requires explicit ordered-prefix, parallel-position or unordered-set
+semantics and never changes native SIDs. N08 evidence applies only to the two
+measured 100-episode routes; it is not a production SLO.
+
+<!-- SIDSCOPE:CURRENT:BEGIN -->
+Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
+Unclosed SDLC requirements: F09.
+Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
+Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
+Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+<!-- SIDSCOPE:CURRENT:END -->
+
 Status: SIDScope 1.7 contract/public-surface stabilization baseline
+
+Current local safety exception (ADR-0016): new submission admission and default
+indexes require protocol-bound diagnostic recomputation. Missing inputs fail
+with `independent_gate_verification_required` or a typed input error. Explicit
+historical replay remains available but is not new admission. Profile CLI
+verification exposes `structure_only`/`unverified`; standard metric ranges and
+target-state invariants reject previously accepted contradictory documents.
+No immutable artifact is rewritten. Release receipt v2 verifies member bytes;
+legacy receipts require rebuilding for current delivery verification. These
+pre-stable restrictions remain in `1.7.0.dev0` and do not alter released 1.1.x.
+
+The existing `verify` command additionally accepts `--diagnostic`, `--trace`
+and `--selection` together for CPU recomputation. Its output distinguishes
+`diagnostics_from_supplied_trace` from `structure_only` and never equates either
+with training authenticity. The no-recomputation path reports
+`verification_performed=false`. No human sign-off path is supported.
 
 ## Product and Entry Points
 
@@ -33,12 +77,12 @@ during migration.
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
 | Product/package | `1.7.0.dev0` | PEP 440 development version; not a public 1.7.0 release. |
-| Adapter SDK | `0.2.0-alpha` | Versioned capability descriptors and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted. |
+| Adapter SDK | `1.0.0` | Stable capability descriptor and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted for historical replay. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | governed `static_mapping_c0_c5`, `generator_g0_g5`, `overlay_g0_g5`, `release_local` at `1.0.0`; legacy `common.generator.v1` and five family profiles remain supported | Profile reports bind the exact catalog hash; legacy-only routes retain read-only authority until migration. |
 | Evidence bundle | `sidscope.evidence_bundle.v1@1.0.0` | Immutable canonical JSON; SHA-256 object directory authoritative; SQLite and static views are derived. |
 | Submission | `sidscope.evidence_submission.v1@1.0.0` and `sidscope.submission_check_report.v1@1.0.0` | Root-relative canonical package; unknown roles revisions bindings or claims fail closed. |
-| Public schema catalog | 45 schema IDs across 27 bundled Draft 2020-12 resources | `sidscope schema validate` runs the selected JSON Schema before the owning Python semantic validator. |
+| Public schema catalog | 46 schema IDs across 28 bundled Draft 2020-12 resources | `sidscope schema validate` runs the selected JSON Schema before the owning Python semantic validator. |
 | CLI result envelope | 19 result schema IDs in `cli_result.v1.schema.json` | Every CLI envelope requires recognized schema, pass/fail status, and status-consistent failure state; domain artifacts retain their own schema/status semantics. |
 
 The executable matrix is
@@ -137,7 +181,7 @@ versioned: compatibility of the common envelope never implies compatibility of
 AR, parallel graph, masked diffusion, retry, or overlay payload semantics.
 
 Adapter SDK `0.1.0-alpha` remains a supported legacy descriptor. SDK
-`0.2.0-alpha` adds `sidscope.adapter_capabilities.v1`, an SDK compatibility
+`1.0.0` stabilizes `sidscope.adapter_capabilities.v1`, an SDK compatibility
 interval, native payload schema binding, runtime requirements, and plugin API
 1.0 under the `sidscope.adapters` entry-point group.
 The distribution and import remain `sidinspector`; the product command is

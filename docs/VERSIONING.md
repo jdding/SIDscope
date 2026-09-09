@@ -1,5 +1,15 @@
 # SIDScope Versioning and Release Governance
 
+<!-- SIDSCOPE:CURRENT:BEGIN -->
+Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
+Unclosed SDLC requirements: F09.
+Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
+Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
+Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+<!-- SIDSCOPE:CURRENT:END -->
+
 Status: active; current development baseline `1.7.0.dev0`
 
 ## Sources of Truth

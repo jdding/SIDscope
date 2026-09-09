@@ -47,15 +47,17 @@ class ConformanceSubmissionCLITest(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(report["status"], "pass")
         self.assertEqual(report["profile_id"], "generator_g0_g5")
-        self.assertEqual(report["status_label"], "named_adapter")
+        self.assertEqual(report["status_label"], "unverified")
+        self.assertEqual(report["declared_status_label"], "named_adapter")
+        self.assertEqual(report["verification_level"], "structure_only")
 
     def test_submission_check_and_deterministic_index_export(self) -> None:
         code, report = invoke(
             ["submission", "check", "--root", str(SUBMISSION_FIXTURE)]
         )
-        self.assertEqual(code, 0)
-        self.assertEqual(report["status"], "accepted")
-        self.assertEqual(report["bindings"]["status_label"], "named_adapter")
+        self.assertEqual(code, 2)
+        self.assertEqual(report["status"], "rejected")
+        self.assertEqual(report["failures"][0]["code"], "independent_gate_verification_required")
 
         with tempfile.TemporaryDirectory() as tmp:
             first_status = Path(tmp) / "first-status.json"
@@ -78,11 +80,10 @@ class ConformanceSubmissionCLITest(unittest.TestCase):
                         str(result_path),
                     ]
                 )
-                self.assertEqual(code, 0)
-                self.assertEqual(exported["status"], "pass")
-            self.assertEqual(first_status.read_bytes(), second_status.read_bytes())
-            self.assertEqual(first_result.read_bytes(), second_result.read_bytes())
-            self.assertNotIn(str(SUBMISSION_FIXTURE), first_status.read_text(encoding="utf-8"))
+                self.assertEqual(code, 2)
+                self.assertEqual(exported["failure"]["code"], "independent_gate_verification_required")
+                self.assertFalse(status_path.exists())
+                self.assertFalse(result_path.exists())
 
     def test_missing_submission_root_is_typed_rejection(self) -> None:
         code, report = invoke(

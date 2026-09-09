@@ -32,6 +32,7 @@ from .comparison import (
     validate_evidence_comparison,
 )
 from .object_store import ObjectStore
+from .recomputation import recompute_bundle, result_card_from_diagnostic
 from .registry import EvidenceRegistry, EvidenceRegistryError
 
 
@@ -41,7 +42,8 @@ def build_evidence_index(
     registry = load_contract_registry()
     loaded: dict[str, tuple[Any, Any]] = {}
     for path in artifact_paths:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        from sidinspector.contracts import load_json
+        raw = load_json(path)
         if not isinstance(raw, Mapping):
             raise ContractRegistryError("invalid_type", str(path))
         descriptor = registry.by_schema_id(str(raw.get("schema")))

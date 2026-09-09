@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -25,12 +25,21 @@ from sidinspector.evidence import (
 )
 
 from .contracts import (
+    ID_PATTERN,
     EvidenceSubmission,
     SubmissionCheckReport,
     SubmissionValidationError,
     build_submission_check_report,
     validate_evidence_submission,
 )
+from sidinspector.evidence import recompute_bundle
+
+
+# Bounded public interchange, not a container for full training traces.
+MAX_ARTIFACT_BYTES = 8 * 1024 * 1024
+MAX_SUBMISSION_BYTES = 64 * 1024 * 1024
+MAX_SUBMISSION_ARTIFACTS = 256
+MAX_JSON_DEPTH = 64
 
 
 @dataclass(frozen=True)
@@ -39,6 +48,7 @@ class ValidatedSubmission:
     descriptor: Mapping[str, Any]
     conformance_report: Mapping[str, Any]
     evidence_bundle: EvidenceBundle
+    objects: Mapping[str, bytes] = field(default_factory=dict)
 
 
 def _fail(code: str, detail: str) -> None:
@@ -73,14 +83,61 @@ def _safe_relative_file(root: Path, relative: str, location: str) -> Path:
     return candidate
 
 
+def _bounded_read(path: Path, location: str, *, remaining: int | None = None) -> bytes:
+    if remaining is None:
+        remaining = MAX_SUBMISSION_BYTES
+    limit = min(MAX_ARTIFACT_BYTES, remaining)
+    code = "submission_artifact_too_large" if limit == MAX_ARTIFACT_BYTES else "submission_total_too_large"
+    try:
+        if path.stat().st_size > limit:
+            _fail(code, location)
+        with path.open("rb") as handle:
+            payload = handle.read(limit + 1)
+    except OSError:
+        _fail("submission_read_failed", location)
+    if len(payload) > limit:
+        _fail(code, location)
+    return payload
+
+
+def _check_json_depth(payload: bytes, location: str) -> None:
+    # Lexical preflight runs before the recursive JSON decoder. Braces inside
+    # strings, including escaped quotes, do not contribute to nesting depth.
+    depth = 0
+    quoted = escaped = False
+    for byte in payload:
+        if quoted:
+            if escaped:
+                escaped = False
+            elif byte == 92:
+                escaped = True
+            elif byte == 34:
+                quoted = False
+        elif byte == 34:
+            quoted = True
+        elif byte in (91, 123):
+            depth += 1
+            if depth > MAX_JSON_DEPTH:
+                _fail("submission_json_depth_exceeded", location)
+        elif byte in (93, 125):
+            depth -= 1
+
+
 def _read_json_bytes(payload: bytes, location: str) -> Mapping[str, Any]:
+    _check_json_depth(payload, location)
     try:
         value = json.loads(payload.decode("utf-8"))
-    except (UnicodeError, json.JSONDecodeError) as error:
-        _fail("invalid_json_artifact", f"{location}: {error}")
+    except RecursionError:
+        _fail("submission_json_depth_exceeded", location)
+    except (UnicodeError, ValueError):
+        _fail("invalid_json_artifact", location)
     if not isinstance(value, Mapping):
         _fail("invalid_json_artifact", f"{location}: expected object")
-    if payload != canonical_json_bytes(value) + b"\n":
+    try:
+        canonical = canonical_json_bytes(value) + b"\n"
+    except (ValueError, UnicodeError):
+        _fail("invalid_json_artifact", location)
+    if payload != canonical:
         _fail("noncanonical_json_artifact", location)
     try:
         scan_evidence_content(value, location=location)
@@ -106,15 +163,19 @@ def _scan_payload(payload: bytes, media_type: str, location: str) -> None:
 def validate_submission_package(
     root: Path, *, manifest_path: str = "submission.json"
 ) -> ValidatedSubmission:
-    """Validate a complete package using only versioned public JSON contracts."""
+    """Validate structural bindings, not gate execution or independent admission."""
 
     root = Path(root)
     if not root.is_dir():
         _fail("submission_root_missing", "submission root is not a directory")
     manifest_file = _safe_relative_file(root, manifest_path, "manifest")
-    manifest_payload = manifest_file.read_bytes()
+    manifest_payload = _bounded_read(manifest_file, "manifest")
     manifest_value = _read_json_bytes(manifest_payload, "submission")
+    artifacts = manifest_value.get("artifacts")
+    if isinstance(artifacts, list) and len(artifacts) > MAX_SUBMISSION_ARTIFACTS:
+        _fail("submission_artifact_count_exceeded", "artifacts")
     submission = validate_evidence_submission(manifest_value)
+    total_bytes = len(manifest_payload)
 
     loaded_bytes: dict[str, bytes] = {}
     documents_by_role: dict[str, Mapping[str, Any]] = {}
@@ -122,7 +183,8 @@ def validate_submission_package(
     for row in submission.artifacts:
         relative = str(row["path"])
         path = _safe_relative_file(root, relative, f"artifact:{row['artifact_id']}")
-        payload = path.read_bytes()
+        payload = _bounded_read(path, str(row["artifact_id"]), remaining=MAX_SUBMISSION_BYTES - total_bytes)
+        total_bytes += len(payload)
         observed = _file_sha256(payload)
         if observed != row["sha256"]:
             _fail("artifact_hash_mismatch", str(row["artifact_id"]))
@@ -241,30 +303,32 @@ def validate_submission_package(
         descriptor=json.loads(json.dumps(descriptor)),
         conformance_report=json.loads(json.dumps(report)),
         evidence_bundle=bundle,
+        objects={digest: loaded_bytes[str(rows_by_sha[digest]["artifact_id"])] for digest in required_object_hashes},
     )
 
 
 def _manifest_identity(root: Path, manifest_path: str) -> tuple[str, str | None]:
     try:
         path = _safe_relative_file(root, manifest_path, "manifest")
-        payload = path.read_bytes()
+        payload = _bounded_read(path, "manifest")
     except (SubmissionValidationError, OSError):
         return "unresolved", None
     raw_sha = _file_sha256(payload)
     try:
+        _check_json_depth(payload, "manifest")
         value = json.loads(payload.decode("utf-8"))
-    except (UnicodeError, json.JSONDecodeError):
+    except (SubmissionValidationError, UnicodeError, ValueError, RecursionError):
         return "unresolved", raw_sha
     submission_id = value.get("submission_id") if isinstance(value, Mapping) else None
-    if not isinstance(submission_id, str) or not submission_id:
+    if not isinstance(submission_id, str) or ID_PATTERN.fullmatch(submission_id) is None:
         submission_id = "unresolved"
     return submission_id, raw_sha
 
 
-def check_submission(
+def replay_submission_check(
     root: Path, *, manifest_path: str = "submission.json"
 ) -> SubmissionCheckReport:
-    """Return a deterministic accepted/rejected report for one package root."""
+    """Replay historical v1 structural checking; never use this as new admission."""
 
     try:
         validated = validate_submission_package(root, manifest_path=manifest_path)
@@ -294,6 +358,39 @@ def check_submission(
             "conformance_report_sha256": report["content_sha256"],
             "status_label": report["decision"]["status_label"],
         },
+        failures=[],
+    )
+
+
+def require_verified_admission(submission: ValidatedSubmission) -> dict[str, Any]:
+    """Execute verification each time; no cached flag or caller label grants trust."""
+    if not any(row["role"] == "evaluation_protocol" for row in submission.evidence_bundle.artifacts):
+        _fail("independent_gate_verification_required", submission.submission.submission_id)
+    try:
+        return recompute_bundle(submission.evidence_bundle, submission.objects)
+    except EvidenceBundleValidationError as error:
+        _fail(error.code, error.detail)
+
+
+def check_submission(
+    root: Path, *, manifest_path: str = "submission.json"
+) -> SubmissionCheckReport:
+    """Admit only the diagnostic scope actually recomputed from bound inputs."""
+    structural = replay_submission_check(root, manifest_path=manifest_path)
+    if structural.status == "rejected":
+        return structural
+    try:
+        verified = require_verified_admission(validate_submission_package(root, manifest_path=manifest_path))
+    except SubmissionValidationError as error:
+        return build_submission_check_report(
+            submission_id=structural.submission_id, submission_sha256=structural.submission_sha256,
+            status="rejected", bindings=None, failures=[{"code": error.code, "detail": error.detail}],
+        )
+    return build_submission_check_report(
+        submission_id=structural.submission_id,
+        submission_sha256=structural.submission_sha256,
+        status="accepted",
+        bindings={**structural.bindings, "status_label": verified["status_label"]},
         failures=[],
     )
 

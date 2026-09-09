@@ -6,7 +6,7 @@ Status: 1.6 candidate migration contract
 
 - Core-only users keep the `sidinspector` import and move automation to the
   `sidscope` facade commands listed in the candidate API inventory.
-- Adapter publishers use Adapter SDK `0.2.0-alpha`, a separately installed
+- Adapter publishers use Adapter SDK `1.0.0`, a separately installed
   `sidscope.adapters` entry point, one registered native payload family, and a
   governed conformance profile.
 - Evidence publishers package immutable EvidenceBundle v1 objects and derive
@@ -36,6 +36,11 @@ Status: 1.6 candidate migration contract
    Python export, or compatibility wrapper used by the integration.
 9. Run the archive and fresh-environment release rehearsal on supported Python
    versions before declaring migration complete.
+10. Replace a pre-stable `sdk_compatibility` interval ending at `0.3.0` with
+    `minimum: 1.0.0` and `maximum_exclusive: 2.0.0` only after verifying the
+    unchanged stable API. Recompute the descriptor hash; never edit an immutable
+    historical descriptor in place. An unchanged 0.2 descriptor remains
+    replayable because the 1.0 runtime explicitly retains the 0.2 API level.
 
 ## Compatibility and Deprecation Rules
 

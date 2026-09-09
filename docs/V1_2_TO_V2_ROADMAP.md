@@ -1,10 +1,28 @@
 # SIDScope 1.2 to 2.0 Product Roadmap
 
+<!-- SIDSCOPE:CURRENT:BEGIN -->
+Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
+Unclosed SDLC requirements: F09.
+Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
+Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
+Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+<!-- SIDSCOPE:CURRENT:END -->
+
 Status: approved development direction
 
 Regression baseline: `1.1.1.dev0`; active development: `1.7.0.dev0`
 
 Architecture authority: `SIDSCOPE_SYSTEM_ARCHITECTURE.md`
+
+Current implementation diagram and code map are at the top of that document.
+The numbered milestone sections below describe the staged plan, not proof of
+today's acceptance. Current execution status is in `SIDSCOPE_NEXT_DEVELOPMENT_PLAN.md`
+and the requirement ledger: N02-N08 engineering scope is verified, including the
+bounded 100-episode N08 gate and N07 refresh diagnostics; Adapter SDK 1.0 and the
+candidate surface are frozen. N01/F09 independent actual use remains the sole
+certification blocker. N09/N10 are explicitly deferred.
 
 Publication topology: GitHub `sidscope/main` remains on 1.1.x. Milestones
 1.2--1.9 and the 2.0 target are developed only in the local `SIDScope-v2`
@@ -108,7 +126,7 @@ SQLite projections remain assigned to 1.3 and 1.4.
 
 The 1.3 Adapter and Native-Trace Ecosystem is development-closed. Lazy
 `importlib.metadata` discovery under `sidscope.adapters` does not import plugin
-code until one named plugin is explicitly preflighted. SDK `0.2.0-alpha`
+code until one named plugin is explicitly preflighted. SDK `1.0.0`
 capabilities bind method family to one of five registered native payload
 schemas while legacy SDK 0.1 descriptors remain accepted.
 
@@ -148,7 +166,7 @@ as part of this milestone.
 
 ## 2. State Transition
 
-### Current State
+### Historical starting state (1.1.1, before the local shared-contract work)
 
 The 1.1.1 tree is a proven but route-oriented evidence package. Method-specific
 CLIs and verifiers are authoritative, while common concepts are documented but
@@ -159,8 +177,9 @@ not uniformly registered or dispatched.
 Versions 1.2 through the final active 1.x milestone run shared and legacy paths
 side by side. Each adapter migrates independently after outcome, metric,
 binding, hash and typed-failure parity. Compatibility wrappers are temporary,
-owned and reversible. Versions 1.7--1.9 are available but remain inactive until
-an explicitly approved scope assigns deliverables and exit gates.
+owned and reversible. Version 1.7 is active as `1.7.0.dev0`; 1.8--1.9 remain
+optional inactive slots. The SDLC hardening ledger now gates current readiness;
+historical milestone closure does not discharge its open trust and user gates.
 
 ### Target State
 

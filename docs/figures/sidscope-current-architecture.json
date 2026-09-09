@@ -1,0 +1,167 @@
+{
+  "format": "sidscope-architecture-content-map",
+  "product_version": "1.7.0.dev0",
+  "view": "local_implementation_not_public_certification",
+  "generation": {
+    "mode": "built_in_imagegen",
+    "model_version": "not_exposed",
+    "visual_review": "2026-09-09"
+  },
+  "layers": [
+    {
+      "id": "integration",
+      "label": "01 Integration",
+      "code_paths": [
+        "src/sidinspector/adapters_core",
+        "src/sidinspector/sdk",
+        "tools/build_sidscope_native_submission.py"
+      ]
+    },
+    {
+      "id": "observation",
+      "label": "02 Observation",
+      "code_paths": [
+        "src/sidinspector/trace"
+      ]
+    },
+    {
+      "id": "evaluation",
+      "label": "03 Evaluation",
+      "code_paths": [
+        "src/sidinspector/evaluation",
+        "src/sidinspector/evidence/recomputation.py",
+        "src/sidscope/mapping_check.py",
+        "src/sidscope/refresh.py"
+      ]
+    },
+    {
+      "id": "conformance",
+      "label": "04 Conformance",
+      "code_paths": [
+        "src/sidinspector/conformance_core",
+        "src/sidinspector/submission"
+      ]
+    },
+    {
+      "id": "evidence",
+      "label": "05 Evidence",
+      "code_paths": [
+        "src/sidinspector/evidence"
+      ]
+    },
+    {
+      "id": "contracts",
+      "label": "06 Canonical contracts",
+      "code_paths": [
+        "src/sidinspector/contracts",
+        "src/sidinspector/schemas"
+      ]
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "upstream",
+      "label": "UPSTREAM SYSTEMS",
+      "code_paths": [
+        "tools/observe_sidscope_native_runtime.py"
+      ]
+    },
+    {
+      "id": "workflows",
+      "label": "LOCAL WORKFLOWS \u00b7 CLI / PYTHON",
+      "code_paths": [
+        "src/sidscope/diagnostic_review.py",
+        "src/sidscope/mapping_check.py",
+        "src/sidscope/pipeline.py",
+        "src/sidscope/refresh.py",
+        "src/sidscope/regression.py",
+        "tools/benchmark_sidscope_observed_review.py"
+      ]
+    },
+    {
+      "id": "review",
+      "label": "Offline review & export",
+      "code_paths": [
+        "src/sidscope/diagnostic_review.py",
+        "src/sidscope/refresh.py",
+        "tools/run_sidscope_observed_review.py"
+      ]
+    },
+    {
+      "id": "indexes",
+      "label": "Rebuildable SQLite / static indexes",
+      "code_paths": [
+        "src/sidinspector/evidence",
+        "src/sidinspector/submission/indexes.py"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "upstream",
+      "target": "integration",
+      "kind": "artifact_flow"
+    },
+    {
+      "source": "integration",
+      "target": "observation",
+      "kind": "artifact_flow"
+    },
+    {
+      "source": "observation",
+      "target": "evaluation",
+      "kind": "artifact_flow"
+    },
+    {
+      "source": "evaluation",
+      "target": "conformance",
+      "kind": "artifact_flow"
+    },
+    {
+      "source": "conformance",
+      "target": "evidence",
+      "kind": "artifact_flow"
+    },
+    {
+      "source": "evidence",
+      "target": "review",
+      "kind": "artifact_flow"
+    },
+    {
+      "source": "evidence",
+      "target": "indexes",
+      "kind": "artifact_flow"
+    },
+    {
+      "source": "contracts",
+      "target": "integration",
+      "kind": "contract_binding"
+    },
+    {
+      "source": "contracts",
+      "target": "observation",
+      "kind": "contract_binding"
+    },
+    {
+      "source": "contracts",
+      "target": "evaluation",
+      "kind": "contract_binding"
+    },
+    {
+      "source": "contracts",
+      "target": "conformance",
+      "kind": "contract_binding"
+    },
+    {
+      "source": "contracts",
+      "target": "evidence",
+      "kind": "contract_binding"
+    }
+  ],
+  "limitations": [
+    "Logical artifact flow, not Python imports or deployable services.",
+    "Code-path checks and asset hashes do not verify image text; visual inspection is required.",
+    "Requirements and acceptance states are kept in the SDLC ledger, not in the illustration.",
+    "Snapshot declarations and hashes alone do not establish diagnostic or training truth."
+  ]
+}

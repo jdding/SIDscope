@@ -80,7 +80,10 @@ def verify_runtime_release(root: Path = ROOT) -> dict[str, Any]:
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     all_paths = release_files(root)
     content_paths = [path for path in all_paths if path != PROFILE_RECEIPT_PATH]
-    profile_id = validate_profile_receipt(receipt, content_paths=content_paths)
+    profile_id = validate_profile_receipt(
+        receipt, content_paths=content_paths,
+        content_hashes={path: file_sha256(root / path) for path in content_paths},
+    )
     if profile_id not in {"runtime", "conformance", "evidence-full"}:
         raise ReleaseProfileError("unsupported_runtime_verification_profile", profile_id)
 

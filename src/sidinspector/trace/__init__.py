@@ -1,5 +1,7 @@
 """Observation-layer facade for canonical trace envelopes."""
 
+from .projection import validate_native_projection
+
 from sidinspector.contracts import (
     TRACE_ENVELOPE_SCHEMA,
     RuntimeContract,

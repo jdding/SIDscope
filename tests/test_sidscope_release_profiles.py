@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import tempfile
 import unittest
@@ -47,6 +48,11 @@ class SIDScopeReleaseProfileTest(unittest.TestCase):
         self.assertLess(resolved["runtime"], resolved["conformance"])
         self.assertLess(resolved["conformance"], resolved["evidence-full"])
         self.assertFalse(any(path.startswith("examples/") for path in resolved["runtime"]))
+        for suffix in (".json", "-prompt.md", ".png"):
+            figure = "docs/figures/sidscope-current-architecture" + suffix
+            self.assertNotIn(figure, resolved["runtime"])
+            self.assertIn(figure, resolved["conformance"])
+            self.assertIn(figure, resolved["evidence-full"])
         self.assertEqual(
             [path for path in resolved["runtime"] if path.startswith("docs/reproducibility/")],
             ["docs/reproducibility/sidscope_release_profiles.v1.json"],
@@ -69,6 +75,7 @@ class SIDScopeReleaseProfileTest(unittest.TestCase):
             with zipfile.ZipFile(first_path) as archive:
                 names = sorted(archive.namelist())
                 receipt = json.loads(archive.read(PROFILE_RECEIPT_PATH))
+                hashes = {name: hashlib.sha256(archive.read(name)).hexdigest() for name in names if name != PROFILE_RECEIPT_PATH}
 
         self.assertEqual(first["profile_id"], "runtime")
         self.assertEqual(first["archive_sha256"], second["archive_sha256"])
@@ -76,6 +83,7 @@ class SIDScopeReleaseProfileTest(unittest.TestCase):
             validate_profile_receipt(
                 receipt,
                 content_paths=[name for name in names if name != PROFILE_RECEIPT_PATH],
+                content_hashes=hashes,
             ),
             "runtime",
         )
@@ -96,6 +104,18 @@ class SIDScopeReleaseProfileTest(unittest.TestCase):
             validate_profile_receipt(value, content_paths=["README.md"])
 
         self.assertEqual(caught.exception.code, "profile_path_binding_mismatch")
+
+    def test_same_paths_changed_bytes_fail_before_archive_execution(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            original = Path(tmp) / "original.zip"
+            changed = Path(tmp) / "changed.zip"
+            build_archive(manifest_path=MANIFEST, output_path=original)
+            with zipfile.ZipFile(original) as source, zipfile.ZipFile(changed, "w") as dest:
+                for entry in source.infolist():
+                    data = b"modified license\n" if entry.filename == "LICENSE" else source.read(entry)
+                    dest.writestr(entry, data)
+            with self.assertRaisesRegex(ReleaseProfileError, "profile_content_binding_mismatch"):
+                read_archive_profile(changed)
 
     def test_unknown_profile_fails_closed(self) -> None:
         with self.assertRaisesRegex(ReleaseProfileError, "unknown_release_profile") as caught:
