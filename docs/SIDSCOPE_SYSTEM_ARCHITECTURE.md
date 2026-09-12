@@ -640,7 +640,7 @@ needed through 2.0.
 | Privacy | Public bundles exclude restricted identities and assets. | Forbidden-content, path and size-bound scanners pass before admission/export. |
 | Extensibility | A third party can add a method without core edits. | External reference plugin passes a profile with zero changes under core module paths. |
 | Auditability | Every result has a reconstructable provenance graph. | Registry traversal resolves all required dependencies to hashes and reports no cycles. |
-| Performance | Shared abstractions do not make verification impractical. | Establish 1.2 command baselines; fail CI on unapproved regressions above 20%. |
+| Performance | Shared abstractions do not make verification impractical. | Preserve the 1.2 baseline; bind current measurements into the detached exact-source delivery record and block unhandled regressions above 20%. |
 | Portability | Evidence can be checked outside the producing project. | Fresh Python 3.9+ environment installs, verifies and rebuilds the registry record without private assets. |
 
 ## 10. Ownership and Operability

@@ -37,8 +37,14 @@ the second command.
 ## RC transition
 
 The engineering candidate runs wheel/sdist, all three profile archives, the
-Linux/Python matrix and a detached exact-source record before F09 so delivery
+Linux/Python matrix and a detached exact-source record v2 before F09 so delivery
 defects do not hide behind human acceptance. Only after certification readiness
 is true may a separately authorized change set `2.0.0rc1`; that RC commit must
 rerun the same gates and populate a new public release packet. Push, tag and GitHub Release remain separate
 explicit actions.
+
+Record v2 embeds and binds the current six-command CPU observation and its narrow delivery
+disposition to the exact source snapshot. Platform-version-only variance can be
+accepted only when every frozen workload stays inside the original 20% threshold;
+other environment, workload or performance drift remains blocked. The raw
+observation status is preserved and the baseline is never rewritten.

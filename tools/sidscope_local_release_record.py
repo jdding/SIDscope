@@ -43,7 +43,7 @@ def source_snapshot():
 def verify_record(record_path: Path, *, expected_record_sha256: str, archive_path: Path, profile: str):
     verify_archive_digest(record_path, expected_record_sha256)
     record = load_json(record_path)
-    if record.get("format") != "sidscope.local_release_record.v1" or record.get("status") != "pass":
+    if record.get("format") != "sidscope.local_release_record.v2" or record.get("status") != "pass":
         raise ReleaseRecordError("invalid_release_record", "format/status")
     candidates = [row for row in record["archives"] if row["profile"] == profile]
     if len(candidates) != 1:
@@ -53,6 +53,14 @@ def verify_record(record_path: Path, *, expected_record_sha256: str, archive_pat
     read_archive_profile(archive_path, expected_profile=profile)
     if not record["tests"] or any(row["returncode"] != 0 or row["source_snapshot_sha256"] != record["source"]["content_sha256"] for row in record["tests"]):
         raise ReleaseRecordError("unbound_release_test_evidence", "tests")
+    performance = record.get("performance", {})
+    measurement = performance.get("measurement", {})
+    if (performance.get("delivery_status") != "pass"
+            or performance.get("source_snapshot_sha256") != record["source"]["content_sha256"]
+            or measurement.get("status") != performance.get("observation_status")
+            or measurement.get("delivery_gate", {}).get("status") != "pass"
+            or measurement.get("delivery_gate", {}).get("disposition") != performance.get("disposition")):
+        raise ReleaseRecordError("unbound_performance_evidence", "performance")
     return entry
 
 
@@ -63,7 +71,8 @@ def build_record(output: Path, interpreters=None):
     output.mkdir(parents=True, exist_ok=False)
     before = source_snapshot()
     tests = []
-    commands = [[sys.executable, "-m", "pytest", "-q"], [sys.executable, "tools/verify_sidscope_resource_package.py"], [sys.executable, "tools/verify_sidscope_release_profiles.py"]]
+    performance_path = output / "performance.json"
+    commands = [[sys.executable, "tools/check_sidscope_current_performance.py", "--require-delivery", "--output", str(performance_path)], [sys.executable, "-m", "pytest", "-q"], [sys.executable, "tools/verify_sidscope_resource_package.py"], [sys.executable, "tools/verify_sidscope_release_profiles.py"]]
     matrix_command = [sys.executable, "tools/verify_sidscope_distribution_install.py", "--output-dir", str(output / "distribution")]
     for interpreter in interpreters or [sys.executable]:
         matrix_command.extend(["--python", interpreter])
@@ -75,6 +84,15 @@ def build_record(output: Path, interpreters=None):
         tests.append({"command": command[1:], "returncode": run.returncode, "output_sha256": sha(log), "source_snapshot_sha256": before["content_sha256"]})
         if run.returncode:
             raise ReleaseRecordError("candidate_test_failed", log.name)
+    performance_payload = load_json(performance_path)
+    if performance_payload.get("delivery_gate", {}).get("status") != "pass":
+        raise ReleaseRecordError("candidate_performance_failed", "performance.json")
+    performance = {"result_sha256": sha(performance_path),
+                   "observation_status": performance_payload["status"],
+                   "delivery_status": performance_payload["delivery_gate"]["status"],
+                   "disposition": performance_payload["delivery_gate"]["disposition"],
+                   "measurement": performance_payload,
+                   "source_snapshot_sha256": before["content_sha256"]}
     archives = []
     for profile in ("runtime", "conformance", "evidence-full"):
         path = output / (profile + ".zip")
@@ -93,7 +111,7 @@ def build_record(output: Path, interpreters=None):
             raise ReleaseRecordError("candidate_g8_failed", log.name)
     if source_snapshot() != before:
         raise ReleaseRecordError("source_changed_during_verification", "rerun on a stable snapshot")
-    record = with_content_sha256({"format": "sidscope.local_release_record.v1", "status": "pass", "source": before, "tests": tests, "archives": archives, "distribution_matrix_sha256": sha(output / "distribution/result.json"), "build_environment": {"python": platform.python_version(), "platform": platform.platform()}, "release_authorized": False, "independent_user_acceptance": "not_established_by_automated_tests"})
+    record = with_content_sha256({"format": "sidscope.local_release_record.v2", "status": "pass", "source": before, "tests": tests, "performance": performance, "archives": archives, "distribution_matrix_sha256": sha(output / "distribution/result.json"), "build_environment": {"python": platform.python_version(), "platform": platform.platform()}, "release_authorized": False, "independent_user_acceptance": "not_established_by_automated_tests"})
     path = output / "release-record.json"
     path.write_bytes(canonical_json_bytes(record)+b"\n")
     return {"status": "pass", "record_sha256": sha(path), "source_snapshot_sha256": before["content_sha256"], "dirty": before["dirty"]}

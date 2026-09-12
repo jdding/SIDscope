@@ -23,7 +23,9 @@ def rows():
 
 
 def block():
-    pending = [row["id"] for row in rows() if row["id"].startswith("F") and row["state"] != "verified"]
+    records = rows()
+    pending = [row["id"] for row in records if row["id"].startswith("F") and row["state"] != "verified"]
+    accepted = user_acceptance_status(records) == "accepted"
     with ROUTES.open(newline="") as handle:
         routes = sorted(csv.DictReader(handle), key=lambda row: row["route_id"])
     history = "; ".join(row["route_id"]+"="+row["current_decision"] for row in routes)
@@ -33,7 +35,9 @@ def block():
         "Requirement snapshot: `"+hashlib.sha256(LEDGER.read_bytes()).hexdigest()+"`.",
         "Historical route decisions (not newly recomputed training): " + history + ".",
         "Historical route snapshot: `"+hashlib.sha256(ROUTES.read_bytes()).hexdigest()+"`.",
-        "Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.", END])
+        ("Independent user acceptance is recorded by traceable F09/N01 evidence. " if accepted else
+         "Independent user acceptance is not established by automated tests. ") +
+        "No push, tag, public release or TOIS mutation is authorized.", END])
 
 
 def render(document):
@@ -46,6 +50,27 @@ def render(document):
     return title + "\n\n" + value + "\n" + rest
 
 
+def user_acceptance_status(records):
+    """Check recorded state/traceability, never authenticate a human's use."""
+    actual_use = [row for row in records if row["id"] in {"F09", "N01"}]
+    assert len(actual_use) == 2
+    states = {row["user_accepted"] for row in actual_use}
+    assert len(states) == 1 and states <= {"pending_actual_use", "yes"}, "actual-use state mismatch"
+    for row in actual_use:
+        if row["user_accepted"] == "yes":
+            assert row["state"] == "verified" and row["implemented"] == row["verified"] == "yes"
+            evidence = Path(row.get("user_acceptance_evidence", ""))
+            assert str(evidence) != "." and not evidence.is_absolute() and ".." not in evidence.parts, "actual-use evidence required"
+            evidence_path = ROOT / evidence
+            expected_sha256 = row.get("user_acceptance_sha256", "")
+            assert (len(expected_sha256) == 64 and set(expected_sha256) <= set("0123456789abcdef")), "actual-use evidence hash required"
+            assert evidence_path.is_file() and evidence_path.stat().st_size > 0, "actual-use evidence required"
+            assert hashlib.sha256(evidence_path.read_bytes()).hexdigest() == expected_sha256, "actual-use evidence hash mismatch"
+        else:
+            assert row["state"] != "verified" and row["verified"] == "no", "pending actual use cannot be verified"
+    return "accepted" if states == {"yes"} else "pending_actual_use"
+
+
 def verify():
     records = rows()
     by_id = {row["id"]: row for row in records}
@@ -56,7 +81,7 @@ def verify():
         assert all(row[key] for key in required), row["id"]
         assert row["accountable"] == "jdding", "do not invent external reviewers"
         assert row["release_authorized"] == "no"
-        assert row["user_accepted"] in {"not_applicable", "pending_actual_use"}
+        assert row["user_accepted"] in {"not_applicable", "pending_actual_use", "yes"}
         for column in ("verification", "implementation", "tests"):
             for path in row[column].split(";"):
                 assert (ROOT / path).is_file(), (row["id"], column, path)
@@ -71,11 +96,12 @@ def verify():
                 visit(dependency, active | {name})
     for name in by_id:
         visit(name, set())
+    user_acceptance = user_acceptance_status(records)
     expected = block()
     for name in DOCUMENTS:
         assert expected in (ROOT / name).read_text(), "current status drift: " + name
     pending = [row["id"] for row in records if row["id"].startswith("F") and row["state"] != "verified"]
-    return {"status": "pass", "requirement_count": len(records), "generated_documents": len(DOCUMENTS), "unclosed_requirements": pending, "user_acceptance": "pending_actual_use", "release_authorized": False}
+    return {"status": "pass", "requirement_count": len(records), "generated_documents": len(DOCUMENTS), "unclosed_requirements": pending, "user_acceptance": user_acceptance, "release_authorized": False}
 
 
 def main():

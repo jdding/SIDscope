@@ -4,13 +4,35 @@
 Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
-Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
 Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-Last updated: 2026-09-09
+Last updated: 2026-09-12
+
+## 2026-09-12 whole-project review remediation
+
+Ten newly reproduced review findings are closed in dependency order.
+Public JSON artifact scanning now uses strict duplicate/depth/nonfinite intake;
+quarantined CAS entries cannot participate in normal comparisons; rejected
+quarantine requests are side-effect free and an index-write interruption has a
+typed rebuild path. N07 now propagates ordered-prefix structural changes into
+classification, examples and downstream groups, uses canonical normalized-row
+pointers, and applies caller row budgets to bound evaluation tables without
+adding a default input cap.
+
+The certification verifier now has an executable pending-to-accepted transition
+that requires consistent, traceable F09/N01 evidence; no such evidence is being
+invented, so F09 remains pending. Separately authorized `2.0.0rcN` versions can
+be checked only after certification readiness. Exact-source record v2 binds a
+current six-command CPU measurement and a narrow delivery disposition; it
+preserves environment-review status and never rewrites the baseline. User docs
+distinguish the historical rejected fixture from the current recomputed journey,
+and the N08 reproduction flag is corrected to `--repeats 3` without rerunning a
+model or expanding beyond 100 episodes. A new clean candidate record is required
+after these changes; the preceding record remains immutable historical evidence.
 
 ## Current 2.0 engineering-candidate closeout
 
@@ -33,8 +55,9 @@ and 9.5620 s / 1,048,821,760 bytes for PSID. No model rerun, 1000-episode
 expansion or production SLO is planned. Private receipts remain under
 `.local_artifacts/reviews/2026-09-09/`.
 
-The local macOS CPU suite passes with 571 tests and 6 external-input skips.
-The Linux arm64 Docker matrix passed on CPython 3.9, 3.10, 3.11 and 3.12. Each
+The corrected local macOS CPU suite passes with 607 tests and 6 external-input
+skips. The preceding candidate's Linux arm64 Docker matrix passed on CPython
+3.9, 3.10, 3.11 and 3.12. Each
 cell ran the full suite (544 passed, 29 optional/external skips, 65 subtests)
 and the metadata, architecture, SDLC acceptance/hardening, profile, candidate
 and resource-package verifiers. The 3.10 run exposed and closed a global import
@@ -60,9 +83,10 @@ blocked only by F09: an independent SID algorithm engineer must complete the
 documented own-producer workflow without core edits or hand-built internal JSON.
 Automation and maintainer execution do not satisfy it. N09/N10 remain excluded.
 No push, tag, GitHub Release, public-main change or TOIS mutation is authorized.
-A clean local candidate commit and its detached exact-source record are the final
-delivery artifacts for this handoff; their immutable identifiers belong in the
-post-commit receipt rather than being predicted in source text.
+A clean local candidate commit, a same-source Linux matrix and its detached
+exact-source record v2 are the final delivery artifacts for this handoff; their
+immutable identifiers belong in the post-commit receipt rather than being
+predicted in source text.
 
 ## Earlier algorithm-engineer workflow continuation (ADR-0021)
 

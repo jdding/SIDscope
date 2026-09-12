@@ -33,3 +33,20 @@ separate explicit authorization.
 
 Rollback pins the preceding local commit and its surface record. It never
 rewrites evidence, public 1.1.x history, TOIS refs or adapter-native semantics.
+
+## Implementation amendment, 2026-09-12
+
+The candidate verifier accepts both the current development stage and a later,
+separately authorized `2.0.0rcN` stage. It permits the certification blocker set
+to transition from exactly F09 to empty only when the ledger records consistent,
+traceable F09/N01 actual-use evidence. It still rejects unknown blockers,
+inconsistent readiness, unapproved version shapes and RC state before
+certification. This makes the documented positive transition executable; it
+does not record user acceptance, authorize an RC version change, or release.
+
+The detached exact-source record is v2 and embeds the current six-command CPU
+measurement plus its source-snapshot binding. A raw environment-review status is
+retained. Delivery may accept only a platform-version-only variance when every
+frozen workload remains within the original threshold; workload, Python,
+implementation, processor or over-threshold drift remains blocked. No baseline
+is rewritten and this is not a production SLO.

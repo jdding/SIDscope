@@ -128,7 +128,7 @@ targets may select a subset of split episodes. Missing dependencies remain
 `unavailable`. D3/D4 use only train events, never a fallback to held-out rows.
 Only supplied identities are checked; temporal split correctness is not inferred.
 
-### Explicit producer orchestration (integration still partial)
+### Explicit producer orchestration
 
 ```bash
 python3 -m sidscope.pipeline --producer my_installed_adapter:make_producer --spec run.json
@@ -145,12 +145,14 @@ baseline it explicitly performs only self-recomputation. `complete.json` marks
 completion; partial I/O output without it is not a successful run. Retry with a
 new output path; do not overwrite prior evidence.
 
-This is a tested generic orchestration entry, not finished RPG/PSID native-export
-adapters. Their real source/checkpoint/data/selection materials and canonical
-export bindings still have to be connected and executed. Public PSID exports
-lack labels and the RPG mapping is a 43-row subset of a 12,101-row universe.
-Do not invent missing facts or pass a fixture as real provenance. F09/N03 remain
-partial until both actual chains run; independent user use is a separate gate.
+This is the tested generic live-producer entry. The separate observed-native
+bridge has also connected and exercised the approved RPG Beauty and PSID Video
+Games inputs through canonical identity, trace, diagnostic admission and bundle
+verification; N03's technical bridge is verified. Those observations do not
+authenticate training, and the public PSID sample still lacks target labels.
+Do not invent missing facts or pass a historical fixture as real provenance.
+F09/N01 remain pending until an independent SID algorithm engineer completes
+this own-producer journey; maintainer automation cannot satisfy that condition.
 
 Use your already generated ranked items. Targets are evaluator-side, never
 generator input. Null slots remain in their original positions; no backfilling.

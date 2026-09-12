@@ -21,7 +21,8 @@ Public release authorized: no.
 - Linux CPython 3.9, 3.10, 3.11 and 3.12 matrix;
 - deterministic runtime, conformance and evidence-full archives plus smoke;
 - regular wheel/sdist and G8 clean-environment installation;
-- a clean local candidate commit and detached exact-source record.
+- a clean local candidate commit and detached exact-source record v2, including
+  its source-bound current performance measurement and delivery disposition.
 
 ## Current engineering execution
 
@@ -31,8 +32,9 @@ Public release authorized: no.
 - CI explicitly provisions the declared `setuptools>=68` backend and `wheel`;
   this is build tooling, not a runtime dependency.
 - The immutable macOS 26.5.2 performance baseline is not rewritten. The 26.6.2
-  rerun remains typed `environment_review_required`; review found all six advisory
-  medians lower than baseline, without promoting it to a same-environment PASS.
+  rerun remains typed `environment_review_required`; the deterministic delivery
+  policy accepts its platform-version-only variance because all six medians stay
+  within the frozen threshold, without promoting it to a same-environment PASS.
 - The final local commit must be clean and is followed by one detached exact-
   source record covering full tests, wheel/sdist installation, all archives,
   smoke tests and G8. Its commit and record hashes are reported after execution.

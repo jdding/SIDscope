@@ -4,7 +4,7 @@
 Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
-Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
 Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
@@ -190,11 +190,16 @@ sidscope trace payload validate \
   --input examples/native_trace_payload_fixtures/masked_diffusion.json
 sidscope profile compose --profile family.masked_diffusion.v1
 sidscope profile catalog
+# This historical structure-only fixture is an expected rejection after
+# diagnostic recomputation became mandatory:
 sidscope submission check \
   --root examples/conformance_ecosystem_fixture/submission/positive
+# status=rejected; code=independent_gate_verification_required
 ```
 
-The reference plugin under `examples/reference_adapter_plugin/` is an external
+For a current recomputed positive submission and own-producer workflow, follow
+`docs/SIDSCOPE_USER_WORKFLOWS.md`; do not treat this historical fixture as an
+accepted bundle. The reference plugin under `examples/reference_adapter_plugin/` is an external
 package proof, not a named-method result. See `docs/ADAPTER_PLUGIN_ECOSYSTEM.md`
 and `docs/NATIVE_TRACE_PAYLOADS.md`.
 

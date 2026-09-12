@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import tempfile
 from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any, Union
 
-from sidinspector.contracts import SHA256_PATTERN, canonical_json_bytes
+from sidinspector.contracts import SHA256_PATTERN, canonical_json_bytes, loads_json, JSONInputError
 
 from .bundle import (
     EvidenceBundle,
@@ -54,9 +53,9 @@ def _read_source(source: ArtifactSource, content_sha256: str) -> bytes:
 def _scan_public_artifact(payload: bytes, media_type: str, content_sha256: str) -> None:
     if "json" in media_type.casefold():
         try:
-            value = json.loads(payload.decode("utf-8"))
-        except (UnicodeError, json.JSONDecodeError) as exc:
-            _fail("invalid_public_json", f"{content_sha256}: {exc}")
+            value = loads_json(payload, max_bytes=None)
+        except JSONInputError as exc:
+            _fail("invalid_public_json", f"{content_sha256}: {exc.code}")
         scan_evidence_content(value, location=f"artifact:{content_sha256}")
         return
     try:

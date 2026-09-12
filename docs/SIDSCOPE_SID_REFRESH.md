@@ -6,9 +6,11 @@ This workflow does not modify SIDs, run a model or establish a causal effect.
 ## Purpose
 
 `python -m sidscope.refresh` compares two caller-supplied mapping snapshots and
-separates literal code churn from changes to item grouping. It reports common,
+separates literal code churn from changes to item grouping. For ordered-prefix
+SIDs, the actionable structural summary is the union of affected items over all
+reported prefix and full-code partitions; per-depth counts remain separate. It reports common,
 added and removed items, split/merge structure, bounded pseudonymous examples
-with JSON pointers, and an explicit interpretation limit. Optional evaluation
+with JSON pointers into the normalized mapping sorted by `item_id`, and an explicit interpretation limit. Optional evaluation
 bindings associate two recomputed ranked-evaluation reports with the snapshots;
 the resulting metric deltas are observations, not proof that the refresh caused
 them.
@@ -55,7 +57,8 @@ python3 -m sidscope.refresh compare \
 The output directory is new and contains `report.json`, `report.md`, and a final
 `complete.json` receipt. Existing paths are never overwritten. `--max-rows` and
 `--max-input-bytes` are optional local resource policies; omitted means no
-application-imposed local cap. JSON depth, duplicate-key and non-finite-number
+application-imposed local cap. A configured row budget applies independently to
+snapshot mapping, evaluation predictions and evaluation targets. JSON depth, duplicate-key and non-finite-number
 checks remain active.
 
 To bind a recomputed `sidscope.workflows.evaluate` report without hand-writing a

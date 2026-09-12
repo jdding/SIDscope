@@ -225,6 +225,39 @@ def test_public_json_identity_leak_is_rejected_at_admission(tmp_path: Path) -> N
     assert captured.value.code == "forbidden_field"
 
 
+@pytest.mark.parametrize("payload,reason", [
+    (('{"note":"/' + 'Users/person/pri' + 'vate/run' + '","note":"public"}').encode(), "duplicate_json_key"),
+    (b'{"note":{"label":"secret","label":"public"}}', "duplicate_json_key"),
+    (b'{"value":NaN}', "nonfinite_json_number"),
+    (b'[' * 65 + b'0' + b']' * 65, "json_depth_exceeded"),
+    (b'{"value":"\xff"}', "invalid_json_input"),
+])
+def test_public_json_strict_scan_before_any_publication(tmp_path, payload, reason):
+    bundle = _bundle(public_payload=payload)
+    digest = hashlib.sha256(payload).hexdigest()
+    store = ObjectStore(tmp_path / "store")
+    with pytest.raises(EvidenceBundleValidationError) as error:
+        store.admit_bundle(bundle, {digest: payload})
+    assert error.value.code == "invalid_public_json"
+    assert reason in str(error.value)
+    assert not store.root.exists()
+    # Legacy stored bytes must be rescanned too, not grandfathered by hashes.
+    store.bundle_path(bundle.content_sha256).parent.mkdir(parents=True)
+    store.bundle_path(bundle.content_sha256).write_bytes(store._bundle_bytes(bundle))
+    store.object_path(digest).parent.mkdir(parents=True)
+    store.object_path(digest).write_bytes(payload)
+    with pytest.raises(EvidenceBundleValidationError, match="invalid_public_json"):
+        store.verify_bundle(bundle.content_sha256)
+
+
+def test_public_json_pretty_safe_payload_remains_accepted(tmp_path):
+    payload = b'{\n  "note": "public", "value": 1.25\n}\n'
+    bundle = _bundle(public_payload=payload)
+    store = ObjectStore(tmp_path / "store")
+    store.admit_bundle(bundle, {hashlib.sha256(payload).hexdigest(): payload})
+    assert store.verify_bundle(bundle.content_sha256) == bundle
+
+
 def test_provenance_cycle_and_disconnected_chain_fail_closed() -> None:
     cycle = _bundle().to_dict()
     cycle["provenance_edges"].append(

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -25,14 +26,20 @@ def verify(*, require_clean: bool = False) -> dict:
     metadata = verify_release_metadata()
     sdlc = verify_sdlc()
     default_profile, profiles = load_release_profiles()
-    if metadata["package_version"] != "1.7.0.dev0":
-        raise AssertionError("2.0 certification has not authorized a package version change")
+    version = metadata["package_version"]
+    stage = "development" if version == "1.7.0.dev0" else "rc" if re.fullmatch(r"2\.0\.0rc[1-9][0-9]*", version) else None
+    if stage is None:
+        raise AssertionError("unsupported candidate version/stage")
+    if stage == "rc" and not sdlc["certification_ready"]:
+        raise AssertionError("RC requires completed certification readiness")
     if (ADAPTER_SDK_VERSION, PLUGIN_API_VERSION) != ("1.0.0", "1.0"):
         raise AssertionError("stable adapter extension boundary drift")
     if default_profile != "runtime" or tuple(profiles) != PROFILE_IDS:
         raise AssertionError("additive release profile boundary drift")
-    if sdlc["blocking_requirements"] != ["F09"]:
+    if set(sdlc["blocking_requirements"]) - {"F09"}:
         raise AssertionError(f"unexpected certification blockers: {sdlc['blocking_requirements']}")
+    if sdlc["certification_ready"] and (sdlc["blocking_requirements"] or sdlc["pending_acceptance"]):
+        raise AssertionError("inconsistent certification state")
     if sdlc["engineering_blocking_requirements"]:
         raise AssertionError(f"engineering blockers remain: {sdlc['engineering_blocking_requirements']}")
     if sdlc["candidate_requirements"] != ["N09", "N10"]:
@@ -47,6 +54,7 @@ def verify(*, require_clean: bool = False) -> dict:
         "schema": "sidscope.2_0_candidate_verification.v1",
         "status": "pass",
         "package_version": metadata["package_version"],
+        "candidate_stage": stage,
         "adapter_sdk_version": ADAPTER_SDK_VERSION,
         "plugin_api_version": PLUGIN_API_VERSION,
         "public_schema_count": surface["schema_count"],

@@ -19,6 +19,7 @@ from sidinspector.submission.checker import validate_submission_package
 from sidinspector.submission.indexes import generate_status_index, generate_result_index
 from sidinspector.evidence.comparison import compare_evidence_bundles
 from tools.inspect_sidscope_native_export import inspect_export
+from tools.verify_sidscope_sdlc_acceptance import user_acceptance_status
 
 
 def verify() -> dict:
@@ -31,6 +32,7 @@ def verify() -> dict:
         assert row["owner"] and row["acceptance"] and row["priority"] in {"P0", "P1", "P2"}
         assert row["state"] in {"verified", "contained", "partial", "open", "blocked"}
         assert (ROOT / row["verification"]).is_file(), row["id"]
+    user_acceptance = user_acceptance_status(rows)
     positive = ROOT / "examples/conformance_ecosystem_fixture/submission/positive"
     assert check_submission(positive).failures[0]["code"] == "independent_gate_verification_required"
     with tempfile.TemporaryDirectory(prefix="sidscope-positive-admission-") as tmp:
@@ -67,7 +69,7 @@ def verify() -> dict:
     pending_local = [row["id"] for row in rows if row["id"] in approved_local and row["state"] != "verified"]
     engineering_pending_local = [item for item in pending_local if item not in acceptance_only]
     candidates = [row["id"] for row in rows if row["id"].startswith("N") and row["id"] not in approved_local and row["state"] != "verified"]
-    pending_acceptance = ["independent_user_actual_use"] if any(item in blockers + pending_local for item in acceptance_only) else []
+    pending_acceptance = ["independent_user_actual_use"] if user_acceptance != "accepted" else []
     engineering_ready = not engineering_blockers and not engineering_pending_local
     certification_ready = not blockers and not pending_local and not pending_acceptance
     return {"status": "pass", "scope": "recomputed_admission_comparison_and_real_native_consumers",

@@ -32,6 +32,9 @@ automation supplies reproducible checks, not an invented independent reviewer.
    binds HEAD, dirty status, exact public source bytes, executed test output,
    build environment, profiles and archive/tree hashes. A receiver pins the
    record digest before loading it and the archive digest before executing code.
+   Record v2 also embeds and binds a current six-command CPU measurement and its distinct
+   delivery disposition to the same source snapshot; unresolved performance or
+   environment drift blocks the record rather than being hidden by static inventory.
    This identifies dirty development candidates without certifying a public
    release. No signature service or manual receipt policy is introduced.
 7. The requirement ledger links persona, journey, actual accountable owner,

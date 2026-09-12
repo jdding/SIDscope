@@ -32,7 +32,7 @@ def _snapshot(value: Any, budget: LocalInputBudget | None = None) -> tuple[dict,
     if not isinstance(mapping, list):
         _fail("refresh_mapping_required", "mapping must be a list")
     _row_budget(len(mapping), budget)
-    rows, pointers, seen, width = [], {}, set(), None
+    rows, seen, width = [], set(), None
     for index, row in enumerate(mapping):
         if not isinstance(row, dict) or set(row) != {"item_id", "sid"}:
             _fail("refresh_mapping_fields", f"row={index}")
@@ -51,9 +51,9 @@ def _snapshot(value: Any, budget: LocalInputBudget | None = None) -> tuple[dict,
             if len(tokens) != width:
                 _fail("inconsistent_sid_width", f"item={item}")
         rows.append({"item_id": item, "sid": tokens})
-        pointers[item] = index
     normalized = {key: value[key] for key in ("dataset", "item_namespace", "sid_namespace", "semantics")}
     normalized["mapping"] = sorted(rows, key=lambda row: row["item_id"])
+    pointers = {row["item_id"]: index for index, row in enumerate(normalized["mapping"])}
     return normalized, pointers
 
 
@@ -160,7 +160,7 @@ def _relabel_classification(old_snapshot: dict, new_snapshot: dict, common: list
 
 def bind_evaluation(snapshot: dict, report: dict, *, budget: LocalInputBudget | None = None) -> dict:
     normalized, _ = _snapshot(snapshot, budget)
-    checked_report(report)
+    checked_report(report, budget=budget)
     if report["protocol"]["dataset"] != normalized["dataset"]:
         _fail("refresh_evaluation_dataset_mismatch", "evaluation and snapshot datasets differ")
     catalog = {row["item_id"] for row in normalized["mapping"]}
@@ -238,10 +238,12 @@ def compare_snapshots(old: dict, new: dict, *, downstream: dict | None = None,
     for depth in [*depths, None]:
         row, affected = _partitions(old_rows, new_rows, common, semantics, depth)
         structural.append(row); affected_by_scope["full_code" if depth is None else f"prefix_{depth}"] = affected
-    full_affected = affected_by_scope["full_code"]
+    # Ordered-prefix membership can change while all full codes stay unique.
+    # Each semantics contributes only the scopes it actually defines above.
+    structural_affected = set().union(*affected_by_scope.values())
     raw_changed = {item for item in common if tuple(old_rows[item]["sid"]) != tuple(new_rows[item]["sid"])}
-    categories = {"structural_change": full_affected, "raw_changed_structure_stable": raw_changed - full_affected,
-        "stable": set(common) - raw_changed - full_affected}
+    categories = {"structural_change": structural_affected, "raw_changed_structure_stable": raw_changed - structural_affected,
+        "stable": set(common) - raw_changed - structural_affected}
     def examples(kind: str, items: list[int], pointers: dict[int, int], salt: str) -> list[dict]:
         return [{"item_alias": hashlib.sha256(f"{old_sha}:{new_sha}:{salt}:{item}".encode()).hexdigest()[:20],
             "source_pointer": f"/{kind}/mapping/{pointers[item]}"} for item in items[:max_examples]]
@@ -251,7 +253,7 @@ def compare_snapshots(old: dict, new: dict, *, downstream: dict | None = None,
         "structural_change": [{
             "item_alias": hashlib.sha256(f"{old_sha}:{new_sha}:structural:{item}".encode()).hexdigest()[:20],
             "old_pointer": f"/old/mapping/{old_pointers[item]}", "new_pointer": f"/new/mapping/{new_pointers[item]}"
-        } for item in sorted(full_affected)[:max_examples]],
+        } for item in sorted(structural_affected)[:max_examples]],
     }
     result = {"format": "sidscope.sid_refresh_report.v1", "status": "computed",
         "identity": {"dataset": old_snapshot["dataset"], "item_namespace": old_snapshot["item_namespace"],
@@ -261,11 +263,13 @@ def compare_snapshots(old: dict, new: dict, *, downstream: dict | None = None,
             "added_items": len(added), "removed_items": len(removed)},
         "raw_churn": _raw_churn(old_snapshot, new_snapshot, common),
         "structural_change": structural,
-        "classification": _relabel_classification(old_snapshot, new_snapshot, common, full_affected),
+        "classification": _relabel_classification(old_snapshot, new_snapshot, common, structural_affected),
+        "structural_summary_scope": "union_of_reported_partition_scopes",
+        "example_pointer_representation": "normalized_snapshot_mapping_sorted_by_item_id",
         "examples": example_rows, "max_examples_per_category": max_examples,
         "omitted_examples": {"added": max(0, len(added)-len(example_rows["added"])),
             "removed": max(0, len(removed)-len(example_rows["removed"])),
-            "structural_change": max(0, len(full_affected)-len(example_rows["structural_change"]))},
+            "structural_change": max(0, len(structural_affected)-len(example_rows["structural_change"]))},
         "downstream": None,
         "verification_scope": "recomputed_from_supplied_sid_snapshots",
         "limitations": ["Snapshot identities are caller declarations, not authenticated dataset or training facts.",

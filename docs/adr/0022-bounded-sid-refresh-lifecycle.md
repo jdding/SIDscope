@@ -59,9 +59,16 @@ Membership preservation alone is not proof of relabeling. Width/semantics limits
 remain visible.
 
 Reports bind normalized snapshot inputs, include bounded pseudonymous item
-examples with exact source-row pointers, affected counts, observations and next
+examples with exact normalized-row pointers, affected counts, observations and next
 checks. Example limits never change metrics. No auto repair/re-encoding, causal
 claim, training verification or mutation of the source mapping.
+
+Implementation clarification, 2026-09-12: for `ordered_prefix`, actionable
+classification, examples and downstream groups use the union of affected items
+over every reported prefix/full-code scope; per-depth results remain explicit.
+Pointers address the item-ID-sorted normalized snapshot whose hash is bound by
+the report. Caller-configured row budgets apply to snapshot mappings and to each
+bound evaluation table. Parallel and unordered semantics do not gain prefixes.
 
 ## Optional downstream evidence
 

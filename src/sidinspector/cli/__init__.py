@@ -777,7 +777,17 @@ def _registry_command(args: argparse.Namespace) -> int:
                 "failure": None,
             }
         elif command == "compare":
-            left_bundle, right_bundle = registry.show(args.left), registry.show(args.right)
+            def active_bundle(digest):
+                projection = registry.show(digest, require_active=True)
+                # CAS is authoritative even if an interrupted quarantine left
+                # the disposable projection stale or the bundle was re-added.
+                if store.quarantine_path(digest).exists():
+                    raise EvidenceRegistryError("bundle_quarantined", digest)
+                document = store.verify_bundle(digest).to_dict()
+                if projection != document:
+                    raise EvidenceRegistryError("registry_projection_mismatch", digest)
+                return document
+            left_bundle, right_bundle = active_bundle(args.left), active_bundle(args.right)
             def verification_objects(bundle):
                 from sidinspector.contracts import bounded_bytes
                 return {row["object_sha256"]: bounded_bytes(store.object_path(row["object_sha256"])) for row in bundle["artifacts"] if row["availability"] == "embedded_public" and row["role"] in {"evaluation_protocol", "selection", "trace", "diagnostics"}}
@@ -821,9 +831,20 @@ def _registry_command(args: argparse.Namespace) -> int:
                 "failure": None,
             }
         elif command == "quarantine":
+            if not args.reason.strip():
+                raise EvidenceRegistryError("invalid_quarantine_reason", "reason is empty")
             registry.show(args.sha256)
             store.quarantine_bundle(args.sha256)
-            registry.quarantine(args.sha256, reason=args.reason)
+            import sqlite3
+            try:
+                registry.quarantine(args.sha256, reason=args.reason)
+            except (sqlite3.Error, OSError, EvidenceRegistryError) as exc:
+                # Do not reactivate suspect evidence on a projection failure.
+                # Rebuild derives the quarantine state from the durable CAS.
+                raise EvidenceRegistryError(
+                    "quarantine_index_update_failed",
+                    "CAS remains quarantined; run registry rebuild to reconcile the index",
+                ) from exc
             result = {
                 "schema": "sidscope.evidence_registry_operation.v1",
                 "status": "pass",

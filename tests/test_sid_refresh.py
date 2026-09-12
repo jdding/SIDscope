@@ -130,3 +130,68 @@ def test_purity_budget_write_and_cli_parity(tmp_path):
     old_path.write_text(json.dumps(old)); new_path.write_text(json.dumps(new))
     cli=tmp_path/"cli"; assert main(["compare","--old",str(old_path),"--new",str(new_path),"--output",str(cli)])==0
     assert json.loads((cli/"report.json").read_text())==expected
+
+
+def test_prefix_only_split_merge_reaches_summary_examples_and_downstream():
+    old = snapshot([(1,[0,0]), (2,[0,1]), (3,[1,0])])
+    new = snapshot([(1,[0,0]), (2,[1,1]), (3,[1,0])])
+    report = evaluate([{"episode_id":str(i), "ranked_items":[i]} for i in range(1,4)],
+        [{"episode_id":str(i),"target_item_id":i,"slice":"all"} for i in range(1,4)],dataset="toy",cutoff=1)
+    result = compare_snapshots(old, new, downstream={"old":bind_evaluation(old,report),"new":bind_evaluation(new,report)})
+    assert result["structural_change"][0]["affected_items"] == 3
+    assert result["structural_change"][-1]["affected_items"] == 0
+    assert result["classification"]["classification"] == "structural_change"
+    assert len(result["examples"]["structural_change"]) == 3
+    groups = result["downstream"]["target_lifecycle_groups"]
+    assert groups["structural_change"]["targets"] == 3
+    assert groups["stable"]["status"] == "unavailable"
+    # Exactly the same vectors do not invent prefix semantics for parallel SIDs.
+    old["semantics"] = new["semantics"] = "parallel_positions"
+    parallel = compare_snapshots(old,new)
+    assert parallel["examples"]["structural_change"] == []
+
+
+def test_example_pointers_resolve_canonical_snapshot_independent_of_input_order():
+    from sidinspector.contracts import canonical_sha256
+    old = snapshot([(3,[1]),(2,[0]),(1,[0]),(5,[2])])
+    new = snapshot([(4,[3]),(3,[1]),(2,[1]),(1,[0])])
+    first = compare_snapshots(old,new)
+    old["mapping"].reverse(); new["mapping"].reverse()
+    second = compare_snapshots(old,new)
+    assert first == second
+    snapshots = {"old":copy.deepcopy(old),"new":copy.deepcopy(new)}
+    for kind, value in snapshots.items():
+        value["mapping"].sort(key=lambda row:row["item_id"])
+        assert canonical_sha256(value) == first[kind + "_snapshot_sha256"]
+    for example in first["examples"]["structural_change"]:
+        indices = [int(example[kind + "_pointer"].split("/")[-1]) for kind in ("old","new")]
+        assert snapshots["old"]["mapping"][indices[0]]["item_id"] == snapshots["new"]["mapping"][indices[1]]["item_id"]
+    for category, item in (("added",4),("removed",5)):
+        _, kind, _, index = first["examples"][category][0]["source_pointer"].split("/")
+        assert snapshots[kind]["mapping"][int(index)]["item_id"] == item
+
+
+@pytest.mark.parametrize("table", ["predictions", "targets"])
+def test_binding_budget_checked_before_evaluation_recomputation(tmp_path, capsys, table):
+    source = snapshot([(1,[0])])
+    report = evaluate([{"episode_id":"a","ranked_items":[1]}],
+        [{"episode_id":"a","target_item_id":1,"slice":"all"}],dataset="toy",cutoff=1)
+    report["inputs"][table] *= 20
+    with pytest.raises(WorkflowError) as error:
+        bind_evaluation(source,report,budget=LocalInputBudget(max_rows=1))
+    assert error.value.code == "workflow_row_budget"
+    snapshot_path, report_path, output = tmp_path/"snapshot.json", tmp_path/"evaluation.json", tmp_path/"binding.json"
+    snapshot_path.write_text(json.dumps(source)); report_path.write_text(json.dumps(report))
+    assert main(["bind","--snapshot",str(snapshot_path),"--evaluation",str(report_path),"--output",str(output),"--max-rows","1"]) == 2
+    assert json.loads(capsys.readouterr().out)["code"] == "workflow_row_budget"
+    assert not output.exists()
+
+
+def test_binding_default_unlimited_and_compare_budget_consistent():
+    source = snapshot([(1,[0])])
+    report = evaluate([{"episode_id":str(i),"ranked_items":[1]} for i in range(20)],
+        [{"episode_id":str(i),"target_item_id":1,"slice":"all"} for i in range(20)],dataset="toy",cutoff=1)
+    binding = bind_evaluation(source,report)
+    assert len(binding["evaluation"]["inputs"]["targets"]) == 20
+    with pytest.raises(WorkflowError,match="workflow_row_budget"):
+        compare_snapshots(source,source,downstream={"old":binding,"new":binding},budget=LocalInputBudget(max_rows=1))

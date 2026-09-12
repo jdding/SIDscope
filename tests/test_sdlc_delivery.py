@@ -7,7 +7,7 @@ import pytest
 
 from sidinspector.runtime_demo import main as demo_main
 from sidinspector.contracts import validate_source_identity
-from tools.check_sidscope_current_performance import classify
+from tools.check_sidscope_current_performance import classify, delivery_gate
 from tools.smoke_sidscope_release_candidate_archive import smoke_archive, verify_archive_digest
 from tools.sidscope_release_profiles import ReleaseProfileError
 
@@ -50,11 +50,26 @@ def test_performance_threshold_and_environment_do_not_silently_pass():
     assert classify(baseline, current)[0] == "pass"
     current["commands"]["evaluate"]["median_ms"] = 12.1
     assert classify(baseline, current)[0] == "performance_review_required"
+    current = deepcopy(baseline)
     current["environment"]["python"] = "3.12"
     assert classify(baseline, current)[0] == "environment_review_required"
     current = deepcopy(baseline)
     current["commands"] = {}
     assert classify(baseline, current)[0] == "workload_review_required"
+
+
+def test_delivery_performance_policy_is_narrow_and_preserves_observation_status():
+    baseline = {"environment":{"python":"3.9","implementation":"CPython","platform":"macOS-a","processor":"arm"},
+                "policy":{"review_threshold_percent":20},"commands":{"evaluate":{"median_ms":10}}}
+    current = deepcopy(baseline); current["environment"]["platform"] = "macOS-b"
+    gate = delivery_gate(baseline,current)
+    assert gate["status"] == "pass"
+    assert gate["observation_status"] == "environment_review_required"
+    assert gate["disposition"] == "platform_version_variance_within_frozen_threshold"
+    current["commands"]["evaluate"]["median_ms"] = 12.1
+    assert delivery_gate(baseline,current)["status"] == "blocked"
+    current = deepcopy(baseline); current["environment"]["python"] = "3.12"
+    assert delivery_gate(baseline,current)["status"] == "blocked"
 
 
 def test_expected_digest_rejects_before_archive_execution(tmp_path):

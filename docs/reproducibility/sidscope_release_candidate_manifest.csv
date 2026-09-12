@@ -30,13 +30,13 @@ local_input_policy_5,tools/benchmark_sidscope_local_workflows.py,tool,fully_runn
 sdlc_closure_1,docs/SIDSCOPE_USER_WORKFLOWS.md,documentation,tracked_snapshot,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_2,docs/adr/0017-executable-sdlc-acceptance-and-consumer-workflows.md,documentation,tracked_snapshot,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_3,docs/reproducibility/sidscope_public_consumer_contract.v1.json,documentation,tracked_snapshot,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
-sdlc_closure_4,tests/test_local_release_record.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_4,tests/test_local_release_record.py,test,fully_runnable,yes,pass_local,Exercises exact-source record trust plus mandatory source-bound performance evidence.
 sdlc_closure_5,tests/test_native_projection_states.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_6,tests/test_public_consumer_contract.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_7,tests/test_public_input_budgets.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_8,tests/test_sdlc_acceptance.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_9,tests/test_workflow_consumers.py,test,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
-sdlc_closure_10,tools/sidscope_local_release_record.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
+sdlc_closure_10,tools/sidscope_local_release_record.py,verification,fully_runnable,yes,pass_local,Builds exact-source record v2 with tests install archives G8 and source-bound performance disposition.
 sdlc_closure_11,tools/sidscope_public_consumer.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_12,tools/verify_sidscope_distribution_install.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
 sdlc_closure_13,tools/verify_sidscope_sdlc_acceptance.py,verification,fully_runnable,yes,pass_local,Executable SDLC closure contract and local-only acceptance boundary.
@@ -47,7 +47,7 @@ sdlc_hardening_doc,docs/SIDSCOPE_SDLC_HARDENING.md,release_governance,documentat
 sdlc_trust_adr,docs/adr/0016-quarantine-unverified-admission.md,architecture_governance,documentation,yes,pass_local,Computed diagnostic admission and protocol comparison; native authenticity and hash-only training stay unverified without sign-off.
 sdlc_requirements,docs/reproducibility/sidscope_sdlc_requirements.csv,release_governance,tracked_snapshot,yes,pass_local,Tracks all SDLC findings and candidate user requirements with explicit nonpassing states.
 sdlc_hardening_verifier,tools/verify_sidscope_sdlc_hardening.py,verification,fully_runnable,yes,pass_local,Checks containment and separates technical blockers from candidate feature backlog without claiming readiness.
-sdlc_performance_gate,tools/check_sidscope_current_performance.py,verification,fully_runnable,yes,pass_local,Runs current CPU commands and reports review-required drift without rewriting frozen baseline.
+sdlc_performance_gate,tools/check_sidscope_current_performance.py,verification,fully_runnable,yes,pass_local,Runs current CPU commands preserves raw drift status and applies the narrow delivery disposition without rewriting the frozen baseline.
 sdlc_trust_tests,tests/test_sdlc_trust_hardening.py,test,fully_runnable,yes,pass_local,Adversarial metric target-state admission and bounded parser regressions.
 sdlc_delivery_tests,tests/test_sdlc_delivery.py,test,fully_runnable,yes,pass_local,Self-contained runtime demo and performance decision regressions.
 release_profiles_doc,docs/SIDSCOPE_RELEASE_PROFILES.md,release_governance,documentation,yes,pass_local,Documents the additive runtime conformance and evidence-full packaging views without activating a new product version.
@@ -120,10 +120,10 @@ plugin_ecosystem_tests,tests/test_native_payload_ecosystem.py,test,fully_runnabl
 sprint34_adr,docs/adr/0007-canonical-execution-report-and-sdk-boundary.md,architecture_governance,documentation,yes,pass_local,Defines the common execution and report boundary native payload preservation SDK alpha scope migration and rollback.
 adapter_sdk_stable_doc,docs/ADAPTER_SDK.md,adapter_sdk,documentation,yes,pass_local,Defines the stable 1.0 capability producer and plugin boundary plus exact pre-stable migration.
 adapter_sdk_alpha_doc,docs/ADAPTER_SDK_ALPHA.md,adapter_sdk,documentation,yes,pass_local,Retains historical pre-stable capability and migration context without a stable claim.
-sid_refresh_module,src/sidscope/refresh.py,runnable_code,fully_runnable,yes,pass_local,Bounded N07 SID lifecycle comparison with ordered-prefix parallel-position and unordered-set semantics.
-sid_refresh_doc,docs/SIDSCOPE_SID_REFRESH.md,documentation,documentation,yes,pass_local,Documents opt-in SID refresh comparison identity semantics limits and downstream evidence binding.
+sid_refresh_module,src/sidscope/refresh.py,runnable_code,fully_runnable,yes,pass_local,Bounded N07 lifecycle comparison with prefix-scope propagation canonical pointers and caller-owned evaluation budgets.
+sid_refresh_doc,docs/SIDSCOPE_SID_REFRESH.md,documentation,documentation,yes,pass_local,Documents refresh scope aggregation canonical evidence pointers caller budgets limits and downstream binding.
 sid_refresh_verifier,tools/verify_sidscope_sid_refresh.py,verification,fully_runnable,yes,pass_local,Replays actual-shape RPG and PSID same-input zero-change controls without executing either model.
-sid_refresh_tests,tests/test_sid_refresh.py,test,fully_runnable,yes,pass_local,Exercises lifecycle partitions relabeling typed negatives downstream evidence and CLI parity.
+sid_refresh_tests,tests/test_sid_refresh.py,test,fully_runnable,yes,pass_local,Exercises lifecycle partitions prefix-only changes canonical pointers budgets typed negatives downstream evidence and CLI parity.
 sid_refresh_real_control_tests,tests/test_sid_refresh_real_control.py,test,fully_runnable,yes,pass_local,Exercises route-specific real-shape controls source immutability and no-overwrite behavior.
 candidate_freeze_doc,docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md,release_gate,documentation,yes,pass_local,Defines the exact engineering-versus-certification boundary and deferred candidate exclusions.
 candidate_rc_packet,docs/SIDSCOPE_2_0_RC_PACKET.md,release_gate,documentation,yes,pass_local,Records the local evidence surfaces and keeps the RC transition blocked on F09 without overwriting v1.1 history.

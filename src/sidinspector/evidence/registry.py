@@ -284,20 +284,22 @@ class EvidenceRegistry:
             ).fetchall()
         return [dict(row) for row in rows]
 
-    def show(self, content_sha256: str) -> dict[str, Any]:
+    def show(self, content_sha256: str, *, require_active: bool = False) -> dict[str, Any]:
         with self._connect() as connection:
             row = connection.execute(
-                "SELECT bundle_json FROM bundles WHERE content_sha256 = ?",
+                "SELECT bundle_json, status FROM bundles WHERE content_sha256 = ?",
                 (content_sha256,),
             ).fetchone()
         if row is None:
             raise EvidenceRegistryError("unknown_bundle", content_sha256)
+        if require_active and row["status"] != "active":
+            raise EvidenceRegistryError("bundle_quarantined", content_sha256)
         return json.loads(row["bundle_json"])
 
     def quarantine(self, content_sha256: str, *, reason: str) -> None:
         """Mark a projection quarantined without deleting its authoritative object."""
 
-        if not reason.strip():
+        if not isinstance(reason, str) or not reason.strip():
             raise EvidenceRegistryError("invalid_quarantine_reason", "reason is empty")
         with self._connect() as connection:
             cursor = connection.execute(

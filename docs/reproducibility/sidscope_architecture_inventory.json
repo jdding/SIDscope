@@ -3462,6 +3462,7 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
+        "tests/test_local_release_record.py",
         "tools/sidscope_local_release_record.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
@@ -3469,8 +3470,10 @@
       "producer_paths": [
         "tools/sidscope_local_release_record.py"
       ],
-      "schema_id": "sidscope.local_release_record.v1",
-      "verifier_paths": []
+      "schema_id": "sidscope.local_release_record.v2",
+      "verifier_paths": [
+        "tests/test_local_release_record.py"
+      ]
     },
     {
       "artifact_paths": [],

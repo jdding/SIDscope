@@ -4,7 +4,7 @@
 Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
-Requirement snapshot: `48d593e1151cbacde9f62ac271e8b45f61847695b31846779679ab424bb3deb3`.
+Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
 Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
@@ -236,11 +236,14 @@ python3 -m pytest -q
 python3 tools/verify_sidscope_sdlc_hardening.py
 python3 tools/verify_sidscope_sdlc_hardening.py --require-ready
 python3 tools/check_sidscope_current_performance.py \
+  --require-delivery \
   --output /tmp/sidscope-current-performance.json
 ```
 
 The readiness command intentionally exits 2 while blockers remain. Performance
 output must be outside the repository and must not overwrite an existing file.
+The raw observation status remains distinct from the delivery disposition and
+record v2 binds both to the exact source snapshot.
 The first live run exceeded the 20% review threshold for all six commands.
 The implemented fix constructs only the selected root command's argument tree;
 full inventory/help construction remains available. All branch parameter trees

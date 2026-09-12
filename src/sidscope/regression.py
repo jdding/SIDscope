@@ -18,11 +18,11 @@ def fail(code, detail):
     raise WorkflowError(code, detail)
 
 
-def checked_report(report):
+def checked_report(report, *, budget=None):
     if not isinstance(report, dict) or report.get('kind') != 'evaluate':
         fail('evaluation_report_required', 'recomputable evaluate report required')
     try:
-        rebuilt = evaluate(**report['inputs'])
+        rebuilt = evaluate(**report['inputs'], budget=budget)
     except (KeyError, TypeError) as error:
         fail('invalid_regression_report', str(error))
     if rebuilt != report:
