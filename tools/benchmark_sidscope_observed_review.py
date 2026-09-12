@@ -25,7 +25,7 @@ def sources():
     return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(files)}
 
 
-def benchmark(source,metadata,output,*,repeats=3,timeout=60,rss_mib=2048):
+def benchmark(source,metadata,output,*,repeats=3,timeout=300,rss_mib=2048):
     if type(repeats) is not int or repeats<3 or any(type(v) not in (int,float) or not math.isfinite(v) or v<=0 for v in (timeout,rss_mib)):
         raise ValueError('at least three repeats and positive execution guards required')
     output=Path(output)
@@ -71,7 +71,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input',type=Path,required=True); parser.add_argument('--metadata',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True); parser.add_argument('--repeats',type=int,default=3)
-    parser.add_argument('--timeout',type=float,default=60); parser.add_argument('--rss-mib',type=float,default=2048)
+    parser.add_argument('--timeout',type=float,default=300); parser.add_argument('--rss-mib',type=float,default=2048)
     args=parser.parse_args()
     result=benchmark(args.input,args.metadata,args.output,repeats=args.repeats,timeout=args.timeout,rss_mib=args.rss_mib)
     print(json.dumps({'status':result['status'],'summary':result['summary']})); return 0 if result['status']=='pass' else 2

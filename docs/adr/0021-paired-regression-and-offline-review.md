@@ -84,6 +84,9 @@ three or more times in new processes. Bind inputs and source bytes, record phase
 wall time, whole-process peak RSS, output volume, exact workload shape and existing
 native NFE with its original scope. Require numerical/evidence identity equality
 across repeats. Timeout is enforced; RSS is a post-run guard, not a memory limiter.
+The default timeout guard is 300 seconds, aligned with the local scale harness;
+it is scheduling headroom for supported Python/dependency combinations, not a
+latency promise. Callers can explicitly select a smaller guard.
 Report median/min/max, not a tail-latency claim from three samples.
 
 The available real workloads contain full 12101/17396-item mappings and

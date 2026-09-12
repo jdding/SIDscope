@@ -78,10 +78,12 @@ removed; the optional ranked review fails with an explicit unsupported code.
 ```sh
 python tools/benchmark_sidscope_observed_review.py --input OBSERVATION_DIRECTORY \
   --metadata CHECKPOINT_METADATA_JSON --output /tmp/my-new-review-benchmark \
-  --repeats 3 --timeout 60 --rss-mib 2048
+  --repeats 3 --timeout 300 --rss-mib 2048
 ```
 
 These are execution guards, not production SLOs or product input restrictions.
+The 300-second default provides cross-platform scheduling margin; callers may
+set a lower explicit guard when their measured workload supports it.
 Fresh-process peak RSS includes imports and full joins; existing native NFE is
 reported separately from current CPU postprocessing. Compare only the recorded
 machine, inputs and shapes. Five trace episodes do not establish large-trace scale.

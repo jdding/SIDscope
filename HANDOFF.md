@@ -31,8 +31,10 @@ current six-command CPU measurement and a narrow delivery disposition; it
 preserves environment-review status and never rewrites the baseline. User docs
 distinguish the historical rejected fixture from the current recomputed journey,
 and the N08 reproduction flag is corrected to `--repeats 3` without rerunning a
-model or expanding beyond 100 episodes. A new clean candidate record is required
-after these changes; the preceding record remains immutable historical evidence.
+model or expanding beyond 100 episodes. Linux acceptance also replaced the
+fragile 60-second postprocessing default with a documented 300-second execution
+guard; it remains a caller-configurable guard, not an SLO. A new clean candidate
+record is required after these changes; preceding records remain immutable.
 
 ## Current 2.0 engineering-candidate closeout
 

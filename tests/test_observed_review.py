@@ -22,6 +22,7 @@ def test_repeated_real_shape_benchmark_plumbing(synthetic_inputs,tmp_path):
     result=benchmark(source,metadata,tmp_path/'benchmark',repeats=3)
     assert result['status']=='pass'
     assert len(result['runs'])==3
+    assert result['benchmark_guards']['timeout_seconds']==300
     assert result['summary']['process_peak_rss_bytes']['max']>0
     assert len({r['review_sha256'] for r in result['runs']})==1
 
