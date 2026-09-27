@@ -42,7 +42,10 @@ def _run_group(group_path: str) -> int:
 def run_campaign(output: Path) -> dict:
     output = output.resolve()
     if output == ROOT or ROOT in output.parents:
-        raise SystemExit("campaign_output_must_be_outside_repository")
+        # The owner-designated ignored evidence area (.local_artifacts/) is
+        # the sanctioned in-tree location; anything else stays outside.
+        if ".local_artifacts" not in output.parts:
+            raise SystemExit("campaign_output_must_be_outside_repository")
     if output.exists():
         raise SystemExit("campaign_output_exists: use a fresh attempt path")
     output.parent.mkdir(parents=True, exist_ok=True)
