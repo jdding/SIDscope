@@ -69,7 +69,11 @@ def _verify_external_install() -> dict[str, object]:
         shutil.copytree(
             ROOT,
             core_source,
-            ignore=shutil.ignore_patterns(".git", ".pytest_cache", "*.egg-info", "__pycache__"),
+            # The plugin proof builds from the source package only; the ignored
+            # private evidence area is neither source nor distributable.
+            ignore=shutil.ignore_patterns(
+                ".git", ".pytest_cache", "*.egg-info", "__pycache__", ".local_artifacts"
+            ),
         )
         shutil.copytree(REFERENCE_PLUGIN, plugin_source, ignore=shutil.ignore_patterns("*.egg-info", "__pycache__"))
         # The proof remains network-free while reusing the host build backend.
