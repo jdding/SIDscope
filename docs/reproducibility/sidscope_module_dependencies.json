@@ -19,6 +19,9 @@
    "build_sidscope_1_2_legacy_migration_matrix": [
     "build_sidscope_architecture_inventory"
    ],
+   "build_sidscope_linux_matrix_receipt": [
+    "sidscope_delivery_summary"
+   ],
    "build_sidscope_native_submission": [
     "verify_rpg_trained_trace_bundle"
    ],

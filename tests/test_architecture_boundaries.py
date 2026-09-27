@@ -361,10 +361,14 @@ class ApplicationBoundaryTest(unittest.TestCase):
 
     def test_imported_facades_stay_lightweight_in_this_process(self) -> None:
         import sys
+        before = set(sys.modules)
         import sidinspector  # noqa: F401
         import sidscope  # noqa: F401
-        forbidden = [name for name in sys.modules if name.split(".")[0] in {"torch", "transformers", "faiss", "tensorflow", "vllm"}]
-        self.assertEqual(forbidden, [])
+        # Measure what the facade import itself pulls in, not what other
+        # tests in this process may have loaded before it ran.
+        added = set(sys.modules) - before
+        banned = {name.split(".")[0] for name in added} & {"torch", "transformers", "faiss", "tensorflow", "vllm"}
+        self.assertEqual(banned, set())
 
 
 if __name__ == "__main__":

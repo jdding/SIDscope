@@ -1680,9 +1680,13 @@
       ]
     },
     {
-      "artifact_paths": [],
+      "artifact_paths": [
+        "docs/adr/0026-delivery-summary-and-application-boundaries.md"
+      ],
       "declaration_paths": [
-        "tools/sidscope_delivery_summary.py"
+        "docs/adr/0026-delivery-summary-and-application-boundaries.md",
+        "tools/sidscope_delivery_summary.py",
+        "tools/verify_sidscope_release_metadata.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
@@ -1690,7 +1694,9 @@
         "tools/sidscope_delivery_summary.py"
       ],
       "schema_id": "sidscope.delivery_summary.v1",
-      "verifier_paths": []
+      "verifier_paths": [
+        "tools/verify_sidscope_release_metadata.py"
+      ]
     },
     {
       "artifact_paths": [
