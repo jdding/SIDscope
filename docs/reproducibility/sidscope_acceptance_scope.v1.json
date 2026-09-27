@@ -1,0 +1,38 @@
+{
+  "schema": "sidscope.acceptance_scope.v1",
+  "policy_revision": 2,
+  "title": "SIDScope acceptance condition scope",
+  "decision": {
+    "decided_by": "project_owner",
+    "date": "2026-09-27",
+    "adr": "docs/adr/0025-remove-independent-user-acceptance-gate.md",
+    "statement": "Independent user actual use is excluded from certification, RC and delivery readiness predicates for the current engineering scope. Producer technical chains, diagnostic recomputation, distribution usability and input safety stay required; no adoption fact is fabricated."
+  },
+  "conditions": [
+    {
+      "condition_id": "independent_user_actual_use",
+      "requirement_ids": ["F09", "N01"],
+      "condition_type": "independent_user_adoption",
+      "scope": "excluded",
+      "exclusion_reason": "Project owner decision 2026-09-27: no independent user trial is scheduled this round; actual adoption must not gate certification, RC or delivery readiness.",
+      "fact_status": "not_verified",
+      "fact_note": "Ledger rows F09/N01 keep state partial and user_accepted=pending_actual_use; no simulated, recorded or maintainer-substituted adoption exists."
+    },
+    {
+      "condition_id": "distinct_family_producer_technical_chains",
+      "requirement_ids": ["F09"],
+      "condition_type": "technical_chain",
+      "scope": "required",
+      "covered_by_requirements": ["N03"],
+      "fact_status": "Two distinct-family producer chains pass canonical SDK export, diagnostic admission, original-input rebuild and same-export comparison per verified N03 and its regression tests."
+    },
+    {
+      "condition_id": "minimum_observed_review_workflow",
+      "requirement_ids": ["N01"],
+      "condition_type": "technical_chain",
+      "scope": "required",
+      "covered_by_requirements": ["N03", "N04"],
+      "fact_status": "The approved single-command observed-input canonical evaluation and review runs through verified producer chains (N03) and ranked diagnostic review (N04)."
+    }
+  ]
+}

@@ -29,13 +29,15 @@ python3 tools/verify_sidscope_2_0_candidate.py --require-engineering-ready
 python3 tools/verify_sidscope_2_0_candidate.py --require-certification-ready
 ```
 
-The engineering command passes. The certification command remains blocked only
-on F09 until an independent user completes the own-producer workflow. The local
-engineering packet at the preceding commit executed a clean commit gate, Linux/Python
-3.9-3.12, wheel/sdist consumers, all three profile archives and smoke tests, G8,
-and an external exact-source record. Source or documentation changes invalidate
-that record; the current candidate must produce record v2, including the
-source-bound performance disposition, after a clean commit. Do not change to `2.0.0rc1` before F09;
+The engineering command passes. The certification command remains blocked until a
+same-source delivery summary with valid receipts for every required gate verifies;
+independent user actual use is excluded from current gates by ADR-0025 and the
+adoption fact stays not verified. The local engineering packet at the preceding
+commit executed a clean commit gate, Linux/Python 3.9-3.12, wheel/sdist consumers,
+all three profile archives and smoke tests, G8, and an external exact-source
+record. Source or documentation changes invalidate that record; the current
+candidate must produce record v2 and the delivery summary, including the
+source-bound performance disposition, after a clean commit. Do not change to `2.0.0rc1` before the delivery summary verifies;
 a separately authorized RC commit must rerun the same gates. Push, tag and GitHub Release still require separate explicit approval.
 See `docs/SIDSCOPE_2_0_RC_PACKET.md`.
 

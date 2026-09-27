@@ -90,10 +90,16 @@ machine, inputs and shapes. Five trace episodes do not establish large-trace sca
 Interrupted/failed outputs have no top-level completion marker; preserve them and
 retry under a new path. Do not modify frozen originals to make acceptance pass.
 
-## Independent actual use (N01/F09)
+## Independent actual use status (N01/F09)
 
-A non-implementing engineer should install the artifact, use their authorized
+Independent user actual use is excluded from current gates by ADR-0025 and the
+acceptance scope policy; the adoption fact stays not verified and no trial is
+scheduled this round. The documented own-producer journey below remains the
+reference procedure if a future owner schedules one.
+
+A non-implementing engineer would install the artifact, use their authorized
 observation directory, execute the documented command, inspect a finding through
 its source pointer and interpret the explicit missing multi-run evidence. Record
 commands, outputs and usability defects; fix defects and rerun affected steps.
-No signature policy is required. Developer automation is not independent use.
+No signature policy is required. Developer automation is not independent use,
+and no automated run records or implies adoption.

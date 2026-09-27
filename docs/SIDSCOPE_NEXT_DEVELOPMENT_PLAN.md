@@ -1,6 +1,26 @@
 # SIDScope 本地后续开发计划
 
-## 当前状态（2026-09-09，覆盖下方历史记录）
+## 当前状态（2026-09-27，覆盖下方历史记录）
+
+- 项目负责人 2026-09-27 决定：independent_user_actual_use excluded from current gates
+  ——认证、RC 与交付门禁不再要求独立用户实际使用（ADR-0025 与
+  `docs/reproducibility/sidscope_acceptance_scope.v1.json`）。该事实仍为
+  not_verified：台账 F09/N01 行保持 `partial` 与 `pending_actual_use`，
+  不虚构采用、不回写旧证据。
+- 两条 producer 技术链路、诊断重算、安装可用性与输入安全仍为 required，
+  由已验证的 N03/N04 覆盖项与回归测试继续把门；任何覆盖要求失效
+  （如 N03 回退）都会重新进入阻塞，策略缺失或越权排除按 typed 错误拒绝。
+- 认证状态分离：`implementation_ready` 可为真；`delivery_ready` 需要绑定
+  当前源码的交付摘要与全部 required 门禁回执（尚缺）；
+  `certification_ready` 在交付证据齐全前保持 false。
+- `--require-engineering-ready` 通过。N09/N10 暂不排期，也不建设 hosted
+  service 或训练框架。
+- RC 过渡绑定同源码交付证据：Linux/Python 3.9-3.12 matrix、三 profile
+  archive/smoke、regular install/G8、干净本地 commit、exact-source 回执与
+  交付摘要；历史矩阵记录不当作当前通过。推送、tag、GitHub Release 仍需
+  单独明确授权。
+
+## 2026-09-09 状态记录（历史，被上方当前状态覆盖）
 
 - N02-N08 的已批准工程范围均已开发、测试并写入验收台账。
 - N08 严格止于两条路线各 100 episode：回传哈希、本地验证及各三次独立
@@ -10,12 +30,12 @@
   与 PSID 17,396 item 的实际形状零变化控制通过，但不宣称真实 refresh 效应。
 - Adapter SDK 已按选择稳定为 1.0.0，39-symbol curated facade 不扩张；机器
   surface、迁移、ADR、installed consumer 和 typed negative 已同步。
-- `--require-engineering-ready` 通过；N01/F09 独立用户实际使用是唯一认证
-  阻塞项。N09/N10 暂不排期，也不建设 hosted service 或训练框架。
-- RC 前工程交付门禁已执行：Linux/Python 3.9-3.12 matrix、三 profile
-  archive/smoke、regular install/G8、干净本地 commit 与 exact-source 回执。
-  下一步只剩 F09；完成后以 RC 版本从新 commit 重跑同一门禁。推送、tag、
-  GitHub Release 仍需单独明确授权。
+- 当时 `--require-engineering-ready` 通过；N01/F09 独立用户实际使用是当时
+  唯一认证阻塞项。N09/N10 暂不排期，也不建设 hosted service 或训练框架。
+- 当时 RC 前工程交付门禁已执行：Linux/Python 3.9-3.12 matrix、三 profile
+  archive/smoke、regular install/G8、干净本地 commit 与 exact-source 回执
+  （绑定当时代码，非当前 HEAD）。推送、tag、GitHub Release 仍需单独明确
+  授权。
 
 ## 已完成的 N07/N08 有界结论（2026-09-09）
 
@@ -65,7 +85,7 @@ N08 为 partial：已有 10k/100k/1M 合成规模实测，尚非真实输入/SLO
 
 | 顺序 | 交付目标 | 严格退出条件 |
 | --- | --- | --- |
-| 1：F09、N01/N03 | 两个已有不同 native family 的真实端到端 golden path。一个本地 run spec 从 producer 导出，经验证、诊断到 immutable bundle 和比较；先复用 RPG/PSID 接口，不堆新算法名字。 | 两条实际 producer 链路都执行；无需改 core、手拼内部 JSON 或补哈希；协议和原生语义不变；缺失标签/事实明确 unavailable。故意篡改、缺输入及协议不兼容负例拒绝。F09 另需实际独立用户操作记录，自动化不能冒充，且不要求签字。 |
+| 1：F09、N01/N03 | 两个已有不同 native family 的真实端到端 golden path。一个本地 run spec 从 producer 导出，经验证、诊断到 immutable bundle 和比较；先复用 RPG/PSID 接口，不堆新算法名字。 | 两条实际 producer 链路都执行；无需改 core、手拼内部 JSON 或补哈希；协议和原生语义不变；缺失标签/事实明确 unavailable。故意篡改、缺输入及协议不兼容负例拒绝。F09 的独立用户条件已按 ADR-0025 从当前门禁排除（independent_user_actual_use excluded from current gates，仍 not_verified）；自动化不能冒充采用事实，且不要求签字。 |
 | 2：N06 | Mapping-first 完整体检。加入 catalog、split、target 与 SID 的一致性 join，按可用输入启用已有 D3/D4，形成统一 preflight。 | 真实输入能定位越界 item、缺失/重复映射和 split 错配；缺少依赖时精确列出未执行项；CLI/API 一致，不自动修 SID。 |
 | 3：N05 | 多 run/seed 回归比较。冻结评估协议，明确配对单位、用户聚类、效应量、区间和可配置退化预算。 | 用已知结果数据校验统计量与覆盖行为；不同 cohort/协议拒绝合并；seed 与用户采样不混同；重复记录、不足样本和缺失 run 有 typed 结果。 |
 | 4：N04 | 可行动的诊断和静态离线报告。受影响 slice、脱敏案例、证据位置、下一步检查；严格区分观察、假设、已证实原因。 | 至少三个预设退化能指回具体证据；离线可读，缺失信息不推断因果；隐私检查、差异和 supersession 可追溯。 |
@@ -84,7 +104,8 @@ N08 的测量伴随各阶段，不必等第五项才测；第五项完成真实�
    新的 exact-source local release record 通过；原 evidence 不重写。
 4. 需求表分别记录 implemented、verified、user_accepted、delivery_ready，
    缺失一层不以另一层 PASS 代替。工程交付记录不等于 2.0 certification。
-5. 上述批准范围的技术项和实际使用条件齐备后再做 certification-readiness audit；
+5. 上述批准范围的技术项与 required 验收条件（按 acceptance scope 策略，
+   独立用户条件已排除）齐备后再做 certification-readiness audit；
    仍有缺口就继续在适当本地 1.x 闭环。推送、tag、公开发布另需明确授权。
 
 本地 CPU 工作无需训练。只有必要且可复算的训练事实才考虑既定复旦集群流程；

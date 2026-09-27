@@ -15,7 +15,9 @@ Automated consumer and delivery checks do not represent a second human reviewer.
 No backup reviewer has been assigned; if the maintainer is unavailable, retain
 the candidate and its evidence without authorizing publication. Do not invent
 an assignee, require a signature, or block already authorized independent CPU
-development merely because publication or independent user acceptance is pending.
+development merely because publication is pending. Independent user actual use
+is excluded from current gates by ADR-0025; the adoption fact stays not verified
+and no sign-off is required or invented.
 
 | Surface | Owner role | Required review | Failure boundary |
 | --- | --- | --- | --- |

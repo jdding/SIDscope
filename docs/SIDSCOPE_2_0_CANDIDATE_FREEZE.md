@@ -1,7 +1,10 @@
 # SIDScope 2.0 engineering candidate freeze
 
-Status: engineering candidate only; package `1.7.0.dev0`; certification blocked
-only by F09 independent-user actual use. No RC, tag, push or release authorized.
+Status: engineering candidate only; package `1.7.0.dev0`; certification gated on
+same-source delivery evidence, with
+independent_user_actual_use excluded from current gates
+(ADR-0025, 2026-09-27) and still not verified.
+No RC, tag, push or release authorized.
 
 ## Frozen compatibility inputs
 
@@ -28,11 +31,15 @@ python3 tools/verify_sidscope_2_0_candidate.py --require-certification-ready
 ```
 
 The first command must pass once all technical gates are green. The second must
-return a typed blocked result while F09 remains partial. Automation, a maintainer
-rerun or a synthetic installed consumer cannot satisfy F09. After an independent
-user completes the documented own-producer journey, update the requirement
-ledger from that evidence, regenerate the seven current-status blocks, and rerun
-the second command.
+return a typed blocked result until the same-source delivery summary exists and
+verifies: `delivery_ready` requires valid receipts for every required gate bound
+to the clean candidate. Independent user actual use is excluded from current
+gates by the acceptance scope policy (`docs/reproducibility/sidscope_acceptance_scope.v1.json`,
+ADR-0025); no user trial, sign-off or adoption evidence is required or accepted.
+The policy fails closed on missing, unknown or over-broad exclusions, and any
+required technical condition that loses verified coverage (for example N03)
+re-enters gating. When the delivery summary verifies, an authorized change may
+set an RC version from a new clean commit and rerun the same gates.
 
 ## RC transition
 

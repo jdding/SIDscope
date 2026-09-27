@@ -665,7 +665,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 232,
+  "schema_count": 233,
   "schemas": [
     {
       "artifact_paths": [],
@@ -718,6 +718,22 @@
       "verifier_paths": [
         "tools/verify_sidscope_2_0_candidate.py"
       ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_acceptance_scope.v1.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_acceptance_scope.v1.json",
+        "tools/sidscope_acceptance_scope.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/sidscope_acceptance_scope.py"
+      ],
+      "schema_id": "sidscope.acceptance_scope.v1",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [

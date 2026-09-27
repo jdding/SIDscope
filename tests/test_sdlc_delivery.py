@@ -83,7 +83,7 @@ def test_expected_digest_rejects_before_archive_execution(tmp_path):
     assert caught.value.code == "invalid_expected_archive_digest"
 
 
-def test_readiness_stays_blocked_with_open_requirements(monkeypatch, capsys):
+def test_readiness_stays_blocked_without_delivery_evidence(monkeypatch, capsys):
     from tools.verify_sidscope_sdlc_hardening import main
     monkeypatch.setattr(sys, "argv", ["verify", "--require-ready"])
     assert main() == 2
@@ -93,9 +93,13 @@ def test_readiness_stays_blocked_with_open_requirements(monkeypatch, capsys):
     assert "F01" not in result["blocking_requirements"]
     assert "F07" not in result["blocking_requirements"]
     assert "F09" in result["blocking_requirements"]
-    assert result["pending_acceptance"] == ["independent_user_actual_use"]
+    assert result["unresolved_certification_blockers"] == []
+    assert result["pending_acceptance"] == []
+    assert result["excluded_acceptance"] == ["independent_user_actual_use"]
     assert not any(item.startswith("N") for item in result["blocking_requirements"])
     assert result["engineering_ready"] is True
+    assert result["implementation_ready"] is True
+    assert result["delivery_ready"] is False
     assert result["engineering_blocking_requirements"] == []
     assert result["approved_local_workflow_pending"] == ["N01"]
     assert result["approved_local_workflow_ready"] is False

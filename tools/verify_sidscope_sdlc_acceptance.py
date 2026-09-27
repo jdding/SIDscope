@@ -8,12 +8,17 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 from sidinspector.version import PRODUCT_VERSION
 
 LEDGER = ROOT / "docs/reproducibility/sidscope_sdlc_requirements.csv"
 ROUTES = ROOT / "docs/reproducibility/generator_adapter_coverage.csv"
 DOCUMENTS = ["README.md", "HANDOFF.md", "docs/COMPATIBILITY.md", "docs/VERSIONING.md", "docs/V1_2_TO_V2_ROADMAP.md", "docs/SIDSCOPE_1_7_STABILIZATION.md", "docs/SIDSCOPE_SDLC_HARDENING.md"]
+# Hand-edited plan/RC/freeze documents are not generated blocks, but their
+# current-state claims must agree with the acceptance scope policy.
+SCOPE_SENTINEL_DOCUMENTS = ["docs/SIDSCOPE_NEXT_DEVELOPMENT_PLAN.md", "docs/SIDSCOPE_2_0_RC_PACKET.md", "docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md"]
+SCOPE_SENTINEL = "independent_user_actual_use excluded from current gates"
 BEGIN, END = "<!-- SIDSCOPE:CURRENT:BEGIN -->", "<!-- SIDSCOPE:CURRENT:END -->"
 
 
@@ -22,21 +27,59 @@ def rows():
         return list(csv.DictReader(handle))
 
 
+def acceptance_scope():
+    from tools.sidscope_acceptance_scope import (
+        SCOPE_RELATIVE_PATH,
+        load_acceptance_scope,
+        resolve_requirement_scope,
+        scope_digest,
+    )
+
+    records = rows()
+    policy = load_acceptance_scope(ROOT, records)
+    resolution = resolve_requirement_scope(records, policy)
+    return {
+        "policy": policy,
+        "policy_revision": policy["policy_revision"],
+        "path": SCOPE_RELATIVE_PATH,
+        "snapshot": scope_digest(ROOT),
+        "excluded_acceptance": resolution["excluded_acceptance"],
+        "pending_acceptance": required_pending_acceptance(records, policy),
+        "unresolved_requirements": resolution["unresolved_requirements"],
+        "adr": policy["decision"]["adr"],
+        "decision_date": policy["decision"]["date"],
+    }
+
+
+def required_pending_acceptance(records, policy):
+    from tools.sidscope_acceptance_scope import required_pending_acceptance as compute
+
+    return compute(policy, user_acceptance_status(records))
+
+
 def block():
     records = rows()
     pending = [row["id"] for row in records if row["id"].startswith("F") and row["state"] != "verified"]
+    scope = acceptance_scope()
     accepted = user_acceptance_status(records) == "accepted"
     with ROUTES.open(newline="") as handle:
         routes = sorted(csv.DictReader(handle), key=lambda row: row["route_id"])
     history = "; ".join(row["route_id"]+"="+row["current_decision"] for row in routes)
+    adoption_sentence = (
+        "Independent user acceptance is recorded by traceable F09/N01 evidence. " if accepted else
+        "Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope "
+        f"policy revision {scope['policy_revision']}; it remains not verified and is not a current prerequisite. "
+    )
     return "\n".join([BEGIN, f"Local development: `{PRODUCT_VERSION}`; public GitHub remains 1.1.x; 1.8/1.9 inactive.",
         "Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.",
         "Unclosed SDLC requirements: " + (", ".join(pending) if pending else "none") + ".",
         "Requirement snapshot: `"+hashlib.sha256(LEDGER.read_bytes()).hexdigest()+"`.",
+        "Acceptance scope: `" + scope["path"] + "` revision " + str(scope["policy_revision"]) + " snapshot `"+scope["snapshot"]+"`.",
+        "Acceptance scope decision: " + (", ".join(scope["excluded_acceptance"]) if scope["excluded_acceptance"] else "no excluded acceptance conditions") +
+        " excluded from current gates (" + scope["decision_date"] + ", " + scope["adr"] + "); the adoption fact stays not_verified.",
         "Historical route decisions (not newly recomputed training): " + history + ".",
         "Historical route snapshot: `"+hashlib.sha256(ROUTES.read_bytes()).hexdigest()+"`.",
-        ("Independent user acceptance is recorded by traceable F09/N01 evidence. " if accepted else
-         "Independent user acceptance is not established by automated tests. ") +
+        adoption_sentence +
         "No push, tag, public release or TOIS mutation is authorized.", END])
 
 
@@ -97,11 +140,18 @@ def verify():
     for name in by_id:
         visit(name, set())
     user_acceptance = user_acceptance_status(records)
+    scope = acceptance_scope()
     expected = block()
     for name in DOCUMENTS:
         assert expected in (ROOT / name).read_text(), "current status drift: " + name
+    for name in SCOPE_SENTINEL_DOCUMENTS:
+        assert SCOPE_SENTINEL in (ROOT / name).read_text(), "acceptance scope drift: " + name
     pending = [row["id"] for row in records if row["id"].startswith("F") and row["state"] != "verified"]
-    return {"status": "pass", "requirement_count": len(records), "generated_documents": len(DOCUMENTS), "unclosed_requirements": pending, "user_acceptance": user_acceptance, "release_authorized": False}
+    return {"status": "pass", "requirement_count": len(records), "generated_documents": len(DOCUMENTS), "unclosed_requirements": pending, "user_acceptance": user_acceptance,
+            "pending_acceptance": scope["pending_acceptance"], "excluded_acceptance": scope["excluded_acceptance"],
+            "scope_unresolved_requirements": scope["unresolved_requirements"],
+            "acceptance_scope": {"policy_revision": scope["policy_revision"], "path": scope["path"], "snapshot": scope["snapshot"], "adr": scope["adr"]},
+            "release_authorized": False}
 
 
 def main():

@@ -5,9 +5,11 @@ Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
+Acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json` revision 2 snapshot `fc0ab4a29822290d43eb190364443c5afbc7d288de57ed30988f0269f26db9db`.
+Acceptance scope decision: independent_user_actual_use excluded from current gates (2026-09-27, docs/adr/0025-remove-independent-user-acceptance-gate.md); the adoption fact stays not_verified.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
-Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. No push, tag, public release or TOIS mutation is authorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
 Status: approved development direction
@@ -21,8 +23,9 @@ The numbered milestone sections below describe the staged plan, not proof of
 today's acceptance. Current execution status is in `SIDSCOPE_NEXT_DEVELOPMENT_PLAN.md`
 and the requirement ledger: N02-N08 engineering scope is verified, including the
 bounded 100-episode N08 gate and N07 refresh diagnostics; Adapter SDK 1.0 and the
-candidate surface are frozen. N01/F09 independent actual use remains the sole
-certification blocker. N09/N10 are explicitly deferred.
+candidate surface are frozen. Independent user actual use is excluded from
+current gates by ADR-0025 and the fact stays not verified; certification
+additionally requires same-source delivery evidence. N09/N10 are explicitly deferred.
 
 Publication topology: GitHub `sidscope/main` remains on 1.1.x. Milestones
 1.2--1.9 and the 2.0 target are developed only in the local `SIDScope-v2`

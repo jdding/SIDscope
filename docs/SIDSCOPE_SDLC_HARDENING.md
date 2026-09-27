@@ -5,31 +5,40 @@ Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
+Acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json` revision 2 snapshot `fc0ab4a29822290d43eb190364443c5afbc7d288de57ed30988f0269f26db9db`.
+Acceptance scope decision: independent_user_actual_use excluded from current gates (2026-09-27, docs/adr/0025-remove-independent-user-acceptance-gate.md); the adoption fact stays not_verified.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
-Independent user acceptance is not established by automated tests. No push, tag, public release or TOIS mutation is authorized.
+Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. No push, tag, public release or TOIS mutation is authorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-Active version: `1.7.0.dev0`. Local only. Updated: 2026-09-09.
-Authority: ADR-0016 and the requirement ledger
+Active version: `1.7.0.dev0`. Local only. Updated: 2026-09-27 (acceptance scope
+decision ADR-0025; earlier dated notes below stay historical).
+Authority: ADR-0016, ADR-0025 and the requirement ledger
 `reproducibility/sidscope_sdlc_requirements.csv`.
 
 ## State and execution order
 
-All approved technical work other than the deliberately human F09 condition is
-closed. N03-N06 provide real native admission, mapping preflight, paired
-regression and actionable offline review. N08 is verified at the exact user-
-bounded workload of 100 episodes per RPG/PSID route, including transferred-input
-hash checks and three fresh-process local postprocessing repeats; no further
-inference, 1000-episode expansion or production SLO is planned. N07 adds bounded
-SID lifecycle diagnostics with route-specific semantics and actual-shape
-same-input controls. Adapter SDK 1.0 and the candidate surface are frozen by
-ADR-0023/0024. N09/N10 are deferred.
+All approved technical work is closed. N03-N06 provide real native admission,
+mapping preflight, paired regression and actionable offline review. N08 is
+verified at the exact user-bounded workload of 100 episodes per RPG/PSID route,
+including transferred-input hash checks and three fresh-process local
+postprocessing repeats; no further inference, 1000-episode expansion or
+production SLO is planned. N07 adds bounded SID lifecycle diagnostics with
+route-specific semantics and actual-shape same-input controls. Adapter SDK 1.0
+and the candidate surface are frozen by ADR-0023/0024. N09/N10 are deferred.
 
-`--require-engineering-ready` now passes. Certification remains fail-closed only
-because N01/F09 requires an independent user to complete the documented own-
-producer journey. No automation or maintainer sign-off substitutes for that use.
-The package therefore remains `1.7.0.dev0`; no RC, tag, push or release is
+Independent user actual use is excluded from current gates by ADR-0025 and the
+acceptance scope policy; the adoption fact stays `not_verified`, ledger rows
+F09/N01 remain partial with `pending_actual_use`, and no adoption evidence file
+is required or invented. Required technical conditions keep gating: the policy
+covers them through verified requirements (N03/N04), and any coverage loss
+re-enters blocking with typed failures.
+
+`--require-engineering-ready` passes. Certification remains fail-closed until
+same-source delivery evidence verifies: `delivery_ready` requires a delivery
+summary bound to the clean candidate with valid receipts for every required
+gate. The package therefore remains `1.7.0.dev0`; no RC, tag, push or release is
 implied. Current delivery results require a fresh clean exact-source record.
 
 Current decision: computation only, no maintainer sign-off. Necessary and
@@ -61,10 +70,12 @@ gate and two real native export consumers are implemented and exercised.**
 F01/F02/F04/F08 retain their executable acceptance. N03's approved technical
 producer -> validate -> evaluate -> bundle -> compare chain is now implemented
 and exercised on the two actual observations. F09 remains partial solely for its
-actual independent user trial. Earlier narrower export-inspection closure wording is
-superseded, not a reason to reduce the acceptance criterion. Structural historical
-replay is not independent verification. No named-adapter or training authenticity
-claim follows from diagnostic admission. Broader 2.0 certification remains open.
+actual independent user trial, which ADR-0025 excludes from current gates while
+the adoption fact stays not verified. Earlier narrower export-inspection closure
+wording is superseded, not a reason to reduce the acceptance criterion.
+Structural historical replay is not independent verification. No named-adapter
+or training authenticity claim follows from diagnostic admission. Broader 2.0
+certification additionally requires same-source delivery evidence.
 
 ## Requirement ownership and definition of done
 
@@ -111,7 +122,8 @@ CSV, Parquet mapping and evaluation/comparison. N08 adds the bounded real-route
 100-episode observations and three local repeats described above. These results
 support only the measured workloads; they do not establish p95, arbitrary scale
 or a production SLO. See `SIDSCOPE_NEXT_DEVELOPMENT_PLAN.md` for the remaining
-F09 acceptance and RC transition gates.
+delivery evidence and RC transition gates; independent user acceptance is
+excluded from current gates by ADR-0025.
 
 F10 links all findings and candidates to an actual accountable owner, code,
 tests, commands, dependencies, risk and disposition. F13 generates marked current

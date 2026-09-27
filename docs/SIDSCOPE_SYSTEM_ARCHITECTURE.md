@@ -53,8 +53,10 @@ in an input artifact.
   mapping. They verify the zero-change invariant, not a real refresh experiment.
 - Adapter SDK 1.0 and the pre-2.0 compatibility surface are frozen by ADR-0023/0024.
   N09/N10 remain deferred and no hosted/training surface is introduced.
-- N01/F09 independent actual use is the sole certification blocker. Automated
-  tests, maintainer reruns and synthetic installed consumers do not satisfy it.
+- Independent user actual use is excluded from current gates by ADR-0025; the
+  adoption fact stays not verified. Certification additionally requires
+  same-source delivery evidence; automated tests, maintainer reruns and
+  synthetic installed consumers never certify delivery or adoption by themselves.
 
 ### Maintaining this view
 

@@ -151,8 +151,9 @@ Games inputs through canonical identity, trace, diagnostic admission and bundle
 verification; N03's technical bridge is verified. Those observations do not
 authenticate training, and the public PSID sample still lacks target labels.
 Do not invent missing facts or pass a historical fixture as real provenance.
-F09/N01 remain pending until an independent SID algorithm engineer completes
-this own-producer journey; maintainer automation cannot satisfy that condition.
+Independent user adoption is excluded from current gates (ADR-0025) and remains not verified.
+F09/N01 ledger rows stay partial and pending_actual_use, and no
+run of this workflow records or implies adoption.
 
 Use your already generated ranked items. Targets are evaluator-side, never
 generator input. Null slots remain in their original positions; no backfilling.

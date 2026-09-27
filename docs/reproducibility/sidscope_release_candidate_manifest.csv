@@ -394,3 +394,6 @@ acceptance_gates,experiments/v1_evidence_chain/ACCEPTANCE_GATES.md,gate_record,p
 large_raw_datasets,external_raw_datasets,omitted,excluded,no,excluded,Raw Amazon P5 HF and AutoDL data are intentionally not shipped.
 autodl_payloads,experiments/v1_evidence_chain/autodl/payloads,omitted,excluded,no,excluded,Cloud payloads and returned archives must not enter reviewer package.
 private_local_provenance,private_paper_chain,omitted,excluded,no,excluded,Private paper-chain or local-only provenance is not reviewer-facing.
+acceptance_scope_policy,docs/reproducibility/sidscope_acceptance_scope.v1.json,release_governance,tracked_snapshot,yes,pass_local,Versioned condition scope mapping; only independent user actual use may be excluded and technical conditions fail closed.
+acceptance_scope_adr,docs/adr/0025-remove-independent-user-acceptance-gate.md,architecture_decision,documentation,yes,pass_local,Removes the independent-user adoption gate for the current scope while keeping producer technical chains and not-verified adoption facts.
+acceptance_scope_loader,tools/sidscope_acceptance_scope.py,verification,fully_runnable,yes,pass_local,Loads and validates the acceptance scope policy and resolves requirement gating with typed fail-closed errors.

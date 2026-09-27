@@ -19,6 +19,11 @@ from sidinspector.submission.checker import validate_submission_package
 from sidinspector.submission.indexes import generate_status_index, generate_result_index
 from sidinspector.evidence.comparison import compare_evidence_bundles
 from tools.inspect_sidscope_native_export import inspect_export
+from tools.sidscope_acceptance_scope import (
+    load_acceptance_scope,
+    required_pending_acceptance,
+    resolve_requirement_scope,
+)
 from tools.verify_sidscope_sdlc_acceptance import user_acceptance_status
 
 
@@ -59,29 +64,45 @@ def verify() -> dict:
     # Findings remain technical obligations; proposed features are a backlog,
     # not an implicitly approved expansion of the certification scope.
     blockers = [row["id"] for row in rows if row["id"].startswith("F") and row["state"] != "verified"]
-    # F09 and N01 retain the deliberately human acceptance condition. They do
-    # not conceal a technical failure and automation must never mark them done.
-    acceptance_only = {"F09", "N01"}
-    engineering_blockers = [item for item in blockers if item not in acceptance_only]
+    # Acceptance scope is policy-driven, not a hard-coded allowed-blocker set:
+    # the policy file decides which acceptance conditions are excluded, and any
+    # required condition that loses its verified coverage re-enters gating.
+    policy = load_acceptance_scope(ROOT, rows)
+    resolution = resolve_requirement_scope(rows, policy)
     # Explicitly approved local work is distinct from unapproved candidate scope.
     # Neither list creates a public 2.0 compatibility/release promise.
     approved_local = {"N01", "N02", "N03", "N04", "N05", "N06", "N07", "N08"}
     pending_local = [row["id"] for row in rows if row["id"] in approved_local and row["state"] != "verified"]
-    engineering_pending_local = [item for item in pending_local if item not in acceptance_only]
     candidates = [row["id"] for row in rows if row["id"].startswith("N") and row["id"] not in approved_local and row["state"] != "verified"]
-    pending_acceptance = ["independent_user_actual_use"] if user_acceptance != "accepted" else []
-    engineering_ready = not engineering_blockers and not engineering_pending_local
-    certification_ready = not blockers and not pending_local and not pending_acceptance
+    user_acceptance = user_acceptance_status(rows)
+    pending_acceptance = required_pending_acceptance(policy, user_acceptance)
+    excluded_acceptance = resolution["excluded_acceptance"]
+    unresolved = [item for item in resolution["unresolved_requirements"] if item.startswith("F")]
+    unresolved_pending_local = [item for item in resolution["unresolved_requirements"] if item in pending_local]
+    engineering_ready = not unresolved and not unresolved_pending_local
+    implementation_ready = engineering_ready
+    # delivery_ready requires a current-source delivery summary with valid
+    # receipts for every required delivery gate (D02); without it, a
+    # certification claim would not be bound to executed evidence.
+    delivery_ready = False
+    delivery_ready_reason = "current-source delivery summary with required gate receipts is not present"
+    certification_ready = implementation_ready and delivery_ready and not unresolved and not pending_acceptance
     return {"status": "pass", "scope": "recomputed_admission_comparison_and_real_native_consumers",
             "positive_admission": "diagnostics_verified", "real_native_consumers": native,
-            "engineering_ready": engineering_ready, "certification_ready": certification_ready,
+            "engineering_ready": engineering_ready,
+            "implementation_ready": implementation_ready,
+            "delivery_ready": delivery_ready, "delivery_ready_reason": delivery_ready_reason,
+            "certification_ready": certification_ready,
             "blocking_requirements": blockers,
-            "engineering_blocking_requirements": engineering_blockers + engineering_pending_local,
+            "unresolved_certification_blockers": unresolved,
+            "engineering_blocking_requirements": unresolved + unresolved_pending_local,
             "approved_local_workflow_pending": pending_local,
             "approved_local_workflow_ready": not blockers and not pending_local,
             "pending_acceptance": pending_acceptance,
+            "excluded_acceptance": excluded_acceptance,
+            "acceptance_scope": {"policy_revision": policy["policy_revision"], "decision_date": policy["decision"]["date"], "adr": policy["decision"]["adr"]},
             "candidate_requirements": candidates,
-            "boundary": "Regression checks do not verify private training claims or independent user acceptance."}
+            "boundary": "Regression checks do not verify private training claims or independent user adoption facts."}
 
 
 def main() -> int:

@@ -132,13 +132,18 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         ],
         "docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md": [
             "engineering candidate only",
-            "F09 independent-user actual use",
+            "independent_user_actual_use excluded from current gates",
             "No RC, tag, push or release authorized",
         ],
         "docs/SIDSCOPE_2_0_RC_PACKET.md": [
-            "RC transition blocked only by F09",
+            "RC transition gated on same-source delivery evidence",
             "Linux CPython 3.9, 3.10, 3.11 and 3.12",
             "No public action is authorized",
+        ],
+        "docs/adr/0025-remove-independent-user-acceptance-gate.md": [
+            "independent_user_actual_use",
+            "scope_policy_missing",
+            "Rollback",
         ],
         "docs/adr/0023-stabilize-adapter-sdk-1-0.md": [
             "Adapter SDK at 1.0",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the frozen 2.0 engineering candidate without inventing F09 acceptance."""
+"""Verify the frozen 2.0 engineering candidate under the acceptance scope policy."""
 from __future__ import annotations
 
 import argparse
@@ -36,12 +36,22 @@ def verify(*, require_clean: bool = False) -> dict:
         raise AssertionError("stable adapter extension boundary drift")
     if default_profile != "runtime" or tuple(profiles) != PROFILE_IDS:
         raise AssertionError("additive release profile boundary drift")
-    if set(sdlc["blocking_requirements"]) - {"F09"}:
-        raise AssertionError(f"unexpected certification blockers: {sdlc['blocking_requirements']}")
-    if sdlc["certification_ready"] and (sdlc["blocking_requirements"] or sdlc["pending_acceptance"]):
-        raise AssertionError("inconsistent certification state")
+    # Blocker gating is policy-driven: any required technical condition that
+    # loses verified coverage blocks, independent of which requirement row
+    # carries it. Exclusions come only from the validated scope policy.
+    if sdlc["unresolved_certification_blockers"]:
+        raise AssertionError(f"unresolved certification blockers: {sdlc['unresolved_certification_blockers']}")
     if sdlc["engineering_blocking_requirements"]:
         raise AssertionError(f"engineering blockers remain: {sdlc['engineering_blocking_requirements']}")
+    if sdlc["pending_acceptance"]:
+        raise AssertionError(f"required acceptance conditions unresolved: {sdlc['pending_acceptance']}")
+    if sdlc["excluded_acceptance"] != ["independent_user_actual_use"]:
+        raise AssertionError(f"unexpected acceptance scope exclusions: {sdlc['excluded_acceptance']}")
+    if sdlc["certification_ready"] and (
+        sdlc["unresolved_certification_blockers"] or sdlc["pending_acceptance"]
+        or not sdlc["implementation_ready"] or not sdlc["delivery_ready"]
+    ):
+        raise AssertionError("inconsistent certification state")
     if sdlc["candidate_requirements"] != ["N09", "N10"]:
         raise AssertionError("deferred candidate boundary drift")
     clean = None
@@ -63,14 +73,19 @@ def verify(*, require_clean: bool = False) -> dict:
         "python_facade_symbol_count": surface["python_facade_symbol_count"],
         "release_profiles": list(PROFILE_IDS),
         "engineering_ready": sdlc["engineering_ready"],
+        "implementation_ready": sdlc["implementation_ready"],
+        "delivery_ready": sdlc["delivery_ready"],
         "certification_ready": sdlc["certification_ready"],
-        "certification_blockers": sdlc["blocking_requirements"],
+        "certification_blockers": sdlc["unresolved_certification_blockers"],
+        "ledger_unclosed_requirements": sdlc["blocking_requirements"],
         "pending_acceptance": sdlc["pending_acceptance"],
+        "excluded_acceptance": sdlc["excluded_acceptance"],
+        "acceptance_scope": sdlc["acceptance_scope"],
         "excluded_candidates": sdlc["candidate_requirements"],
         "clean_source_required": require_clean,
         "clean_source": clean,
         "release_authorized": False,
-        "boundary": "Engineering closure is not F09 acceptance, an RC version, or public-release authorization.",
+        "boundary": "Engineering closure is not independent-user adoption, an RC version, or public-release authorization.",
     }
 
 
