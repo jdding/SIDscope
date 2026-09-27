@@ -400,3 +400,5 @@ acceptance_scope_loader,tools/sidscope_acceptance_scope.py,verification,fully_ru
 required_gate_catalog,docs/reproducibility/sidscope_required_gate_catalog.v1.json,release_governance,tracked_snapshot,yes,pass_local,Freezes the required local delivery gate catalog that every delivery summary must cover.
 delivery_summary_tool,tools/sidscope_delivery_summary.py,verification,fully_runnable,yes,pass_local,Builds and verifies the same-source delivery summary with typed fail-closed gate aggregation.
 performance_campaign_tool,tools/run_sidscope_performance_campaign.py,verification,fully_runnable,yes,pass_local,Runs three fresh-process six-command performance groups and retains every group result.
+native_bridge_module,src/sidscope/native_bridge.py,library,fully_runnable,yes,pass_local,Pure-data RPG/PSID native bridge installable with the runtime; RPG v1 verification is an explicit evidence-full provider that fails closed when missing.
+observed_review_module,src/sidscope/observed_review.py,library,fully_runnable,yes,pass_local,Single observed-input workflow over the installed package with deterministic identity and run-scoped timing fields.

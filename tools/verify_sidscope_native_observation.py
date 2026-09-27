@@ -8,7 +8,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
 from pathlib import Path
 import resource
 import sys
@@ -19,56 +18,13 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 from sidinspector.contracts import canonical_sha256, with_content_sha256
 from sidinspector.contracts.json_io import loads_json
-from tools.project_sidscope_native_export import project_export, compare_exports, fail
-
-
-DATASETS = {"rpg": "AmazonReviews2014.Beauty", "psid": "VideoGames.rigor_original_test.selected"}
-
-
-def validate_observed_inputs(native, selected, observation, inputs, *, native_sha256, preflight_sha256):
-    method = observation.get("method")
-    if method not in DATASETS or native.get("method", "").lower() != method:
-        fail("native_observation_method_mismatch", "method")
-    if observation.get("native_sha256") != native_sha256 or observation.get("preflight_sha256") != preflight_sha256:
-        fail("native_observation_binding_mismatch", "native/preflight bytes")
-    if observation.get("checkpoint_sha256") != native["evidence"]["checkpoint_sha256"]:
-        fail("native_observation_binding_mismatch", "checkpoint")
-    if observation.get("native_execution") != "cpu_frozen_checkpoint_no_training" or observation.get("environment", {}).get("device") != "cpu":
-        fail("native_observation_execution_scope", "CPU inference observation required")
-    expected_mapping = [{"item_id": r["normalized_item_id"],
-        "sid": r["semantic_codes" if method == "rpg" else "ordered_model_vocabulary_tokens"]}
-        for r in native["target_universe"]["rows"]]
-    if sorted(inputs["mapping"], key=lambda r: r["item_id"]) != sorted(expected_mapping, key=lambda r: r["item_id"]):
-        fail("native_observation_mapping_mismatch", "native universe and preflight mapping")
-    rows = observation.get("selection")
-    measurements = observation.get("measurements")
-    if not isinstance(rows, list) or not isinstance(measurements, list) or len(rows) != len(native["episodes"]) or len(measurements) != len(rows):
-        fail("native_observation_population_mismatch", "one measurement per exported episode")
-    if [{k: v for k, v in row.items() if k != "split_row_index"} for row in rows] != selected["rows"]:
-        fail("native_observation_selection_mismatch", "exact labels and order")
-    test_rows = [r for r in inputs["splits"] if r["split"] == "test"]
-    if len(inputs["targets"]) != len(rows):
-        fail("native_observation_target_mismatch", "exact selected target count")
-    targets = {r["episode_id"]: r for r in inputs["targets"]}
-    for row, ep, measurement in zip(rows, native["episodes"], measurements):
-        index = row.get("split_row_index")
-        if type(index) is not int or not 0 <= index < len(test_rows):
-            fail("native_observation_split_mismatch", "split row index")
-        split = test_rows[index]
-        target = targets.get(row["episode_id"], {})
-        if row["episode_id"] != ep["trace_id"] or split["episode_id"] != row["episode_id"] or split["target_item_id"] != row["target_normalized_item_id"] or target.get("target_item_id") != row["target_normalized_item_id"] or target.get("split") != "test":
-            fail("native_observation_target_mismatch", "episode/split/target join")
-        if not isinstance(measurement, dict) or set(measurement) != {"nfe", "forward_calls", "candidate_count", "latency_ms"}:
-            fail("invalid_native_measurement", "exact measured fields required")
-        if any(type(measurement[k]) is not int or measurement[k] < 1 for k in ("nfe", "forward_calls", "candidate_count")):
-            fail("invalid_native_measurement", "positive observed counts required")
-        latency = measurement["latency_ms"]
-        if type(latency) not in (int, float) or not math.isfinite(latency) or latency <= 0 or measurement["nfe"] != measurement["forward_calls"]:
-            fail("invalid_native_measurement", "finite latency and declared NFE definition")
-        candidates = sum(p["candidate_count"] for p in ep["propagation"]) if method == "rpg" else sum(len(a["final_beams"]) for a in ep["attempts"])
-        if measurement["candidate_count"] != candidates:
-            fail("native_candidate_count_mismatch", row["episode_id"])
-    return method
+from sidscope.native_bridge import (
+    DATASETS,
+    compare_exports,
+    fail,
+    project_export,
+    validate_observed_inputs,
+)
 
 
 def verify_observation(source, output):

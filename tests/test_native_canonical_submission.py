@@ -150,3 +150,37 @@ def test_metadata_missing_log_does_not_invent_progress(tmp_path):
     checkpoint=tmp_path/"checkpoint.pth";checkpoint.write_bytes(b"synthetic")
     spec={"method":"psid","source":str(tmp_path),"checkpoint":str(checkpoint),"checkpoint_sha256":hashlib.sha256(checkpoint.read_bytes()).hexdigest()}
     with pytest.raises(FileNotFoundError):checkpoint_metadata(spec)
+
+
+def test_missing_evidence_full_provider_fails_closed(monkeypatch, tmp_path):
+    from sidscope import native_bridge
+    monkeypatch.setattr(native_bridge, "_provider", None)
+    rpg_like = tmp_path / "rpg-like-native.json"
+    rpg_like.write_text(json.dumps({"schema": "sidscope.rpg_trained_trace_bundle.v1", "method": "RPG"}))
+    with pytest.raises(native_bridge.NativeBridgeError) as caught:
+        native_bridge.project_export(rpg_like)
+    assert caught.value.code == "native_verifier_unavailable"
+    psid_like = tmp_path / "psid-like-native.json"
+    psid_like.write_text(json.dumps({"schema": "sidscope.latte_psid_trained_trace_bundle.v2", "method": "PSID"}))
+    with pytest.raises(native_bridge.NativeBridgeError) as caught:
+        native_bridge.project_export(psid_like)
+    assert caught.value.code != "native_verifier_unavailable"
+
+
+def test_wrapper_entry_registers_hash_pinned_rpg_provider():
+    from sidscope import native_bridge
+    from tools import project_sidscope_native_export as wrapper
+    assert wrapper.NativeInspectionError is native_bridge.NativeBridgeError
+    assert callable(native_bridge._provider)
+
+
+def test_wrapper_and_package_api_share_one_implementation():
+    import sidscope.native_bridge as bridge
+    from tools import build_sidscope_native_submission as build_wrapper
+    from tools import run_sidscope_observed_review as review_wrapper
+    from tools import verify_sidscope_native_observation as observation_wrapper
+    assert build_wrapper.build_submission is bridge.build_submission
+    assert build_wrapper.build_documents is bridge.build_documents
+    assert review_wrapper.run.__module__ == "sidscope.observed_review"
+    assert observation_wrapper.validate_observed_inputs is bridge.validate_observed_inputs
+    assert observation_wrapper.DATASETS is bridge.DATASETS

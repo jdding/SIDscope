@@ -182,7 +182,21 @@ def verify(inputs: Path, contract: Path, *, installed: bool = False):
         refresh_output=Path(tmp)/'refresh'
         write_refresh_report(refresh_output,old_snapshot,new_snapshot)
         assert (refresh_output/'report.md').is_file() and (refresh_output/'complete.json').is_file()
-    return {"status": "pass", "curated_symbols_exercised": sorted(covered), "workflow_functions": ["audit", "evaluate", "compare", "compare_runs", "write_review", "compare_snapshots", "bind_evaluation", "write_refresh_report"], "installed": installed}
+    # The installable pure-data bridge runs without the evidence-full RPG
+    # verifier resource; missing resources fail closed, never pass.
+    import sidscope.native_bridge as native_bridge
+    import sidscope.observed_review  # noqa: F401
+    native_bridge.clear_native_verifier_provider()
+    with tempfile.TemporaryDirectory() as tmp:
+        rpg_like = Path(tmp) / 'rpg-like.json'
+        rpg_like.write_text(json.dumps({'schema': 'sidscope.rpg_trained_trace_bundle.v1', 'method': 'RPG'}))
+        try:
+            native_bridge.project_export(rpg_like)
+        except native_bridge.NativeBridgeError as error:
+            assert error.code == 'native_verifier_unavailable', error.code
+        else:
+            raise AssertionError('missing evidence-full RPG verifier did not fail closed')
+    return {"status": "pass", "curated_symbols_exercised": sorted(covered), "workflow_functions": ["audit", "evaluate", "compare", "compare_runs", "write_review", "compare_snapshots", "bind_evaluation", "write_refresh_report"], "native_bridge": ["sidscope.native_bridge", "sidscope.observed_review"], "installed": installed}
 
 
 def main():

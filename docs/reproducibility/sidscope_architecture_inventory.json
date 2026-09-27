@@ -751,16 +751,16 @@
         "examples/canonical_pipeline_fixture/expected_failure_telemetry_overlap.json",
         "src/sidinspector/schemas/adapter_capabilities.alpha.schema.json",
         "src/sidinspector/sdk/alpha.py",
-        "tools/build_sidscope_1_2_closure_fixtures.py",
-        "tools/build_sidscope_native_submission.py"
+        "src/sidscope/native_bridge.py",
+        "tools/build_sidscope_1_2_closure_fixtures.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:sdk",
       "producer_paths": [
         "src/sidinspector/schemas/adapter_capabilities.alpha.schema.json",
         "src/sidinspector/sdk/alpha.py",
-        "tools/build_sidscope_1_2_closure_fixtures.py",
-        "tools/build_sidscope_native_submission.py"
+        "src/sidscope/native_bridge.py",
+        "tools/build_sidscope_1_2_closure_fixtures.py"
       ],
       "schema_id": "sidscope.adapter_capabilities.alpha.v1",
       "verifier_paths": []
@@ -3019,16 +3019,16 @@
         "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
         "examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json",
         "src/sidinspector/adapters/latte.py",
+        "src/sidscope/native_bridge.py",
         "tests/test_native_canonical_submission.py",
-        "tools/inspect_sidscope_native_export.py",
-        "tools/project_sidscope_native_export.py"
+        "tools/inspect_sidscope_native_export.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
         "src/sidinspector/adapters/latte.py",
-        "tools/inspect_sidscope_native_export.py",
-        "tools/project_sidscope_native_export.py"
+        "src/sidscope/native_bridge.py",
+        "tools/inspect_sidscope_native_export.py"
       ],
       "schema_id": "sidscope.latte_psid_trained_trace_bundle.v2",
       "verifier_paths": [
@@ -3585,12 +3585,12 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
-        "tools/build_sidscope_native_submission.py"
+        "src/sidscope/native_bridge.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/build_sidscope_native_submission.py"
+        "src/sidscope/native_bridge.py"
       ],
       "schema_id": "sidscope.native_canonical_completion.v1",
       "verifier_paths": []
@@ -3598,12 +3598,12 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
-        "tools/build_sidscope_native_submission.py"
+        "src/sidscope/native_bridge.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/build_sidscope_native_submission.py"
+        "src/sidscope/native_bridge.py"
       ],
       "schema_id": "sidscope.native_canonical_origin.v1",
       "verifier_paths": []
@@ -3611,14 +3611,14 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
+        "src/sidscope/native_bridge.py",
         "tests/test_native_canonical_submission.py",
-        "tools/build_sidscope_native_submission.py",
         "tools/observe_sidscope_native_runtime.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/build_sidscope_native_submission.py",
+        "src/sidscope/native_bridge.py",
         "tools/observe_sidscope_native_runtime.py"
       ],
       "schema_id": "sidscope.native_checkpoint_metadata.v1",
@@ -3675,12 +3675,12 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
-        "tools/project_sidscope_native_export.py"
+        "src/sidscope/native_bridge.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/project_sidscope_native_export.py"
+        "src/sidscope/native_bridge.py"
       ],
       "schema_id": "sidscope.native_rank_comparison.v1",
       "verifier_paths": []
@@ -3688,12 +3688,12 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
-        "tools/project_sidscope_native_export.py"
+        "src/sidscope/native_bridge.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/project_sidscope_native_export.py"
+        "src/sidscope/native_bridge.py"
       ],
       "schema_id": "sidscope.native_rank_projection.v1",
       "verifier_paths": []
@@ -3704,16 +3704,16 @@
       ],
       "declaration_paths": [
         "docs/SIDSCOPE_USER_WORKFLOWS.md",
+        "src/sidscope/native_bridge.py",
         "tests/test_native_canonical_submission.py",
         "tests/test_native_export_projection.py",
-        "tools/observe_sidscope_native_runtime.py",
-        "tools/project_sidscope_native_export.py"
+        "tools/observe_sidscope_native_runtime.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/observe_sidscope_native_runtime.py",
-        "tools/project_sidscope_native_export.py"
+        "src/sidscope/native_bridge.py",
+        "tools/observe_sidscope_native_runtime.py"
       ],
       "schema_id": "sidscope.native_selection.v1",
       "verifier_paths": [
@@ -3761,12 +3761,12 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
-        "tools/run_sidscope_observed_review.py"
+        "src/sidscope/observed_review.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/run_sidscope_observed_review.py"
+        "src/sidscope/observed_review.py"
       ],
       "schema_id": "sidscope.observed_review_completion.v1",
       "verifier_paths": []
@@ -4632,20 +4632,24 @@
       ],
       "declaration_paths": [
         "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
+        "src/sidscope/native_bridge.py",
+        "tests/test_native_canonical_submission.py",
         "tools/export_rpg_trained_trace.py",
         "tools/inspect_sidscope_native_export.py",
-        "tools/project_sidscope_native_export.py",
+        "tools/sidscope_public_consumer.py",
         "tools/verify_rpg_trained_trace_bundle.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
+        "src/sidscope/native_bridge.py",
         "tools/export_rpg_trained_trace.py",
         "tools/inspect_sidscope_native_export.py",
-        "tools/project_sidscope_native_export.py"
+        "tools/sidscope_public_consumer.py"
       ],
       "schema_id": "sidscope.rpg_trained_trace_bundle.v1",
       "verifier_paths": [
+        "tests/test_native_canonical_submission.py",
         "tools/verify_rpg_trained_trace_bundle.py"
       ]
     },

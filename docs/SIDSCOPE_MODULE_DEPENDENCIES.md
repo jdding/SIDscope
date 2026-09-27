@@ -27,10 +27,12 @@ are grandfathered only until their inventory entries migrate or become archived.
 
 ## Workflow and application layers
 
-`sidscope_modules` records the opt-in `src/sidscope` workflow modules. Each
-module lists its allowed core imports, allowed same-layer workflow imports and
-allowed legacy imports (`sidinspector.metrics`, `sidinspector.churn`). The
-directions are one-way:
+`sidscope_modules` records the opt-in `src/sidscope` workflow modules
+(`workflows`, `mapping_check`, `regression`, `diagnostic_review`, `refresh`,
+`pipeline`, `native_bridge`, `observed_review`). Each module lists its allowed
+core imports, allowed same-layer workflow imports and allowed legacy imports
+(`sidinspector.metrics`, `sidinspector.churn`, `sidinspector.adapters.latte`).
+The directions are one-way:
 
 ```text
 sidscope workflows -> declared core facades + declared workflow modules
