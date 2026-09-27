@@ -36,6 +36,27 @@ def test_record_without_bound_passing_performance_is_rejected(tmp_path, monkeypa
     monkeypatch.setattr(record,"verify_archive_digest",lambda *args:None)
     monkeypatch.setattr(record,"read_archive_profile",lambda *args,**kwargs:None)
     monkeypatch.setattr(record,"load_json",lambda *args,**kwargs:candidate)
+    # R04: a record that binds no sub-evidence files is refused before anything else.
+    with pytest.raises(ReleaseRecordError) as error:
+        verify_record(tmp_path/"record.json",expected_record_sha256="c"*64,archive_path=tmp_path/"runtime.zip",profile="runtime")
+    assert error.value.code == "record_artifact_files_required"
+    candidate["artifact_files"] = {"performance.json": "0"*64}
+    with pytest.raises(ReleaseRecordError) as error:
+        verify_record(tmp_path/"record.json",expected_record_sha256="c"*64,archive_path=tmp_path/"runtime.zip",profile="runtime")
+    assert error.value.code == "record_sub_evidence_missing_or_tampered"
+    # Bind every required sub-evidence file with real bytes; only the embedded
+    # performance verdict stays unbound, which must then be rejected.
+    required = ["performance.json", "distribution/result.json", "test-0.log"]
+    required += [f"{profile}-{suffix}" for profile in ("runtime", "conformance", "evidence-full")
+                 for suffix in ("smoke.json", "g8.json", "g8.log")]
+    import hashlib as _hashlib
+    bound = {}
+    for name in required:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"synthetic")
+        bound[name] = _hashlib.sha256(path.read_bytes()).hexdigest()
+    candidate["artifact_files"] = bound
     with pytest.raises(ReleaseRecordError) as error:
         verify_record(tmp_path/"record.json",expected_record_sha256="c"*64,archive_path=tmp_path/"runtime.zip",profile="runtime")
     assert error.value.code == "unbound_performance_evidence"

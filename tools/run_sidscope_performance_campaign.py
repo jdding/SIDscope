@@ -54,9 +54,11 @@ def run_campaign(output: Path) -> dict:
         raise SystemExit("dirty_candidate: performance campaign requires a clean candidate")
     groups = []
     group_digests = []
+    groups_paths = []
     context = multiprocessing.get_context("spawn")
     for index in range(GROUPS):
         group_path = output.parent / f"{output.stem}-group-{index}.json"
+        groups_paths.append(group_path)
         if group_path.exists():
             raise SystemExit(f"campaign_group_exists: {group_path}")
         with context.Pool(processes=1) as pool:
@@ -74,6 +76,8 @@ def run_campaign(output: Path) -> dict:
                        "measurement": payload})
         group_digests.append(hashlib.sha256(group_path.read_bytes()).hexdigest())
     aggregate_pass = all(group["returncode"] == 0 and group["delivery_status"] == "pass" for group in groups)
+    group_files = [{"path": group_path.name, "sha256": digest}
+                   for group_path, digest in zip(groups_paths, group_digests)]
     receipt = with_content_sha256({
         "format": CAMPAIGN_FORMAT,
         "status": "pass" if aggregate_pass else "failed",
@@ -81,6 +85,7 @@ def run_campaign(output: Path) -> dict:
         "environment": {"python": platform.python_version(), "platform": platform.platform()},
         "invocation_digest": hashlib.sha256(canonical_json_bytes(["run-campaign", GROUPS])).hexdigest(),
         "groups": groups,
+        "group_files": group_files,
         "group_digests": group_digests,
         "aggregate": {"status": "pass" if aggregate_pass else "failed",
                       "policy": "All three fresh-process groups must satisfy the frozen threshold; no group selection, deletion or retry-until-green."},

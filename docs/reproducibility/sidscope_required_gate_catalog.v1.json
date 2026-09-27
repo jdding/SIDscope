@@ -1,18 +1,93 @@
 {
   "schema": "sidscope.required_gate_catalog.v1",
   "title": "SIDScope required local delivery gates",
-  "policy": "A delivery summary is ready only when every gate in this catalog has a valid same-source receipt; missing, duplicated, unknown, failed, not-run or unapproved-skipped gates block. The catalog is frozen: changing it is a delivery-policy change and requires a new format revision.",
+  "policy": "A delivery summary is ready only when every gate in this catalog has a valid same-source receipt; missing, duplicated, unknown, failed, not-run or unapproved-skipped gates block. Each receipt gate is bound to the frozen invocation below: the runner executes exactly that command and validators reject any other argv. The catalog is frozen: changing it is a delivery-policy change and requires a new format revision.",
   "gates": [
-    {"gate_id": "full_cpu_test_suite", "binding": "receipt", "description": "Full CPU pytest suite on the clean candidate with zero failures and every skip reasoned."},
-    {"gate_id": "release_metadata_verifier", "binding": "receipt", "description": "tools/verify_sidscope_release_metadata.py"},
-    {"gate_id": "architecture_inventory_verifier", "binding": "receipt", "description": "tools/verify_sidscope_architecture_inventory.py"},
-    {"gate_id": "sdlc_acceptance_verifier", "binding": "receipt", "description": "tools/verify_sidscope_sdlc_acceptance.py"},
-    {"gate_id": "sdlc_hardening_engineering_ready", "binding": "receipt", "description": "tools/verify_sidscope_sdlc_hardening.py --require-engineering-ready"},
-    {"gate_id": "release_profiles_verifier", "binding": "receipt", "description": "tools/verify_sidscope_release_profiles.py"},
-    {"gate_id": "candidate_engineering_ready_clean", "binding": "receipt", "description": "tools/verify_sidscope_2_0_candidate.py --require-engineering-ready --require-clean"},
-    {"gate_id": "resource_package_verifier", "binding": "receipt", "description": "tools/verify_sidscope_resource_package.py without skip options"},
-    {"gate_id": "performance_campaign", "binding": "campaign_receipt", "description": "Three fresh-process groups of the six frozen CPU commands; every group must satisfy the original threshold and the corrected environment policy."},
-    {"gate_id": "linux_matrix", "binding": "linux_receipt", "description": "Linux CPython 3.9, 3.10, 3.11 and 3.12 full suite plus required verifiers, bound to the same source snapshot digest."},
-    {"gate_id": "exact_source_record_v2", "binding": "record_v2", "description": "Detached exact-source record v2 with verify passing for runtime, conformance and evidence-full archives."}
+    {
+      "gate_id": "full_cpu_test_suite",
+      "binding": "catalog_command",
+      "description": "Full CPU pytest suite on the clean candidate with zero failures and every skip reasoned.",
+      "invocation": [
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "allowed_skips": 6,
+      "skip_policy": "The six documented external-input boundary skips; any other skip count is unapproved."
+    },
+    {
+      "gate_id": "release_metadata_verifier",
+      "binding": "catalog_command",
+      "description": "tools/verify_sidscope_release_metadata.py",
+      "invocation": [
+        "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "gate_id": "architecture_inventory_verifier",
+      "binding": "catalog_command",
+      "description": "tools/verify_sidscope_architecture_inventory.py",
+      "invocation": [
+        "tools/verify_sidscope_architecture_inventory.py"
+      ]
+    },
+    {
+      "gate_id": "sdlc_acceptance_verifier",
+      "binding": "catalog_command",
+      "description": "tools/verify_sidscope_sdlc_acceptance.py",
+      "invocation": [
+        "tools/verify_sidscope_sdlc_acceptance.py"
+      ]
+    },
+    {
+      "gate_id": "sdlc_hardening_engineering_ready",
+      "binding": "catalog_command",
+      "description": "tools/verify_sidscope_sdlc_hardening.py --require-engineering-ready",
+      "invocation": [
+        "tools/verify_sidscope_sdlc_hardening.py",
+        "--require-engineering-ready"
+      ]
+    },
+    {
+      "gate_id": "release_profiles_verifier",
+      "binding": "catalog_command",
+      "description": "tools/verify_sidscope_release_profiles.py",
+      "invocation": [
+        "tools/verify_sidscope_release_profiles.py"
+      ]
+    },
+    {
+      "gate_id": "candidate_engineering_ready_clean",
+      "binding": "catalog_command",
+      "description": "tools/verify_sidscope_2_0_candidate.py --require-engineering-ready --require-clean",
+      "invocation": [
+        "tools/verify_sidscope_2_0_candidate.py",
+        "--require-engineering-ready",
+        "--require-clean"
+      ]
+    },
+    {
+      "gate_id": "resource_package_verifier",
+      "binding": "catalog_command",
+      "description": "tools/verify_sidscope_resource_package.py without skip options",
+      "invocation": [
+        "tools/verify_sidscope_resource_package.py"
+      ]
+    },
+    {
+      "gate_id": "performance_campaign",
+      "binding": "campaign_receipt",
+      "description": "Three fresh-process groups of the six frozen CPU commands; every group must satisfy the original threshold and the corrected environment policy."
+    },
+    {
+      "gate_id": "linux_matrix",
+      "binding": "linux_receipt",
+      "description": "Linux CPython 3.9, 3.10, 3.11 and 3.12 full suite plus required verifiers, bound to the same source snapshot digest."
+    },
+    {
+      "gate_id": "exact_source_record_v2",
+      "binding": "record_v2",
+      "description": "Detached exact-source record v2 with verify passing for runtime, conformance and evidence-full archives."
+    }
   ]
 }

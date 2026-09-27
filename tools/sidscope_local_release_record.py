@@ -40,11 +40,37 @@ def source_snapshot():
     return with_content_sha256({"head": git("rev-parse", "HEAD"), "branch": git("branch", "--show-current"), "dirty": bool(git("status", "--porcelain")), "public_files": {name: sha(ROOT / name) for name in files}})
 
 
+def _bound_evidence_files(record_path: Path, record: dict) -> dict:
+    """Every sub-evidence file the record binds, re-hashed in place (R04)."""
+    bound = record.get("artifact_files")
+    if not isinstance(bound, dict) or not bound:
+        raise ReleaseRecordError("record_artifact_files_required",
+                                 "record binds no sub-evidence files; only records from the current builder are accepted")
+    base = record_path.resolve().parent
+    for relative, digest in sorted(bound.items()):
+        relative_path = Path(relative)
+        if relative_path.is_absolute() or ".." in relative_path.parts:
+            raise ReleaseRecordError("record_artifact_files_required", relative)
+        path = base / relative_path
+        if not path.is_file() or sha(path) != digest:
+            raise ReleaseRecordError("record_sub_evidence_missing_or_tampered", relative)
+    required = ["performance.json", "distribution/result.json"]
+    required += [f"test-{index}.log" for index in range(len(record.get("tests") or []))]
+    for row in record.get("archives", []):
+        profile = row["profile"]
+        required += [f"{profile}-smoke.json", f"{profile}-g8.json", f"{profile}-g8.log"]
+    missing = [name for name in required if name not in bound]
+    if missing:
+        raise ReleaseRecordError("record_sub_evidence_missing_or_tampered", ",".join(missing))
+    return bound
+
+
 def verify_record(record_path: Path, *, expected_record_sha256: str, archive_path: Path, profile: str):
     verify_archive_digest(record_path, expected_record_sha256)
     record = load_json(record_path)
     if record.get("format") != "sidscope.local_release_record.v2" or record.get("status") != "pass":
         raise ReleaseRecordError("invalid_release_record", "format/status")
+    _bound_evidence_files(record_path, record)
     candidates = [row for row in record["archives"] if row["profile"] == profile]
     if len(candidates) != 1:
         raise ReleaseRecordError("release_record_profile_mismatch", profile)
@@ -114,7 +140,14 @@ def build_record(output: Path, interpreters=None):
             raise ReleaseRecordError("candidate_g8_failed", log.name)
     if source_snapshot() != before:
         raise ReleaseRecordError("source_changed_during_verification", "rerun on a stable snapshot")
-    record = with_content_sha256({"format": "sidscope.local_release_record.v2", "status": "pass", "source": before, "tests": tests, "performance": performance, "archives": archives, "distribution_matrix_sha256": sha(output / "distribution/result.json"), "build_environment": {"python": platform.python_version(), "platform": platform.platform()}, "release_authorized": False, "independent_user_acceptance": "not_established_by_automated_tests"})
+    # Bind every sub-evidence file by digest so verification can re-hash them
+    # in place instead of trusting embedded copies (R04).
+    artifact_files = {
+        str(path.relative_to(output)): sha(path)
+        for path in sorted(output.rglob("*"))
+        if path.is_file() and path.name != "release-record.json"
+    }
+    record = with_content_sha256({"format": "sidscope.local_release_record.v2", "status": "pass", "source": before, "tests": tests, "performance": performance, "archives": archives, "distribution_matrix_sha256": sha(output / "distribution/result.json"), "build_environment": {"python": platform.python_version(), "platform": platform.platform()}, "release_authorized": False, "independent_user_acceptance": "not_established_by_automated_tests", "artifact_files": artifact_files})
     path = output / "release-record.json"
     path.write_bytes(canonical_json_bytes(record)+b"\n")
     return {"status": "pass", "record_sha256": sha(path), "source_snapshot_sha256": before["content_sha256"], "dirty": before["dirty"]}

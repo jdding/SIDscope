@@ -66,27 +66,31 @@ class SIDScopeReleaseProfileTest(unittest.TestCase):
             resolved["evidence-full"],
         )
 
-    def test_runtime_archive_is_deterministic_and_receipt_bound(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            first_path = Path(tmp) / "first.zip"
-            second_path = Path(tmp) / "second.zip"
-            first = build_archive(manifest_path=MANIFEST, output_path=first_path)
-            second = build_archive(manifest_path=MANIFEST, output_path=second_path)
-            with zipfile.ZipFile(first_path) as archive:
-                names = sorted(archive.namelist())
-                receipt = json.loads(archive.read(PROFILE_RECEIPT_PATH))
-                hashes = {name: hashlib.sha256(archive.read(name)).hexdigest() for name in names if name != PROFILE_RECEIPT_PATH}
+    def test_release_archive_is_deterministic_and_receipt_bound(self) -> None:
+        # E03: independent double-build determinism must hold for every
+        # additive profile, not only the default runtime one.
+        for profile_id in PROFILE_IDS:
+            with self.subTest(profile=profile_id):
+                with tempfile.TemporaryDirectory() as tmp:
+                    first_path = Path(tmp) / "first.zip"
+                    second_path = Path(tmp) / "second.zip"
+                    first = build_archive(manifest_path=MANIFEST, output_path=first_path, profile_id=profile_id)
+                    second = build_archive(manifest_path=MANIFEST, output_path=second_path, profile_id=profile_id)
+                    with zipfile.ZipFile(first_path) as archive:
+                        names = sorted(archive.namelist())
+                        receipt = json.loads(archive.read(PROFILE_RECEIPT_PATH))
+                        hashes = {name: hashlib.sha256(archive.read(name)).hexdigest() for name in names if name != PROFILE_RECEIPT_PATH}
 
-        self.assertEqual(first["profile_id"], "runtime")
-        self.assertEqual(first["archive_sha256"], second["archive_sha256"])
-        self.assertEqual(
-            validate_profile_receipt(
-                receipt,
-                content_paths=[name for name in names if name != PROFILE_RECEIPT_PATH],
-                content_hashes=hashes,
-            ),
-            "runtime",
-        )
+                    self.assertEqual(first["profile_id"], profile_id)
+                    self.assertEqual(first["archive_sha256"], second["archive_sha256"])
+                    self.assertEqual(
+                        validate_profile_receipt(
+                            receipt,
+                            content_paths=[name for name in names if name != PROFILE_RECEIPT_PATH],
+                            content_hashes=hashes,
+                        ),
+                        profile_id,
+                    )
 
     def test_receipt_path_tamper_fails_closed(self) -> None:
         value = {

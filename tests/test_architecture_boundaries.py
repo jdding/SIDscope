@@ -50,8 +50,15 @@ def _resolved_import_names_for(path: Path, package_root: Path, prefix: str) -> s
         if not isinstance(node, ast.ImportFrom):
             continue
         if node.level == 0:
-            if node.module:
-                imports.add(node.module)
+            if not node.module:
+                continue
+            imports.add(node.module)
+            # R06: `from package import submodule` names a real module edge;
+            # recording only the bare package let forbidden edges slip through.
+            if "." not in node.module:
+                for alias in node.names:
+                    if alias.name != "*":
+                        imports.add(f"{node.module}.{alias.name}")
             continue
         remove = node.level - 1
         if remove > len(current_package):
@@ -322,6 +329,17 @@ class ApplicationBoundaryTest(unittest.TestCase):
             tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
             dynamic = []
             for node in ast.walk(tree):
+                if isinstance(node, ast.ImportFrom) and node.module == "importlib" and node.level == 0:
+                    for alias in node.names:
+                        if alias.name in {"import_module", "__import__"}:
+                            # R06: aliasing does not launder the capability —
+                            # `from importlib import import_module as load` is
+                            # itself dynamic loading outside the producer entry.
+                            dynamic.append(f"from importlib import {alias.name}")
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        if alias.name == "__import__" or alias.name == "importlib.import_module":
+                            dynamic.append(f"import {alias.name}")
                 if isinstance(node, ast.Call):
                     function = node.func
                     if isinstance(function, ast.Attribute) and function.attr == "import_module":
@@ -332,6 +350,26 @@ class ApplicationBoundaryTest(unittest.TestCase):
                 failures.append(f"{path.relative_to(ROOT)} performs dynamic module loading {sorted(set(dynamic))}")
         self.assertEqual(failures, [])
         self.assertIn("src/sidscope/pipeline.py", allowed_files)
+
+    def test_sidscope_workflow_layers_stay_acyclic(self) -> None:
+        matrix = matrix_document()["sidscope_modules"]
+        graph = {name: set(rules["allowed_sidscope_imports"]) for name, rules in matrix.items()}
+        visiting: set[str] = set()
+        visited: set[str] = set()
+
+        def visit(node: str) -> None:
+            if node in visiting:
+                self.fail(f"workflow dependency cycle reaches {node}")
+            if node in visited:
+                return
+            visiting.add(node)
+            for dependency in graph.get(node, ()):
+                visit(dependency)
+            visiting.remove(node)
+            visited.add(node)
+
+        for node in graph:
+            visit(node)
 
     def test_violation_fixtures_in_temp_dir_are_detected(self) -> None:
         import tempfile
@@ -345,10 +383,27 @@ class ApplicationBoundaryTest(unittest.TestCase):
             ]
             self.assertEqual(from_core, ["tools.inventored_helper"])
             workflow_like = tmp_root / "workflow_child.py"
-            workflow_like.write_text("from .workflows import run\n\n\ndef run():\n    import tools.secret_entry\n")
+            workflow_like.write_text(
+                "from .workflows import run\n"
+                "from sidinspector import cli\n"
+                "from importlib import import_module as load\n\n\n"
+                "def run():\n"
+                "    import tools.secret_entry\n"
+                "    return load('tools.other_secret')\n"
+            )
             resolved = _resolved_import_names_for(workflow_like, tmp_root, "sidscope")
             self.assertIn("sidscope.workflows", resolved)
             self.assertIn("tools.secret_entry", resolved)
+            # R06: the from-import submodule and the dynamic alias both expose
+            # their forbidden edge now.
+            self.assertIn("sidinspector.cli", resolved)
+            tree = ast.parse(workflow_like.read_text(encoding="utf-8"))
+            alias_imports = [
+                node for node in ast.walk(tree)
+                if isinstance(node, ast.ImportFrom) and node.module == "importlib"
+                and any(alias.name == "import_module" for alias in node.names)
+            ]
+            self.assertEqual(len(alias_imports), 1)
             tool_like = tmp_root / "new_tool.py"
             tool_like.write_text("from tools.sidscope_release_profiles import load_release_profiles\n")
             edges = {
