@@ -32,6 +32,28 @@ passes; `--require-certification-ready` stays blocked until that summary exists.
 No push, tag, public release or TOIS mutation is authorized. Sections below
 keep their original dates and scope.
 
+## 2026-09-27 delivery closeout implementation (W01-W05)
+
+The performance gate now parses the legacy platform string strictly and
+decides comparability from structured identity (OS family/version, machine
+architecture, bitness, platform processor, Python version, implementation,
+processor); only a platform-version-only variance within the frozen threshold
+passes delivery, and medians must be finite positive non-bool values compared
+unrounded. Delivery readiness is aggregated by
+`tools/sidscope_delivery_summary.py` against the frozen
+`docs/reproducibility/sidscope_required_gate_catalog.v1.json` (ADR-0026):
+missing, duplicated, unknown, failed or unapproved-skipped gates fail closed,
+and the verifier recomputes every digest instead of trusting status strings.
+Evidence-registry business judgements live in
+`sidinspector.evidence.operations`; the CLI delegates with unchanged
+parameters, schemas and codes. The pure-data native bridge and observed review
+moved into `sidscope.native_bridge` / `sidscope.observed_review`: installed
+consumers run them without the source tree, the RPG v1 verifier remains an
+explicit evidence-full provider that fails closed as
+`native_verifier_unavailable` when absent, and real RPG/PSID observations
+rebuild byte-identically through the package path (receipts under the ignored
+evidence area, input hashes unchanged, no model rerun).
+
 ## 2026-09-12 whole-project review remediation
 
 Ten newly reproduced review findings are closed in dependency order.

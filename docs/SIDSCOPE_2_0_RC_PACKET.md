@@ -12,7 +12,7 @@ independent_user_actual_use excluded from current gates
 - acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json`;
 - profiles: `docs/reproducibility/sidscope_release_profiles.v1.json`;
 - package boundary: `docs/reproducibility/sidscope_release_candidate_manifest.csv`;
-- decisions: ADR-0015, ADR-0022 through ADR-0025.
+- decisions: ADR-0015, ADR-0022 through ADR-0026.
 
 ## Required local evidence
 
@@ -25,7 +25,8 @@ independent_user_actual_use excluded from current gates
 - regular wheel/sdist and G8 clean-environment installation;
 - a clean local candidate commit, detached exact-source record v2 (including
   its source-bound current performance measurement and delivery disposition),
-  and the same-source delivery summary covering every required gate.
+  the three-group performance campaign, and the same-source delivery summary
+  covering every required gate in the frozen catalog.
 
 ## Current engineering execution
 

@@ -261,6 +261,8 @@ class ApplicationBoundaryTest(unittest.TestCase):
             for name_full in sorted(_resolved_import_names_for(path, SIDSCOPE_ROOT, "sidscope")):
                 parts = name_full.split(".")
                 if parts[0] == "sidinspector":
+                    if len(parts) < 2:
+                        continue  # bare package import carries no module edge
                     target = parts[1]
                     if target in self.LEGACY_MODULES:
                         if target not in rules["allowed_legacy_imports"]:

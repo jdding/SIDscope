@@ -78,6 +78,9 @@ def write_campaign(evidence: Path, *, groups=3, delivery_status="pass"):
         group_path.write_bytes(json.dumps(payload).encode())
         group_rows.append({"group": index, "returncode": 0, "delivery_status": delivery_status,
                            "observation_status": "environment_review_required",
+                           "delivery_gate": {"status": delivery_status,
+                                             "disposition": "platform_version_variance_within_frozen_threshold",
+                                             "median_ratios": {"evaluate": 1.0}},
                            "disposition": "platform_version_variance_within_frozen_threshold",
                            "median_ratios": {"evaluate": 1.0},
                            "environment": {"python": "3.9.6"}, "measurement": payload})

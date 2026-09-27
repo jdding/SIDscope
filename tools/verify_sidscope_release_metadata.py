@@ -145,6 +145,11 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "scope_policy_missing",
             "Rollback",
         ],
+        "docs/adr/0026-delivery-summary-and-application-boundaries.md": [
+            "sidscope.delivery_summary.v1",
+            "native_verifier_unavailable",
+            "Rollback",
+        ],
         "docs/adr/0023-stabilize-adapter-sdk-1-0.md": [
             "Adapter SDK at 1.0",
             "honor declared intervals exactly",

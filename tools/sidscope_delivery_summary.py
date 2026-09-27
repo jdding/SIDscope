@@ -215,7 +215,7 @@ def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: s
     for gate_id in required:
         if gate_id in ("performance_campaign", "linux_matrix", "exact_source_record_v2"):
             continue
-        receipt = receipts[gate_id]
+        receipt = validate_receipt(receipts[gate_id], evidence_dir, expected_source, gate_id)
         gate_entries.append({
             "gate_id": gate_id, "status": "pass",
             "receipt": {"path": f"gates/{gate_id}.json", "sha256": sha(evidence_dir / f"gates/{gate_id}.json")},

@@ -15,6 +15,14 @@
   `certification_ready` 在交付证据齐全前保持 false。
 - `--require-engineering-ready` 通过。N09/N10 暂不排期，也不建设 hosted
   service 或训练框架。
+- 2026-09-27 交付收尾（ADR-0026）：交付摘要工具与冻结 required gate
+  catalog 落地（缺失/重复/未知/失败/未批准 skip 一律 fail closed，验签重算
+  全部哈希）；性能门禁改为结构化环境身份与严格计时校验；Evidence registry
+  业务判断下沉 `sidinspector.evidence.operations`（CLI 委托，参数/模式/错误
+  码不变）；纯数据原生桥接与 observed review 下沉
+  `sidscope.native_bridge` / `sidscope.observed_review`，安装后可执行，
+  RPG v1 历史验证器为显式 evidence-full provider（缺失 typed unavailable），
+  真实 RPG/PSID 观察经包内路径重建一致、输入哈希不变、无模型重跑。
 - RC 过渡绑定同源码交付证据：Linux/Python 3.9-3.12 matrix、三 profile
   archive/smoke、regular install/G8、干净本地 commit、exact-source 回执与
   交付摘要；历史矩阵记录不当作当前通过。推送、tag、GitHub Release 仍需
