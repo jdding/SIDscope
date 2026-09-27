@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from functools import lru_cache
 from importlib import resources
 from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Mapping, Sequence
@@ -356,9 +357,23 @@ def contract_registry_path() -> Path:
     return Path(resources.files("sidinspector.schemas").joinpath("contract_registry.v1.json"))
 
 
+@lru_cache(maxsize=1)
+def _load_bundled_contract_registry() -> ContractRegistry:
+    source = contract_registry_path()
+    value = json.loads(source.read_text(encoding="utf-8"))
+    if not isinstance(value, Mapping):
+        _fail("invalid_type", f"{source} must contain a JSON object")
+    return validate_contract_registry(value, repository_root=None)
+
+
 def load_contract_registry(
     path: Path | None = None, *, repository_root: Path | None = None
 ) -> ContractRegistry:
+    # The bundled registry is an immutable packaged resource; caching its one
+    # validation per process removes repeated scans without weakening any
+    # check. Explicit paths and repository roots always reload fail-closed.
+    if path is None and repository_root is None:
+        return _load_bundled_contract_registry()
     source = path or contract_registry_path()
     value = json.loads(source.read_text(encoding="utf-8"))
     if not isinstance(value, Mapping):
