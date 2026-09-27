@@ -67,7 +67,10 @@ def verify_record(record_path: Path, *, expected_record_sha256: str, archive_pat
 def build_record(output: Path, interpreters=None):
     output = output.resolve()
     if output == ROOT or ROOT in output.parents:
-        raise ReleaseRecordError("record_output_inside_source", "use a separate temporary directory")
+        # The owner-designated ignored evidence area (.local_artifacts/) is
+        # the sanctioned in-tree location; anything else stays outside.
+        if ".local_artifacts" not in output.parts:
+            raise ReleaseRecordError("record_output_inside_source", "use the ignored evidence area or a separate temporary directory")
     output.mkdir(parents=True, exist_ok=False)
     before = source_snapshot()
     tests = []

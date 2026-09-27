@@ -32,7 +32,10 @@ def run(command, cwd, log):
 def verify(output: Path, interpreters: list[str]):
     output = output.resolve()
     if output == ROOT or ROOT in output.parents:
-        raise ValueError("distribution_output_must_be_outside_repository")
+        # The owner-designated ignored evidence area (.local_artifacts/) is
+        # the sanctioned in-tree location; anything else stays outside.
+        if ".local_artifacts" not in output.parts:
+            raise ValueError("distribution_output_must_be_outside_repository")
     output.mkdir(parents=True, exist_ok=False)
     source, consumer = output / "build-source", output / "consumer"
     source.mkdir(); consumer.mkdir()
