@@ -76,7 +76,10 @@ def main() -> int:
     parser.add_argument("--require-delivery", action="store_true")
     args = parser.parse_args()
     if args.output is not None and (args.output.resolve() == ROOT or ROOT in args.output.resolve().parents):
-        parser.error("performance_output_must_be_outside_repository")
+        # The owner-designated ignored evidence area (.local_artifacts/) is
+        # the sanctioned in-tree location for measurements bound to receipts.
+        if ".local_artifacts" not in args.output.resolve().parts:
+            parser.error("performance_output_must_be_outside_repository")
     baseline_bytes = args.baseline.read_bytes()
     baseline = json.loads(baseline_bytes)
     current = measure()
