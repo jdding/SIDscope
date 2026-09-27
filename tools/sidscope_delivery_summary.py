@@ -372,7 +372,7 @@ def main() -> int:
     run = commands.add_parser("run-gate")
     run.add_argument("--gate-id", required=True)
     run.add_argument("--evidence-dir", type=Path, required=True)
-    run.add_argument("command", nargs="+")
+    run.add_argument("gate_command", nargs="+")
     build = commands.add_parser("build")
     build.add_argument("--evidence-dir", type=Path, required=True)
     build.add_argument("--expected-record-sha256", required=True)
@@ -384,7 +384,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         if args.command == "run-gate":
-            result = run_gate(args.gate_id, args.evidence_dir, args.command)
+            result = run_gate(args.gate_id, args.evidence_dir, args.gate_command)
         elif args.command == "build":
             result = build_summary(args.evidence_dir, args.output, expected_record_sha256=args.expected_record_sha256)
         else:
