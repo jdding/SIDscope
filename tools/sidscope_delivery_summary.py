@@ -185,7 +185,11 @@ def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: s
     evidence_dir = evidence_dir.resolve()
     output = output.resolve()
     if output == ROOT or ROOT in output.parents or output == evidence_dir:
-        raise DeliverySummaryError("summary_output_invalid", "write the summary beside the evidence, outside the source tree")
+        # The owner-designated ignored evidence area (.local_artifacts/) is the
+        # sanctioned in-tree location; any other in-tree output is refused.
+        if ".local_artifacts" not in output.parts:
+            raise DeliverySummaryError("summary_output_invalid",
+                                       "write the summary into the ignored evidence area or outside the source tree")
     catalog_info = gate_catalog()
     required = catalog_info["required"]
     expected_source = short_source()
