@@ -232,7 +232,10 @@ def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: s
             "artifact_digests": receipt.get("artifact_digests") or {},
             "skip_dispositions": receipt.get("skip_dispositions") or [],
         })
-    campaign = validate_campaign(load_json(evidence_dir / "performance-campaign.json"), expected_source)
+    campaign_path = evidence_dir / "performance-campaign.json"
+    if not campaign_path.is_file():
+        raise DeliverySummaryError("missing_campaign_receipt", str(campaign_path))
+    campaign = validate_campaign(load_json(campaign_path), expected_source)
     gate_entries.append({"gate_id": "performance_campaign", "status": "pass",
                          "receipt": {"path": "performance-campaign.json", "sha256": sha(evidence_dir / "performance-campaign.json")},
                          "source": campaign["source"],
@@ -243,7 +246,10 @@ def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: s
                          "receipt_digest": sha(evidence_dir / "performance-campaign.json"),
                          "artifact_digests": {f"group-{index}.json": group_sha for index, group_sha in enumerate(campaign.get("group_digests", []))},
                          "skip_dispositions": []})
-    matrix = validate_linux_matrix(load_json(evidence_dir / "linux-matrix.json"), expected_source, evidence_dir)
+    matrix_path = evidence_dir / "linux-matrix.json"
+    if not matrix_path.is_file():
+        raise DeliverySummaryError("missing_linux_receipt", str(matrix_path))
+    matrix = validate_linux_matrix(load_json(matrix_path), expected_source, evidence_dir)
     gate_entries.append({"gate_id": "linux_matrix", "status": "pass",
                          "receipt": {"path": "linux-matrix.json", "sha256": sha(evidence_dir / "linux-matrix.json")},
                          "source": matrix["source"],

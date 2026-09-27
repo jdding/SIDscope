@@ -67,6 +67,7 @@ def run_campaign(output: Path) -> dict:
         groups.append({"group": index, "returncode": returncode,
                        "delivery_status": payload["delivery_gate"]["status"],
                        "observation_status": payload["status"],
+                       "delivery_gate": payload["delivery_gate"],
                        "disposition": payload["delivery_gate"]["disposition"],
                        "median_ratios": payload["delivery_gate"]["median_ratios"],
                        "environment": payload["environment"],
