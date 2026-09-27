@@ -5,7 +5,8 @@ import argparse
 import json
 from pathlib import Path
 
-from sidscope import canonical_json_bytes, validate_public_document, with_content_sha256
+from sidinspector.contracts import canonical_json_bytes, with_content_sha256
+from sidinspector.schemas import validate_public_document
 
 
 def main() -> None:

@@ -8,8 +8,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = ROOT / "src" / "sidinspector"
+SIDSCOPE_ROOT = ROOT / "src" / "sidscope"
+TOOLS_ROOT = ROOT / "tools"
 
 MATRIX_PATH = ROOT / "docs" / "reproducibility" / "sidscope_module_dependencies.json"
+
+
+def matrix_document() -> dict:
+    return json.loads(MATRIX_PATH.read_text(encoding="utf-8"))
+
+
+def application_rules() -> dict:
+    return matrix_document()["application_rules"]
 
 
 def allowed_target_imports() -> dict[str, set[str]]:
@@ -20,17 +30,17 @@ def allowed_target_imports() -> dict[str, set[str]]:
     }
 
 
-def _module_name(path: Path) -> str:
-    relative = path.relative_to(PACKAGE_ROOT).with_suffix("")
+def _module_name_for(path: Path, package_root: Path, prefix: str) -> str:
+    relative = path.relative_to(package_root).with_suffix("")
     parts = list(relative.parts)
     if parts[-1] == "__init__":
         parts.pop()
-    return ".".join(("sidinspector", *parts))
+    return ".".join((prefix, *parts)) if parts else prefix
 
 
-def _resolved_import_names(path: Path) -> set[str]:
+def _resolved_import_names_for(path: Path, package_root: Path, prefix: str) -> set[str]:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-    current = _module_name(path).split(".")
+    current = _module_name_for(path, package_root, prefix).split(".")
     current_package = current if path.name == "__init__.py" else current[:-1]
     imports: set[str] = set()
     for node in ast.walk(tree):
@@ -51,6 +61,14 @@ def _resolved_import_names(path: Path) -> set[str]:
         suffix = node.module.split(".") if node.module else []
         imports.add(".".join((*base, *suffix)))
     return imports
+
+
+def _module_name(path: Path) -> str:
+    return _module_name_for(path, PACKAGE_ROOT, "sidinspector")
+
+
+def _resolved_import_names(path: Path) -> set[str]:
+    return _resolved_import_names_for(path, PACKAGE_ROOT, "sidinspector")
 
 
 def internal_target_imports(path: Path) -> set[str]:
@@ -214,6 +232,137 @@ class ArchitectureBoundaryTest(unittest.TestCase):
                         failures.append(f"{path.relative_to(ROOT)} imports {name}")
 
         self.assertEqual(failures, [])
+
+
+class ApplicationBoundaryTest(unittest.TestCase):
+    """D03: workflow, application and tool edges have explicit directions."""
+
+    LEGACY_MODULES = {"metrics", "churn", "adapters", "conformance", "d7_trace",
+                      "interface", "preflight", "trace_analysis"}
+
+    def _sidscope_module_name(self, path: Path) -> str:
+        relative = path.relative_to(SIDSCOPE_ROOT).with_suffix("")
+        parts = list(relative.parts)
+        if parts[-1] == "__init__":
+            parts.pop()
+        return parts[0] if parts else "__init__"
+
+    def test_sidscope_workflow_modules_follow_recorded_matrix(self) -> None:
+        matrix = matrix_document()["sidscope_modules"]
+        failures: list[str] = []
+        seen: set[str] = set()
+        for path in sorted(SIDSCOPE_ROOT.rglob("*.py")):
+            name = self._sidscope_module_name(path)
+            seen.add(name)
+            rules = matrix.get(name)
+            if rules is None:
+                failures.append(f"{path.relative_to(ROOT)} is missing from sidscope_modules")
+                continue
+            for name_full in sorted(_resolved_import_names_for(path, SIDSCOPE_ROOT, "sidscope")):
+                parts = name_full.split(".")
+                if parts[0] == "sidinspector":
+                    target = parts[1]
+                    if target in self.LEGACY_MODULES:
+                        if target not in rules["allowed_legacy_imports"]:
+                            failures.append(f"{path.relative_to(ROOT)} imports legacy {name_full} not allowed")
+                    elif target not in rules["allowed_core_imports"]:
+                        failures.append(f"{path.relative_to(ROOT)} imports core {name_full} not allowed")
+                elif parts[0] == "sidscope":
+                    target = parts[1] if len(parts) > 1 else "__init__"
+                    if target != name and target not in rules["allowed_sidscope_imports"]:
+                        failures.append(f"{path.relative_to(ROOT)} imports workflow {name_full} not allowed")
+        self.assertEqual(failures, [])
+        self.assertEqual(seen, set(matrix))
+
+    def test_core_never_imports_workflow_cli_or_tools(self) -> None:
+        failures = [
+            f"{path.relative_to(ROOT)} imports {name}"
+            for path in sorted(PACKAGE_ROOT.rglob("*.py"))
+            for name in sorted(_resolved_import_names(path))
+            if name == "sidscope" or name.startswith(("sidscope.", "tools"))
+        ]
+        self.assertEqual(failures, [])
+
+    def test_sidscope_never_imports_tools(self) -> None:
+        failures = [
+            f"{path.relative_to(ROOT)} imports {name}"
+            for path in sorted(SIDSCOPE_ROOT.rglob("*.py"))
+            for name in sorted(_resolved_import_names_for(path, SIDSCOPE_ROOT, "sidscope"))
+            if name == "tools" or name.startswith("tools.")
+        ]
+        self.assertEqual(failures, [])
+
+    def test_tool_to_tool_edges_match_recorded_allowlist(self) -> None:
+        recorded = application_rules()["tool_to_tool_imports"]
+        actual: dict[str, set[str]] = {}
+        for path in sorted(TOOLS_ROOT.glob("*.py")):
+            targets = {
+                name.split(".", 1)[1]
+                for name in _resolved_import_names_for(path, ROOT, "tools")
+                if name == "tools" or name.startswith("tools.")
+            }
+            if targets:
+                actual[path.stem] = targets
+        failures = []
+        for tool, targets in sorted(actual.items()):
+            allowed = set(recorded.get(tool, []))
+            for extra in sorted(targets - allowed):
+                failures.append(f"tools/{tool}.py imports tools.{extra} without a matrix entry")
+        for tool, allowed in sorted(recorded.items()):
+            for stale in sorted(set(allowed) - actual.get(tool, set())):
+                failures.append(f"matrix records stale edge tools/{tool}.py -> tools.{stale}")
+        self.assertEqual(failures, [])
+
+    def test_dynamic_module_loading_only_in_producer_entry(self) -> None:
+        allowed_files = set(application_rules()["dynamic_module_loading_allowed_files"])
+        failures = []
+        for path in sorted((PACKAGE_ROOT.rglob("*.py"))) + sorted(SIDSCOPE_ROOT.rglob("*.py")):
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+            dynamic = []
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Call):
+                    function = node.func
+                    if isinstance(function, ast.Attribute) and function.attr == "import_module":
+                        dynamic.append("importlib.import_module")
+                    elif isinstance(function, ast.Name) and function.id == "__import__":
+                        dynamic.append("__import__")
+            if dynamic and "src/sidscope/pipeline.py" != str(path.relative_to(ROOT)):
+                failures.append(f"{path.relative_to(ROOT)} performs dynamic module loading {sorted(set(dynamic))}")
+        self.assertEqual(failures, [])
+        self.assertIn("src/sidscope/pipeline.py", allowed_files)
+
+    def test_violation_fixtures_in_temp_dir_are_detected(self) -> None:
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_root = Path(tmp)
+            core_like = tmp_root / "suspicious.py"
+            core_like.write_text("import tools.inventored_helper\nfrom sidinspector import contracts\n")
+            from_core = [
+                name for name in _resolved_import_names_for(core_like, tmp_root, "sidinspector")
+                if name.startswith("tools")
+            ]
+            self.assertEqual(from_core, ["tools.inventored_helper"])
+            workflow_like = tmp_root / "workflow_child.py"
+            workflow_like.write_text("from .workflows import run\n\n\ndef run():\n    import tools.secret_entry\n")
+            resolved = _resolved_import_names_for(workflow_like, tmp_root, "sidscope")
+            self.assertIn("sidscope.workflows", resolved)
+            self.assertIn("tools.secret_entry", resolved)
+            tool_like = tmp_root / "new_tool.py"
+            tool_like.write_text("from tools.sidscope_release_profiles import load_release_profiles\n")
+            edges = {
+                name.split(".", 1)[1]
+                for name in _resolved_import_names_for(tool_like, tmp_root, "tools")
+                if name.startswith("tools.")
+            }
+            recorded = application_rules()["tool_to_tool_imports"].get("new_tool", [])
+            self.assertEqual(sorted(edges - set(recorded)), ["sidscope_release_profiles"])
+
+    def test_imported_facades_stay_lightweight_in_this_process(self) -> None:
+        import sys
+        import sidinspector  # noqa: F401
+        import sidscope  # noqa: F401
+        forbidden = [name for name in sys.modules if name.split(".")[0] in {"torch", "transformers", "faiss", "tensorflow", "vllm"}]
+        self.assertEqual(forbidden, [])
 
 
 if __name__ == "__main__":

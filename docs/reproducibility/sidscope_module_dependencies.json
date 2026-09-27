@@ -1,107 +1,353 @@
 {
-  "legacy_compatibility_modules": [
-    "sidinspector.adapters",
-    "sidinspector.conformance",
-    "sidinspector.d7_trace",
-    "sidinspector.interface",
-    "sidinspector.metrics",
-    "sidinspector.preflight",
-    "sidinspector.trace_analysis"
+ "application_rules": {
+  "core_must_not_import": [
+   "sidscope",
+   "tools"
   ],
-  "modules": {
-    "adapters_core": {
-      "allowed_internal_imports": [
-        "adapters_core",
-        "contracts",
-        "sdk",
-        "trace"
-      ],
-      "status": "active"
-    },
-    "cli": {
-      "allowed_internal_imports": [
-        "adapters_core",
-        "cli",
-        "conformance_core",
-        "contracts",
-        "evaluation",
-        "evidence",
-        "sdk",
-        "schemas",
-        "submission",
-        "trace"
-      ],
-      "status": "active"
-    },
-    "conformance_core": {
-      "allowed_internal_imports": [
-        "conformance_core",
-        "contracts",
-        "evaluation",
-        "trace"
-      ],
-      "status": "active"
-    },
-    "contracts": {
-      "allowed_internal_imports": [
-        "contracts"
-      ],
-      "status": "active"
-    },
-    "evaluation": {
-      "allowed_internal_imports": [
-        "contracts",
-        "evaluation",
-        "trace"
-      ],
-      "status": "active"
-    },
-    "evidence": {
-      "allowed_internal_imports": [
-        "conformance_core",
-        "contracts",
-        "evaluation",
-        "evidence"
-      ],
-      "status": "active"
-    },
-    "sdk": {
-      "allowed_internal_imports": [
-        "contracts",
-        "sdk"
-      ],
-      "status": "active"
-    },
-    "schemas": {
-      "allowed_internal_imports": [
-        "conformance_core",
-        "contracts",
-        "evidence",
-        "schemas",
-        "sdk",
-        "submission",
-        "trace"
-      ],
-      "status": "active"
-    },
-    "submission": {
-      "allowed_internal_imports": [
-        "conformance_core",
-        "contracts",
-        "evidence",
-        "submission"
-      ],
-      "status": "active"
-    },
-    "trace": {
-      "allowed_internal_imports": [
-        "contracts",
-        "trace"
-      ],
-      "status": "active"
-    }
+  "dynamic_module_loading_allowed_files": [
+   "src/sidscope/pipeline.py"
+  ],
+  "producer_plugin_entry": "sidscope.pipeline",
+  "sanctioned_dynamic_apis": [
+   "importlib.metadata",
+   "importlib.resources"
+  ],
+  "sidscope_must_not_import": [
+   "tools"
+  ],
+  "tool_to_tool_imports": {
+   "build_sidscope_1_2_legacy_migration_matrix": [
+    "build_sidscope_architecture_inventory"
+   ],
+   "build_sidscope_native_submission": [
+    "project_sidscope_native_export",
+    "verify_sidscope_native_observation"
+   ],
+   "build_sidscope_release_candidate_archive": [
+    "sidscope_release_profiles",
+    "verify_sidscope_resource_package"
+   ],
+   "check_sidscope_current_performance": [
+    "benchmark_sidscope_1_2_cli",
+    "sidscope_performance_policy"
+   ],
+   "export_llada_rec_trained_trace": [
+    "run_diffgrm_resumable_training",
+    "run_llada_rec_resumable_training"
+   ],
+   "export_rpg_trained_trace": [
+    "rpg_non_ar_bridge"
+   ],
+   "finalize_rpg_prepared_dataset": [
+    "rpg_non_ar_bridge"
+   ],
+   "inspect_sidscope_native_export": [
+    "verify_rpg_trained_trace_bundle"
+   ],
+   "project_sidscope_native_export": [
+    "inspect_sidscope_native_export",
+    "verify_rpg_trained_trace_bundle"
+   ],
+   "run_llada_rec_resumable_tokenizer": [
+    "run_diffgrm_resumable_training"
+   ],
+   "run_llada_rec_resumable_training": [
+    "run_diffgrm_resumable_training"
+   ],
+   "run_rpg_resumable_training": [
+    "rpg_non_ar_bridge"
+   ],
+   "run_sidscope_g8_fresh_env_smoke": [
+    "build_sidscope_release_candidate_archive",
+    "sidscope_release_profiles",
+    "smoke_sidscope_release_candidate_archive",
+    "verify_sidscope_resource_package"
+   ],
+   "run_sidscope_observed_review": [
+    "build_sidscope_native_submission",
+    "project_sidscope_native_export"
+   ],
+   "run_sidscope_performance_campaign": [
+    "check_sidscope_current_performance",
+    "sidscope_delivery_summary"
+   ],
+   "run_v1_gate10_independent_utility": [
+    "run_v1_gate2_cross_dataset_utility"
+   ],
+   "run_v1_gate12b_sequence_generator_anchor": [
+    "run_v1_gate10_independent_utility",
+    "run_v1_gate2_cross_dataset_utility"
+   ],
+   "run_v1_gate20_d7_trained_beam": [
+    "run_v1_gate10_independent_utility",
+    "run_v1_gate12b_sequence_generator_anchor"
+   ],
+   "run_v1_gate22_diagnose_repair_reaudit": [
+    "run_v1_gate20_d7_trained_beam"
+   ],
+   "run_v1_gate22_downstream_handoff": [
+    "run_v1_gate20_d7_trained_beam",
+    "run_v1_gate21_tiger_d7_trace"
+   ],
+   "sidscope_delivery_summary": [
+    "sidscope_acceptance_scope",
+    "sidscope_local_release_record"
+   ],
+   "sidscope_local_release_record": [
+    "build_sidscope_release_candidate_archive",
+    "smoke_sidscope_release_candidate_archive",
+    "verify_sidscope_resource_package"
+   ],
+   "smoke_sidscope_release_candidate_archive": [
+    "sidscope_release_profiles"
+   ],
+   "verify_adapter_conformance_assets": [
+    "verify_sidscope_source_inventory"
+   ],
+   "verify_diffgrm_adapter": [
+    "preflight_diffgrm_adapter"
+   ],
+   "verify_llada_rec_trained_trace_bundle": [
+    "export_llada_rec_trained_trace",
+    "run_diffgrm_resumable_training",
+    "run_llada_rec_resumable_training"
+   ],
+   "verify_resot_resource_walkthrough": [
+    "build_resot_resource_walkthrough"
+   ],
+   "verify_rpg_generator_adapter": [
+    "verify_rpg_trained_trace_bundle"
+   ],
+   "verify_rpg_non_ar_bridge": [
+    "rpg_non_ar_bridge",
+    "verify_rpg_trained_trace_bundle"
+   ],
+   "verify_rpg_trained_trace_bundle": [
+    "rpg_non_ar_bridge"
+   ],
+   "verify_sidscope_1_2_legacy_migration_matrix": [
+    "build_sidscope_1_2_legacy_migration_matrix"
+   ],
+   "verify_sidscope_2_0_candidate": [
+    "sidscope_release_profiles",
+    "verify_sidscope_1_7_stabilization",
+    "verify_sidscope_release_metadata",
+    "verify_sidscope_sdlc_hardening"
+   ],
+   "verify_sidscope_architecture_inventory": [
+    "build_sidscope_architecture_inventory"
+   ],
+   "verify_sidscope_native_observation": [
+    "project_sidscope_native_export"
+   ],
+   "verify_sidscope_release_profiles": [
+    "build_sidscope_release_candidate_archive",
+    "sidscope_release_profiles",
+    "verify_sidscope_resource_package"
+   ],
+   "verify_sidscope_runtime_release": [
+    "sidscope_release_profiles"
+   ],
+   "verify_sidscope_sdlc_acceptance": [
+    "sidscope_acceptance_scope"
+   ],
+   "verify_sidscope_sdlc_hardening": [
+    "inspect_sidscope_native_export",
+    "sidscope_acceptance_scope",
+    "sidscope_delivery_summary",
+    "verify_sidscope_sdlc_acceptance"
+   ]
   },
-  "schema": "sidscope.module_dependency_matrix.v1",
-  "status": "accepted",
-  "target_package": "sidinspector"
+  "tools_may_import": [
+   "sidinspector",
+   "sidscope"
+  ]
+ },
+ "legacy_compatibility_modules": [
+  "sidinspector.adapters",
+  "sidinspector.conformance",
+  "sidinspector.d7_trace",
+  "sidinspector.interface",
+  "sidinspector.metrics",
+  "sidinspector.preflight",
+  "sidinspector.trace_analysis"
+ ],
+ "modules": {
+  "adapters_core": {
+   "allowed_internal_imports": [
+    "adapters_core",
+    "contracts",
+    "sdk",
+    "trace"
+   ],
+   "status": "active"
+  },
+  "cli": {
+   "allowed_internal_imports": [
+    "adapters_core",
+    "cli",
+    "conformance_core",
+    "contracts",
+    "evaluation",
+    "evidence",
+    "sdk",
+    "schemas",
+    "submission",
+    "trace"
+   ],
+   "status": "active"
+  },
+  "conformance_core": {
+   "allowed_internal_imports": [
+    "conformance_core",
+    "contracts",
+    "evaluation",
+    "trace"
+   ],
+   "status": "active"
+  },
+  "contracts": {
+   "allowed_internal_imports": [
+    "contracts"
+   ],
+   "status": "active"
+  },
+  "evaluation": {
+   "allowed_internal_imports": [
+    "contracts",
+    "evaluation",
+    "trace"
+   ],
+   "status": "active"
+  },
+  "evidence": {
+   "allowed_internal_imports": [
+    "conformance_core",
+    "contracts",
+    "evaluation",
+    "evidence"
+   ],
+   "status": "active"
+  },
+  "schemas": {
+   "allowed_internal_imports": [
+    "conformance_core",
+    "contracts",
+    "evidence",
+    "schemas",
+    "sdk",
+    "submission",
+    "trace"
+   ],
+   "status": "active"
+  },
+  "sdk": {
+   "allowed_internal_imports": [
+    "contracts",
+    "sdk"
+   ],
+   "status": "active"
+  },
+  "submission": {
+   "allowed_internal_imports": [
+    "conformance_core",
+    "contracts",
+    "evidence",
+    "submission"
+   ],
+   "status": "active"
+  },
+  "trace": {
+   "allowed_internal_imports": [
+    "contracts",
+    "trace"
+   ],
+   "status": "active"
+  }
+ },
+ "schema": "sidscope.module_dependency_matrix.v1",
+ "sidscope_modules": {
+  "__init__": {
+   "allowed_core_imports": [
+    "adapters_core",
+    "contracts",
+    "evidence",
+    "schemas",
+    "sdk",
+    "submission",
+    "trace",
+    "version"
+   ],
+   "allowed_legacy_imports": [],
+   "allowed_sidscope_imports": []
+  },
+  "diagnostic_review": {
+   "allowed_core_imports": [
+    "contracts",
+    "evidence"
+   ],
+   "allowed_legacy_imports": [],
+   "allowed_sidscope_imports": [
+    "regression",
+    "workflows"
+   ]
+  },
+  "mapping_check": {
+   "allowed_core_imports": [
+    "contracts"
+   ],
+   "allowed_legacy_imports": [
+    "metrics"
+   ],
+   "allowed_sidscope_imports": [
+    "workflows"
+   ]
+  },
+  "pipeline": {
+   "allowed_core_imports": [
+    "contracts",
+    "evidence",
+    "sdk",
+    "submission"
+   ],
+   "allowed_legacy_imports": [],
+   "allowed_sidscope_imports": [
+    "workflows"
+   ]
+  },
+  "refresh": {
+   "allowed_core_imports": [
+    "contracts",
+    "evidence"
+   ],
+   "allowed_legacy_imports": [
+    "churn"
+   ],
+   "allowed_sidscope_imports": [
+    "regression",
+    "workflows"
+   ]
+  },
+  "regression": {
+   "allowed_core_imports": [
+    "contracts",
+    "evidence"
+   ],
+   "allowed_legacy_imports": [],
+   "allowed_sidscope_imports": [
+    "workflows"
+   ]
+  },
+  "workflows": {
+   "allowed_core_imports": [
+    "contracts"
+   ],
+   "allowed_legacy_imports": [
+    "metrics"
+   ],
+   "allowed_sidscope_imports": []
+  }
+ },
+ "status": "accepted",
+ "target_package": "sidinspector"
 }
