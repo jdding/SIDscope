@@ -29,9 +29,14 @@ def test_cli_blocks_certification_without_delivery_evidence(capsys):
     assert main(["--require-certification-ready"]) == 2
     result = json.loads(capsys.readouterr().out)
     assert result["status"] == "blocked"
-    assert result["pending_acceptance"] == []
-    assert result["excluded_acceptance"] == ["independent_user_actual_use"]
+    assert result["code"] == "delivery_summary_required"
     assert result["delivery_ready"] is False
+    assert result["release_authorized"] is False
+
+
+SUMMARY_ARGS = ["--delivery-summary", "delivery-summary.json",
+                "--expected-summary-sha256", "0" * 64,
+                "--delivery-evidence-dir", "evidence"]
 
 
 def test_full_delivery_evidence_unlocks_the_certification_transition(monkeypatch, capsys):
@@ -39,9 +44,9 @@ def test_full_delivery_evidence_unlocks_the_certification_transition(monkeypatch
     state = gate.verify_sdlc()
     state.update(unresolved_certification_blockers=[], pending_acceptance=[],
                  implementation_ready=True, delivery_ready=True, certification_ready=True)
-    monkeypatch.setattr(gate, "verify_sdlc", lambda: state)
+    monkeypatch.setattr(gate, "verify_sdlc", lambda delivery=None: state)
     monkeypatch.setattr(gate, "verify_release_metadata", lambda: {"package_version": "1.7.0.dev0"})
-    assert gate.main(["--require-certification-ready"]) == 0
+    assert gate.main(["--require-certification-ready"] + SUMMARY_ARGS) == 0
     result = json.loads(capsys.readouterr().out)
     assert result["certification_ready"] is True and result["release_authorized"] is False
 
@@ -52,9 +57,9 @@ def test_recorded_actual_use_transition_path_stays_executable(monkeypatch, capsy
     state = gate.verify_sdlc()
     state.update(unresolved_certification_blockers=[], pending_acceptance=[],
                  implementation_ready=True, delivery_ready=True, certification_ready=True)
-    monkeypatch.setattr(gate, "verify_sdlc", lambda: state)
+    monkeypatch.setattr(gate, "verify_sdlc", lambda delivery=None: state)
     monkeypatch.setattr(gate, "verify_release_metadata", lambda: {"package_version": version})
-    assert gate.main(["--require-certification-ready"]) == 0
+    assert gate.main(["--require-certification-ready"] + SUMMARY_ARGS) == 0
     result = json.loads(capsys.readouterr().out)
     assert result["certification_ready"] is True and result["release_authorized"] is False
 
@@ -71,9 +76,9 @@ def test_candidate_transition_stays_fail_closed(monkeypatch, capsys, version, un
     certification_ready = delivery_ready and not unresolved
     state.update(unresolved_certification_blockers=unresolved, delivery_ready=delivery_ready,
                  implementation_ready=True, certification_ready=certification_ready)
-    monkeypatch.setattr(gate, "verify_sdlc", lambda: state)
+    monkeypatch.setattr(gate, "verify_sdlc", lambda delivery=None: state)
     monkeypatch.setattr(gate, "verify_release_metadata", lambda: {"package_version": version})
-    assert gate.main(["--require-certification-ready"]) == 2
+    assert gate.main(["--require-certification-ready"] + SUMMARY_ARGS) == 2
     assert json.loads(capsys.readouterr().out)["status"] in {"blocked", "fail"}
 
 
@@ -82,9 +87,9 @@ def test_inconsistent_certification_state_fails_closed(monkeypatch, capsys):
     state = gate.verify_sdlc()
     state.update(unresolved_certification_blockers=[], pending_acceptance=[],
                  implementation_ready=True, delivery_ready=False, certification_ready=True)
-    monkeypatch.setattr(gate, "verify_sdlc", lambda: state)
+    monkeypatch.setattr(gate, "verify_sdlc", lambda delivery=None: state)
     monkeypatch.setattr(gate, "verify_release_metadata", lambda: {"package_version": "1.7.0.dev0"})
-    assert gate.main(["--require-certification-ready"]) == 2
+    assert gate.main(["--require-certification-ready"] + SUMMARY_ARGS) == 2
     result = json.loads(capsys.readouterr().out)
     assert result["status"] == "fail"
 
@@ -93,7 +98,7 @@ def test_unexpected_scope_exclusion_fails_closed(monkeypatch, capsys):
     from tools import verify_sidscope_2_0_candidate as gate
     state = gate.verify_sdlc()
     state.update(excluded_acceptance=["independent_user_actual_use", "recomputed_admission_chain"])
-    monkeypatch.setattr(gate, "verify_sdlc", lambda: state)
+    monkeypatch.setattr(gate, "verify_sdlc", lambda delivery=None: state)
     monkeypatch.setattr(gate, "verify_release_metadata", lambda: {"package_version": "1.7.0.dev0"})
     assert gate.main([]) == 2
     result = json.loads(capsys.readouterr().out)

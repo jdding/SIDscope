@@ -665,7 +665,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 233,
+  "schema_count": 238,
   "schemas": [
     {
       "artifact_paths": [],
@@ -1678,6 +1678,19 @@
         "tests/test_submission_ecosystem.py",
         "tools/verify_sidscope_release_metadata.py"
       ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "schema_id": "sidscope.delivery_summary.v1",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [
@@ -2720,6 +2733,19 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "schema_id": "sidscope.gate_receipt.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
         "tools/verify_sidscope_source_inventory.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
@@ -3115,6 +3141,19 @@
         "src/sidinspector/submission/indexes.py"
       ],
       "schema_id": "sidscope.legacy_status_parity.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "schema_id": "sidscope.linux_matrix_receipt.v1",
       "verifier_paths": []
     },
     {
@@ -3746,6 +3785,21 @@
       "verifier_paths": []
     },
     {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/run_sidscope_performance_campaign.py",
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/run_sidscope_performance_campaign.py",
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "schema_id": "sidscope.performance_campaign.v1",
+      "verifier_paths": []
+    },
+    {
       "artifact_paths": [
         "HANDOFF.md",
         "docs/COMPATIBILITY.md",
@@ -4127,6 +4181,22 @@
       "verifier_paths": [
         "tools/verify_sidscope_release_profiles.py"
       ]
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_required_gate_catalog.v1.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_required_gate_catalog.v1.json",
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [
+        "tools/sidscope_delivery_summary.py"
+      ],
+      "schema_id": "sidscope.required_gate_catalog.v1",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [

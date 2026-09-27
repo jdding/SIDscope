@@ -21,10 +21,10 @@ from tools.verify_sidscope_release_metadata import verify_release_metadata
 from tools.verify_sidscope_sdlc_hardening import verify as verify_sdlc
 
 
-def verify(*, require_clean: bool = False) -> dict:
+def verify(*, require_clean: bool = False, delivery: dict | None = None) -> dict:
     surface = verify_surface()
     metadata = verify_release_metadata()
-    sdlc = verify_sdlc()
+    sdlc = verify_sdlc(delivery)
     default_profile, profiles = load_release_profiles()
     version = metadata["package_version"]
     stage = "development" if version == "1.7.0.dev0" else "rc" if re.fullmatch(r"2\.0\.0rc[1-9][0-9]*", version) else None
@@ -94,9 +94,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--require-engineering-ready", action="store_true")
     parser.add_argument("--require-certification-ready", action="store_true")
     parser.add_argument("--require-clean", action="store_true")
+    parser.add_argument("--delivery-summary", type=Path, default=None)
+    parser.add_argument("--expected-summary-sha256", default=None)
+    parser.add_argument("--delivery-evidence-dir", type=Path, default=None)
     args = parser.parse_args(argv)
+    if args.delivery_summary or args.expected_summary_sha256 or args.delivery_evidence_dir:
+        if not (args.delivery_summary and args.expected_summary_sha256 and args.delivery_evidence_dir):
+            parser.error("delivery summary verification needs --delivery-summary, --expected-summary-sha256 and --delivery-evidence-dir together")
+    if args.require_certification_ready and not args.delivery_summary:
+        print(json.dumps({"status": "blocked", "code": "delivery_summary_required",
+                          "detail": "certification readiness requires the final delivery summary, its trusted SHA-256 and evidence directory",
+                          "delivery_ready": False, "certification_ready": False,
+                          "release_authorized": False}, sort_keys=True))
+        return 2
+    delivery = None
+    if args.delivery_summary:
+        delivery = {"summary": args.delivery_summary, "expected_summary_sha256": args.expected_summary_sha256,
+                    "evidence_dir": args.delivery_evidence_dir}
     try:
-        result = verify(require_clean=args.require_clean)
+        result = verify(require_clean=args.require_clean, delivery=delivery)
     except (AssertionError, OSError, ValueError) as error:
         print(json.dumps({"status": "fail", "code": type(error).__name__, "detail": str(error)}, sort_keys=True))
         return 2

@@ -27,7 +27,7 @@ from tools.sidscope_acceptance_scope import (
 from tools.verify_sidscope_sdlc_acceptance import user_acceptance_status
 
 
-def verify() -> dict:
+def verify(delivery: dict | None = None) -> dict:
     ledger = ROOT / "docs/reproducibility/sidscope_sdlc_requirements.csv"
     with ledger.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
@@ -86,6 +86,22 @@ def verify() -> dict:
     # certification claim would not be bound to executed evidence.
     delivery_ready = False
     delivery_ready_reason = "current-source delivery summary with required gate receipts is not present"
+    if delivery is not None:
+        from tools.sidscope_delivery_summary import (
+            DeliverySummaryError,
+            short_source,
+            source_matches,
+            verify_summary,
+        )
+        try:
+            verified = verify_summary(delivery["summary"],
+                                      expected_summary_sha256=delivery["expected_summary_sha256"],
+                                      evidence_dir=delivery["evidence_dir"])
+            source_matches(short_source(), verified["source"], "delivery summary")
+            delivery_ready = True
+            delivery_ready_reason = "verified same-source delivery summary"
+        except (DeliverySummaryError, OSError, ValueError) as error:
+            delivery_ready_reason = f"{getattr(error, 'code', type(error).__name__)}: {error}"
     certification_ready = implementation_ready and delivery_ready and not unresolved and not pending_acceptance
     return {"status": "pass", "scope": "recomputed_admission_comparison_and_real_native_consumers",
             "positive_admission": "diagnostics_verified", "real_native_consumers": native,
@@ -109,8 +125,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--require-engineering-ready", action="store_true")
+    parser.add_argument("--delivery-summary", type=Path, default=None)
+    parser.add_argument("--expected-summary-sha256", default=None)
+    parser.add_argument("--delivery-evidence-dir", type=Path, default=None)
     args = parser.parse_args()
-    result = verify()
+    delivery = None
+    if args.delivery_summary or args.expected_summary_sha256 or args.delivery_evidence_dir:
+        if not (args.delivery_summary and args.expected_summary_sha256 and args.delivery_evidence_dir):
+            parser.error("delivery summary verification needs --delivery-summary, --expected-summary-sha256 and --delivery-evidence-dir together")
+        delivery = {"summary": args.delivery_summary, "expected_summary_sha256": args.expected_summary_sha256,
+                    "evidence_dir": args.delivery_evidence_dir}
+    result = verify(delivery)
     if (args.require_ready and not result["certification_ready"]) or (args.require_engineering_ready and not result["engineering_ready"]):
         result["status"] = "blocked"
     print(json.dumps(result, indent=2, sort_keys=True))
