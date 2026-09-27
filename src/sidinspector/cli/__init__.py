@@ -45,8 +45,14 @@ from sidinspector.evidence import (
     ObjectStore,
     build_evidence_bundle,
     build_evidence_index,
+    compare_active_bundles,
     compare_evidence_bundles,
     load_evidence_bundle,
+    parse_supplied_artifacts,
+    quarantine_bundle,
+    rebuild_registry,
+    register_bundles,
+    supersede_bundle,
 )
 from sidinspector.sdk import ADAPTER_SDK_VERSION, AdapterSDKError, load_adapter_capabilities
 from sidinspector.submission import (
@@ -688,73 +694,15 @@ def _evidence_bundle(args: argparse.Namespace) -> int:
         return 2
 
 
-def _public_artifacts(values: Sequence[str]) -> dict[str, Path]:
-    result: dict[str, Path] = {}
-    for value in values:
-        digest, separator, raw_path = value.partition("=")
-        if not separator or not digest or not raw_path:
-            raise EvidenceBundleValidationError(
-                "invalid_artifact_argument", "expected SHA256=PATH"
-            )
-        if digest in result:
-            raise EvidenceBundleValidationError("duplicate_artifact_argument", digest)
-        result[digest] = Path(raw_path)
-    return result
-
-
-def _order_bundles_for_admission(store: ObjectStore, bundles: Sequence[Any]) -> list[Any]:
-    available = {bundle.content_sha256 for bundle in store.iter_bundles()}
-    remaining = {bundle.content_sha256: bundle for bundle in bundles}
-    ordered: list[Any] = []
-    while remaining:
-        ready = sorted(
-            digest
-            for digest, bundle in remaining.items()
-            if set(bundle.supersedes) <= available
-        )
-        if not ready:
-            referenced = {
-                predecessor
-                for bundle in remaining.values()
-                for predecessor in bundle.supersedes
-            }
-            missing = sorted(referenced - available - set(remaining))
-            code = "missing_superseded_bundle" if missing else "supersession_cycle"
-            raise EvidenceBundleValidationError(code, ",".join(missing or sorted(remaining)))
-        for digest in ready:
-            ordered.append(remaining.pop(digest))
-            available.add(digest)
-    return ordered
-
-
 def _registry_command(args: argparse.Namespace) -> int:
     store = ObjectStore(args.store)
     registry = EvidenceRegistry(args.store / "registry.sqlite3")
     try:
         command = args.registry_command
         if command in {"add", "import"}:
-            supplied = _public_artifacts(args.artifact)
+            supplied = parse_supplied_artifacts(args.artifact)
             bundles = [load_evidence_bundle(path) for path in args.bundle]
-            used_artifacts: set[str] = set()
-            for bundle in _order_bundles_for_admission(store, bundles):
-                embedded = {
-                    str(row["object_sha256"])
-                    for row in bundle.artifacts
-                    if row["availability"] == "embedded_public"
-                }
-                selected = {digest: path for digest, path in supplied.items() if digest in embedded}
-                used_artifacts.update(selected)
-                store.admit_bundle(bundle, selected)
-            unused = sorted(set(supplied) - used_artifacts)
-            if unused:
-                raise EvidenceBundleValidationError(
-                    "unexpected_public_artifact", ",".join(unused)
-                )
-            if command == "import":
-                registry.import_bundles(bundles)
-            else:
-                for bundle in bundles:
-                    registry.add(bundle)
+            register_bundles(store, registry, bundles, supplied, operation=command)
             result = {
                 "schema": "sidscope.evidence_registry_operation.v1",
                 "status": "pass",
@@ -777,38 +725,18 @@ def _registry_command(args: argparse.Namespace) -> int:
                 "failure": None,
             }
         elif command == "compare":
-            def active_bundle(digest):
-                projection = registry.show(digest, require_active=True)
-                # CAS is authoritative even if an interrupted quarantine left
-                # the disposable projection stale or the bundle was re-added.
-                if store.quarantine_path(digest).exists():
-                    raise EvidenceRegistryError("bundle_quarantined", digest)
-                document = store.verify_bundle(digest).to_dict()
-                if projection != document:
-                    raise EvidenceRegistryError("registry_projection_mismatch", digest)
-                return document
-            left_bundle, right_bundle = active_bundle(args.left), active_bundle(args.right)
-            def verification_objects(bundle):
-                from sidinspector.contracts import bounded_bytes
-                return {row["object_sha256"]: bounded_bytes(store.object_path(row["object_sha256"])) for row in bundle["artifacts"] if row["availability"] == "embedded_public" and row["role"] in {"evaluation_protocol", "selection", "trace", "diagnostics"}}
-            result = compare_evidence_bundles(
-                left_bundle, right_bundle,
-                left_objects=verification_objects(left_bundle), right_objects=verification_objects(right_bundle),
-            )
+            result = compare_active_bundles(store, registry, args.left, args.right)
         elif command == "supersede":
             bundle = load_evidence_bundle(args.bundle)
-            if args.prior not in bundle.supersedes:
-                raise EvidenceRegistryError(
-                    "missing_supersession_declaration", args.prior
-                )
-            store.admit_bundle(bundle, _public_artifacts(args.artifact))
-            registry.add(bundle)
+            supersession = supersede_bundle(
+                store, registry, bundle, args.prior, parse_supplied_artifacts(args.artifact)
+            )
             result = {
                 "schema": "sidscope.evidence_registry_operation.v1",
                 "status": "pass",
                 "operation": "supersede",
-                "prior_bundle_sha256": args.prior,
-                "replacement_bundle_sha256": bundle.content_sha256,
+                "prior_bundle_sha256": supersession["prior_bundle_sha256"],
+                "replacement_bundle_sha256": supersession["replacement_bundle_sha256"],
                 "failure": None,
             }
         elif command == "export":
@@ -817,34 +745,17 @@ def _registry_command(args: argparse.Namespace) -> int:
             print(json.dumps(result, indent=2, sort_keys=True))
             return 0
         elif command == "rebuild":
-            bundles = list(store.iter_bundles())
-            quarantined = list(store.iter_quarantined_bundles())
-            registry.rebuild([*bundles, *quarantined])
-            for bundle in quarantined:
-                registry.quarantine(bundle.content_sha256, reason="object_store_quarantine")
+            counts = rebuild_registry(store, registry)
             result = {
                 "schema": "sidscope.evidence_registry_operation.v1",
                 "status": "pass",
                 "operation": "rebuild",
-                "bundle_count": len(bundles) + len(quarantined),
-                "quarantined_bundle_count": len(quarantined),
+                "bundle_count": counts["bundle_count"],
+                "quarantined_bundle_count": counts["quarantined_bundle_count"],
                 "failure": None,
             }
         elif command == "quarantine":
-            if not args.reason.strip():
-                raise EvidenceRegistryError("invalid_quarantine_reason", "reason is empty")
-            registry.show(args.sha256)
-            store.quarantine_bundle(args.sha256)
-            import sqlite3
-            try:
-                registry.quarantine(args.sha256, reason=args.reason)
-            except (sqlite3.Error, OSError, EvidenceRegistryError) as exc:
-                # Do not reactivate suspect evidence on a projection failure.
-                # Rebuild derives the quarantine state from the durable CAS.
-                raise EvidenceRegistryError(
-                    "quarantine_index_update_failed",
-                    "CAS remains quarantined; run registry rebuild to reconcile the index",
-                ) from exc
+            quarantine_bundle(store, registry, args.sha256, args.reason)
             result = {
                 "schema": "sidscope.evidence_registry_operation.v1",
                 "status": "pass",

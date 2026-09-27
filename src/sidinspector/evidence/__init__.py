@@ -32,6 +32,16 @@ from .comparison import (
     validate_evidence_comparison,
 )
 from .object_store import ObjectStore
+from .operations import (
+    active_bundle_document,
+    compare_active_bundles,
+    order_bundles_for_admission,
+    parse_supplied_artifacts,
+    quarantine_bundle,
+    rebuild_registry,
+    register_bundles,
+    supersede_bundle,
+)
 from .recomputation import recompute_bundle, result_card_from_diagnostic
 from .registry import EvidenceRegistry, EvidenceRegistryError
 
@@ -118,11 +128,19 @@ __all__ = [
     "EvidenceRegistry",
     "EvidenceRegistryError",
     "ObjectStore",
+    "active_bundle_document",
     "build_evidence_bundle",
     "build_evidence_index",
+    "compare_active_bundles",
     "compare_evidence_bundles",
     "load_evidence_bundle",
+    "order_bundles_for_admission",
+    "parse_supplied_artifacts",
+    "quarantine_bundle",
+    "rebuild_registry",
+    "register_bundles",
     "scan_evidence_content",
+    "supersede_bundle",
     "validate_evidence_bundle",
     "validate_evidence_comparison",
 ]
