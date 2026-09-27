@@ -9,23 +9,36 @@ from pathlib import Path
 
 try:
     from tools.benchmark_sidscope_1_2_cli import ROOT, OUTPUT, measure
+    from tools.sidscope_performance_policy import (
+        PerformancePolicyError,
+        environment_comparability,
+        explain_environment_extras,
+        measurement_validity,
+        median_ratios,
+        threshold_value,
+    )
 except ModuleNotFoundError:
     from benchmark_sidscope_1_2_cli import ROOT, OUTPUT, measure
+    from sidscope_performance_policy import (
+        PerformancePolicyError,
+        environment_comparability,
+        explain_environment_extras,
+        measurement_validity,
+        median_ratios,
+        threshold_value,
+    )
 from sidinspector.version import PRODUCT_VERSION
 
 
 def classify(baseline: dict, current: dict) -> tuple[str, dict]:
-    if set(baseline["commands"]) != set(current["commands"]):
-        return "workload_review_required", {}
-    ratios = {}
-    for name, sample in current["commands"].items():
-        before = baseline["commands"][name]["median_ms"]
-        after = sample["median_ms"]
-        if before <= 0 or after <= 0:
-            return "invalid_measurement", {}
-        ratios[name] = round(after / before, 4)
-    threshold = 1 + baseline["policy"]["review_threshold_percent"] / 100
-    if any(value > threshold for value in ratios.values()):
+    try:
+        measurement_validity(baseline.get("commands"), current.get("commands"))
+        ratios = median_ratios(baseline["commands"], current["commands"])
+    except PerformancePolicyError as error:
+        if error.code == "workload_command_set_mismatch":
+            return "workload_review_required", {}
+        return "invalid_measurement", {}
+    if any(ratio > threshold_value(baseline["policy"]) for ratio in ratios.values()):
         return "performance_review_required", ratios
     state = "environment_review_required" if baseline["environment"] != current["environment"] else "pass"
     return state, ratios
@@ -34,16 +47,26 @@ def classify(baseline: dict, current: dict) -> tuple[str, dict]:
 def delivery_gate(baseline: dict, current: dict) -> dict:
     """Apply a narrow, deterministic delivery policy without rewriting the baseline."""
     observation_status, ratios = classify(baseline, current)
-    changed = sorted(key for key in set(baseline["environment"]) | set(current["environment"])
-                     if baseline["environment"].get(key) != current["environment"].get(key))
-    disposition = "same_environment_within_threshold" if observation_status == "pass" else None
-    if observation_status == "environment_review_required" and changed == ["platform"] and ratios:
-        disposition = "platform_version_variance_within_frozen_threshold"
+    threshold = threshold_value(baseline["policy"])
+    within_threshold = bool(ratios) and all(ratio <= threshold for ratio in ratios.values())
+    detail = environment_comparability(baseline.get("environment"), current.get("environment"))
+    detail.update(explain_environment_extras(baseline.get("environment"), current.get("environment")))
+    disposition = None
+    if observation_status == "pass" and detail.get("code") == "same_environment":
+        disposition = "same_environment_within_threshold"
+    elif observation_status == "environment_review_required":
+        if not detail.get("comparable"):
+            disposition = None
+        elif detail["code"] == "platform_version_only" and within_threshold:
+            disposition = "platform_version_variance_within_frozen_threshold"
     status = "pass" if disposition is not None else "blocked"
     return {"status": status, "observation_status": observation_status,
-            "disposition": disposition, "changed_environment_fields": changed,
+            "disposition": disposition,
+            "environment_comparison": {key: value for key, value in detail.items() if key != "comparable"},
+            "comparison_code": detail.get("code"),
+            "changed_environment_fields": detail.get("changed_environment_fields", []),
             "median_ratios": ratios,
-            "policy": "Only a platform-version-only variance may be accepted when every frozen workload remains within threshold."}
+            "policy": "Only a platform-version-only variance on identical OS family, architecture, bitness, Python version, implementation and processor may be accepted, and only when every frozen workload remains within threshold; unparseable or incomplete identity blocks."}
 
 
 def main() -> int:
