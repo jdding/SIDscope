@@ -55,7 +55,19 @@ def _bound_evidence_files(record_path: Path, record: dict) -> dict:
         if not path.is_file() or sha(path) != digest:
             raise ReleaseRecordError("record_sub_evidence_missing_or_tampered", relative)
     required = ["performance.json", "distribution/result.json"]
-    required += [f"test-{index}.log" for index in range(len(record.get("tests") or []))]
+    # Each tests row binds one log: base commands to test-N.log, G8 rows to
+    # their per-profile G8 log. The recorded output digest must be the bound
+    # file's actual digest, so rows cannot be satisfied by arbitrary bytes.
+    for index, row in enumerate(record.get("tests") or []):
+        command = row.get("command") or []
+        if command[:1] == ["G8"]:
+            log_name = f"{command[1]}-g8.log"
+        else:
+            log_name = f"test-{index}.log"
+        required.append(log_name)
+        if bound.get(log_name) != row.get("output_sha256"):
+            raise ReleaseRecordError("record_sub_evidence_missing_or_tampered",
+                                     f"{log_name}: test output digest not bound")
     for row in record.get("archives", []):
         profile = row["profile"]
         required += [f"{profile}-smoke.json", f"{profile}-g8.json", f"{profile}-g8.log"]

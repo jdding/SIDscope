@@ -57,6 +57,7 @@ def test_record_without_bound_passing_performance_is_rejected(tmp_path, monkeypa
         path.write_bytes(b"synthetic")
         bound[name] = _hashlib.sha256(path.read_bytes()).hexdigest()
     candidate["artifact_files"] = bound
+    candidate["tests"][0]["output_sha256"] = bound["test-0.log"]
     with pytest.raises(ReleaseRecordError) as error:
         verify_record(tmp_path/"record.json",expected_record_sha256="c"*64,archive_path=tmp_path/"runtime.zip",profile="runtime")
     assert error.value.code == "unbound_performance_evidence"
