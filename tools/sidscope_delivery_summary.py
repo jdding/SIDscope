@@ -318,8 +318,10 @@ def validate_linux_matrix(matrix: dict[str, Any], expected_source: dict[str, Any
 def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: str) -> dict[str, Any]:
     evidence_dir = evidence_dir.resolve()
     output = output.resolve()
-    if output == evidence_dir or evidence_dir in output.parents:
-        raise DeliverySummaryError("summary_output_invalid", "the summary must not alias the evidence tree")
+    if output == evidence_dir:
+        raise DeliverySummaryError("summary_output_invalid", "the summary must not replace the evidence directory")
+    if output.name in {"release-record.json", "performance-campaign.json", "linux-matrix.json"}:
+        raise DeliverySummaryError("summary_output_invalid", f"the summary must not replace bound evidence: {output.name}")
     catalog_info = gate_catalog()
     required = catalog_info["required"]
     expected_source = short_source()
