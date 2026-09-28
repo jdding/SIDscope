@@ -10,6 +10,8 @@ of those would let verification outputs change the verified input.
 from __future__ import annotations
 
 import hashlib
+import os
+import subprocess
 from pathlib import Path
 
 EXCLUDED_DIR_NAMES = {".git", ".local_artifacts", "__pycache__", ".pytest_cache",
@@ -33,7 +35,18 @@ def tree_manifest_digest(root: Path) -> str:
     """Stable content manifest of the controlled source tree under root."""
     root = Path(root)
     digest = hashlib.sha256()
-    for path in sorted(p for p in root.rglob("*") if p.is_file()):
+    if (root / ".git").exists():
+        # Hash live tracked bytes, not HEAD bytes: edits must change the digest.
+        # Git supplies the same file set in a worktree and a standalone clone.
+        names = subprocess.check_output(["git", "ls-files", "-z"], cwd=root)
+        paths = [root / os.fsdecode(name) for name in names.split(b"\0") if name]
+    else:
+        paths = []
+        for directory, dirs, files in os.walk(root):
+            dirs[:] = [name for name in dirs if name not in EXCLUDED_DIR_NAMES
+                       and not name.endswith(".egg-info")]
+            paths.extend(Path(directory) / name for name in files)
+    for path in sorted(paths):
         relative = path.relative_to(root)
         if not is_manifest_source(relative):
             continue

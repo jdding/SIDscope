@@ -100,6 +100,7 @@
    ],
    "sidscope_linux_matrix_cell": [
     "sidscope_linux_matrix_cells",
+    "sidscope_local_release_record",
     "sidscope_source_manifest"
    ],
    "sidscope_local_release_record": [

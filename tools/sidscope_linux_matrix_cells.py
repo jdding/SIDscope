@@ -16,8 +16,7 @@ from typing import Any
 
 LINUX_FORMAT = "sidscope.linux_matrix_receipt.v1"
 LINUX_PYTHONS = ("3.9", "3.10", "3.11", "3.12")
-IMAGES = {"3.9": "python:3.9-slim", "3.10": "python:3.10-slim",
-          "3.11": "python:3.11-slim", "3.12": "python:3.12-slim"}
+IMAGES = {version: f"sidscope-matrix:{version}" for version in LINUX_PYTHONS}
 REQUIRED_STEPS = ("pytest", "metadata", "architecture", "sdlc_acceptance",
                   "sdlc_hardening", "profiles", "resource")
 CELL_FIELDS = {"python", "image", "os", "arch", "interpreter", "python_full", "raw_platform",

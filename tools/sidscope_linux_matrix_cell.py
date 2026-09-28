@@ -6,7 +6,7 @@ fixed required commands, writes each step's stdout/stderr and exit code to the
 steps directory, and then runs this assembler. It computes the mounted tree's
 source manifest with the shared rule, builds the combined log (per-step marker
 appended only for exit-0 steps), and writes the cell JSON next to the log.
-It executes nothing and decides nothing about acceptance.
+It reads live Git identity; it never executes test steps itself.
 """
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 
 from tools.sidscope_linux_matrix_cells import REQUIRED_STEPS, cell_log_filename
 from tools.sidscope_source_manifest import tree_manifest_digest
+from tools.sidscope_local_release_record import source_snapshot
 
 STEP_FILES = {"pytest": "tests", "metadata": "tools/verify_sidscope_release_metadata.py",
               "architecture": "tools/verify_sidscope_architecture_inventory.py",
@@ -45,6 +46,11 @@ def main() -> int:
     parser.add_argument("--public-snapshot-digest", required=True)
     args = parser.parse_args()
 
+    if args.workspace.resolve() != ROOT:
+        parser.error("workspace must be the checkout containing this collector")
+    source = source_snapshot()
+    source_ok = (not source["dirty"] and source["head"] == args.head
+                 and source["content_sha256"] == args.public_snapshot_digest)
     manifest = tree_manifest_digest(args.workspace)
     steps = []
     combined = []
@@ -78,15 +84,15 @@ def main() -> int:
         "python_full": platform.python_version(),
         "raw_platform": platform.platform(),
         "image": args.image,
-        "os": f"Linux {platform.release()} {platform.machine()}",
+        "os": f"{platform.system()} {platform.release()} {platform.machine()}",
         "arch": platform.machine(),
         "interpreter": sys.executable,
         "source_manifest_sha256": manifest,
-        "source_check": {"head": args.head, "public_snapshot_digest": args.public_snapshot_digest,
-                         "clean": manifest == args.expected_manifest},
-        "status": "pass" if worst == 0 and manifest == args.expected_manifest else "failed",
+        "source_check": {"head": source["head"], "public_snapshot_digest": source["content_sha256"],
+                         "clean": not source["dirty"]},
+        "status": "pass" if worst == 0 and source_ok and manifest == args.expected_manifest else "failed",
         "exit_code": worst,
-        "head": args.head,
+        "head": source["head"],
         "steps": steps,
         "log": {"path": log_path.name, "sha256": hashlib.sha256(log_path.read_bytes()).hexdigest()},
     }

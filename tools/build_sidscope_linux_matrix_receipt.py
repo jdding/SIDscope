@@ -28,6 +28,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from sidinspector.contracts import canonical_json_bytes, with_content_sha256
 from tools.sidscope_delivery_summary import DeliverySummaryError, short_source
 from tools.sidscope_linux_matrix_cells import (
+    IMAGES,
     LINUX_FORMAT,
     LINUX_PYTHONS,
     MatrixCellError,
@@ -94,15 +95,12 @@ def build(output: Path, cells_dir: Path) -> dict:
         receipt_cells.append(receipt_cell)
     receipt = with_content_sha256({
         "format": RECEIPT_FORMAT, "source": source, "os_family": "Linux",
-        "invocation_digest": hashlib.sha256(canonical_json_bytes([IMAGES_NOTE])).hexdigest(),
+        "invocation_digest": hashlib.sha256(canonical_json_bytes(IMAGES)).hexdigest(),
         "cells": receipt_cells,
     })
     _exclusive_write(output, canonical_json_bytes(receipt) + b"\n")
     return {"status": "pass", "receipt_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
             "cells": [cell["python"] for cell in receipt_cells]}
-
-
-IMAGES_NOTE = "python:{version}-slim for 3.9-3.12 per the runbook"
 
 
 def main() -> int:

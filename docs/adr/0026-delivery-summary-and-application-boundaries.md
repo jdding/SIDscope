@@ -43,6 +43,16 @@ digest.
 
 ## Consequences and rollback
 
+Linux preparation correction (2026-09-28): shared cell validation accepts the
+prepared `sidscope-matrix:<version>` images documented in the runbook, not the
+git-less upstream base-image names. Source manifests hash live Git-tracked
+bytes so worktree and real clone agree despite ignored build/evidence output.
+The collector independently reads HEAD, branch-bound public snapshot and clean
+state; expected strings are comparison inputs, not observed evidence. Prepared
+wheelhouses are resolved inside each target runtime and cells run offline.
+This changes no runtime API or public compatibility promise. Local shell
+regressions cannot substitute for four actually executed Linux cells.
+
 Every readiness statement must cite the summary digest and gate catalog
 digest; no pytest count, old PASS or running process substitutes for receipts.
 Runtime schema/facade surfaces do not grow (39 curated symbols, 46 schema IDs,

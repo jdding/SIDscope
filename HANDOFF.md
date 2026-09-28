@@ -14,6 +14,20 @@ Independent user actual use is excluded from current certification, RC and deliv
 
 Last updated: 2026-09-27
 
+## 2026-09-28 T02 independent acceptance repair
+
+The e777620 handoff still had a prepared/base-image mismatch and host/clone
+manifest drift; its T02 implementation closure claim was not accepted.
+Prepared image names now share the validator authority. The source manifest
+uses live tracked bytes, and the collector reads actual Git identity rather
+than echoing expected HEAD/snapshot strings. The runbook preserves the branch,
+builds wheels outside the verification clone, resolves dependencies inside
+each target Python image (including build tooling), and runs cells offline.
+Real shell dispatch/negative regressions replace text-only confidence.
+Docker is unavailable on this host; no new Linux PASS or delivery/certification
+readiness is claimed. e777620 evidence is historical after these edits; the
+next clean candidate needs fresh same-source receipts, not a mixed summary.
+
 ## 2026-09-27 acceptance scope decision (ADR-0025)
 
 The project owner removed independent user actual use as a certification, RC or

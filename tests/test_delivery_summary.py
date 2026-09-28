@@ -167,8 +167,7 @@ def write_campaign(evidence: Path, *, groups=3, delivery_status="pass"):
     return path
 
 
-LINUX_IMAGES = {"3.9": "python:3.9-slim", "3.10": "python:3.10-slim",
-                "3.11": "python:3.11-slim", "3.12": "python:3.12-slim"}
+from tools.sidscope_linux_matrix_cells import IMAGES as LINUX_IMAGES
 LINUX_STEPS = ("pytest", "metadata", "architecture", "sdlc_acceptance",
                "sdlc_hardening", "profiles", "resource")
 
@@ -701,6 +700,7 @@ def test_third_round_findings_are_rejected(evidence, tmp_path, monkeypatch):
 
     # 3: a cell assembled on this Darwin host cannot be relabeled Linux 3.12
     # — either the interpreter version or the platform family betrays it.
+    monkeypatch.setattr(summary.subprocess, "run", real_run)
     _, record_sha = write_record(evidence)
     write_linux(evidence, python_full="3.9.6")
     with pytest.raises(DeliverySummaryError) as caught:
