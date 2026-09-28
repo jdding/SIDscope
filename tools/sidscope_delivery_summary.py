@@ -103,7 +103,10 @@ def source_matches(left: dict[str, Any], right: dict[str, Any], what: str) -> No
 
 
 def _exclusive_write(path: Path, payload: bytes, *, code: str) -> None:
-    if path.exists() or path.is_symlink():
+    # Check the original path (never a resolved one): a symlink — including a
+    # dangling one — must be refused without following or creating its target.
+    path = Path(path)
+    if path.is_symlink() or path.exists():
         raise DeliverySummaryError(code, f"{path} already exists; use a new attempt path")
     resolved_parent = path.resolve().parent
     if ROOT in [resolved_parent, *resolved_parent.parents] and ".local_artifacts" not in path.parts:
@@ -130,32 +133,22 @@ def validate_receipt(receipt: dict[str, Any], evidence_dir: Path, expected_sourc
     if receipt.get("exit_code") != 0:
         raise DeliverySummaryError("failed_required_gate", f"{gate_id}: exit {receipt.get('exit_code')}")
     # R01: the executed argv must be exactly the catalog invocation for this
-    # gate, and the recorded digest must be derived from it, not trusted.
+    # gate (with the documented {evidence_dir} placeholder substituted by the
+    # runner), and the recorded digest must be derived from it, not trusted.
     info = (catalog or gate_catalog())["by_id"][gate_id]
     if info.get("binding") == "catalog_command":
-        expected_invocation = list(info["invocation"])
+        expected_invocation = [part.replace("{evidence_dir}", str(evidence_dir)) for part in info["invocation"]]
         if list(receipt.get("invocation") or []) != expected_invocation:
             raise DeliverySummaryError("gate_command_not_authorized",
                                        f"{gate_id}: {receipt.get('invocation')!r} != {expected_invocation!r}")
     if receipt.get("invocation_digest") != sha_bytes(canonical_json_bytes(receipt.get("invocation") or [])):
         raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: invocation digest")
-    for skip in receipt.get("skip_dispositions", []) or []:
-        if not skip.get("approved"):
-            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: {skip}")
     if gate_id == "full_cpu_test_suite":
-        allowed = info.get("allowed_skips")
-        recorded = receipt.get("skip_count")
-        if not isinstance(recorded, int) or isinstance(recorded, bool) or recorded < 0:
-            raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: skip_count")
-        if allowed is None or recorded > allowed:
-            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: {recorded} skips > allowed {allowed}")
-        # Dispositions may be aggregated (one entry carrying a count) but must
-        # cover exactly the recorded skip total.
-        covered = sum(int(d.get("count") or 1) for d in (receipt.get("skip_dispositions") or []) if d)
-        if covered != recorded:
-            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: skip dispositions cover {covered} of {recorded} skips")
-        if not receipt.get("passed_count"):
-            raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: no passing tests recorded")
+        _validate_skip_identities(receipt, evidence_dir, info)
+    else:
+        for skip in receipt.get("skip_dispositions", []) or []:
+            if not skip.get("approved"):
+                raise DeliverySummaryError("unapproved_skip", f"{gate_id}: {skip}")
     log = receipt.get("log") or {}
     log_path = evidence_dir / log.get("path", "")
     if not log_path.is_file() or sha(log_path) != log.get("sha256"):
@@ -172,6 +165,55 @@ def validate_receipt(receipt: dict[str, Any], evidence_dir: Path, expected_sourc
     if not environment.get("python") or not environment.get("platform"):
         raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: environment")
     return receipt
+
+
+def _junit_skips(junit_path: Path) -> list[dict[str, str]]:
+    import xml.etree.ElementTree as ElementTree
+
+    skips = []
+    root = ElementTree.parse(junit_path).getroot()
+    for case in root.iter("testcase"):
+        for skipped in case.findall("skipped"):
+            classname = case.get("classname", "")
+            prefix = classname.replace(".", "/") + ".py::" if classname else ""
+            skips.append({"nodeid": prefix + case.get("name", ""),
+                          "reason": skipped.get("message") or ""})
+    return skips
+
+
+def _validate_skip_identities(receipt: dict[str, Any], evidence_dir: Path, info: dict[str, Any]) -> None:
+    """Skips are approved by frozen identity, never by count (R01/C)."""
+    gate_id = "full_cpu_test_suite"
+    approved = {entry["nodeid"]: entry for entry in info.get("approved_skips") or []}
+    if not approved:
+        raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: catalog approves no skips")
+    passed = receipt.get("passed_count")
+    if isinstance(passed, bool) or not isinstance(passed, int) or passed <= 0:
+        raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: passed_count {passed!r}")
+    dispositions = receipt.get("skip_dispositions") or []
+    recorded = receipt.get("skip_count")
+    if isinstance(recorded, bool) or not isinstance(recorded, int) or recorded != len(dispositions):
+        raise DeliverySummaryError("unapproved_skip", f"{gate_id}: skip_count {recorded!r} vs {len(dispositions)} dispositions")
+    for disposition in dispositions:
+        nodeid = disposition.get("nodeid")
+        entry = approved.get(nodeid)
+        if entry is None:
+            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: unknown skip {nodeid!r}")
+        reason = str(disposition.get("reason") or "")
+        if not reason or entry["reason_contains"] not in reason:
+            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: reason mismatch for {nodeid}")
+        if disposition.get("approved") is not True:
+            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: {nodeid} not approved")
+    if {d.get("nodeid") for d in dispositions} != set(approved):
+        raise DeliverySummaryError("unapproved_skip",
+                                   f"{gate_id}: skip set changed vs catalog (missing/extra entries)")
+    # The bound JUnit record must independently reproduce the dispositions.
+    junit_digest = (receipt.get("artifact_digests") or {}).get("pytest-junit.xml")
+    junit_path = evidence_dir / "pytest-junit.xml"
+    if not junit_digest or not junit_path.is_file() or sha(junit_path) != junit_digest:
+        raise DeliverySummaryError("gate_artifact_integrity", f"{gate_id}: pytest-junit.xml")
+    if _junit_skips(junit_path) != [{"nodeid": d["nodeid"], "reason": d["reason"]} for d in dispositions]:
+        raise DeliverySummaryError("unapproved_skip", f"{gate_id}: JUnit record differs from dispositions")
 
 
 def load_gate_receipts(evidence_dir: Path) -> dict[str, dict[str, Any]]:
@@ -257,7 +299,12 @@ def validate_campaign(campaign: dict[str, Any], expected_source: dict[str, Any],
 
 
 def validate_linux_matrix(matrix: dict[str, Any], expected_source: dict[str, Any], evidence_dir: Path) -> dict[str, Any]:
-    """Structurally validate executed Linux cells; labels and hashes alone (R03)."""
+    """Validate Linux cells with the one shared rule (R03/A); labels, shared
+    markers, zero pass counts and unmatched manifests are refused here exactly
+    as in the receipt builder."""
+    from tools.sidscope_linux_matrix_cells import MatrixCellError, validate_cell
+    from tools.sidscope_source_manifest import tree_manifest_digest
+
     if matrix.get("format") != LINUX_FORMAT:
         raise DeliverySummaryError("invalid_linux_receipt", "format")
     try:
@@ -273,53 +320,23 @@ def validate_linux_matrix(matrix: dict[str, Any], expected_source: dict[str, Any
         by_python[version] = cell
     if sorted(by_python) != sorted(LINUX_PYTHONS):
         raise DeliverySummaryError("invalid_linux_receipt", f"cells {sorted(by_python)} != {sorted(LINUX_PYTHONS)}")
+    expected_manifest = tree_manifest_digest(ROOT)
     for version, cell in sorted(by_python.items()):
-        if not str(cell.get("os", "")).startswith("Linux"):
-            raise DeliverySummaryError("invalid_linux_cell", f"{version}: os={cell.get('os')!r} is not Linux")
-        if cell.get("status") != "pass" or cell.get("exit_code") != 0:
-            raise DeliverySummaryError("failed_required_gate", f"linux {version}")
-        source_check = cell.get("source_check") or {}
-        if source_check.get("head") != expected_source["head"] or \
-           source_check.get("public_snapshot_digest") != expected_source["public_snapshot_digest"] or \
-           source_check.get("clean") is not True:
-            raise DeliverySummaryError("stale_linux_source", f"linux {version}: source check does not match the candidate")
-        if not Path(str(cell.get("interpreter", ""))).name.startswith("python"):
-            raise DeliverySummaryError("invalid_linux_cell", f"{version}: interpreter")
-        steps = cell.get("steps") or []
-        step_map: dict[str, dict[str, Any]] = {}
-        for step in steps:
-            name = step.get("name")
-            if name in step_map:
-                raise DeliverySummaryError("invalid_linux_cell", f"{version}: duplicate step {name}")
-            step_map[name] = step
-        missing = [name for name in LINUX_REQUIRED_STEPS if name not in step_map]
-        if missing:
-            raise DeliverySummaryError("invalid_linux_cell", f"{version}: missing required steps {missing}")
-        for name, step in step_map.items():
-            if name not in LINUX_REQUIRED_STEPS:
-                raise DeliverySummaryError("invalid_linux_cell", f"{version}: unknown step {name}")
-            if step.get("exit_code") != 0:
-                raise DeliverySummaryError("failed_required_gate", f"linux {version}: step {name}")
-            if step.get("passed_count") is None and name == "pytest":
-                raise DeliverySummaryError("invalid_linux_cell", f"{version}: pytest passed_count")
-        log = cell.get("log") or {}
-        relative = log.get("path", "")
-        if ".." in Path(relative).parts or not relative:
-            raise DeliverySummaryError("invalid_linux_cell", f"{version}: log path")
-        log_path = evidence_dir / relative
-        if not log_path.is_file() or sha(log_path) != log.get("sha256"):
-            raise DeliverySummaryError("gate_log_integrity", f"linux {version}")
-        combined = log_path.read_text(errors="replace")
-        for name, step in step_map.items():
-            marker = step.get("log_marker") or ""
-            if not marker or marker not in combined:
-                raise DeliverySummaryError("invalid_linux_cell", f"{version}: step {name} marker absent from log")
+        try:
+            validate_cell(cell, expected_manifest=expected_manifest,
+                          head=expected_source["head"],
+                          public_snapshot_digest=expected_source["public_snapshot_digest"],
+                          log_base=evidence_dir)
+        except MatrixCellError as error:
+            raise DeliverySummaryError(error.code, error.detail) from error
     return matrix
 
 
 def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: str) -> dict[str, Any]:
-    evidence_dir = evidence_dir.resolve()
-    output = output.resolve()
+    evidence_dir = Path(evidence_dir).resolve()
+    # Keep the caller's path (not a resolved copy): symlink identity must
+    # survive until the exclusive-create guard rejects it (R05/D).
+    output = Path(output)
     if output == evidence_dir:
         raise DeliverySummaryError("summary_output_invalid", "the summary must not replace the evidence directory")
     if output.name in {"release-record.json", "performance-campaign.json", "linux-matrix.json"}:
@@ -500,7 +517,16 @@ def run_gate(gate_id: str, evidence_dir: Path, command: list[str] | None = None)
     before = short_source()
     if not before["clean"]:
         raise DeliverySummaryError("dirty_candidate", f"{gate_id} requires a clean candidate")
-    run = subprocess.run([sys.executable, *expected_invocation], cwd=ROOT, capture_output=True, shell=False)
+    # The full-suite gate writes its JUnit record via PYTEST_ADDOPTS so the
+    # executed argv stays exactly the frozen catalog command; the record lands
+    # in the evidence directory and never dirties the candidate tree.
+    import os
+    gate_environment = dict(os.environ)
+    if gate_id == "full_cpu_test_suite":
+        gate_environment["PYTEST_ADDOPTS"] = (gate_environment.get("PYTEST_ADDOPTS", "") +
+                                              f' --junitxml={evidence_dir / "pytest-junit.xml"}').strip()
+    run = subprocess.run([sys.executable, *expected_invocation], cwd=ROOT, capture_output=True,
+                         shell=False, env=gate_environment)
     log_path = evidence_dir / f"logs/{gate_id}.log"
     log_path.write_bytes(run.stdout + run.stderr)
     after = short_source()
@@ -519,26 +545,32 @@ def run_gate(gate_id: str, evidence_dir: Path, command: list[str] | None = None)
         "skip_dispositions": [],
     })
     if gate_id == "full_cpu_test_suite":
+        approved = {entry["nodeid"]: entry for entry in info.get("approved_skips") or []}
+        junit_path = evidence_dir / "pytest-junit.xml"
         tail = run.stdout.decode(errors="replace").strip().splitlines()[-1] if run.stdout else ""
         match = PYTEST_SUMMARY.search(tail)
-        if match is None:
+        skips = _junit_skips(junit_path) if junit_path.is_file() else None
+        if match is None or skips is None:
             receipt["status"] = "failed"
             receipt["skip_count"] = -1
             receipt["passed_count"] = 0
             receipt["skip_dispositions"] = []
+            receipt["detail"] = "pytest summary line or JUnit record missing"
         else:
-            passed = int(match.group(1))
-            skipped = int(match.group(2) or 0)
-            allowed = info.get("allowed_skips")
-            receipt["passed_count"] = passed
-            receipt["skip_count"] = skipped
-            receipt["skip_dispositions"] = [
-                {"count": skipped, "approved": bool(skipped <= (allowed or 0)),
-                 "policy": info.get("skip_policy", "")} if skipped else {}
-            ] if skipped else []
+            receipt["passed_count"] = int(match.group(1))
+            recorded = int(match.group(2) or 0)
+            receipt["skip_count"] = recorded
+            dispositions = []
+            for skip in skips:
+                entry = approved.get(skip["nodeid"])
+                dispositions.append({"nodeid": skip["nodeid"], "reason": skip["reason"],
+                                     "approved": bool(entry and entry["reason_contains"] in skip["reason"])})
+            receipt["skip_dispositions"] = dispositions
+            receipt["artifact_digests"] = {"pytest-junit.xml": sha(junit_path)}
             if not source_stable:
                 receipt["detail"] = "source tree changed during gate execution"
-    receipt_path.write_bytes(canonical_json_bytes(receipt) + b"\n")
+    with receipt_path.open("xb") as handle:
+        handle.write(canonical_json_bytes(receipt) + b"\n")
     if receipt["status"] != "pass":
         return {"status": receipt["status"], "gate_id": gate_id, "exit_code": run.returncode,
                 "receipt": str(receipt_path), "log": str(log_path),

@@ -2,12 +2,13 @@
 """Installed-distribution probe for the pure-data native bridge (positive path).
 
 Copied outside the repository and executed under the installed interpreter by
-the operator's chain script. It verifies the bridge module really imports from
-the expected installed location, runs the canonical PSID build plus the
-original-input recheck on the authorized observation inputs, and — for the
-evidence-full mode — registers the unchanged hash-pinned RPG verifier before
-building. It compares the resulting bundle against the expected SHA-256 and
-prints a machine-checkable result; it executes nothing else.
+the operator's chain script. In every mode `sidscope` must import from the
+installed site-packages (never a checkout/extraction on sys.path ahead of it).
+PSID runs on the plain installed library; the RPG mode additionally registers
+the unchanged hash-pinned verifier from the evidence-full provider tree, whose
+provenance is recorded. The probe runs the canonical build plus the
+original-input recheck on the authorized observation inputs, compares the
+bundle against the expected SHA-256, and prints a machine-checkable result.
 """
 from __future__ import annotations
 
@@ -24,12 +25,10 @@ def sha(path: Path) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("psid-runtime", "rpg-evidence-full"), required=True)
+    parser.add_argument("--mode", choices=("psid-wheel", "psid-sdist", "rpg-installed"), required=True)
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--metadata", type=Path, required=True)
     parser.add_argument("--expected-bundle-sha256", required=True)
-    parser.add_argument("--import-prefix", required=True,
-                        help="substring that sidscope.__file__ must contain (site-packages or extracted evidence-full tree)")
     args = parser.parse_args()
 
     import sidscope
@@ -37,12 +36,15 @@ def main() -> int:
 
     sidscope_file = str(Path(sidscope.__file__).resolve())
     bridge_file = str(Path(native_bridge.__file__).resolve())
-    if args.import_prefix not in sidscope_file:
-        print(json.dumps({"status": "fail", "code": "bridge_import_prefix_mismatch",
-                          "sidscope_file": sidscope_file, "expected_prefix": args.import_prefix}))
+    if "site-packages" not in sidscope_file or "site-packages" not in bridge_file:
+        print(json.dumps({"status": "fail", "code": "bridge_not_installed",
+                          "sidscope_file": sidscope_file, "native_bridge_file": bridge_file}))
         return 2
-    if args.mode == "rpg-evidence-full":
+    provider_file = None
+    if args.mode == "rpg-installed":
         from tools.verify_rpg_trained_trace_bundle import verify as verify_rpg
+
+        provider_file = str(Path(__import__("tools.verify_rpg_trained_trace_bundle", fromlist=["__file__"]).__file__).resolve())
         native_bridge.set_native_verifier_provider(verify_rpg)
     else:
         native_bridge.clear_native_verifier_provider()
@@ -66,7 +68,7 @@ def main() -> int:
         "expected_bundle_sha256": args.expected_bundle_sha256,
         "sidscope_file": sidscope_file,
         "native_bridge_file": bridge_file,
-        "import_prefix": args.import_prefix,
+        "provider_file": provider_file,
         "input_native_sha256": sha(args.input / "native.json"),
         "input_selection_sha256": sha(args.input / "selection.json"),
         "input_observations_sha256": sha(args.input / "observations.json"),

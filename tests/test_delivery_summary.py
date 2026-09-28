@@ -1,3 +1,4 @@
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -25,6 +26,25 @@ def digest_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _catalog():
+    return summary.gate_catalog()["by_id"]["full_cpu_test_suite"]
+
+
+def _approved_skip_dispositions():
+    import xml.sax.saxutils as saxutils
+
+    entries = _catalog()["approved_skips"]
+    junit_cases = "".join(
+        f'<testcase classname="{entry["nodeid"].rsplit("::", 1)[0].replace("/", ".").replace(".py", "")}" '
+        f'name="{entry["nodeid"].split("::")[-1]}"><skipped message="{saxutils.escape(entry["reason_contains"])}"/></testcase>'
+        for entry in entries)
+    junit = ('<?xml version="1.0"?><testsuite name="pytest" tests="1" failures="0">'
+             + junit_cases + "</testsuite>").encode()
+    dispositions = [{"nodeid": entry["nodeid"], "reason": entry["reason_contains"], "approved": True}
+                    for entry in entries]
+    return junit, dispositions
+
+
 def write_receipt(evidence: Path, gate_id: str, *, status="pass", exit_code=0, head=SOURCE["head"],
                   snapshot=SOURCE["public_snapshot_digest"], skip=None, log_text=b"ok\n"):
     log_path = evidence / "logs" / f"{gate_id}.log"
@@ -41,10 +61,15 @@ def write_receipt(evidence: Path, gate_id: str, *, status="pass", exit_code=0, h
                "invocation_digest": digest_bytes(summary.canonical_json_bytes(invocation)),
                "exit_code": exit_code,
                "log": {"path": f"logs/{gate_id}.log", "sha256": digest_bytes(log_path.read_bytes())},
-               "artifact_digests": {}, "skip_dispositions": skip or []}
+               "artifact_digests": {}, "skip_dispositions": skip if skip is not None else []}
     if gate_id == "full_cpu_test_suite":
+        junit, dispositions = _approved_skip_dispositions()
+        junit_path = evidence / "pytest-junit.xml"
+        junit_path.write_bytes(junit)
         receipt["passed_count"] = 649
-        receipt["skip_count"] = len(skip) if skip else 0
+        receipt["skip_count"] = len(dispositions)
+        receipt["skip_dispositions"] = dispositions
+        receipt["artifact_digests"] = {"pytest-junit.xml": digest_bytes(junit)}
     path = evidence / "gates" / f"{gate_id}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(summary.canonical_json_bytes(receipt) + b"\n")
@@ -144,30 +169,39 @@ LINUX_STEPS = ("pytest", "metadata", "architecture", "sdlc_acceptance",
                "sdlc_hardening", "profiles", "resource")
 
 
+def _tree_manifest():
+    from tools.sidscope_source_manifest import tree_manifest_digest
+    return tree_manifest_digest(Path(__file__).resolve().parents[1])
+
+
 def write_linux(evidence: Path, *, cells=("3.9", "3.10", "3.11", "3.12"), head=SOURCE["head"],
                 status="pass", os_name="Linux 6.5.0-arm64", steps="full",
-                snapshot=SOURCE["public_snapshot_digest"]):
+                snapshot=SOURCE["public_snapshot_digest"], image_map=None,
+                manifest=None, passed_count=649, shared_marker=False):
     rows = []
     for version in cells:
-        log_path = evidence / "logs" / f"linux-{version}.log"
+        log_path = evidence / "linux-cells" / f"linux-{version}.log"
         log_path.parent.mkdir(parents=True, exist_ok=True)
         step_rows = []
         markers = []
         for name in LINUX_STEPS:
             if steps == "full" or (steps == "no-resource" and name != "resource"):
-                marker = f"STEP-OK {name} {version}"
+                marker = "STEP-OK shared" if shared_marker else f"STEP-OK {name} {version}"
                 step_rows.append({"name": name, "exit_code": 0,
-                                  "passed_count": 649 if name == "pytest" else None,
+                                  "passed_count": passed_count if name == "pytest" else None,
                                   "log_marker": marker})
                 markers.append(marker)
         log_path.write_text("\n".join(markers) + "\n")
-        rows.append({"python": version, "image": LINUX_IMAGES[version], "os": os_name,
+        rows.append({"python": version,
+                     "image": (image_map if image_map is not None else LINUX_IMAGES).get(version, "not-a-container"),
+                     "os": os_name,
                      "arch": "aarch64", "interpreter": "/usr/local/bin/python3",
+                     "source_manifest_sha256": manifest if manifest is not None else _tree_manifest(),
                      "status": status, "exit_code": 0 if status == "pass" else 1,
                      "head": head,
                      "source_check": {"head": head, "public_snapshot_digest": snapshot, "clean": True},
                      "steps": step_rows,
-                     "log": {"path": f"logs/linux-{version}.log", "sha256": digest_bytes(log_path.read_bytes())}})
+                     "log": {"path": f"linux-cells/linux-{version}.log", "sha256": digest_bytes(log_path.read_bytes())}})
     receipt = {"format": summary.LINUX_FORMAT, "source": dict(SOURCE), "os_family": "Linux",
                "invocation_digest": "0" * 64, "cells": rows}
     path = evidence / "linux-matrix.json"
@@ -253,10 +287,13 @@ def test_failed_or_skipped_required_gate_is_rejected(evidence, tmp_path):
     with pytest.raises(DeliverySummaryError) as caught:
         build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
     assert caught.value.code == "failed_required_gate"
-    write_receipt(evidence, "full_cpu_test_suite",
-                  skip=[{"reason": "external input unavailable", "approved": False}])
+    write_receipt(evidence, "full_cpu_test_suite")
+    path = evidence / "gates/full_cpu_test_suite.json"
+    receipt = json.loads(path.read_text())
+    receipt["skip_dispositions"][0]["approved"] = False
+    path.write_bytes(summary.canonical_json_bytes(receipt))
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+        build_summary(evidence, tmp_path / "s2.json", expected_record_sha256=record_sha)
     assert caught.value.code == "unapproved_skip"
 
 
@@ -328,11 +365,11 @@ def test_linux_matrix_shape_is_enforced(evidence, tmp_path):
     write_linux(evidence, head="9" * 40)
     with pytest.raises(DeliverySummaryError) as caught:
         build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
-    assert caught.value.code == "stale_linux_source"
+    assert caught.value.code == "matrix_identity_unchecked"
 
 
 def test_probe_regressions_are_all_rejected(evidence, tmp_path):
-    """Six negative probes from the 2026-09-28 acceptance report, now refused."""
+    """Negative probes from the acceptance rounds, now refused."""
     # R01: an unrelated command can never run for a bound gate.
     with pytest.raises(DeliverySummaryError) as caught:
         summary.run_gate("full_cpu_test_suite", tmp_path, ["/usr/bin/true"])
@@ -342,13 +379,6 @@ def test_probe_regressions_are_all_rejected(evidence, tmp_path):
     with pytest.raises(DeliverySummaryError) as caught:
         summary.validate_receipt(receipt, evidence, dict(SOURCE), "full_cpu_test_suite")
     assert caught.value.code == "gate_command_not_authorized"
-    # R01b: skips beyond the documented boundary cannot hide in a receipt.
-    receipt = write_receipt(evidence, "full_cpu_test_suite",
-                            skip=[{"reason": "invented", "approved": True}] * 7)
-    receipt["skip_count"] = 7
-    with pytest.raises(DeliverySummaryError) as caught:
-        summary.validate_receipt(receipt, evidence, dict(SOURCE), "full_cpu_test_suite")
-    assert caught.value.code == "unapproved_skip"
     write_receipt(evidence, "full_cpu_test_suite")
     # R02: failed groups with emptied measurements are refused by recomputation.
     import copy
@@ -375,20 +405,129 @@ def test_probe_regressions_are_all_rejected(evidence, tmp_path):
         summary.validate_campaign(campaign, dict(SOURCE), evidence_dir=evidence)
     assert caught.value.code == "campaign_group_integrity"
     group_file.write_bytes(original)
-    # R03: Darwin labels, missing steps and fake source checks are refused.
+    # R03: invalid Linux material is refused at helper, build and verify levels.
     _, record_sha = write_record(evidence)
-    write_linux(evidence, os_name="Darwin 24.0.0")
+    for kwargs, code in (
+            ({"os_name": "Darwin 24.0.0"}, "invalid_matrix_cell"),
+            ({"steps": "no-resource"}, "invalid_matrix_cell"),
+            ({"image_map": {}}, "invalid_matrix_cell"),
+            ({"manifest": "0" * 64}, "stale_matrix_head"),
+            ({"passed_count": 0}, "invalid_matrix_cell"),
+            ({"shared_marker": True}, "invalid_matrix_cell"),
+            ({"snapshot": "0" * 64}, "matrix_identity_unchecked"),
+            ({"head": "9" * 40}, "matrix_identity_unchecked")):
+        write_linux(evidence, **kwargs)
+        matrix = json.loads((evidence / "linux-matrix.json").read_text())
+        with pytest.raises(DeliverySummaryError) as caught:
+            summary.validate_linux_matrix(matrix, dict(SOURCE), evidence)
+        assert caught.value.code == code, kwargs
+        with pytest.raises(DeliverySummaryError) as caught:
+            build_summary(evidence, tmp_path / "s1.json", expected_record_sha256=record_sha)
+        assert caught.value.code == code, kwargs
+    write_linux(evidence)
+    built_output = tmp_path / "valid-summary.json"
+    built = build_summary(evidence, built_output, expected_record_sha256=record_sha)
+    # Tampering the matrix after the summary binds it is rejected by the
+    # receipt-digest binding before cell rules even run; invalid matrices can
+    # no longer reach a summary at all (build re-validates with the shared rule).
+    matrix = json.loads((evidence / "linux-matrix.json").read_text())
+    matrix["cells"][0]["image"] = "not-a-container"
+    (evidence / "linux-matrix.json").write_bytes(summary.canonical_json_bytes(matrix))
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
-    assert caught.value.code == "invalid_linux_cell"
-    write_linux(evidence, steps="no-resource")
+        verify_summary(built_output, expected_summary_sha256=built["summary_sha256"], evidence_dir=evidence)
+    assert caught.value.code == "receipt_integrity"
+
+
+def test_skip_identities_are_approved_individually(evidence, tmp_path):
+    """R01/C: counts never substitute for the frozen skip identities."""
+    write_receipt(evidence, "full_cpu_test_suite")
+    path = evidence / "gates/full_cpu_test_suite.json"
+
+    def load():
+        return json.loads(path.read_text())
+
+    def save(receipt):
+        path.write_bytes(summary.canonical_json_bytes(receipt))
+
+    base = load()
+    approved = base["skip_dispositions"]
+    # Unknown skip nodeid.
+    bad = copy.deepcopy(base)
+    bad["skip_dispositions"][0]["nodeid"] = "tests/test_invented.py::test_unknown_skip"
+    save(bad)
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
-    assert caught.value.code == "invalid_linux_cell"
-    write_linux(evidence, snapshot="0" * 64)
+        summary.validate_receipt(load(), evidence, dict(SOURCE), "full_cpu_test_suite")
+    assert caught.value.code == "unapproved_skip"
+    # Same-count substitution: drop one approved, duplicate another.
+    bad = copy.deepcopy(base)
+    bad["skip_dispositions"] = approved[:-1] + [dict(approved[0])]
+    save(bad)
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
-    assert caught.value.code == "stale_linux_source"
+        summary.validate_receipt(load(), evidence, dict(SOURCE), "full_cpu_test_suite")
+    assert caught.value.code == "unapproved_skip"
+    # Missing reason.
+    bad = copy.deepcopy(base)
+    bad["skip_dispositions"][0]["reason"] = ""
+    save(bad)
+    with pytest.raises(DeliverySummaryError) as caught:
+        summary.validate_receipt(load(), evidence, dict(SOURCE), "full_cpu_test_suite")
+    assert caught.value.code == "unapproved_skip"
+    # JUnit record edited independently of the dispositions.
+    junit = evidence / "pytest-junit.xml"
+    original = junit.read_bytes()
+    bad = copy.deepcopy(base)
+    bad["skip_dispositions"][0]["reason"] = "tampered reason"
+    save(bad)
+    with pytest.raises(DeliverySummaryError) as caught:
+        summary.validate_receipt(load(), evidence, dict(SOURCE), "full_cpu_test_suite")
+    assert caught.value.code == "unapproved_skip"
+    junit.write_bytes(original)
+    save(base)
+    assert summary.validate_receipt(load(), evidence, dict(SOURCE), "full_cpu_test_suite")["status"] == "pass"
+
+
+def test_runner_approves_only_known_skip_identities(tmp_path, monkeypatch):
+    """The runner derives dispositions from the JUnit record, not from counts."""
+    import io
+
+    class FakeRun:
+        def __init__(self, returncode, stdout):
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = b""
+
+    junit_ok, dispositions = _approved_skip_dispositions()
+    summary_path = tmp_path / "evidence"
+
+    def fake_run_ok(command, **kwargs):
+        (tmp_path / "evidence").mkdir(parents=True, exist_ok=True)
+        (tmp_path / "evidence" / "pytest-junit.xml").write_bytes(junit_ok)
+        return FakeRun(0, f"{len(dispositions) + 640} passed, {len(dispositions)} skipped in 1.0s".encode())
+
+    monkeypatch.setattr(summary, "short_source", lambda: dict(SOURCE))
+    monkeypatch.setattr(summary.subprocess, "run", fake_run_ok)
+    result = summary.run_gate("full_cpu_test_suite", summary_path)
+    assert result["status"] == "pass", result
+    receipt = json.loads((summary_path / "gates/full_cpu_test_suite.json").read_text())
+    assert receipt["skip_dispositions"] == dispositions
+
+    # An unknown skip in the JUnit record is recorded as unapproved.
+    unknown = junit_ok.replace(
+        b'">', b'"><testcase classname="tests.test_invented" name="test_unknown">'
+               b'<skipped message="why not"/></testcase>', 1)
+
+    def fake_run_unknown(command, **kwargs):
+        (tmp_path / "evidence-2").mkdir(parents=True, exist_ok=True)
+        (tmp_path / "evidence-2" / "pytest-junit.xml").write_bytes(unknown)
+        return FakeRun(0, b"640 passed, 7 skipped in 1.0s")
+
+    monkeypatch.setattr(summary.subprocess, "run", fake_run_unknown)
+    summary.run_gate("full_cpu_test_suite", tmp_path / "evidence-2")
+    receipt = json.loads((tmp_path / "evidence-2/gates/full_cpu_test_suite.json").read_text())
+    assert any(not d["approved"] for d in receipt["skip_dispositions"])
+    with pytest.raises(DeliverySummaryError) as caught:
+        summary.validate_receipt(receipt, tmp_path / "evidence-2", dict(SOURCE), "full_cpu_test_suite")
+    assert caught.value.code == "unapproved_skip"
 
 
 def test_existing_summary_output_is_never_overwritten(evidence, tmp_path):
@@ -405,6 +544,14 @@ def test_existing_summary_output_is_never_overwritten(evidence, tmp_path):
     with pytest.raises(DeliverySummaryError) as caught:
         build_summary(evidence, alias, expected_record_sha256=record_sha)
     assert caught.value.code == "summary_output_exists"
+    # R05/D: a dangling symlink is refused without creating its target.
+    dangling_target = tmp_path / "never-created.json"
+    dangling = tmp_path / "dangling.json"
+    dangling.symlink_to(dangling_target)
+    with pytest.raises(DeliverySummaryError) as caught:
+        build_summary(evidence, dangling, expected_record_sha256=record_sha)
+    assert caught.value.code == "summary_output_exists"
+    assert not dangling_target.exists()
     output.write_bytes(original)
     assert verify_summary(output, expected_summary_sha256=built["summary_sha256"], evidence_dir=evidence)["status"] == "pass"
 

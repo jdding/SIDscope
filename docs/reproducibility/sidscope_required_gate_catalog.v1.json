@@ -12,8 +12,33 @@
         "pytest",
         "-q"
       ],
-      "allowed_skips": 6,
-      "skip_policy": "The six documented external-input boundary skips; any other skip count is unapproved."
+      "skip_policy": "Skips are approved by identity, never by count: the recorded JUnit skip set must equal this approved list (nodeid exact, reason substring); any unknown, missing, replaced or unreasoned skip is unapproved. The runner writes the JUnit record into the gate evidence directory via PYTEST_ADDOPTS, keeping the executed argv identical to this invocation.",
+      "approved_skips": [
+        {
+          "nodeid": "tests/test_adapter_conformance/AdapterConformanceTest.py::test_released_resot_route_passes_and_public_fixture_fails_only_c1",
+          "reason_contains": "local normalized ReSOT inputs are not shipped"
+        },
+        {
+          "nodeid": "tests/test_gate20_d7_trained_beam/Gate20TrainedBeamTest.py::test_remote_runner_contract_is_fail_closed_and_replicated",
+          "reason_contains": "AutoDL orchestration is intentionally outside"
+        },
+        {
+          "nodeid": "tests/test_gate21_tiger_d7_trace/Gate21TigerD7TraceTest.py::test_official_loader_fail_closed_stub_covers_unused_openpyxl_import",
+          "reason_contains": "does not redistribute the DACT source checkout"
+        },
+        {
+          "nodeid": "tests/test_gate21_tiger_d7_trace/Gate21TigerD7TraceTest.py::test_released_checkpoint_generation_closes_both_mode_contracts",
+          "reason_contains": "released DACT assets are not present"
+        },
+        {
+          "nodeid": "tests/test_gate21_tiger_d7_trace/Gate21TigerD7TraceTest.py::test_released_preprocessing_has_golden_parity",
+          "reason_contains": "released DACT assets are not present"
+        },
+        {
+          "nodeid": "tests/test_resot_same_dataset_control.py::test_frozen_resot_control_reports_all_prefix_depths",
+          "reason_contains": "frozen ReSOT normalized inputs are not redistributed"
+        }
+      ]
     },
     {
       "gate_id": "release_metadata_verifier",

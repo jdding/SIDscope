@@ -3152,12 +3152,14 @@
     {
       "artifact_paths": [],
       "declaration_paths": [
-        "tools/sidscope_delivery_summary.py"
+        "tools/sidscope_delivery_summary.py",
+        "tools/sidscope_linux_matrix_cells.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
-        "tools/sidscope_delivery_summary.py"
+        "tools/sidscope_delivery_summary.py",
+        "tools/sidscope_linux_matrix_cells.py"
       ],
       "schema_id": "sidscope.linux_matrix_receipt.v1",
       "verifier_paths": []

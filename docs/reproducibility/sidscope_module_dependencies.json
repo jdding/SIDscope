@@ -20,7 +20,9 @@
     "build_sidscope_architecture_inventory"
    ],
    "build_sidscope_linux_matrix_receipt": [
-    "sidscope_delivery_summary"
+    "sidscope_delivery_summary",
+    "sidscope_linux_matrix_cells",
+    "sidscope_source_manifest"
    ],
    "build_sidscope_native_submission": [
     "verify_rpg_trained_trace_bundle"
@@ -89,10 +91,16 @@
    "sidscope_delivery_summary": [
     "check_sidscope_current_performance",
     "sidscope_acceptance_scope",
-    "sidscope_local_release_record"
+    "sidscope_linux_matrix_cells",
+    "sidscope_local_release_record",
+    "sidscope_source_manifest"
    ],
    "sidscope_installed_bridge_probe": [
     "verify_rpg_trained_trace_bundle"
+   ],
+   "sidscope_linux_matrix_cell": [
+    "sidscope_linux_matrix_cells",
+    "sidscope_source_manifest"
    ],
    "sidscope_local_release_record": [
     "build_sidscope_release_candidate_archive",

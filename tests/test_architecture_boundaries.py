@@ -66,7 +66,13 @@ def _resolved_import_names_for(path: Path, package_root: Path, prefix: str) -> s
             continue
         base = current_package[: len(current_package) - remove]
         suffix = node.module.split(".") if node.module else []
-        imports.add(".".join((*base, *suffix)))
+        package = ".".join((*base, *suffix))
+        imports.add(package)
+        # R06: relative `from .. import submodule` names the same edge as its
+        # absolute form; expand aliases exactly like the absolute branch.
+        for alias in node.names:
+            if alias.name != "*":
+                imports.add(f"{package}.{alias.name}")
     return imports
 
 
@@ -404,6 +410,14 @@ class ApplicationBoundaryTest(unittest.TestCase):
                 and any(alias.name == "import_module" for alias in node.names)
             ]
             self.assertEqual(len(alias_imports), 1)
+            # R06 (round 2): a relative `from .. import submodule` must expose
+            # the same forbidden edge as its absolute form, via this scanner.
+            core_pkg = tmp_root / "sidinspector" / "contracts"
+            core_pkg.mkdir(parents=True, exist_ok=True)
+            probe = core_pkg / "probe.py"
+            probe.write_text("from .. import cli\n")
+            resolved_core = _resolved_import_names_for(probe, tmp_root / "sidinspector", "sidinspector")
+            self.assertIn("sidinspector.cli", resolved_core)
             tool_like = tmp_root / "new_tool.py"
             tool_like.write_text("from tools.sidscope_release_profiles import load_release_profiles\n")
             edges = {
