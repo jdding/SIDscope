@@ -149,8 +149,11 @@ def validate_receipt(receipt: dict[str, Any], evidence_dir: Path, expected_sourc
             raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: skip_count")
         if allowed is None or recorded > allowed:
             raise DeliverySummaryError("unapproved_skip", f"{gate_id}: {recorded} skips > allowed {allowed}")
-        if recorded != len(receipt.get("skip_dispositions") or []):
-            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: skip dispositions do not cover {recorded} skips")
+        # Dispositions may be aggregated (one entry carrying a count) but must
+        # cover exactly the recorded skip total.
+        covered = sum(int(d.get("count") or 1) for d in (receipt.get("skip_dispositions") or []) if d)
+        if covered != recorded:
+            raise DeliverySummaryError("unapproved_skip", f"{gate_id}: skip dispositions cover {covered} of {recorded} skips")
         if not receipt.get("passed_count"):
             raise DeliverySummaryError("invalid_gate_receipt", f"{gate_id}: no passing tests recorded")
     log = receipt.get("log") or {}
