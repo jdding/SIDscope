@@ -20,8 +20,8 @@ IMAGES = {"3.9": "python:3.9-slim", "3.10": "python:3.10-slim",
           "3.11": "python:3.11-slim", "3.12": "python:3.12-slim"}
 REQUIRED_STEPS = ("pytest", "metadata", "architecture", "sdlc_acceptance",
                   "sdlc_hardening", "profiles", "resource")
-CELL_FIELDS = {"python", "image", "os", "arch", "interpreter", "source_manifest_sha256",
-               "source_check", "status", "exit_code", "head", "steps", "log"}
+CELL_FIELDS = {"python", "image", "os", "arch", "interpreter", "python_full", "raw_platform",
+               "source_manifest_sha256", "source_check", "status", "exit_code", "head", "steps", "log"}
 STEP_FIELDS = {"name", "exit_code", "passed_count", "log_marker"}
 
 
@@ -40,9 +40,21 @@ def validate_cell(cell: dict[str, Any], *, expected_manifest: str, head: str,
         raise MatrixCellError("invalid_matrix_cell", f"{version}: fields {sorted(CELL_FIELDS - set(cell))}")
     if cell.get("image") != IMAGES[version]:
         raise MatrixCellError("invalid_matrix_cell", f"{version}: image {cell.get('image')!r} != {IMAGES[version]!r}")
-    if not str(cell.get("os", "")).startswith("Linux"):
+    os_text = str(cell.get("os", ""))
+    if not os_text.startswith("Linux"):
         raise MatrixCellError("invalid_matrix_cell", f"{version}: os={cell.get('os')!r} is not Linux")
-    if not str(cell.get("arch", "")).strip():
+    # Third-round finding 3: the recorded runtime identity must agree with the
+    # claimed version and OS, so a cell assembled on a different machine or
+    # interpreter can never be relabeled into the matrix.
+    python_full = str(cell.get("python_full", ""))
+    if not python_full.startswith(f"{version}."):
+        raise MatrixCellError("invalid_matrix_cell",
+                              f"{version}: recorded interpreter {python_full!r} does not match claimed {version}")
+    raw_platform = str(cell.get("raw_platform", ""))
+    if raw_platform.split("-")[0] != os_text.split()[0]:
+        raise MatrixCellError("invalid_matrix_cell",
+                              f"{version}: recorded platform {raw_platform!r} does not match claimed OS")
+    if not str(cell.get("arch", "")):
         raise MatrixCellError("invalid_matrix_cell", f"{version}: arch")
     if not Path(str(cell.get("interpreter", ""))).name.startswith("python"):
         raise MatrixCellError("invalid_matrix_cell", f"{version}: interpreter")

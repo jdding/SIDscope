@@ -34,15 +34,19 @@ def _approved_skip_dispositions():
     import xml.sax.saxutils as saxutils
 
     entries = _catalog()["approved_skips"]
-    junit_cases = "".join(
+    # A faithful JUnit record lists the whole executed population: the six
+    # approved skips plus the passing cases.
+    passing = 650
+    cases = [f'<testcase classname="tests.test_pass_{i}" name="test_ok_{i}"/>' for i in range(passing)]
+    cases += [
         f'<testcase classname="{entry["nodeid"].rsplit("::", 1)[0].replace("/", ".").replace(".py", "")}" '
         f'name="{entry["nodeid"].split("::")[-1]}"><skipped message="{saxutils.escape(entry["reason_contains"])}"/></testcase>'
-        for entry in entries)
+        for entry in entries]
     junit = ('<?xml version="1.0"?><testsuite name="pytest" tests="1" failures="0">'
-             + junit_cases + "</testsuite>").encode()
+             + "".join(cases) + "</testsuite>").encode()
     dispositions = [{"nodeid": entry["nodeid"], "reason": entry["reason_contains"], "approved": True}
                     for entry in entries]
-    return junit, dispositions
+    return junit, dispositions, passing
 
 
 def write_receipt(evidence: Path, gate_id: str, *, status="pass", exit_code=0, head=SOURCE["head"],
@@ -63,7 +67,7 @@ def write_receipt(evidence: Path, gate_id: str, *, status="pass", exit_code=0, h
                "log": {"path": f"logs/{gate_id}.log", "sha256": digest_bytes(log_path.read_bytes())},
                "artifact_digests": {}, "skip_dispositions": skip if skip is not None else []}
     if gate_id == "full_cpu_test_suite":
-        junit, dispositions = _approved_skip_dispositions()
+        junit, dispositions, passing = _approved_skip_dispositions()
         junit_path = evidence / "pytest-junit.xml"
         junit_path.write_bytes(junit)
         receipt["passed_count"] = 649
@@ -177,7 +181,9 @@ def _tree_manifest():
 def write_linux(evidence: Path, *, cells=("3.9", "3.10", "3.11", "3.12"), head=SOURCE["head"],
                 status="pass", os_name="Linux 6.5.0-arm64", steps="full",
                 snapshot=SOURCE["public_snapshot_digest"], image_map=None,
-                manifest=None, passed_count=649, shared_marker=False):
+                manifest=None, passed_count=649, shared_marker=False,
+                python_full=None, raw_platform=None, inherited_addopts=False,
+                deselected=0, junit_case_count=None):
     rows = []
     for version in cells:
         log_path = evidence / "linux-cells" / f"linux-{version}.log"
@@ -196,6 +202,8 @@ def write_linux(evidence: Path, *, cells=("3.9", "3.10", "3.11", "3.12"), head=S
                      "image": (image_map if image_map is not None else LINUX_IMAGES).get(version, "not-a-container"),
                      "os": os_name,
                      "arch": "aarch64", "interpreter": "/usr/local/bin/python3",
+                     "python_full": python_full if python_full is not None else {"3.9": "3.9.6", "3.10": "3.10.14", "3.11": "3.11.9", "3.12": "3.12.7"}[version],
+                     "raw_platform": raw_platform if raw_platform is not None else f"Linux-6.5.0-{version}",
                      "source_manifest_sha256": manifest if manifest is not None else _tree_manifest(),
                      "status": status, "exit_code": 0 if status == "pass" else 1,
                      "head": head,
@@ -366,6 +374,11 @@ def test_linux_matrix_shape_is_enforced(evidence, tmp_path):
     with pytest.raises(DeliverySummaryError) as caught:
         build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
     assert caught.value.code == "matrix_identity_unchecked"
+    write_linux(evidence, head="9" * 40,
+                snapshot={"head": "9" * 40, "public_snapshot_digest": "0" * 64, "clean": True}.get("public_snapshot_digest") or SOURCE["public_snapshot_digest"])
+    with pytest.raises(DeliverySummaryError) as caught:
+        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+    assert caught.value.code == "matrix_identity_unchecked"
 
 
 def test_probe_regressions_are_all_rejected(evidence, tmp_path):
@@ -496,15 +509,18 @@ def test_runner_approves_only_known_skip_identities(tmp_path, monkeypatch):
             self.stdout = stdout
             self.stderr = b""
 
-    junit_ok, dispositions = _approved_skip_dispositions()
+    junit_ok, dispositions, passing = _approved_skip_dispositions()
     summary_path = tmp_path / "evidence"
 
     def fake_run_ok(command, **kwargs):
         (tmp_path / "evidence").mkdir(parents=True, exist_ok=True)
         (tmp_path / "evidence" / "pytest-junit.xml").write_bytes(junit_ok)
-        return FakeRun(0, f"{len(dispositions) + 640} passed, {len(dispositions)} skipped in 1.0s".encode())
+        return FakeRun(0, f"{passing} passed, {len(dispositions)} skipped in 1.0s".encode())
 
     monkeypatch.setattr(summary, "short_source", lambda: dict(SOURCE))
+    # Patching subprocess.run globally also intercepts platform.platform()'s
+    # internal uname probe; pin the platform string for the duration.
+    monkeypatch.setattr(summary.platform, "platform", lambda *a, **k: "unit-test-policy")
     monkeypatch.setattr(summary.subprocess, "run", fake_run_ok)
     result = summary.run_gate("full_cpu_test_suite", summary_path)
     assert result["status"] == "pass", result
@@ -525,13 +541,38 @@ def test_runner_approves_only_known_skip_identities(tmp_path, monkeypatch):
     summary.run_gate("full_cpu_test_suite", tmp_path / "evidence-2")
     receipt = json.loads((tmp_path / "evidence-2/gates/full_cpu_test_suite.json").read_text())
     assert any(not d["approved"] for d in receipt["skip_dispositions"])
+    # The receipt is refused either as unapproved identity or as a failed run;
+    # both deny delivery, neither invents approval.
     with pytest.raises(DeliverySummaryError) as caught:
         summary.validate_receipt(receipt, tmp_path / "evidence-2", dict(SOURCE), "full_cpu_test_suite")
-    assert caught.value.code == "unapproved_skip"
+    assert caught.value.code in {"unapproved_skip", "failed_required_gate"}
 
 
 def test_existing_summary_output_is_never_overwritten(evidence, tmp_path):
+    # Round-3 identity cross-checks require per-version runtime fields.
     _, record_sha = write_record(evidence)
+    rows = []
+    for v in ("3.9", "3.10", "3.11", "3.12"):
+        log_path = evidence / "linux-cells" / f"linux-{v}.log"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        markers = [f"STEP-OK {name} {v}" for name in LINUX_STEPS]
+        log_path.write_text("\n".join(markers) + "\n")
+        full = {"3.9": "3.9.6", "3.10": "3.10.14", "3.11": "3.11.9", "3.12": "3.12.7"}[v]
+        rows.append({"python": v, "image": LINUX_IMAGES[v], "os": f"Linux 6.5.0-{v}",
+                     "arch": "aarch64", "interpreter": "/usr/local/bin/python3",
+                     "python_full": full, "raw_platform": f"Linux-6.5.0-{v}",
+                     "source_manifest_sha256": _tree_manifest(),
+                     "status": "pass", "exit_code": 0, "head": SOURCE["head"],
+                     "source_check": {"head": SOURCE["head"],
+                                      "public_snapshot_digest": SOURCE["public_snapshot_digest"],
+                                      "clean": True},
+                     "steps": [{"name": name, "exit_code": 0,
+                                "passed_count": 656 if name == "pytest" else None,
+                                "log_marker": f"STEP-OK {name} {v}"} for name in LINUX_STEPS],
+                     "log": {"path": f"linux-cells/linux-{v}.log", "sha256": digest_bytes(log_path.read_bytes())}})
+    matrix = {"format": summary.LINUX_FORMAT, "source": dict(SOURCE), "os_family": "Linux",
+              "invocation_digest": "0" * 64, "cells": rows}
+    (evidence / "linux-matrix.json").write_bytes(summary.canonical_json_bytes(matrix) + b"\n")
     output = tmp_path / "s.json"
     built = build_summary(evidence, output, expected_record_sha256=record_sha)
     original = output.read_bytes()
@@ -609,3 +650,63 @@ def test_real_runner_receipt_satisfies_validator(tmp_path, monkeypatch):
     out2 = output.parent / "copy.json"
     out2.write_bytes(summary.canonical_json_bytes(receipt) + b"\n")
     summary.validate_campaign(summary.load_json(out2), dict(SOURCE), evidence_dir=output.parent)
+
+
+def _approved_junit():
+    junit, _, _ = _approved_skip_dispositions()
+    return junit
+
+
+def test_third_round_findings_are_rejected(evidence, tmp_path, monkeypatch):
+    """Round-3 acceptance findings: shrunk suite, Darwin-assembled Linux cell."""
+    # 1: an inherited PYTEST_ADDOPTS -k selection would shrink the suite; the
+    # runner must overwrite the variable, never append to it.
+    _, record_sha = write_record(evidence)
+    write_linux(evidence)
+    captured = {}
+    real_run = summary.subprocess.run
+
+    class FakeCompleted:
+        def __init__(self, stdout, returncode=0):
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = b""
+
+    def fake_run_capture_env(command, cwd=None, capture_output=True, shell=False, env=None):
+        # Never execute the suite from inside the suite: run_gate's catalog
+        # command targets tests/ and would recurse. Only the environment and
+        # the recorded artifacts matter here.
+        captured["env_addopts"] = (env or {}).get("PYTEST_ADDOPTS")
+        (gate_dir / "pytest-junit.xml").write_bytes(_approved_junit())
+        return FakeCompleted(b"656 passed, 6 skipped in 1.0s\n")
+
+    monkeypatch.setattr(summary.subprocess, "run", fake_run_capture_env)
+    gate_dir = tmp_path / "gate-run"
+    summary.run_gate("full_cpu_test_suite", gate_dir)
+    assert captured["env_addopts"] == f'--junitxml={gate_dir / "pytest-junit.xml"}'
+
+    # A summary line reporting deselected tests marks the receipt failed.
+    shrunk_dir = tmp_path / "gate-shrunk"
+
+    def fake_run_shrunk(command, cwd=None, capture_output=True, shell=False, env=None):
+        (shrunk_dir / "pytest-junit.xml").write_bytes(_approved_junit())
+        return FakeCompleted(b"1 passed, 6 skipped, 655 deselected in 1.0s\n")
+
+    monkeypatch.setattr(summary.subprocess, "run", fake_run_shrunk)
+    result = summary.run_gate("full_cpu_test_suite", shrunk_dir)
+    assert result["status"] == "failed"
+    shrunk_receipt = json.loads((shrunk_dir / "gates/full_cpu_test_suite.json").read_text())
+    assert "deselected" in (shrunk_receipt.get("detail") or "")
+    write_receipt(evidence, "full_cpu_test_suite")
+
+    # 3: a cell assembled on this Darwin host cannot be relabeled Linux 3.12
+    # — either the interpreter version or the platform family betrays it.
+    _, record_sha = write_record(evidence)
+    write_linux(evidence, python_full="3.9.6")
+    with pytest.raises(DeliverySummaryError) as caught:
+        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+    assert caught.value.code == "invalid_matrix_cell"
+    write_linux(evidence, raw_platform="macOS-26.6.2-arm64-arm-64bit")
+    with pytest.raises(DeliverySummaryError) as caught:
+        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+    assert caught.value.code == "invalid_matrix_cell"

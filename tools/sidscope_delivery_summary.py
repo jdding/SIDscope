@@ -53,7 +53,7 @@ UNVERIFIED_CLAIMS = [
     "real_sid_refresh_effect",
     "multi_seed_statistical_conclusions",
 ]
-PYTEST_SUMMARY = re.compile(r"(\d+) passed(?:,\s*(\d+) skipped)?")
+PYTEST_SUMMARY = re.compile(r"(\d+) passed(?:,\s*(\d+) skipped)?(?:,\s*(\d+) deselected)?")
 
 
 class DeliverySummaryError(ValueError):
@@ -518,13 +518,14 @@ def run_gate(gate_id: str, evidence_dir: Path, command: list[str] | None = None)
     if not before["clean"]:
         raise DeliverySummaryError("dirty_candidate", f"{gate_id} requires a clean candidate")
     # The full-suite gate writes its JUnit record via PYTEST_ADDOPTS so the
-    # executed argv stays exactly the frozen catalog command; the record lands
-    # in the evidence directory and never dirties the candidate tree.
+    # executed argv stays exactly the frozen catalog command. The variable is
+    # OVERWRITTEN, never inherited: an external PYTEST_ADDOPTS (for example a
+    # -k expression) could otherwise shrink the suite while the summary line
+    # still reports it as passing (third-round acceptance finding 1).
     import os
     gate_environment = dict(os.environ)
     if gate_id == "full_cpu_test_suite":
-        gate_environment["PYTEST_ADDOPTS"] = (gate_environment.get("PYTEST_ADDOPTS", "") +
-                                              f' --junitxml={evidence_dir / "pytest-junit.xml"}').strip()
+        gate_environment["PYTEST_ADDOPTS"] = f'--junitxml={evidence_dir / "pytest-junit.xml"}'
     run = subprocess.run([sys.executable, *expected_invocation], cwd=ROOT, capture_output=True,
                          shell=False, env=gate_environment)
     log_path = evidence_dir / f"logs/{gate_id}.log"
@@ -559,6 +560,7 @@ def run_gate(gate_id: str, evidence_dir: Path, command: list[str] | None = None)
         else:
             receipt["passed_count"] = int(match.group(1))
             recorded = int(match.group(2) or 0)
+            deselected = int(match.group(3) or 0)
             receipt["skip_count"] = recorded
             dispositions = []
             for skip in skips:
@@ -567,6 +569,27 @@ def run_gate(gate_id: str, evidence_dir: Path, command: list[str] | None = None)
                                      "approved": bool(entry and entry["reason_contains"] in skip["reason"])})
             receipt["skip_dispositions"] = dispositions
             receipt["artifact_digests"] = {"pytest-junit.xml": sha(junit_path)}
+            # A shrunk suite (deselected tests) can never count as the full
+            # suite, and the JUnit record must account for exactly the
+            # executed population with no failures or errors.
+            if deselected:
+                receipt["status"] = "failed"
+                receipt["detail"] = f"suite shrunk by -k style selection: {deselected} deselected"
+            else:
+                import xml.etree.ElementTree as ElementTree
+
+                junit_root = ElementTree.parse(junit_path).getroot()
+                cases = junit_root.iter("testcase")
+                case_count = sum(1 for _ in cases)
+                failures = sum(len(list(case)) for case in junit_root.iter("testcase")
+                               if case.findall("failure") or case.findall("error"))
+                if case_count != receipt["passed_count"] + recorded:
+                    receipt["status"] = "failed"
+                    receipt["detail"] = (f"JUnit records {case_count} cases but the summary line reports "
+                                         f"{receipt['passed_count']} passed + {recorded} skipped")
+                elif failures:
+                    receipt["status"] = "failed"
+                    receipt["detail"] = f"JUnit records {failures} failing/error cases"
             if not source_stable:
                 receipt["detail"] = "source tree changed during gate execution"
     with receipt_path.open("xb") as handle:

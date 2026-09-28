@@ -72,6 +72,11 @@ def main() -> int:
     log_path.write_bytes(b"\n".join(combined))
     cell = {
         "python": args.python_version,
+        # Identity recorded from this live runtime; the shared validator
+        # cross-checks these against the claimed version and OS so a cell
+        # assembled on a different machine/interpreter can never pass.
+        "python_full": platform.python_version(),
+        "raw_platform": platform.platform(),
         "image": args.image,
         "os": f"Linux {platform.release()} {platform.machine()}",
         "arch": platform.machine(),
