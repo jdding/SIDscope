@@ -203,8 +203,7 @@ def validate_campaign(campaign: dict[str, Any], expected_source: dict[str, Any],
     except DeliverySummaryError as error:
         raise DeliverySummaryError("stale_campaign_source", error.detail) from error
     baseline = _baseline_payload()
-    if campaign.get("baseline_sha256") != sha_bytes(BASELINE_PATH.read_bytes()):
-        raise DeliverySummaryError("campaign_baseline_mismatch", "frozen baseline changed or unbound")
+    baseline_sha256 = sha_bytes(BASELINE_PATH.read_bytes())
     groups = campaign.get("groups") or []
     if len(groups) != 3 or [row.get("group") for row in groups] != [0, 1, 2]:
         raise DeliverySummaryError("invalid_campaign_receipt", f"expected groups [0,1,2], found {[row.get('group') for row in groups]}")
@@ -225,7 +224,7 @@ def validate_campaign(campaign: dict[str, Any], expected_source: dict[str, Any],
         if group.get("delivery_gate") != measurement.get("delivery_gate"):
             raise DeliverySummaryError("invalid_campaign_receipt", f"campaign group {index}: gate drift")
         # The recorded measurement must re-derive the recorded verdict.
-        if measurement.get("baseline_sha256") != campaign.get("baseline_sha256"):
+        if measurement.get("baseline_sha256") != baseline_sha256:
             raise DeliverySummaryError("campaign_baseline_mismatch", f"group {index}")
         commands = measurement.get("commands") or {}
         if set(commands) != set(baseline["commands"]):

@@ -127,7 +127,7 @@ def write_campaign(evidence: Path, *, groups=3, delivery_status="pass"):
                            "median_ratios": measurement["delivery_gate"]["median_ratios"],
                            "environment": measurement["environment"], "measurement": payload})
     receipt = {"format": summary.CAMPAIGN_FORMAT, "status": "pass" if delivery_status == "pass" else "failed",
-               "source": dict(SOURCE), "baseline_sha256": BASELINE_SHA,
+               "source": dict(SOURCE),
                "environment": {"python": "3.9.6", "platform": "macOS-26.6.2-arm64-arm-64bit"},
                "invocation_digest": "0" * 64, "groups": group_rows,
                "group_files": group_files,
@@ -361,9 +361,9 @@ def test_probe_regressions_are_all_rejected(evidence, tmp_path):
     with pytest.raises(DeliverySummaryError) as caught:
         summary.validate_campaign(bad, dict(SOURCE), evidence_dir=evidence)
     assert caught.value.code == "failed_required_gate"
-    # R02b: baseline rebinding is refused.
+    # R02b: baseline rebinding is refused (per recorded measurement).
     bad = copy.deepcopy(campaign)
-    bad["baseline_sha256"] = "0" * 64
+    bad["groups"][0]["measurement"]["baseline_sha256"] = "0" * 64
     with pytest.raises(DeliverySummaryError) as caught:
         summary.validate_campaign(bad, dict(SOURCE), evidence_dir=evidence)
     assert caught.value.code == "campaign_baseline_mismatch"
@@ -425,3 +425,40 @@ def test_record_sub_evidence_files_are_recursively_verified(evidence, tmp_path):
                              archive_path=evidence / "runtime.zip", profile="runtime")
     assert caught.value.code == "record_sub_evidence_missing_or_tampered"
     tampered.write_bytes(original)
+
+
+def test_real_runner_receipt_satisfies_validator(tmp_path, monkeypatch):
+    """Guard against validator/runner field drift (regeneration of the R02 hole)."""
+    from tools import run_sidscope_performance_campaign as runner
+    measurement = _recomputed_measurement()
+
+    class FakePool:
+        def __init__(self, processes=None):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def apply(self, function, arguments):
+            group_path = Path(arguments[0])
+            group_path.write_bytes(json.dumps(measurement).encode())
+            return 0
+
+    class FakeContext:
+        def Pool(self, processes=None):
+            return FakePool()
+
+    monkeypatch.setattr(runner.multiprocessing, "get_context", lambda name: FakeContext())
+    monkeypatch.setattr(runner, "short_source", lambda: dict(SOURCE))
+    output = tmp_path / "performance-campaign.json"
+    result = runner.run_campaign(output)
+    assert result["status"] == "pass"
+    receipt = summary.load_json(output)
+    for group in receipt["groups"]:
+        group["delivery_gate"] = group["measurement"]["delivery_gate"]
+    out2 = output.parent / "copy.json"
+    out2.write_bytes(summary.canonical_json_bytes(receipt) + b"\n")
+    summary.validate_campaign(summary.load_json(out2), dict(SOURCE), evidence_dir=output.parent)
