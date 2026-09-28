@@ -1,18 +1,41 @@
 #!/bin/sh
 # In-container Linux matrix cell runner: fixed commands, then pure assembly.
 # Usage (host, per version; see docs/SIDSCOPE_LINUX_MATRIX_RUNBOOK.md):
-#   docker run --rm -v "$REPO:/workspace:ro" -v "$CELLS:/out" -v "$DEPS:/deps:ro" \
-#     -e DEPS_DIR=/deps -w /workspace python:3.9-slim \
-#     sh tools/run_sidscope_linux_matrix_cell.sh /out 3.9 python:3.9-slim \
-#        "$EXPECTED_MANIFEST" "$HEAD" "$SNAPSHOT"
-# DEPS_DIR (optional) is a prepared per-version Linux wheelhouse (the locked
-# runtime dependencies plus the project wheel); when set, the cell installs
-# the project and its locked dependencies from it before running pytest.
+#   docker run --rm -v "$CLONE:/workspace:ro" -v "$CELLS:/out" \
+#     -v "$DEPS_VERSION_DIR:/deps:ro" -e DEPS_DIR=/deps -w /workspace \
+#     sidscope-matrix:<version> sh tools/run_sidscope_linux_matrix_cell.sh \
+#       /out <version> sidscope-matrix:<version> "$EXPECTED_MANIFEST" "$HEAD" "$SNAPSHOT"
+# The mount at /workspace must be a real local clone (not the worktree): the
+# full suite exercises git identity checks and the worktree .git pointer does
+# not resolve inside the container. DEPS_DIR is a per-version wheelhouse with
+# the project wheel, the locked runtime dependencies and pytest; cells never
+# build from the read-only source and never reach the network.
 set -u
 OUT="$1"; VERSION="$2"; IMAGE="$3"; EXPECTED_MANIFEST="$4"; HEAD="$5"; SNAPSHOT="$6"
 WORK=/workspace
 STEPS="$OUT/steps-$VERSION"
 mkdir -p "$STEPS"
+
+# The full suite runs git-based source identity checks; a missing git is a
+# preparation error, not a test failure.
+if ! command -v git >/dev/null 2>&1; then
+  echo "git_missing: the cell image must include git (see runbook image prep)" >&2
+  exit 1
+fi
+
+if [ -z "${DEPS_DIR:-}" ]; then
+  echo "DEPS_DIR not set: mount the per-version wheelhouse and export DEPS_DIR (see runbook)" >&2
+  exit 1
+fi
+if [ ! -d "$DEPS_DIR" ]; then
+  echo "DEPS_DIR not a directory: $DEPS_DIR" >&2
+  exit 1
+fi
+mkdir -p "$STEPS/deps-install"
+if ! sh tools/sidscope_linux_deps_install.sh "$DEPS_DIR" "$STEPS/deps-install/output.log"; then
+  echo "dependency install failed; see $STEPS/deps-install/output.log" >&2
+  exit 1
+fi
 
 run_step() {
   NAME="$1"; shift
@@ -20,14 +43,6 @@ run_step() {
   ( cd "$WORK" && "$@" ) > "$STEPS/$NAME/output.log" 2>&1
   echo "$?" > "$STEPS/$NAME/exitcode"
 }
-
-# Dependency preparation (network-free): install the locked runtime deps and
-# the project itself from the operator-provided Linux wheelhouse so pytest and
-# imports run against a regular install, never a checkout.
-if [ -n "${DEPS_DIR:-}" ] && [ -d "$DEPS_DIR" ]; then
-  ( cd "$WORK" && python3 -m pip install --no-index --find-links "$DEPS" "$WORK" ) \
-    > "$STEPS/deps-install.log" 2>&1 || { echo "dependency install failed; see $STEPS/deps-install.log"; exit 1; }
-fi
 
 run_step pytest      python3 -m pytest -q --no-header -x tests
 run_step metadata    python3 tools/verify_sidscope_release_metadata.py
