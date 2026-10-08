@@ -1,6 +1,6 @@
 # SIDScope Compatibility Matrix
 
-The `2.0.0rc1` release candidate retains the surface frozen by ADR-0024. N03-N08
+The `2.0.0` package retains the surface frozen by ADR-0024. N03-N08
 technical scope is verified; independent_user_actual_use is excluded from
 current gates by ADR-0025 and the fact stays not verified, while certification
 additionally requires same-source delivery evidence. This does not create an
@@ -20,7 +20,7 @@ semantics and never changes native SIDs. N08 evidence applies only to the two
 measured 100-episode routes; it is not a production SLO.
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
+Current package: `2.0.0`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -31,7 +31,7 @@ Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a
 Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-Status: SIDScope 2.0 release candidate; unchanged 1.7 compatibility baseline
+Status: SIDScope 2.0 stable release line; unchanged 1.7 compatibility baseline
 
 Current local safety exception (ADR-0016): new submission admission and default
 indexes require protocol-bound diagnostic recomputation. Missing inputs fail
@@ -41,7 +41,7 @@ verification exposes `structure_only`/`unverified`; standard metric ranges and
 target-state invariants reject previously accepted contradictory documents.
 No immutable artifact is rewritten. Release receipt v2 verifies member bytes;
 legacy receipts require rebuilding for current delivery verification. These
-restrictions are retained by `2.0.0rc1` and do not alter released 1.1.x.
+restrictions are retained by `2.0.0` and do not alter released 1.1.x.
 
 The existing `verify` command additionally accepts `--diagnostic`, `--trace`
 and `--selection` together for CPU recomputation. Its output distinguishes
@@ -74,6 +74,7 @@ required, including full tests, installation, recomputation and performance.
 | 1.6.0.dev0 | `sidinspector` | `sidinspector` | frozen candidate facade plus compatibility/migration verification | Compatibility, migration and external-adoption hardening closed locally; public release not implied |
 | 1.7.0.dev0 | `sidinspector` | `sidinspector` and curated `sidscope` | previous facade plus `schema list` and two-stage `schema validate` | Contract and public-surface stabilization active; public release not implied |
 | 2.0.0rc1 | `sidinspector` | `sidinspector` and curated `sidscope` | same frozen facade and opt-in workflows | Independent release candidate; current-commit acceptance required |
+| 2.0.0 | `sidinspector` | `sidinspector` and curated `sidscope` | same frozen facade and opt-in workflows | Stable independent release line; exact tag/Release identity is authoritative |
 
 The table records compatibility, not publication. GitHub `main` remains on
 1.1.x; ADR-0028 permits 2.0 publication on `codex/sidscope-v2` after same-source
@@ -92,7 +93,7 @@ during migration.
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `2.0.0rc1` | PEP 440 RC version; Python package remains `sidinspector`. |
+| Product/package | `2.0.0` | PEP 440 final version; Python package remains `sidinspector`. |
 | Adapter SDK | `1.0.0` | Stable capability descriptor and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted for historical replay. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | governed `static_mapping_c0_c5`, `generator_g0_g5`, `overlay_g0_g5`, `release_local` at `1.0.0`; legacy `common.generator.v1` and five family profiles remain supported | Profile reports bind the exact catalog hash; legacy-only routes retain read-only authority until migration. |

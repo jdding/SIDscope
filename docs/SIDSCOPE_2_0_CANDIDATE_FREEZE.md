@@ -1,6 +1,6 @@
 # SIDScope 2.0 engineering candidate freeze
 
-Status: release candidate `2.0.0rc1` under ADR-0028; certification gated on
+Status: stable release-line candidate `2.0.0` under ADR-0028; certification gated on
 same-source delivery evidence, with
 independent_user_actual_use excluded from current gates
 (ADR-0025, 2026-09-27) and still not verified.

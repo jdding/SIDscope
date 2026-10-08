@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="sidinspector",
-    version="2.0.0rc1",
+    version="2.0.0",
     description="Mapping-first diagnostics for semantic-ID tokenizer artifacts",
     package_dir={"": "src"},
     packages=find_packages("src"),

@@ -1,7 +1,7 @@
 # SIDScope
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
+Current package: `2.0.0`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -113,7 +113,7 @@ This validates a contract, not an upstream method or independent admission.
 The fixture-based commands below require a source checkout or the appropriate
 conformance/evidence-full release profile; they are not runtime quickstart steps.
 
-The active `2.0.0rc1` line retains the eleven canonical contracts from source
+The active `2.0.0` line retains the eleven canonical contracts from source
 identity through evidence index, stable Adapter SDK `1.0.0`, lazy external
 plugins, five registered native payload families, and composable profiles. It
 adds immutable EvidenceBundle v1 objects, a rebuildable SQLite registry,

@@ -2,7 +2,7 @@
 
 Status: local engineering candidate; RC transition gated on same-source delivery evidence.
 independent_user_actual_use excluded from current gates
-(ADR-0025, 2026-09-27) and remains not verified. Package: `2.0.0rc1`. Adapter SDK:
+(ADR-0025, 2026-09-27) and remains not verified. Package: `2.0.0`. Adapter SDK:
 `1.0.0`. Plugin API: `1.0`. Owner authorization: ADR-0028, 2026-10-08.
 
 ## Candidate authority

@@ -22,7 +22,7 @@ that every future revision must remain on `v1.0.2` or adopt 2.x.
 
 ## Current 2.0 candidate closeout
 
-The current release candidate is `2.0.0rc1`. Adapter SDK 1.0 and the
+The current stable release-line candidate is `2.0.0`. Adapter SDK 1.0 and the
 compatibility surface are frozen; N02-N08 engineering scope is verified. Run:
 
 ```bash

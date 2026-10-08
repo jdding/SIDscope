@@ -2,7 +2,7 @@
 
 ## Current implementation view — 2026-10-08
 
-The `2.0.0rc1` package retains the **frozen 1.7 implementation architecture**.
+The `2.0.0` package retains the **frozen 1.7 implementation architecture**.
 The existing illustration and content map remain unchanged 1.7 baseline
 artifacts; the package version is reported separately by the verifier. Owner
 authorization for independent publication is ADR-0028, not a diagram.

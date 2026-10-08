@@ -449,7 +449,7 @@
     }
   ],
   "module_dependency_matrix": "docs/reproducibility/sidscope_module_dependencies.json",
-  "product_version": "2.0.0rc1",
+  "product_version": "2.0.0",
   "profiles": [
     {
       "authority": "src/sidinspector/schemas/conformance_profile_catalog.v1.json",
@@ -5399,6 +5399,6 @@
       "family.parallel_graph_token_set.v1@1.0.0"
     ],
     "evidence_bundle": "sidscope.evidence_bundle.v1@1.0.0_with_content_addressed_objects_and_sqlite_projection",
-    "product_package": "2.0.0rc1"
+    "product_package": "2.0.0"
   }
 }

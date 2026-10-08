@@ -1,7 +1,7 @@
 # SIDScope pre-2.0 SDLC hardening
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
+Current package: `2.0.0`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.

@@ -1,7 +1,7 @@
 # SIDScope 1.7 Development Handoff
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
+Current package: `2.0.0`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -19,7 +19,8 @@ Last updated: 2026-10-08
 The owner approved governance update -> `2.0.0rc1` -> fresh full acceptance ->
 public content/history review -> `sidscope` remote `codex/sidscope-v2` push ->
 `2.0.0` same-source acceptance -> immutable tag/Release/assets -> anonymous
-download smoke. Current package is `2.0.0rc1`; old receipts do not certify this
+download smoke. RC `6d3028cd41ece254a01f832e8b72b14b90c86989` passed same-source
+acceptance before the final transition. Current package is `2.0.0`; old receipts do not certify this
 new commit. Main stays at `1876e0072eca49d1f4c7b160fa98826d9b206b60`
 and all existing remote tags stay unchanged. Old origin and maintenance/TOIS
 worktrees are outside authorization. No PyPI or default-branch change.

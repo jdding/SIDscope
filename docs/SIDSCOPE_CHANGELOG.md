@@ -11,6 +11,17 @@ The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
 
+## SIDScope v2.0.0: stable conformance and observability
+
+- Declares the compatibility surface demonstrated by the passing 2.0 RC stable;
+  no feature, native-generation, producer-version or historical-evidence delta.
+- Repeats all ten exact-source gates, package/native consumers, profile smoke,
+  G8 and deterministic rebuild on the final clean commit before publication.
+- Published identity is immutable `v2.0.0` and its GitHub Release on the
+  independent `codex/sidscope-v2` line; main/1.1.x and frozen TOIS are unchanged.
+- Runtime is the default asset. Platform and claim limits remain exactly those
+  of the RC below; no PyPI or broader platform-support promise is introduced.
+
 ## SIDScope v2.0.0rc1: independent release candidate
 
 - Retains 46 schema IDs / 28 resources, 19 CLI result schemas, 39 facade symbols,

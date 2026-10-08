@@ -1,7 +1,7 @@
 # SIDScope Versioning and Release Governance
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
+Current package: `2.0.0`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -12,7 +12,7 @@ Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a
 Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-Status: active; current release candidate `2.0.0rc1` (ADR-0028)
+Status: active; stable release-line candidate `2.0.0` (ADR-0028)
 
 ## Sources of Truth
 
