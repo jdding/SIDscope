@@ -135,6 +135,12 @@ to public 1.1.x maintenance only; the local pre-2.0 branch stops before the
 
 ## Required Release Record
 
+The 2.0 platform decision (ADR-0027, 2026-10-08) replaces the required Linux
+four-cell gate with an explicit unsupported/deferred declaration in catalog
+v2 and delivery summary v2. Platform support is limited to executed acceptance
+listed in `docs/COMPATIBILITY.md`. This decision authorizes scope and local
+evidence updates, not an RC version bump or public publication.
+
 Every formal GitHub Release records version, tag, commit, release date,
 compatibility, breaking changes, migration, schema/profile/SDK/bundle versions,
 adapter status, known limitations, test/verifier/archive/G8 outcomes, artifact

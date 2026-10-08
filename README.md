@@ -78,8 +78,11 @@ Neither mode claims to reproduce upstream training.
 
 ## Install
 
-The release verifier is CPU-only. It was checked with Python 3.9, and should run
-on Python 3.9+ with the dependencies in `pyproject.toml` / `requirements.txt`.
+The release verifier is CPU-only. Current 2.0 acceptance covers macOS arm64
+with CPython 3.9.6. Linux Python 3.9–3.12 support is deferred beyond 2.0;
+see `docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md` and ADR-0027.
+Python >=3.9 in `pyproject.toml` is an installation constraint, not proof of
+acceptance for other OS/interpreter combinations. Windows remains unverified.
 Use a regular installation for consumption; editable installation is only for
 development. Stock Python installations with older pip should upgrade it first.
 No GPU is required for the bundled verifier, quickstart, or D1-D7 audits;

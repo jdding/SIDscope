@@ -1,6 +1,8 @@
 # SIDScope Linux matrix runbook
 
-Status: executable runbook for the `linux_matrix` required gate. The cell
+Status: deferred backlog reference under ADR-0027 (2026-10-08). Linux is
+unsupported in 2.0 and this runbook is not a release prerequisite. It is
+retained for a future feedback-driven support decision. The cell
 rules live in `tools/sidscope_linux_matrix_cells.py` and are applied
 identically by the receipt builder and the delivery summary.
 

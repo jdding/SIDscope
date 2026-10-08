@@ -98,12 +98,15 @@ F06 binds source HEAD, dirty public-file bytes, tests, environment and all three
 archive hashes in a detached local record. Pin its digest before reading an
 archive; no signature service or publisher-authenticity claim is introduced.
 F07 executes wide dependency resolution and a separate hash-locked offline
-replay, wheel consumers and sdist round-trip consumers. Actual local install matrix: Darwin arm64 Python 3.9.6, 3.10.19, 3.11.15 and
-3.12.13. The current Linux arm64 Docker matrix also executed CPython 3.9 through
-3.12, with the full suite and engineering verifiers green in every cell. CI now
-installs the declared `setuptools>=68` build backend explicitly. Windows,
-optional training extras and unlisted Python versions remain outside the recorded
-acceptance; none is inferred from `>=3.9`.
+replay, wheel consumers and sdist round-trip consumers. Current candidate
+acceptance covers macOS arm64 Python 3.9.6. Historical Darwin 3.10–3.12 and
+Linux matrix results remain tied to their original source, not this candidate.
+Linux CPython 3.9–3.12 support is deferred beyond 2.0 by ADR-0027; the platform
+backlog is `docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md`. CI uses macOS Python
+3.9 and installs `setuptools>=68` and wheel explicitly; CI configuration alone
+is not execution evidence. Windows, optional training extras and other
+interpreter combinations remain outside current recorded acceptance;
+none is inferred from `>=3.9`.
 F11 keeps bounded untrusted intake and strict structural checks; ADR-0018 removes
 arbitrary default caps from trusted local workflows and export inspection while
 offering explicit caller budgets. Hash-pinned historical verifier scripts retain their original

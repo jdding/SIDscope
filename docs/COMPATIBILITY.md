@@ -51,6 +51,17 @@ with training authenticity. The no-recomputation path reports
 
 ## Product and Entry Points
 
+### 2.0 platform support scope (ADR-0027, 2026-10-08)
+
+Current acceptance covers macOS arm64 / CPython 3.9.6. Linux CPython 3.9–3.12
+is unsupported in 2.0 and moved to the feedback-driven backlog at
+`docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md`; no Linux matrix receipt is
+required by gate catalog v2. Windows and other OS/interpreter combinations
+remain unverified. `requires-python >=3.9` describes install eligibility,
+not a supported-platform test matrix. Historical Linux evidence stays intact
+and is not a PASS for this candidate. All ten remaining technical gates stay
+required, including full tests, installation, recomputation and performance.
+
 | Product line | Distribution | Python import | Product CLI | Status |
 | --- | --- | --- | --- | --- |
 | 1.0.2 | `sidinspector` | `sidinspector` | route-specific commands | Immutable historical release associated with the submitted TOIS snapshot; not a permanent TOIS revision constraint |

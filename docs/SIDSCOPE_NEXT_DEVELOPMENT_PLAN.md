@@ -1,6 +1,15 @@
 # SIDScope 本地后续开发计划
 
-## 当前状态（2026-09-27，覆盖下方历史记录）
+## 当前平台范围决定（2026-10-08）
+
+- Linux Python 3.9–3.12 支持及四格验收移出 2.0 必须项，进入反馈驱动待办：
+  `docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md`、ADR-0027。
+- 当前验收范围为 macOS arm64 / CPython 3.9.6；catalog v2 保留其余十项门禁，
+  delivery summary v2 明确 Linux unsupported/deferred，不生成 Linux PASS。
+- 收尾顺序：新候选同源码证据 → 摘要复验 → certification gate → 另行批准 RC。
+  N09/N10 不排期，公开发布授权规则不变。
+
+## 2026-09-27 状态记录（Linux 前置项已被 ADR-0027 覆盖）
 
 - 项目负责人 2026-09-27 决定：independent_user_actual_use excluded from current gates
   ——认证、RC 与交付门禁不再要求独立用户实际使用（ADR-0025 与
@@ -23,7 +32,7 @@
   `sidscope.native_bridge` / `sidscope.observed_review`，安装后可执行，
   RPG v1 历史验证器为显式 evidence-full provider（缺失 typed unavailable），
   真实 RPG/PSID 观察经包内路径重建一致、输入哈希不变、无模型重跑。
-- RC 过渡绑定同源码交付证据：Linux/Python 3.9-3.12 matrix、三 profile
+- 当时 RC 过渡要求 Linux/Python 3.9-3.12 matrix（现已移出 2.0）；三 profile
   archive/smoke、regular install/G8、干净本地 commit、exact-source 回执与
   交付摘要；历史矩阵记录不当作当前通过。推送、tag、GitHub Release 仍需
   单独明确授权。

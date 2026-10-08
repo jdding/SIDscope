@@ -7,8 +7,9 @@ failed, not-run or unapproved-skipped required gates, stale source identity and
 tampered evidence; the verifier recomputes every referenced digest, re-runs
 record v2 verification with recursive sub-evidence checks, re-derives the
 performance verdict from the recorded measurements and the frozen baseline, and
-rejects structurally incomplete Linux matrix receipts — it never trusts status
-strings. Receipt gates are bound to the catalog invocations. Outputs are
+checks the declared platform scope — it never trusts status strings.
+Linux support is deferred in catalog v2; its standalone validator is retained.
+Receipt gates are bound to the catalog invocations. Outputs are
 created exclusively; existing files are never overwritten. This tool never
 rewrites historical evidence.
 """
@@ -38,11 +39,25 @@ from tools.sidscope_local_release_record import (
     verify_record,
 )
 
-SUMMARY_FORMAT = "sidscope.delivery_summary.v1"
+SUMMARY_FORMAT = "sidscope.delivery_summary.v2"
 RECEIPT_FORMAT = "sidscope.gate_receipt.v1"
 CAMPAIGN_FORMAT = "sidscope.performance_campaign.v1"
 LINUX_FORMAT = "sidscope.linux_matrix_receipt.v1"
-CATALOG_PATH = ROOT / "docs/reproducibility/sidscope_required_gate_catalog.v1.json"
+CATALOG_PATH = ROOT / "docs/reproducibility/sidscope_required_gate_catalog.v2.json"
+REQUIRED_GATE_BINDINGS = {
+    "full_cpu_test_suite": "catalog_command",
+    "release_metadata_verifier": "catalog_command",
+    "architecture_inventory_verifier": "catalog_command",
+    "sdlc_acceptance_verifier": "catalog_command",
+    "sdlc_hardening_engineering_ready": "catalog_command",
+    "release_profiles_verifier": "catalog_command",
+    "candidate_engineering_ready_clean": "catalog_command",
+    "resource_package_verifier": "catalog_command",
+    "performance_campaign": "campaign_receipt",
+    "exact_source_record_v2": "record_v2",
+}
+PLATFORM_SUPPORT = {"accepted": "macOS arm64 / CPython 3.9.6",
+                    "linux": "unsupported_in_2_0", "windows": "unverified"}
 BASELINE_PATH = ROOT / "docs/reproducibility/sidscope_1_2_cli_cpu_baseline.json"
 LINUX_PYTHONS = ("3.9", "3.10", "3.11", "3.12")
 LINUX_REQUIRED_STEPS = ("pytest", "metadata", "architecture", "sdlc_acceptance",
@@ -52,6 +67,7 @@ UNVERIFIED_CLAIMS = [
     "native_training_authenticity",
     "real_sid_refresh_effect",
     "multi_seed_statistical_conclusions",
+    "linux_python_3_9_to_3_12_support",
 ]
 PYTEST_SUMMARY = re.compile(r"(\d+) passed(?:,\s*(\d+) skipped)?(?:,\s*(\d+) deselected)?")
 
@@ -74,12 +90,22 @@ def gate_catalog() -> dict[str, Any]:
     if not CATALOG_PATH.is_file():
         raise DeliverySummaryError("gate_catalog_missing", str(CATALOG_PATH))
     catalog = load_json(CATALOG_PATH)
-    if catalog.get("schema") != "sidscope.required_gate_catalog.v1":
+    if catalog.get("schema") != "sidscope.required_gate_catalog.v2":
         raise DeliverySummaryError("gate_catalog_invalid", "schema")
     gates = [row["gate_id"] for row in catalog.get("gates", [])]
     if not gates or len(set(gates)) != len(gates):
         raise DeliverySummaryError("gate_catalog_invalid", "gate ids must be non-empty and unique")
     by_id = {row["gate_id"]: row for row in catalog["gates"]}
+    if {key: row.get("binding") for key, row in by_id.items()} != REQUIRED_GATE_BINDINGS:
+        raise DeliverySummaryError("gate_catalog_invalid", "the ten required gates and bindings are frozen")
+    if (catalog.get("deferred_gates") != ["linux_matrix"]
+            or catalog.get("platform_support") != PLATFORM_SUPPORT):
+        raise DeliverySummaryError("gate_catalog_invalid", "platform/deferred scope differs from ADR-0027")
+    decision = catalog.get("decision") or {}
+    if (decision.get("decided_by") != "project_owner" or decision.get("date") != "2026-10-08"
+            or decision.get("adr") != "docs/adr/0027-defer-linux-support-beyond-2-0.md"
+            or not (ROOT / decision["adr"]).is_file()):
+        raise DeliverySummaryError("gate_catalog_invalid", "ADR-0027 owner decision required")
     for gate_id, row in by_id.items():
         if row.get("binding") == "catalog_command":
             invocation = row.get("invocation")
@@ -364,12 +390,12 @@ def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: s
     if unknown:
         raise DeliverySummaryError("unknown_gate_receipt", str(unknown))
     missing = [gate_id for gate_id in required
-               if gate_id not in receipts and gate_id not in ("performance_campaign", "linux_matrix", "exact_source_record_v2")]
+               if gate_id not in receipts and gate_id not in ("performance_campaign", "exact_source_record_v2")]
     if missing:
         raise DeliverySummaryError("missing_required_gate", str(missing))
     gate_entries = []
     for gate_id in required:
-        if gate_id in ("performance_campaign", "linux_matrix", "exact_source_record_v2"):
+        if gate_id in ("performance_campaign", "exact_source_record_v2"):
             continue
         receipt = validate_receipt(receipts[gate_id], evidence_dir, expected_source, gate_id, catalog=catalog_info)
         gate_entries.append({
@@ -398,20 +424,6 @@ def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: s
                          "receipt_digest": sha(campaign_path),
                          "artifact_digests": {row["path"]: row["sha256"] for row in campaign.get("group_files", [])},
                          "skip_dispositions": []})
-    matrix_path = evidence_dir / "linux-matrix.json"
-    if not matrix_path.is_file():
-        raise DeliverySummaryError("missing_linux_receipt", str(matrix_path))
-    matrix = validate_linux_matrix(load_json(matrix_path), expected_source, evidence_dir)
-    gate_entries.append({"gate_id": "linux_matrix", "status": "pass",
-                         "receipt": {"path": "linux-matrix.json", "sha256": sha(matrix_path)},
-                         "source": matrix["source"],
-                         "environment_id": sha_bytes(canonical_json_bytes({"os_family": matrix.get("os_family", "Linux")})),
-                         "invocation_digest": matrix.get("invocation_digest", ""),
-                         "exit_code": 0,
-                         "log_digest": "",
-                         "receipt_digest": sha(matrix_path),
-                         "artifact_digests": {cell["python"]: cell["log"]["sha256"] for cell in matrix["cells"]},
-                         "skip_dispositions": []})
     gate_entries.append({"gate_id": "exact_source_record_v2", "status": "pass",
                          "receipt": {"path": "release-record.json", "sha256": expected_record_sha256},
                          "source": record_source,
@@ -429,6 +441,8 @@ def build_summary(evidence_dir: Path, output: Path, *, expected_record_sha256: s
     summary = with_content_sha256({
         "format": SUMMARY_FORMAT, "status": "pass",
         "gate_catalog_digest": catalog_info["digest"],
+        "deferred_gates": catalog_info["catalog"]["deferred_gates"],
+        "platform_support": catalog_info["catalog"]["platform_support"],
         "acceptance_scope": {"policy_revision": scope["policy_revision"], "snapshot": scope_digest(ROOT)},
         "source": expected_source,
         "gates": gate_entries,
@@ -457,6 +471,11 @@ def verify_summary(summary_path: Path, *, expected_summary_sha256: str, evidence
     catalog_info = gate_catalog()
     if summary.get("gate_catalog_digest") != catalog_info["digest"]:
         raise DeliverySummaryError("gate_catalog_mismatch", "catalog changed after the summary was built")
+    for field in ("deferred_gates", "platform_support"):
+        if summary.get(field) != catalog_info["catalog"][field]:
+            raise DeliverySummaryError("delivery_scope_mismatch", field)
+    if summary.get("unverified_claims") != UNVERIFIED_CLAIMS:
+        raise DeliverySummaryError("delivery_scope_mismatch", "unverified_claims")
     gate_ids = [row["gate_id"] for row in summary["gates"]]
     if sorted(gate_ids) != sorted(catalog_info["required"]):
         raise DeliverySummaryError("gate_catalog_incomplete", str(sorted(set(catalog_info["required"]) ^ set(gate_ids))))
@@ -477,7 +496,7 @@ def verify_summary(summary_path: Path, *, expected_summary_sha256: str, evidence
             raise DeliverySummaryError("receipt_integrity", row["gate_id"])
         if row["status"] != "pass" or row["exit_code"] != 0:
             raise DeliverySummaryError("failed_required_gate", row["gate_id"])
-        if row["gate_id"] in ("performance_campaign", "linux_matrix", "exact_source_record_v2"):
+        if row["gate_id"] in ("performance_campaign", "exact_source_record_v2"):
             continue
         receipt = load_json(receipt_path)
         validate_receipt(receipt, evidence_dir, expected_source, row["gate_id"], catalog=catalog_info)
@@ -487,10 +506,6 @@ def verify_summary(summary_path: Path, *, expected_summary_sha256: str, evidence
     if not campaign_path.is_file():
         raise DeliverySummaryError("missing_campaign_receipt", str(campaign_path))
     validate_campaign(load_json(campaign_path), expected_source, evidence_dir=evidence_dir)
-    matrix_path = evidence_dir / "linux-matrix.json"
-    if not matrix_path.is_file():
-        raise DeliverySummaryError("missing_linux_receipt", str(matrix_path))
-    validate_linux_matrix(load_json(matrix_path), expected_source, evidence_dir)
     return {"status": "pass", "summary_sha256": sha(summary_path), "source": expected_source,
             "delivery_ready": True, "certification_ready": summary.get("certification_ready") is True,
             "release_authorized": False}

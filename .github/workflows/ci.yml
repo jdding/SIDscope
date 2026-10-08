@@ -6,10 +6,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,7 +40,7 @@ jobs:
       - run: python tools/verify_sidscope_release_metadata.py
 
   compatibility-matrix:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         gate: [schemas, profiles, plugins, compatibility, migration, adoption, comparison, api, backward-compatibility]
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.9"
           cache: pip
       - run: python -m pip install --upgrade pip "setuptools>=68" wheel
       - run: python -m pip install -e . pytest
@@ -75,10 +75,10 @@ jobs:
           esac
 
   archive-matrix:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.12"]
+        python-version: ["3.9"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -91,7 +91,7 @@ jobs:
       - run: python tools/smoke_sidscope_release_candidate_archive.py /tmp/sidscope-ci.zip
 
   resource-package:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

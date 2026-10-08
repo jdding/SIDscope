@@ -227,23 +227,25 @@ def evidence(tmp_path, monkeypatch):
         write_receipt(store, gate_id)
     write_record(store)
     write_campaign(store)
-    write_linux(store)
     return store
 
 
 def test_catalog_is_frozen_and_matches_the_builder():
     info = gate_catalog()
-    assert len(info["required"]) == 11
+    assert len(info["required"]) == 10
+    assert "linux_matrix" not in info["required"]
+    assert info["catalog"]["deferred_gates"] == ["linux_matrix"]
     assert "exact_source_record_v2" in info["required"]
     assert info["digest"] == hashlib.sha256(
-        (summary.ROOT / "docs/reproducibility/sidscope_required_gate_catalog.v1.json").read_bytes()).hexdigest()
+        summary.CATALOG_PATH.read_bytes()).hexdigest()
 
 
 def test_build_and_reverify_roundtrip(evidence, tmp_path):
     _, record_sha = write_record(evidence)
     output = tmp_path / "delivery-summary.json"
     built = build_summary(evidence, output, expected_record_sha256=record_sha)
-    assert built["status"] == "pass" and len(built["gates"]) == 11
+    assert built["status"] == "pass" and len(built["gates"]) == 10
+    assert not (evidence / "linux-matrix.json").exists()
     verified = verify_summary(output, expected_summary_sha256=built["summary_sha256"], evidence_dir=evidence)
     assert verified["delivery_ready"] is True
     loaded = json.loads(output.read_text())
@@ -251,6 +253,35 @@ def test_build_and_reverify_roundtrip(evidence, tmp_path):
     assert loaded["excluded_acceptance"] == ["independent_user_actual_use"]
     assert "independent_user_actual_use" in loaded["unverified_claims"]
     assert loaded["gate_catalog_digest"] == gate_catalog()["digest"]
+    assert loaded["platform_support"]["linux"] == "unsupported_in_2_0"
+    assert loaded["deferred_gates"] == ["linux_matrix"]
+    assert "linux_python_3_9_to_3_12_support" in loaded["unverified_claims"]
+
+
+@pytest.mark.parametrize("removed", ["full_cpu_test_suite", "resource_package_verifier"])
+def test_catalog_cannot_drop_other_required_gates(tmp_path, monkeypatch, removed):
+    catalog = json.loads(summary.CATALOG_PATH.read_text())
+    catalog["gates"] = [row for row in catalog["gates"] if row["gate_id"] != removed]
+    path = tmp_path / "catalog.json"
+    path.write_text(json.dumps(catalog))
+    monkeypatch.setattr(summary, "CATALOG_PATH", path)
+    with pytest.raises(DeliverySummaryError) as caught:
+        gate_catalog()
+    assert caught.value.code == "gate_catalog_invalid"
+
+
+def test_summary_cannot_promote_deferred_linux_support(evidence, tmp_path):
+    _, record_sha = write_record(evidence)
+    output = tmp_path / "summary.json"
+    build_summary(evidence, output, expected_record_sha256=record_sha)
+    original = json.loads(output.read_text())
+    for field, value in (("platform_support", {**summary.PLATFORM_SUPPORT, "linux": "supported"}),
+                         ("deferred_gates", []), ("unverified_claims", [])):
+        changed = {**original, field: value}
+        output.write_bytes(summary.canonical_json_bytes(changed))
+        with pytest.raises(DeliverySummaryError) as caught:
+            verify_summary(output, expected_summary_sha256=summary.sha(output), evidence_dir=evidence)
+        assert caught.value.code == "delivery_scope_mismatch"
 
 
 def test_missing_required_gate_is_rejected(evidence, tmp_path):
@@ -365,18 +396,17 @@ def test_campaign_shape_is_enforced(evidence, tmp_path):
 
 def test_linux_matrix_shape_is_enforced(evidence, tmp_path):
     write_linux(evidence, cells=("3.9", "3.10", "3.11"))
-    _, record_sha = write_record(evidence)
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+        summary.validate_linux_matrix(summary.load_json(evidence / "linux-matrix.json"), dict(SOURCE), evidence)
     assert caught.value.code == "invalid_linux_receipt"
     write_linux(evidence, head="9" * 40)
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+        summary.validate_linux_matrix(summary.load_json(evidence / "linux-matrix.json"), dict(SOURCE), evidence)
     assert caught.value.code == "matrix_identity_unchecked"
     write_linux(evidence, head="9" * 40,
                 snapshot={"head": "9" * 40, "public_snapshot_digest": "0" * 64, "clean": True}.get("public_snapshot_digest") or SOURCE["public_snapshot_digest"])
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+        summary.validate_linux_matrix(summary.load_json(evidence / "linux-matrix.json"), dict(SOURCE), evidence)
     assert caught.value.code == "matrix_identity_unchecked"
 
 
@@ -417,7 +447,7 @@ def test_probe_regressions_are_all_rejected(evidence, tmp_path):
         summary.validate_campaign(campaign, dict(SOURCE), evidence_dir=evidence)
     assert caught.value.code == "campaign_group_integrity"
     group_file.write_bytes(original)
-    # R03: invalid Linux material is refused at helper, build and verify levels.
+    # Deferred Linux collection still rejects invalid material on its own path.
     _, record_sha = write_record(evidence)
     for kwargs, code in (
             ({"os_name": "Darwin 24.0.0"}, "invalid_matrix_cell"),
@@ -433,21 +463,15 @@ def test_probe_regressions_are_all_rejected(evidence, tmp_path):
         with pytest.raises(DeliverySummaryError) as caught:
             summary.validate_linux_matrix(matrix, dict(SOURCE), evidence)
         assert caught.value.code == code, kwargs
-        with pytest.raises(DeliverySummaryError) as caught:
-            build_summary(evidence, tmp_path / "s1.json", expected_record_sha256=record_sha)
-        assert caught.value.code == code, kwargs
     write_linux(evidence)
     built_output = tmp_path / "valid-summary.json"
     built = build_summary(evidence, built_output, expected_record_sha256=record_sha)
-    # Tampering the matrix after the summary binds it is rejected by the
-    # receipt-digest binding before cell rules even run; invalid matrices can
-    # no longer reach a summary at all (build re-validates with the shared rule).
+    # Deferred evidence is not bound or promoted by the 2.0 summary.
     matrix = json.loads((evidence / "linux-matrix.json").read_text())
     matrix["cells"][0]["image"] = "not-a-container"
     (evidence / "linux-matrix.json").write_bytes(summary.canonical_json_bytes(matrix))
-    with pytest.raises(DeliverySummaryError) as caught:
-        verify_summary(built_output, expected_summary_sha256=built["summary_sha256"], evidence_dir=evidence)
-    assert caught.value.code == "receipt_integrity"
+    assert "linux_matrix" not in built["gates"]
+    assert verify_summary(built_output, expected_summary_sha256=built["summary_sha256"], evidence_dir=evidence)["status"] == "pass"
 
 
 def test_skip_identities_are_approved_individually(evidence, tmp_path):
@@ -704,9 +728,9 @@ def test_third_round_findings_are_rejected(evidence, tmp_path, monkeypatch):
     _, record_sha = write_record(evidence)
     write_linux(evidence, python_full="3.9.6")
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+        summary.validate_linux_matrix(summary.load_json(evidence / "linux-matrix.json"), dict(SOURCE), evidence)
     assert caught.value.code == "invalid_matrix_cell"
     write_linux(evidence, raw_platform="macOS-26.6.2-arm64-arm-64bit")
     with pytest.raises(DeliverySummaryError) as caught:
-        build_summary(evidence, tmp_path / "s.json", expected_record_sha256=record_sha)
+        summary.validate_linux_matrix(summary.load_json(evidence / "linux-matrix.json"), dict(SOURCE), evidence)
     assert caught.value.code == "invalid_matrix_cell"

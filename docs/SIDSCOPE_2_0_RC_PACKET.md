@@ -12,7 +12,9 @@ independent_user_actual_use excluded from current gates
 - acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json`;
 - profiles: `docs/reproducibility/sidscope_release_profiles.v1.json`;
 - package boundary: `docs/reproducibility/sidscope_release_candidate_manifest.csv`;
-- decisions: ADR-0015, ADR-0022 through ADR-0026.
+- decisions: ADR-0015, ADR-0022 through ADR-0027;
+- required gates: `docs/reproducibility/sidscope_required_gate_catalog.v2.json`;
+- platform backlog: `docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md`.
 
 ## Required local evidence
 
@@ -20,7 +22,7 @@ independent_user_actual_use excluded from current gates
 - stable SDK interval, legacy replay, external plugin and installed consumer;
 - N07 typed suite and actual-shape zero-change controls;
 - N08 exact 100-episode transfer/validation and three-repeat metrics;
-- Linux CPython 3.9, 3.10, 3.11 and 3.12 matrix;
+- macOS arm64 / CPython 3.9.6 acceptance; Linux support deferred beyond 2.0;
 - deterministic runtime, conformance and evidence-full archives plus smoke;
 - regular wheel/sdist and G8 clean-environment installation;
 - a clean local candidate commit, detached exact-source record v2 (including
@@ -30,12 +32,11 @@ independent_user_actual_use excluded from current gates
 
 ## Current engineering execution
 
-- Linux arm64 Docker / CPython 3.9, 3.10, 3.11 and 3.12: the recorded four-
-  version full run belongs to the preceding candidate commit, not the current
-  HEAD; a new same-source matrix run is required for delivery evidence. That
-  historical record passed 544 tests, skipped 29 optional/external-input tests,
-  and passed 65 subtests per cell with metadata, architecture, SDLC, profile,
-  candidate and resource gates green.
+- Linux CPython 3.9–3.12: unsupported in 2.0, deferred by the project owner
+  on 2026-10-08 (ADR-0027). Historical matrix records remain intact. No new
+  Linux execution, receipt or container recovery gates this RC transition.
+  Current required evidence is the ten-gate catalog v2 under the documented
+  macOS acceptance scope, recorded in delivery summary v2.
 - CI explicitly provisions the declared `setuptools>=68` backend and `wheel`;
   this is build tooling, not a runtime dependency.
 - The immutable macOS 26.5.2 performance baseline is not rewritten. A 26.6.2

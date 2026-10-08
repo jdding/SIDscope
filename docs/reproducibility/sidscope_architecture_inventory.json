@@ -665,7 +665,7 @@
     ]
   },
   "schema": "sidscope.architecture_inventory.v1",
-  "schema_count": 238,
+  "schema_count": 240,
   "schemas": [
     {
       "artifact_paths": [],
@@ -1685,18 +1685,28 @@
       ],
       "declaration_paths": [
         "docs/adr/0026-delivery-summary-and-application-boundaries.md",
-        "tools/sidscope_delivery_summary.py",
         "tools/verify_sidscope_release_metadata.py"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.delivery_summary.v1",
+      "verifier_paths": [
+        "tools/verify_sidscope_release_metadata.py"
+      ]
+    },
+    {
+      "artifact_paths": [],
+      "declaration_paths": [
+        "tools/sidscope_delivery_summary.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
       "owner": "core:diagnostics",
       "producer_paths": [
         "tools/sidscope_delivery_summary.py"
       ],
-      "schema_id": "sidscope.delivery_summary.v1",
-      "verifier_paths": [
-        "tools/verify_sidscope_release_metadata.py"
-      ]
+      "schema_id": "sidscope.delivery_summary.v2",
+      "verifier_paths": []
     },
     {
       "artifact_paths": [
@@ -4195,7 +4205,20 @@
         "docs/reproducibility/sidscope_required_gate_catalog.v1.json"
       ],
       "declaration_paths": [
-        "docs/reproducibility/sidscope_required_gate_catalog.v1.json",
+        "docs/reproducibility/sidscope_required_gate_catalog.v1.json"
+      ],
+      "lifecycle": "active_or_historical_legacy_authority",
+      "owner": "core:diagnostics",
+      "producer_paths": [],
+      "schema_id": "sidscope.required_gate_catalog.v1",
+      "verifier_paths": []
+    },
+    {
+      "artifact_paths": [
+        "docs/reproducibility/sidscope_required_gate_catalog.v2.json"
+      ],
+      "declaration_paths": [
+        "docs/reproducibility/sidscope_required_gate_catalog.v2.json",
         "tools/sidscope_delivery_summary.py"
       ],
       "lifecycle": "active_or_historical_legacy_authority",
@@ -4203,7 +4226,7 @@
       "producer_paths": [
         "tools/sidscope_delivery_summary.py"
       ],
-      "schema_id": "sidscope.required_gate_catalog.v1",
+      "schema_id": "sidscope.required_gate_catalog.v2",
       "verifier_paths": []
     },
     {

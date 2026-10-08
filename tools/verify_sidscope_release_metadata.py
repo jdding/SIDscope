@@ -137,9 +137,12 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
         ],
         "docs/SIDSCOPE_2_0_RC_PACKET.md": [
             "RC transition gated on same-source delivery evidence",
-            "Linux CPython 3.9, 3.10, 3.11 and 3.12",
+            "unsupported in 2.0",
+            "sidscope_required_gate_catalog.v2.json",
             "No public action is authorized",
         ],
+        "docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md": ["ADR-0027", "unsupported in 2.0", "feedback"],
+        "docs/adr/0027-defer-linux-support-beyond-2-0.md": ["catalog v1", "Catalog v2", "Rollback", "unsupported in 2.0"],
         "docs/adr/0025-remove-independent-user-acceptance-gate.md": [
             "independent_user_actual_use",
             "scope_policy_missing",

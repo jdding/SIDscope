@@ -12,7 +12,22 @@ Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a
 Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. No push, tag, public release or TOIS mutation is authorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-Last updated: 2026-09-27
+Last updated: 2026-10-08
+
+## 2026-10-08 Linux support scope decision (ADR-0027)
+
+The project owner removed Linux CPython 3.9–3.12 support and four-cell execution
+from 2.0 release/certification/RC prerequisites. Move it to the feedback-driven
+backlog in docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md; keep tools and historical
+evidence. Current acceptance covers macOS arm64 / CPython 3.9.6. Catalog v2
+requires the ten remaining gates; delivery summary v2 binds that scope and
+records Linux as unsupported/deferred. Never fabricate a Linux PASS.
+Regenerate same-source delivery evidence after this clean policy commit and
+run certification verification with the resulting summary and trusted digest.
+Independent-user adoption remains excluded/not_verified. Version remains
+1.7.0.dev0; public publication and RC version changes are not authorized.
+The v2 checkout was relocated to the external research volume; use the current
+SIDScope-v2 checkout and verify its branch/HEAD before work.
 
 ## 2026-09-28 T02 independent acceptance repair
 

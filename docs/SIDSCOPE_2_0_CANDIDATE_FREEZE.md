@@ -6,6 +6,12 @@ independent_user_actual_use excluded from current gates
 (ADR-0025, 2026-09-27) and still not verified.
 No RC, tag, push or release authorized.
 
+Platform scope (ADR-0027, 2026-10-08): current acceptance covers macOS arm64 /
+CPython 3.9.6. Linux CPython 3.9–3.12 is unsupported in 2.0 and deferred to
+feedback-driven work; it is not a certification/RC/delivery prerequisite.
+Catalog v2 and delivery summary v2 preserve all ten remaining required gates.
+See `docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md`.
+
 ## Frozen compatibility inputs
 
 - 46 public schema IDs backed by 28 schema resources;
@@ -44,8 +50,8 @@ set an RC version from a new clean commit and rerun the same gates.
 ## RC transition
 
 The engineering candidate runs wheel/sdist, all three profile archives, the
-Linux/Python matrix and a detached exact-source record v2 before F09 so delivery
-defects do not hide behind human acceptance. Only after certification readiness
+macOS CPU gates and a detached exact-source record v2. Linux/Python matrix
+execution is deferred by ADR-0027. Only after certification readiness
 is true may a separately authorized change set `2.0.0rc1`; that RC commit must
 rerun the same gates and populate a new public release packet. Push, tag and GitHub Release remain separate
 explicit actions.
