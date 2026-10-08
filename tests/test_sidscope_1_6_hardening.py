@@ -5,6 +5,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,6 +23,17 @@ from verify_sidscope_1_6_hardening import (
 
 
 class SIDScope16HardeningTest(unittest.TestCase):
+    def test_release_versions_replay_the_unchanged_historical_matrix(self):
+        for version in ("2.0.0rc1", "2.0.0"):
+            with self.subTest(version=version), patch("verify_sidscope_1_6_hardening.verify_release_metadata", return_value={"package_version": version}):
+                self.assertEqual(verify_compatibility()["axis_count"], 6)
+
+    def test_unreviewed_release_versions_fail_closed(self):
+        for version in ("2.0.0rc0", "2.0.1", "3.0.0"):
+            with self.subTest(version=version), patch("verify_sidscope_1_6_hardening.verify_release_metadata", return_value={"package_version": version}):
+                with self.assertRaisesRegex(AssertionError, "unsupported"):
+                    verify_compatibility()
+
     def test_compatibility_matrix_positive_and_typed_negative_cases(self) -> None:
         result = verify_compatibility()
         self.assertEqual(result["axis_count"], 6)

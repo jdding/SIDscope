@@ -110,7 +110,7 @@ def verify_compatibility() -> dict[str, Any]:
         raise AssertionError("compatibility axes changed")
     metadata = verify_release_metadata()
     active_version = metadata["package_version"]
-    if re.fullmatch(r"1\.(?:6|7|8|9)\.0\.dev0", active_version) is None:
+    if re.fullmatch(r"(?:1\.(?:6|7|8|9)\.0\.dev0|2\.0\.0(?:rc[1-9][0-9]*)?)", active_version) is None:
         raise AssertionError(
             f"1.6 historical hardening replay is unsupported on {active_version}"
         )
