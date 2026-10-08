@@ -6,6 +6,7 @@ import tempfile
 import unittest
 import zipfile
 from pathlib import Path
+from sidinspector.version import PRODUCT_VERSION
 from unittest.mock import patch
 
 from sidinspector.adapters import (
@@ -223,7 +224,7 @@ class SIDScopeResourcePackageTest(unittest.TestCase):
         inventory = verify_inventory()
 
         self.assertEqual(metadata["status"], "pass")
-        self.assertEqual(metadata["package_version"], "1.7.0.dev0")
+        self.assertEqual(metadata["package_version"], PRODUCT_VERSION)
         self.assertEqual(inventory["canonical_contract_count"], 11)
         self.assertEqual(inventory["status"], "pass")
         document = json.loads(

@@ -2,12 +2,13 @@ import json
 import pytest
 
 from tools.verify_sidscope_2_0_candidate import main, verify
+from sidinspector.version import PRODUCT_VERSION
 
 
 def test_engineering_candidate_is_policy_scoped_and_not_delivery_ready():
     result = verify()
     assert result["status"] == "pass"
-    assert result["package_version"] == "1.7.0.dev0"
+    assert result["package_version"] == PRODUCT_VERSION
     assert result["adapter_sdk_version"] == "1.0.0"
     assert result["python_facade_symbol_count"] == 39
     assert result["engineering_ready"] is True
@@ -51,7 +52,7 @@ def test_full_delivery_evidence_unlocks_the_certification_transition(monkeypatch
     assert result["certification_ready"] is True and result["release_authorized"] is False
 
 
-@pytest.mark.parametrize("version", ["1.7.0.dev0", "2.0.0rc1", "2.0.0rc2"])
+@pytest.mark.parametrize("version", ["1.7.0.dev0", "2.0.0rc1", "2.0.0rc2", "2.0.0"])
 def test_recorded_actual_use_transition_path_stays_executable(monkeypatch, capsys, version):
     from tools import verify_sidscope_2_0_candidate as gate
     state = gate.verify_sdlc()
@@ -64,8 +65,21 @@ def test_recorded_actual_use_transition_path_stays_executable(monkeypatch, capsy
     assert result["certification_ready"] is True and result["release_authorized"] is False
 
 
+@pytest.mark.parametrize("version", ["2.0.0rc1", "2.0.0"])
+def test_release_engineering_receipts_do_not_certify_without_delivery(monkeypatch, capsys, version):
+    from tools import verify_sidscope_2_0_candidate as gate
+    monkeypatch.setattr(gate, "verify_release_metadata", lambda: {"package_version": version})
+    assert gate.main(["--require-engineering-ready"]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["engineering_ready"] is True
+    assert result["delivery_ready"] is result["certification_ready"] is False
+    assert gate.main(["--require-certification-ready"]) == 2
+    assert json.loads(capsys.readouterr().out)["code"] == "delivery_summary_required"
+
+
 @pytest.mark.parametrize("version,unresolved,delivery_ready", [
     ("2.0.0rc1", [], False),
+    ("2.0.0", [], False),
     ("2.0.0rc1", ["F09"], True),
     ("1.7.0.dev0", ["F01"], True),
     ("1.8.0.dev0", [], True),

@@ -22,6 +22,10 @@ are reviewed every release but made only when the public entrypoint changes.
 
 Release refs:
 
+- `codex/sidscope-v2`: independent 2.0 line authorized by ADR-0028; use remote
+  `sidscope`, never old `origin`, without changing main. Keep release packets
+  separate from historical 1.1.0 records.
+
 - `main`: current clean SIDScope public repository surface at
   `https://github.com/jdding/sidscope`; it remains the 1.1.x maintenance line
   until a different public line is explicitly authorized.

@@ -1,10 +1,10 @@
 # SIDScope 2.0 engineering candidate freeze
 
-Status: engineering candidate only; package `1.7.0.dev0`; certification gated on
+Status: release candidate `2.0.0rc1` under ADR-0028; certification gated on
 same-source delivery evidence, with
 independent_user_actual_use excluded from current gates
 (ADR-0025, 2026-09-27) and still not verified.
-No RC, tag, push or release authorized.
+The owner authorized independent 2.0 publication; main and frozen TOIS remain unchanged.
 
 Platform scope (ADR-0027, 2026-10-08): current acceptance covers macOS arm64 /
 CPython 3.9.6. Linux CPython 3.9–3.12 is unsupported in 2.0 and deferred to

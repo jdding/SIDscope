@@ -1,10 +1,10 @@
 # SIDScope Compatibility Matrix
 
-The local `1.7.0.dev0` engineering candidate is frozen by ADR-0024. N03-N08
+The `2.0.0rc1` release candidate retains the surface frozen by ADR-0024. N03-N08
 technical scope is verified; independent_user_actual_use is excluded from
 current gates by ADR-0025 and the fact stays not verified, while certification
 additionally requires same-source delivery evidence. This does not create an
-RC, public 2.0 compatibility promise or release authorization.
+release authorization by itself; owner authorization is recorded in ADR-0028.
 
 Adapter SDK `1.0.0` is the stable extension boundary with plugin API `1.0`.
 The runtime preserves exact interval-based 0.2 replay and historical SDK 0.1
@@ -20,7 +20,7 @@ semantics and never changes native SIDs. N08 evidence applies only to the two
 measured 100-episode routes; it is not a production SLO.
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -28,10 +28,10 @@ Acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json` revis
 Acceptance scope decision: independent_user_actual_use excluded from current gates (2026-09-27, docs/adr/0025-remove-independent-user-acceptance-gate.md); the adoption fact stays not_verified.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
-Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. No push, tag, public release or TOIS mutation is authorized.
+Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-Status: SIDScope 1.7 contract/public-surface stabilization baseline
+Status: SIDScope 2.0 release candidate; unchanged 1.7 compatibility baseline
 
 Current local safety exception (ADR-0016): new submission admission and default
 indexes require protocol-bound diagnostic recomputation. Missing inputs fail
@@ -41,7 +41,7 @@ verification exposes `structure_only`/`unverified`; standard metric ranges and
 target-state invariants reject previously accepted contradictory documents.
 No immutable artifact is rewritten. Release receipt v2 verifies member bytes;
 legacy receipts require rebuilding for current delivery verification. These
-pre-stable restrictions remain in `1.7.0.dev0` and do not alter released 1.1.x.
+restrictions are retained by `2.0.0rc1` and do not alter released 1.1.x.
 
 The existing `verify` command additionally accepts `--diagnostic`, `--trace`
 and `--selection` together for CPU recomputation. Its output distinguishes
@@ -73,9 +73,11 @@ required, including full tests, installation, recomputation and performance.
 | 1.5.0.dev0 | `sidinspector` | `sidinspector` | facade plus profile, submission and generated-view commands | Conformance/submission ecosystem development closed locally; public release not implied |
 | 1.6.0.dev0 | `sidinspector` | `sidinspector` | frozen candidate facade plus compatibility/migration verification | Compatibility, migration and external-adoption hardening closed locally; public release not implied |
 | 1.7.0.dev0 | `sidinspector` | `sidinspector` and curated `sidscope` | previous facade plus `schema list` and two-stage `schema validate` | Contract and public-surface stabilization active; public release not implied |
+| 2.0.0rc1 | `sidinspector` | `sidinspector` and curated `sidscope` | same frozen facade and opt-in workflows | Independent release candidate; current-commit acceptance required |
 
 The table records compatibility, not publication. GitHub `main` remains on
-1.1.x, while 1.2--1.7 and the planned 2.0 contract are local-only development.
+1.1.x; ADR-0028 permits 2.0 publication on `codex/sidscope-v2` after same-source
+acceptance. The 1.2--1.7 records remain historical development baselines.
 The frozen TOIS package selects software by an exact reviewed ref; a later
 authorized revision may select a compatible 1.x ref, but never inherits local
 2.x merely because its development version is newer.
@@ -90,7 +92,7 @@ during migration.
 
 | Axis | Current value | Compatibility rule |
 | --- | --- | --- |
-| Product/package | `1.7.0.dev0` | PEP 440 development version; not a public 1.7.0 release. |
+| Product/package | `2.0.0rc1` | PEP 440 RC version; Python package remains `sidinspector`. |
 | Adapter SDK | `1.0.0` | Stable capability descriptor and lazy plugin API 1.0; SDK 0.1 descriptors remain accepted for historical replay. |
 | Canonical schemas | Eleven registry entries from SourceIdentity v1 through EvidenceIndex v1, each at revision `1.0.0` | Registry-declared exact major and supported revision required. |
 | Conformance profiles | governed `static_mapping_c0_c5`, `generator_g0_g5`, `overlay_g0_g5`, `release_local` at `1.0.0`; legacy `common.generator.v1` and five family profiles remain supported | Profile reports bind the exact catalog hash; legacy-only routes retain read-only authority until migration. |

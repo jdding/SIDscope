@@ -11,6 +11,7 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
+
 try:
     from tools.build_sidscope_release_candidate_archive import build_archive
     from tools.sidscope_release_profiles import (
@@ -34,6 +35,7 @@ except ModuleNotFoundError:
 
 
 MANIFEST = ROOT / "docs" / "reproducibility" / "sidscope_release_candidate_manifest.csv"
+from sidinspector.version import PRODUCT_VERSION
 LARGE_TRACE_PATHS = {
     "examples/rpg_generator_trained_trace_real_smoke/rpg_beauty_trained_smoke_5.json",
     "examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json",
@@ -105,7 +107,7 @@ def verify_release_profiles() -> dict[str, Any]:
         "schema": "sidscope.release_profile_verification.v1",
         "status": "pass",
         "gpu_required": False,
-        "product_version": "1.7.0.dev0",
+        "product_version": PRODUCT_VERSION,
         "default_profile": default_profile,
         "profile_order": list(PROFILE_IDS),
         "profiles": summaries,

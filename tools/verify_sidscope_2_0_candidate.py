@@ -27,11 +27,13 @@ def verify(*, require_clean: bool = False, delivery: dict | None = None) -> dict
     sdlc = verify_sdlc(delivery)
     default_profile, profiles = load_release_profiles()
     version = metadata["package_version"]
-    stage = "development" if version == "1.7.0.dev0" else "rc" if re.fullmatch(r"2\.0\.0rc[1-9][0-9]*", version) else None
+    stage = "development" if version == "1.7.0.dev0" else "rc" if re.fullmatch(r"2\.0\.0rc[1-9][0-9]*", version) else "stable" if version == "2.0.0" else None
     if stage is None:
         raise AssertionError("unsupported candidate version/stage")
-    if stage == "rc" and not sdlc["certification_ready"]:
-        raise AssertionError("RC requires completed certification readiness")
+    # Engineering receipts precede the delivery summary; only verified delivery
+    # evidence may unlock RC/stable certification, never the version label.
+    if stage in {"rc", "stable"} and delivery is not None and not sdlc["certification_ready"]:
+        raise AssertionError("RC/stable certification requires completed delivery readiness")
     if (ADAPTER_SDK_VERSION, PLUGIN_API_VERSION) != ("1.0.0", "1.0"):
         raise AssertionError("stable adapter extension boundary drift")
     if default_profile != "runtime" or tuple(profiles) != PROFILE_IDS:

@@ -29,6 +29,10 @@ earlier ADR rather than editing its rationale or consequences in place.
 | [0022](0022-bounded-sid-refresh-lifecycle.md) | Add bounded SID refresh lifecycle diagnostics | Accepted | 2026-09-09 |
 | [0023](0023-stabilize-adapter-sdk-1-0.md) | Stabilize the Adapter SDK at 1.0 | Accepted | 2026-09-09 |
 | [0024](0024-freeze-2-0-engineering-candidate.md) | Freeze the 2.0 engineering candidate before certification | Accepted | 2026-09-09 |
+| [0025](0025-remove-independent-user-acceptance-gate.md) | Remove independent-user acceptance from current gates | Accepted | 2026-09-27 |
+| [0026](0026-delivery-summary-and-application-boundaries.md) | Bind delivery summaries and application boundaries | Accepted | 2026-09-27 |
+| [0027](0027-defer-linux-support-beyond-2-0.md) | Defer Linux support beyond 2.0 | Accepted | 2026-10-08 |
+| [0028](0028-publish-2-0-on-an-independent-branch.md) | Publish 2.0 independently of the 1.1.x review line | Accepted | 2026-10-08 |
 
 New ADRs must include context, decision drivers, viable options, the decision,
 positive and negative consequences, migration, validation and rollback. Accepted

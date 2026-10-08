@@ -41,4 +41,5 @@ Artifacts:
 ```
 
 The post-publication public URL smoke result and final immutable identifiers are
-also copied into `docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
+recorded in a new version-specific release packet. Preserve the historical
+`docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md` for 1.1.0 unchanged.

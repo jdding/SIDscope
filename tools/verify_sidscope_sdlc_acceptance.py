@@ -70,7 +70,7 @@ def block():
         "Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope "
         f"policy revision {scope['policy_revision']}; it remains not verified and is not a current prerequisite. "
     )
-    return "\n".join([BEGIN, f"Local development: `{PRODUCT_VERSION}`; public GitHub remains 1.1.x; 1.8/1.9 inactive.",
+    return "\n".join([BEGIN, f"Current package: `{PRODUCT_VERSION}`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).",
         "Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.",
         "Unclosed SDLC requirements: " + (", ".join(pending) if pending else "none") + ".",
         "Requirement snapshot: `"+hashlib.sha256(LEDGER.read_bytes()).hexdigest()+"`.",
@@ -80,7 +80,7 @@ def block():
         "Historical route decisions (not newly recomputed training): " + history + ".",
         "Historical route snapshot: `"+hashlib.sha256(ROUTES.read_bytes()).hexdigest()+"`.",
         adoption_sentence +
-        "No push, tag, public release or TOIS mutation is authorized.", END])
+        "The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.", END])
 
 
 def render(document):

@@ -56,7 +56,7 @@ except ModuleNotFoundError:
 
 
 DEFAULT_MANIFEST = ROOT / "docs" / "reproducibility" / "sidscope_release_candidate_manifest.csv"
-DEFAULT_OUTPUT = Path("/tmp") / "sidscope-v1.7.0.dev0-runtime.zip"
+DEFAULT_OUTPUT = Path("/tmp") / f"sidscope-v{PRODUCT_VERSION}-runtime.zip"
 FIXED_ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 FIXED_FILE_MODE = 0o100644
 

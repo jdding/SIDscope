@@ -1,9 +1,12 @@
 # SIDScope System Architecture
 
-## Current implementation view — 2026-09-09
+## Current implementation view — 2026-10-08
 
-This is the **local `1.7.0.dev0` implementation toward 2.0**, not a published
-2.0 compatibility claim. The six owned layers are implemented; a diagram of
+The `2.0.0rc1` package retains the **frozen 1.7 implementation architecture**.
+The existing illustration and content map remain unchanged 1.7 baseline
+artifacts; the package version is reported separately by the verifier. Owner
+authorization for independent publication is ADR-0028, not a diagram.
+The six owned layers are implemented; a diagram of
 their existence does not establish every route, workload or user acceptance.
 Requirement states come from `reproducibility/sidscope_sdlc_requirements.csv`.
 

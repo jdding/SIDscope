@@ -2,8 +2,8 @@
 
 Status: local engineering candidate; RC transition gated on same-source delivery evidence.
 independent_user_actual_use excluded from current gates
-(ADR-0025, 2026-09-27) and remains not verified. Package: `1.7.0.dev0`. Adapter SDK:
-`1.0.0`. Plugin API: `1.0`. Public release authorized: no.
+(ADR-0025, 2026-09-27) and remains not verified. Package: `2.0.0rc1`. Adapter SDK:
+`1.0.0`. Plugin API: `1.0`. Owner authorization: ADR-0028, 2026-10-08.
 
 ## Candidate authority
 
@@ -49,18 +49,20 @@ independent_user_actual_use excluded from current gates
   source record covering full tests, wheel/sdist installation, all archives,
   smoke tests and G8. Its commit and record hashes are reported after execution.
 
-## Deliberately blocked transition
+## Evidence-gated authorized transition
 
 Independent user actual use is excluded from current gates by ADR-0025; the
 adoption fact stays `not_verified` and no evidence file is required or invented.
 What blocks the transition now is delivery evidence: `delivery_ready` requires a
 same-source delivery summary with valid receipts for every required gate. Until
 that summary exists and verifies against the clean candidate, the package stays
-`1.7.0.dev0`, `--require-certification-ready` returns blocked, and no RC
-version/tag is created.
+uncertified, `--require-certification-ready` returns blocked, and no public
+version/tag is created for that candidate. Engineering receipts may be gathered
+on RC/stable commits before the final summary without claiming certification.
 
-Once the delivery summary verifies, an authorized change may set the RC version,
-rerun every item above from that clean commit, and populate public URL, commit,
+The 1.7 baseline was certified before the authorized RC transition. Rerun every
+item above from the new clean RC/stable commit and populate public URL, commit,
 tag, archive hashes and smoke transcript in a new public-release packet. Do not
 overwrite the historical `SIDSCOPE_PUBLIC_RELEASE_PACKET.md` for v1.1.0.
-No public action is authorized by this preparation packet.
+Public actions rely on explicit owner authorization in ADR-0028, not automated
+PASS. Main, origin and frozen TOIS remain unchanged.

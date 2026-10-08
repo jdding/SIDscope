@@ -8,6 +8,7 @@ import argparse
 import hashlib
 import inspect
 import json
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -34,7 +35,12 @@ def signatures():
 def verify(inputs: Path, contract: Path, *, installed: bool = False):
     if installed:
         assert "site-packages" in Path(api.__file__).resolve().parts
-    assert signatures() == json.loads(contract.read_text())["signatures"], "public signature/default/constant drift"
+    expected = json.loads(contract.read_text())["signatures"]
+    assert expected["__version__"] == {"constant": "1.7.0.dev0"}, "frozen consumer baseline drift"
+    version = api.__version__
+    assert version in {"1.7.0.dev0", "2.0.0"} or re.fullmatch(r"2\.0\.0rc[1-9][0-9]*", version), "unsupported consumer version"
+    expected["__version__"] = {"constant": version}
+    assert signatures() == expected, "public signature/default/constant drift"
     covered = {"ADAPTER_SDK_VERSION", "PLUGIN_API_VERSION", "__version__"}
     fixture = inputs / "canonical_pipeline_fixture"
     for name in api.__all__:

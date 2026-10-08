@@ -1,4 +1,5 @@
 component,path,release_role,evidence_level,public_package,gate_status,notes
+independent_2_0_publication,docs/adr/0028-publish-2-0-on-an-independent-branch.md,architecture_governance,documentation,yes,pass_local,Owner-authorized independent RC and stable publication; main origin and frozen TOIS unchanged.
 paired_regression,src/sidscope/regression.py,library,fully_runnable,yes,pass_local,Matched run and user-cluster effects with approximate pointwise uncertainty and typed insufficient evidence.
 diagnostic_review,src/sidscope/diagnostic_review.py,library,fully_runnable,yes,pass_local,Recomputed diagnostics with pseudonymous examples evidence pointers and escaped offline HTML.
 observed_review,tools/run_sidscope_observed_review.py,tool,fully_runnable,yes,pass_local,Single command on existing observations; no new native execution or invented seeds.

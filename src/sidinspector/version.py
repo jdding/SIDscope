@@ -1,3 +1,3 @@
 """Runtime product version, checked against packaging metadata at release gates."""
 
-PRODUCT_VERSION = "1.7.0.dev0"
+PRODUCT_VERSION = "2.0.0rc1"

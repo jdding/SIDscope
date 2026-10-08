@@ -1,7 +1,7 @@
 # SIDScope Versioning and Release Governance
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -9,10 +9,10 @@ Acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json` revis
 Acceptance scope decision: independent_user_actual_use excluded from current gates (2026-09-27, docs/adr/0025-remove-independent-user-acceptance-gate.md); the adoption fact stays not_verified.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
-Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. No push, tag, public release or TOIS mutation is authorized.
+Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-Status: active; current development baseline `1.7.0.dev0`
+Status: active; current release candidate `2.0.0rc1` (ADR-0028)
 
 ## Sources of Truth
 
@@ -64,8 +64,8 @@ separate:
 
 | Surface | Current authority | Promotion rule |
 | --- | --- | --- |
-| Public GitHub | `sidscope/main` on the 1.1.x maintenance line | Remains 1.1.x until an explicit user-authorized push or release changes the public line. |
-| Local pre-2.0 development | `SIDScope-v2` on `codex/sidscope-v2` | Local commits may advance through 1.2--1.9 toward 2.0, but do not imply a tag, push, GitHub release, or public compatibility promise. |
+| Public review/maintenance | `sidscope/main` on 1.1.x | Keep main and its existing refs unchanged during independent 2.0 publication. |
+| Independent 2.0 release | `SIDScope-v2`, `codex/sidscope-v2`, remote `sidscope` | The owner authorized RC, same-source acceptance, branch push and 2.0 tag/Release on 2026-10-08 under ADR-0028. |
 | TOIS submission/revision | Exact frozen manuscript branch, commit, tag, and archived package | The submitted package remains untouched. A future revision chooses and verifies an explicit claim-compatible 1.x software snapshot; local 2.x is never inherited automatically. |
 
 `v1.0.2` remains an immutable historical release associated with the submitted
@@ -117,7 +117,7 @@ a new minor version by themselves.
 
 ```text
 short-lived feature branch
-  -> reviewed main candidate
+  -> reviewed release-line candidate (main for 1.1.x; codex/sidscope-v2 for 2.0)
   -> vX.Y.Z-rc.N (when an RC is needed)
   -> local release gates
   -> immutable vX.Y.Z tag
@@ -126,12 +126,11 @@ short-lived feature branch
   -> finalized public release packet
 ```
 
-`main` is the current releasable line. A long-lived maintenance branch is used
-only when an older line must receive fixes while newer development continues.
-Tag creation, push, and public publication always require explicit release
-authorization. Under the current repository policy, this generic flow applies
-to public 1.1.x maintenance only; the local pre-2.0 branch stops before the
-`reviewed main candidate` step unless separately authorized.
+`main` remains the 1.1.x review/maintenance line. ADR-0028 authorizes independent
+2.0 publication from `codex/sidscope-v2` through `sidscope`, without merging to
+main, changing the default branch, or pushing to old `origin`. Version labels
+and automated PASS records never grant publication authority. Any later main
+promotion or PyPI publication requires a separate owner decision.
 
 ## Required Release Record
 

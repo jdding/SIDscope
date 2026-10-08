@@ -12,6 +12,12 @@ def test_old_style_consumer_executes_all_curated_symbols():
     assert len(verify(ROOT / "examples", CONTRACT)["curated_symbols_exercised"]) == 39
 
 
+def test_unreviewed_product_version_is_not_implicitly_compatible(monkeypatch):
+    monkeypatch.setattr(sidscope, "__version__", "3.0.0")
+    with pytest.raises(AssertionError, match="unsupported consumer version"):
+        verify(ROOT / "examples", CONTRACT)
+
+
 def test_default_or_required_parameter_mutation_fails(monkeypatch):
     def changed(path, *, now_required):
         return None

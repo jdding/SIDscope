@@ -1,7 +1,7 @@
 # SIDScope Changelog
 
 Status: clean SIDScope official-repository changelog
-Last updated: 2026-08-31
+Last updated: 2026-10-08
 
 This changelog records reviewer-package changes for the standalone SIDScope
 repository at `https://github.com/jdding/sidscope`. The earlier SIDInspector
@@ -10,6 +10,19 @@ release surface.
 The public repository is the reviewer-visible and post-acceptance open source
 package surface only; it is not the private project workspace and must not
 include paper drafts, local provenance, AutoDL payloads, or large caches.
+
+## SIDScope v2.0.0rc1: independent release candidate
+
+- Retains 46 schema IDs / 28 resources, 19 CLI result schemas, 39 facade symbols,
+  stable Adapter SDK 1.0 and plugin API 1.0.
+- Includes native canonical admission, mapping preflight, paired regression,
+  offline diagnostics and bounded SID refresh; no training or hosted service.
+- Preserves producer versions, historical evidence and native generation.
+- Requires fresh exact-source tests, performance, wheel/sdist/native consumers,
+  deterministic profiles and G8 for this release commit.
+- Main/1.1.x stays unchanged under ADR-0028. Accepted platform: macOS arm64 /
+  CPython 3.9.6; Linux unsupported, Windows and independent adoption unverified,
+  N09/N10 deferred.
 
 ## SIDScope v1.7.0.dev0: contract and public-surface stabilization
 

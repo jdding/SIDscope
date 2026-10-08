@@ -1,7 +1,7 @@
 # SIDScope
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -9,7 +9,7 @@ Acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json` revis
 Acceptance scope decision: independent_user_actual_use excluded from current gates (2026-09-27, docs/adr/0025-remove-independent-user-acceptance-gate.md); the adoption fact stays not_verified.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
-Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. No push, tag, public release or TOIS mutation is authorized.
+Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
 SIDScope is evolving into the conformance and observability layer for
@@ -113,7 +113,7 @@ This validates a contract, not an upstream method or independent admission.
 The fixture-based commands below require a source checkout or the appropriate
 conformance/evidence-full release profile; they are not runtime quickstart steps.
 
-The active `1.7.0.dev0` line retains the eleven canonical contracts from source
+The active `2.0.0rc1` line retains the eleven canonical contracts from source
 identity through evidence index, stable Adapter SDK `1.0.0`, lazy external
 plugins, five registered native payload families, and composable profiles. It
 adds immutable EvidenceBundle v1 objects, a rebuildable SQLite registry,
@@ -462,11 +462,11 @@ smoke/G8 gates:
 
 ```bash
 python3 tools/build_sidscope_release_candidate_archive.py \
-  --profile runtime --output /tmp/sidscope-v1.7.0.dev0-runtime.zip
+  --profile runtime --output /tmp/sidscope-runtime.zip
 python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime
+  /tmp/sidscope-runtime.zip --profile runtime
 python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-v1.7.0.dev0-runtime.zip --profile runtime \
+  --archive /tmp/sidscope-runtime.zip --profile runtime \
   --result-json /tmp/sidscope_g8_fresh_env_smoke.json
 ```
 

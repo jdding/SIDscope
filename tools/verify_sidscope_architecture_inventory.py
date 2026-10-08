@@ -25,7 +25,8 @@ def validate_diagram(document: dict[str, Any]) -> dict[str, Any]:
     """Check the illustration's content map, not its pixels or acceptance."""
     sys.path.insert(0, str(ROOT / "src"))
     from sidinspector.version import PRODUCT_VERSION
-    if document.get("product_version") != PRODUCT_VERSION:
+    baseline = json.loads((ROOT / "docs/reproducibility/sidscope_1_7_public_surface.json").read_text())
+    if document.get("product_version") != baseline["product_version"]:
         raise ValueError("architecture_diagram_version_drift")
     if (document.get("format") != "sidscope-architecture-content-map"
             or document.get("view") != "local_implementation_not_public_certification"):
@@ -74,7 +75,9 @@ def validate_diagram(document: dict[str, Any]) -> dict[str, Any]:
         "integration", "observation", "evaluation", "conformance", "evidence")}
     if set(observed_edges) != expected_edges or len(observed_edges) != len(expected_edges):
         raise ValueError("architecture_diagram_flow_drift")
-    return {"owned_layers": len(layers), "code_paths_checked": len(paths),
+    return {"illustration_baseline_version": baseline["product_version"],
+        "current_package_version": PRODUCT_VERSION,
+        "owned_layers": len(layers), "code_paths_checked": len(paths),
         "logical_edges_checked": len(observed_edges), "pixel_semantics_checked": False}
 
 

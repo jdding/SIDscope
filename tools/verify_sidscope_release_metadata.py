@@ -131,16 +131,17 @@ def verify_release_metadata(root: Path = ROOT) -> dict[str, Any]:
             "not a before/after refresh experiment",
         ],
         "docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md": [
-            "engineering candidate only",
+            "ADR-0028",
             "independent_user_actual_use excluded from current gates",
-            "No RC, tag, push or release authorized",
+            "same-source delivery evidence",
         ],
         "docs/SIDSCOPE_2_0_RC_PACKET.md": [
             "RC transition gated on same-source delivery evidence",
             "unsupported in 2.0",
             "sidscope_required_gate_catalog.v2.json",
-            "No public action is authorized",
+            "Main, origin and frozen TOIS remain unchanged",
         ],
+        "docs/adr/0028-publish-2-0-on-an-independent-branch.md": ["codex/sidscope-v2", "sidscope", "anonymous", "rollback"],
         "docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md": ["ADR-0027", "unsupported in 2.0", "feedback"],
         "docs/adr/0027-defer-linux-support-beyond-2-0.md": ["catalog v1", "Catalog v2", "Rollback", "unsupported in 2.0"],
         "docs/adr/0025-remove-independent-user-acceptance-gate.md": [

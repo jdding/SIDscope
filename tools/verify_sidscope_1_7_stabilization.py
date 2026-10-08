@@ -54,8 +54,8 @@ def verify() -> dict[str, Any]:
         raise AssertionError("1.7 stabilization record is stale")
 
     metadata = verify_release_metadata()
-    if metadata["package_version"] != PRODUCT_VERSION:
-        raise AssertionError(f"package version mismatch: {metadata['package_version']}")
+    # Metadata verifies the current runtime version; the 1.7 surface record is
+    # an immutable compatibility baseline, not the current package version.
 
     catalog = load_public_schema_catalog()
     canonical = _read_json(

@@ -1,7 +1,7 @@
 # SIDScope 1.7 Development Handoff
 
 <!-- SIDSCOPE:CURRENT:BEGIN -->
-Local development: `1.7.0.dev0`; public GitHub remains 1.1.x; 1.8/1.9 inactive.
+Current package: `2.0.0rc1`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
 Unclosed SDLC requirements: F09.
 Requirement snapshot: `d84f1b924e203550bd953ad5254467d09079fc49aee229ed85e189e890ac0e2c`.
@@ -9,12 +9,25 @@ Acceptance scope: `docs/reproducibility/sidscope_acceptance_scope.v1.json` revis
 Acceptance scope decision: independent_user_actual_use excluded from current gates (2026-09-27, docs/adr/0025-remove-independent-user-acceptance-gate.md); the adoption fact stays not_verified.
 Historical route decisions (not newly recomputed training): dact_tiger=named_adapter; diffgrm_www2026=named_adapter; isd=close_named_adapter; latte_psid=named_adapter; llada_rec=named_adapter; rpg_kdd2025=named_adapter.
 Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a76fe1cf02a92`.
-Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. No push, tag, public release or TOIS mutation is authorized.
+Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
 Last updated: 2026-10-08
 
-## 2026-10-08 Linux support scope decision (ADR-0027)
+## 2026-10-08 independent 2.0 publication authorization (ADR-0028)
+
+The owner approved governance update -> `2.0.0rc1` -> fresh full acceptance ->
+public content/history review -> `sidscope` remote `codex/sidscope-v2` push ->
+`2.0.0` same-source acceptance -> immutable tag/Release/assets -> anonymous
+download smoke. Current package is `2.0.0rc1`; old receipts do not certify this
+new commit. Main stays at `1876e0072eca49d1f4c7b160fa98826d9b206b60`
+and all existing remote tags stay unchanged. Old origin and maintenance/TOIS
+worktrees are outside authorization. No PyPI or default-branch change.
+Frozen 1.7 surface/consumer contract bytes are preserved. Automated
+`release_authorized=false` fields certify evidence, not the owner decision.
+New release packets must not overwrite historical 1.1 evidence.
+
+## 2026-10-08 Linux support scope decision (ADR-0027; historical baseline)
 
 The project owner removed Linux CPython 3.9–3.12 support and four-cell execution
 from 2.0 release/certification/RC prerequisites. Move it to the feedback-driven

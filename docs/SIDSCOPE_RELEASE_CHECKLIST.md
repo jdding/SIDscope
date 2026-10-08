@@ -15,13 +15,14 @@ Paper submission readiness remains a separate writing and venue-decision gate.
 
 Current publication boundary: this checklist may verify local 1.2--2.0
 development artifacts, but GitHub `main` remains the 1.1.x maintenance line.
-Passing local gates does not authorize pushing `codex/sidscope-v2`. The TOIS
+Passing local gates alone does not authorize pushing `codex/sidscope-v2`;
+the owner separately authorized independent 2.0 publication in ADR-0028. The TOIS
 submission is governed by its exact frozen ref/package, not by an assumption
 that every future revision must remain on `v1.0.2` or adopt 2.x.
 
 ## Current 2.0 candidate closeout
 
-The local engineering candidate remains `1.7.0.dev0`. Adapter SDK 1.0 and the
+The current release candidate is `2.0.0rc1`. Adapter SDK 1.0 and the
 compatibility surface are frozen; N02-N08 engineering scope is verified. Run:
 
 ```bash
@@ -39,7 +40,8 @@ Delivery summary v2 records Linux as unsupported/deferred. Source or
 documentation changes invalidate preceding records; the current
 candidate must produce record v2 and the delivery summary, including the
 source-bound performance disposition, after a clean commit. Do not change to `2.0.0rc1` before the delivery summary verifies;
-a separately authorized RC commit must rerun the same gates. Push, tag and GitHub Release still require separate explicit approval.
+the authorized RC and final commits must rerun the same gates. ADR-0028 covers
+the independent branch/tag/Release only, not main, old origin or PyPI.
 See `docs/SIDSCOPE_2_0_RC_PACKET.md`.
 
 ## Release Candidate Inputs
@@ -99,9 +101,9 @@ wrapper inventory to pass. The release body must link
 `docs/MIGRATING_1_X_TO_2_0.md`; no development closure authorizes a tag, push,
 or public release by itself.
 
-Under the active repository policy, these pre-2.0 checks close local
-development only. The public-release steps below are intentionally dormant for
-`codex/sidscope-v2` until the user explicitly authorizes a public-line change.
+ADR-0028 authorizes independent 2.0 publication after these gates pass.
+Keep main and all old tags unchanged; finish anonymous download checks before
+claiming public delivery closure.
 
 ## Public Release Gates
 
