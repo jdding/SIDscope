@@ -4,7 +4,7 @@ SIDScope inspects exported mappings, ranked-item outputs, generated beams, and r
 
 ## Option 1 · Zero-Install Browser Workbench (Client-Side CSV)
 
-Open the [live browser workbench](https://jdding.github.io/SIDscope/) and switch to **Tab 5 · Inspect Your Own Mapping**. Paste CSV text or pick local `.csv` files (`item_id,sid_0,sid_1,...` + optional `interactions.csv` and `item_metadata.csv`). Pyodide runs D1–D5, the RQ1 **Stratum Allocation (`A_b`) vs. Global Singleton (`S_b`)** split, and actionable triage cards 100% client-side — zero bytes leave your browser.
+Serve [`index.html`](../index.html) locally (`python3 -m http.server 8768`, or open `https://jdding.github.io/SIDscope/` once GitHub Pages is enabled) and switch to **Tab 5 · Inspect Your Own Mapping**. Paste CSV text or pick local `.csv` files (`item_id,sid_0,sid_1,...` + optional `interactions.csv` and `item_metadata.csv`). Note: if `interactions.csv` declares an explicit `split` column (`train`/`valid`/`test`), SIDScope uses `train` rows only and fails closed when zero `train` rows are present. Pyodide runs D1–D5, the RQ1 **Stratum Allocation (`A_b`) vs. Global Singleton (`S_b`)** split, and actionable triage cards 100% client-side — zero bytes leave your browser.
 
 ## Option 2 · Algorithm-Engineer Workflows (`sidscope.workflows`)
 

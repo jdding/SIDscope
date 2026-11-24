@@ -139,6 +139,30 @@ def _parse_metadata_csv(text: str) -> dict[str, dict[str, str]]:
     return meta
 
 
+_UNSPLIT_LABELS = {"", "all", "full", "reference"}
+
+
+def _select_train_events(interactions: list[dict[str, str]]) -> tuple[list[dict[str, str]], str]:
+    """Select training interactions without ever falling back to held-out valid/test splits."""
+    if not interactions:
+        return [], "none"
+    non_empty_splits = {
+        e.get("split", "").strip().lower()
+        for e in interactions
+        if e.get("split", "").strip()
+    }
+    if not non_empty_splits or non_empty_splits <= _UNSPLIT_LABELS:
+        return interactions, "unsplit_reference"
+    train = [e for e in interactions if e.get("split", "").strip().lower() == "train"]
+    if not train:
+        labels = ", ".join(sorted(non_empty_splits))
+        raise ValueError(
+            f"Interactions declare explicit split labels ({labels}) with zero 'train' rows; "
+            "held-out splits (valid/test) cannot be used for training-only D3/D4 diagnostics."
+        )
+    return train, "train_only"
+
+
 def run_mapping_audit(
     sid_rows: list[dict[str, Any]],
     interactions: list[dict[str, str]] | None = None,
@@ -151,8 +175,7 @@ def run_mapping_audit(
     depth = len(sid_rows[0]["levels"])
     sid_ids = {r["item_id"] for r in sid_rows}
 
-    has_split = any(e.get("split") for e in interactions)
-    train = [e for e in interactions if (not has_split or e.get("split") == "train")] or interactions
+    train, split_mode = _select_train_events(interactions)
     pop: Counter[str] = Counter(e["item_id"] for e in train if e["item_id"] in sid_ids)
 
     d1 = []
@@ -302,7 +325,16 @@ def run_mapping_audit(
             "action": "When refreshing mappings, pair D6 churn with a 4-condition generator handoff gate and changed-code subgroup check.",
         },
     ]
-    return {"d1": d1, "d2": d2, "d3": d3, "d4": d4, "d5": d5, "decisions": decisions}
+    return {
+        "d1": d1,
+        "d2": d2,
+        "d3": d3,
+        "d4": d4,
+        "d5": d5,
+        "interaction_split_mode": split_mode,
+        "train_events_used": len(train),
+        "decisions": decisions,
+    }
 
 
 def _simulate_cross_stratum_ab_vs_sb() -> dict[str, Any]:

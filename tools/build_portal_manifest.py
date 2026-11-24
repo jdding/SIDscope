@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build PACKAGE_MANIFEST.json and CHECKSUMS.sha256 for SIDScope's resource portal."""
+"""Build PACKAGE_MANIFEST.json and SHA256SUMS for SIDScope's resource portal."""
 
 from __future__ import annotations
 
@@ -100,10 +100,10 @@ def main() -> None:
     (ROOT / "PACKAGE_MANIFEST.json").write_text(
         json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
     )
-    (ROOT / "CHECKSUMS.sha256").write_text(
+    (ROOT / "SHA256SUMS").write_text(
         "\n".join(checksum_lines) + "\n", encoding="utf-8"
     )
-    print(f"Wrote SIDScope PACKAGE_MANIFEST.json and CHECKSUMS.sha256 ({len(entries)} files)")
+    print(f"Wrote SIDScope PACKAGE_MANIFEST.json and SHA256SUMS ({len(entries)} files)")
 
 
 if __name__ == "__main__":

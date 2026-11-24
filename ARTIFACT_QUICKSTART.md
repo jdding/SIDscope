@@ -2,7 +2,7 @@
 
 Use Python 3.9+ on CPU (no GPU required; accepted 2.0 baseline: macOS arm64 / CPython 3.9.6). Install via `python3 -m pip install .` (or `-e .` for development).
 
-The [online browser workbench](https://jdding.github.io/SIDscope/) executes the released Python scripts directly in your browser (pinned Pyodide `v314.0.7`, SHA-256 verified against `PACKAGE_MANIFEST.json`) across RQ1–RQ3, C0–C5 conformance, and client-side BYO CSV audits with zero installation.
+The browser workbench ([`index.html`](index.html), served locally via `python3 -m http.server 8768` or at `https://jdding.github.io/SIDscope/` once GitHub Pages is activated) executes the released Python scripts directly in your browser (pinned Pyodide `v314.0.7`, SHA-256 verified against `PACKAGE_MANIFEST.json`) across RQ1–RQ3, C0–C5 conformance, and client-side BYO CSV audits with zero installation.
 
 ## 1. Rebuild and verify all 8 manuscript tables
 

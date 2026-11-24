@@ -4,7 +4,7 @@ title: "SIDScope"
 type: software
 version: 2.0.0
 date-released: 2026-10-08
-url: "https://jdding.github.io/SIDscope/"
+url: "https://github.com/jdding/SIDscope"
 repository-code: "https://github.com/jdding/SIDscope"
 license: MIT
 authors:

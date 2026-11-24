@@ -38,12 +38,12 @@ def verify_manifest() -> int:
         manifest_map[rel] = actual
 
     checksum_map: dict[str, str] = {}
-    for line in (ROOT / "CHECKSUMS.sha256").read_text(encoding="utf-8").splitlines():
+    for line in (ROOT / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
         if line.strip():
             digest, rel = line.split("  ", 1)
             checksum_map[rel] = digest
     if checksum_map != manifest_map:
-        raise ValueError("CHECKSUMS.sha256 disagrees with PACKAGE_MANIFEST.json.")
+        raise ValueError("SHA256SUMS disagrees with PACKAGE_MANIFEST.json.")
     return len(entries)
 
 

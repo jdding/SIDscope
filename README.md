@@ -2,8 +2,8 @@
 
 **A diagnostic, conformance, and observability resource for Semantic-ID interfaces in generative recommendation.**
 
-[Live Browser Workbench](https://jdding.github.io/SIDscope/) |
 [Release v2.0.0](https://github.com/jdding/SIDscope/releases/tag/v2.0.0) |
+[Browser Workbench (`index.html`)](index.html) |
 [CIKM '26 Foundation (SIDInspector)](https://doi.org/10.1145/3799682.3840174) |
 [SIDDuet (Search & Rec)](https://jdding.github.io/SIDDuet/) |
 [MIT License](LICENSE)
@@ -18,9 +18,9 @@ SIDScope (`v2.0.0`, resource portal upgrade) is an open-source diagnostic toolki
 
 See [what this release supports](docs/RESOURCE_CAPABILITIES.md) for package-only, browser-only, and own-data workflows, and [how SIDScope relates to SIDInspector and SIDDuet](docs/RELATION_TO_SIDINSPECTOR_AND_SIDDUET.md).
 
-## Try it online (zero install)
+## Browser Workbench (Zero-Install Pyodide & Local HTTP)
 
-Open the [live browser workbench](https://jdding.github.io/SIDscope/) to run SIDScope directly in your browser using a pinned standard-library Pyodide runtime (`v314.0.7`):
+Serve [`index.html`](index.html) from a local static server (`python3 -m http.server 8768`) — or open the hosted GitHub Pages URL (`https://jdding.github.io/SIDscope/`, pending Pages activation after this branch is published) — to run SIDScope directly in your browser using a pinned standard-library Pyodide runtime (`v314.0.7`):
 
 - **Tab 1 · RQ1 Mapping Diagnostics & `A_b` vs `S_b`:** Executes live Python D1–D5 diagnostics with an interactive **Stratum Allocation (`A_b`) vs. Global Singleton (`S_b`)** comparison and runs `tools/build_sidscope_paper_tables.py` live to rebuild and verify the 8-route Table 3 / Table 5 matrix.
 - **Tab 2 · RQ2 Exposure Controls & D7 Beam Resolvers:** Runs live resolver comparisons (Path Survival vs. Singleton Credit vs. Uniform Draw vs. Popularity Resolver) on ambiguous beams alongside verified Table 4, Table 5 (fixed-budget Beauty/Instruments), Table 6, and Table 7 summaries.

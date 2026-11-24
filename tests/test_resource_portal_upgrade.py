@@ -45,6 +45,27 @@ class SidScopePortalTests(unittest.TestCase):
             browser_example.audit_custom_csv(bad)
         self.assertIn("C1 mismatch", str(ctx.exception))
 
+    def test_heldout_only_splits_fail_closed_without_leakage(self) -> None:
+        sid_csv = "item_id,sid_0,sid_1\n1,1,1\n2,1,2\n3,2,1\n4,2,2\n"
+        for split_name in ("valid", "test"):
+            heldout = f"user_id,item_id,split\nu1,1,{split_name}\nu1,2,{split_name}\nu2,3,{split_name}\nu2,4,{split_name}\n"
+            with self.assertRaises(ValueError) as ctx:
+                browser_example.audit_custom_csv(sid_csv, heldout)
+            self.assertIn("zero 'train' rows", str(ctx.exception))
+
+        train_only = "user_id,item_id,split\nu1,1,train\nu1,2,train\nu2,3,train\nu2,4,train\n"
+        train_plus_test = train_only + "u9,1,test\nu9,3,test\nu8,4,valid\nu8,4,valid\n"
+        r1 = browser_example.audit_custom_csv(sid_csv, train_only)["report"]
+        r2 = browser_example.audit_custom_csv(sid_csv, train_plus_test)["report"]
+        self.assertEqual(r1["interaction_split_mode"], "train_only")
+        self.assertEqual(r1["d3"], r2["d3"])
+        self.assertEqual(r1["d4"], r2["d4"])
+
+        unsplit = "user_id,item_id,split\nu1,1,all\nu1,2,all\n"
+        r_unsplit = browser_example.audit_custom_csv(sid_csv, unsplit)["report"]
+        self.assertEqual(r_unsplit["interaction_split_mode"], "unsplit_reference")
+        self.assertEqual(r_unsplit["d3"][0]["edge_micro"], 1.0)
+
     def test_local_http_demo_endpoints_and_security(self) -> None:
         server = serve_demo.ThreadingHTTPServer(("127.0.0.1", 0), serve_demo.Handler)
         server.bind_host = "127.0.0.1"

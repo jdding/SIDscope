@@ -62,7 +62,7 @@ def run_isolated_workflow() -> dict:
             shutil.copy2(source, target)
             verified_count += 1
 
-        for meta_name in ("PACKAGE_MANIFEST.json", "CHECKSUMS.sha256"):
+        for meta_name in ("PACKAGE_MANIFEST.json", "SHA256SUMS"):
             shutil.copy2(ROOT / meta_name, work / meta_name)
 
         proc = subprocess.Popen(
