@@ -1,0 +1,26 @@
+{
+  "schema": "sidscope.resource_portal.v1",
+  "name": "SIDScope",
+  "version": "2.0.0",
+  "portal_revision": "2.1.0-portal",
+  "release_date": "2026-11-24",
+  "publication_status": "tois_under_review_with_public_v2_0_0_release",
+  "scientific_reproduction_status": "tois_v2_0_0_tables_frozen_and_verified",
+  "repository_url": "https://github.com/jdding/SIDscope",
+  "release_url": "https://github.com/jdding/SIDscope/releases/tag/v2.0.0",
+  "hosted_live_demo": "https://jdding.github.io/SIDscope/",
+  "local_demo_command": "python3 tools/serve_demo.py --port 8765",
+  "demo_execution": "pinned Pyodide v314.0.7, live build_sidscope_paper_tables.py + RQ1-RQ3 pure-Python audits + C1 rejection fixture + client-side BYO CSV, SHA-256 verified",
+  "license": "MIT",
+  "prior_publication_doi": "10.1145/3799682.3840174",
+  "companion_resources": {
+    "sidinspector": "https://github.com/jdding/sidinspector",
+    "sidduet": "https://github.com/jdding/SIDDuet"
+  },
+  "excluded": [
+    "upstream checkpoints and trained model weights",
+    "raw Amazon and Yelp datasets",
+    "unredistributable tokenizer archives without explicit licenses",
+    "unpublished TOIS manuscript drafts"
+  ]
+}

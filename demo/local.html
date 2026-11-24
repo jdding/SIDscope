@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIDScope · Local Diagnostic &amp; Conformance Workbench</title>
+<style>
+:root{color-scheme:light;--ink:#221c2c;--muted:#5d556b;--accent:#3b2852;--line:#d4cedc;--paper:#faf9f4;--card:#f3f1f6}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 "Avenir Next","Trebuchet MS",sans-serif}main{max-width:1120px;margin:34px auto;padding:0 28px 50px}header{border-top:5px solid var(--accent);padding-top:17px}.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}h1{font:normal clamp(26px,4vw,38px)/1.15 Georgia,serif;margin:12px 0}h2{font:normal 21px/1.25 Georgia,serif;margin:24px 0 11px}p{margin:8px 0}.lede{max-width:82ch;color:var(--muted)}.notice{padding:13px 16px;background:#f1edf6;border-left:3px solid var(--accent);margin:22px 0 17px;font-size:14px}.notice strong{display:block}.meta{font-size:12px;color:var(--muted)}.action{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:19px 0 24px}button{border:0;border-radius:3px;background:var(--accent);color:white;padding:11px 18px;font:700 15px "Avenir Next","Trebuchet MS",sans-serif;cursor:pointer}button:hover{background:#291a3b}button:disabled{opacity:.65;cursor:wait}#status,#audit-status{font-size:14px;color:var(--muted)}#status.error,#audit-status.error{color:#9a3023;font-weight:600}.results{border-top:1px solid var(--line);padding-top:22px}.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap}caption{text-align:left;color:var(--muted);font-size:13px;margin-bottom:8px}th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}th{font-size:12px;font-weight:700;color:var(--muted);border-top:1px solid var(--ink)}th:first-child,td:first-child{text-align:left}tbody tr:nth-child(even){background:#f3f1f4}textarea{width:100%;min-height:110px;font:12.5px/1.45 ui-monospace,Menlo,monospace;padding:9px;border:1px solid var(--line);border-radius:4px}footer{border-top:1px solid var(--line);margin-top:28px;padding-top:14px;color:var(--muted);font-size:12px}[hidden]{display:none!important}
+</style>
+<main>
+<header>
+  <div class="eyebrow">SIDScope / v2.0.0 local workbench</div>
+  <h1>Semantic-ID Interfaces in Generative Recommendation</h1>
+  <p class="lede">Run an isolated local verification of SIDScope's RQ1–RQ3 workflows, 8-table rebuild, DACT 4-gate handoff audit, and C1 failure rejection — or audit a local CSV in memory.</p>
+</header>
+<aside class="notice">
+  <strong>Local isolated verification · SHA-256 checked</strong>
+  Each verification run copies manifest-listed files into a fresh temporary directory, checks SHA-256 hashes, rebuilds all 8 manuscript tables, and runs RQ1–RQ3 and C1 rejection checks.
+  <p class="meta" id="metadata">Reading release state…</p>
+</aside>
+<div class="action">
+  <button id="run" type="button">Run isolated RQ1–RQ3 verification</button>
+  <span id="status" role="status" aria-live="polite">Ready. Loopback only (127.0.0.1).</span>
+</div>
+<section class="results" id="results" hidden>
+  <h2>1. RQ1 · Eight Executable C0–C5 Routes (Rebuilt Table 5)</h2>
+  <div class="scroll"><table><thead><tr><th>Route</th><th>Items</th><th>Depth</th><th>D1 L1</th><th>D2 alias</th><th>D3@1</th><th>D4 tail A_b</th><th>D5 leaves</th></tr></thead><tbody id="t5"></tbody></table></div>
+  <h2>2. RQ2 · Trained Constrained-Beam Traces (Table 6)</h2>
+  <div class="scroll"><table><thead><tr><th>Route</th><th>Split</th><th>Targets</th><th>Beams</th><th>Ambiguous</th><th>Path</th><th>Singleton</th><th>Gap</th></tr></thead><tbody id="t10"></tbody></table></div>
+  <h2>3. RQ3 · DACT 0.6 → 0.7 Handoff Gate (Rebuilt Table 8A)</h2>
+  <div class="scroll"><table><thead><tr><th>State</th><th>Gaps</th><th>Churn</th><th>Common NDCG@20</th><th>New R@20</th><th>Gate</th><th>P(Pass)</th></tr></thead><tbody id="t8"></tbody></table></div>
+  <h2>4. C1 Conformance Rejection Fixture</h2>
+  <p id="c1" style="font-weight:600;"></p>
+</section>
+<section style="border-top:1px solid var(--line);margin-top:26px;padding-top:18px;">
+  <h2>5. Quick Local CSV Audit (D1–D5 &amp; A_b vs S_b)</h2>
+  <textarea id="csv-input" spellcheck="false">item_id,sid_0,sid_1,sid_2
+1,1,1,1
+2,1,1,2
+3,2,1,1
+4,1,1,1</textarea>
+  <div class="action">
+    <button id="audit-btn" type="button">Audit CSV</button>
+    <span id="audit-status">Paste any item_id,sid_0,... CSV above.</span>
+  </div>
+  <pre id="audit-out" style="background:var(--card);padding:12px;border-radius:4px;overflow-x:auto;font-size:12.5px;" hidden></pre>
+</section>
+<footer>Loopback-only server with CSP nonces and isolated temporary-directory execution.</footer>
+</main>
+<script nonce="__SCRIPT_NONCE__">
+const runBtn=document.getElementById('run'),st=document.getElementById('status');
+const pct=v=>(100*Number(v)).toFixed(1)+'%';
+function row(id,vals){const tr=document.createElement('tr');for(const v of vals){const td=document.createElement('td');td.textContent=String(v);tr.append(td)}document.getElementById(id).append(tr)}
+fetch('/health').then(r=>r.json()).then(i=>{document.getElementById('metadata').textContent=`v${i.version} (${i.portal_revision}) · ${i.publication_status}`}).catch(()=>{});
+runBtn.addEventListener('click',async()=>{
+  runBtn.disabled=true;runBtn.textContent='Running…';st.className='';st.textContent='Running isolated SHA-256 verification and RQ1–RQ3 workflows…';
+  try{
+    const resp=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+    const r=await resp.json();if(!resp.ok)throw new Error(r.error||'Run failed');
+    for(const id of ['t5','t10','t8'])document.getElementById(id).replaceChildren();
+    for(const x of r.table5_profiles)row('t5',[x.artifact,x.items,x.sid_depth,x.d1_level1_symbols,x.d2_collision_item_rate,x.d3_depth1_weighted,x.d4_tail_unique_ratio,x.d5_unique_full_codes]);
+    for(const x of r.table10_traces)row('t10',[x.route,x.split,x.targets,x.beam_rows,pct(x.ambiguous_beam_rate),pct(x.target_path_survival),pct(x.target_unique_item_hit),'+'+(100*Number(x.path_item_gap)).toFixed(1)+' pp']);
+    for(const x of r.dact_handoff)row('t8',[x.mapping_model_state,x.catalog_gaps,x.d6_churn,x.common_ndcg_at_20,x.new_item_recall_at_20,x.gate,x.gate_probability]);
+    const m=r.c1_failure_check.mismatches[0];
+    document.getElementById('c1').textContent=`PASS (expected C1 fail): caught mismatch at row ${m.row_index} (item ${m.item_id}: "${m.declared_sid}" vs "${m.reconstructed_sid}").`;
+    document.getElementById('results').hidden=false;
+    st.textContent=`Complete in ${Number(r.elapsed_seconds).toFixed(2)} s · isolated run ${r.run_id} (${r.manifest_files_verified} files SHA-256 verified)`;
+  }catch(e){st.className='error';st.textContent=e.message}finally{runBtn.disabled=false;runBtn.textContent='Run isolated RQ1–RQ3 verification'}
+});
+document.getElementById('audit-btn').addEventListener('click',async()=>{
+  const out=document.getElementById('audit-out'),ast=document.getElementById('audit-status');
+  ast.className='';ast.textContent='Auditing CSV…';
+  try{
+    const resp=await fetch('/api/audit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sid_csv:document.getElementById('csv-input').value})});
+    const r=await resp.json();if(!resp.ok)throw new Error(r.error||'Audit failed');
+    out.textContent=JSON.stringify({d5:r.report.d5,d4:r.report.d4,decisions:r.report.decisions},null,2);
+    out.hidden=false;ast.textContent=`Audited ${r.report.d5.items} items (${r.report.d5.unique_sid} unique SIDs).`;
+  }catch(e){ast.className='error';ast.textContent=e.message}
+});
+</script>
+</html>

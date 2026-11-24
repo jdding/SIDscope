@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIDScope · Diagnostic Resource for Semantic-ID Interfaces</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="demo/browser.css">
+  <script src="demo/browser-example.js" defer></script>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">SIDScope / v2.0.0 · Diagnostic &amp; Conformance Resource</div>
+    <h1>Semantic-ID Interfaces in Generative Recommendation</h1>
+    <p class="lede">Inspect Semantic-ID mappings as reusable recommendation interfaces across three research questions: <strong>RQ1</strong> mapping structure (<code>A<sub>b</sub></code> vs. <code>S<sub>b</sub></code>), <strong>RQ2</strong> fixed-budget prefix exposure &amp; D7 beam-resolver accounting, and <strong>RQ3</strong> refresh audits with a 4-condition generator handoff gate — plus C0–C5 conformance and client-side BYO-CSV audits.</p>
+    <nav aria-label="Resource links">
+      <a href="https://github.com/jdding/SIDscope/releases/tag/v2.0.0">Release v2.0.0</a>
+      <a href="https://github.com/jdding/SIDscope/blob/codex/sidscope-v2/ARTIFACT_QUICKSTART.md">Quickstart</a>
+      <a href="https://github.com/jdding/SIDscope/blob/codex/sidscope-v2/docs/BRING_YOUR_OWN_DATA.md">Use your own data</a>
+      <a href="https://jdding.github.io/sidinspector/">SIDInspector (CIKM '26)</a>
+      <a href="https://jdding.github.io/SIDDuet/">SIDDuet (Search &amp; Rec)</a>
+      <a href="https://github.com/jdding/SIDscope">Source on GitHub</a>
+    </nav>
+  </header>
+
+  <aside class="notice">
+    <strong>Zero-install browser runtime · SHA-256 verified release files</strong>
+    Clicking below loads a pinned standard-library Pyodide runtime (<code>v314.0.7</code>), checks SHA-256 hashes against <code>PACKAGE_MANIFEST.json</code>, runs <code>tools/build_sidscope_paper_tables.py</code> live to rebuild &amp; verify all eight manuscript tables, evaluates the DACT 4-condition handoff gate, triggers the C1 failure fixture live, and lets you audit your own CSV client-side in Tab 5.
+  </aside>
+
+  <div class="action">
+    <button id="run" type="button">Run all RQ1–RQ3 &amp; conformance workflows</button>
+    <span id="status" role="status" aria-live="polite">Ready. The first run loads Python in your browser; repeat runs reuse the runtime.</span>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="SIDScope workflows">
+    <button type="button" class="tab-btn active" role="tab" aria-selected="true" data-tab="t1">RQ1 · Mapping &amp; A_b vs S_b</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="t2">RQ2 · Exposure &amp; D7 Resolvers</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="t3">RQ3 · Refresh &amp; Handoff Gate</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="t4">C0–C5 Conformance</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="t5">Inspect Your Own CSV</button>
+  </div>
+
+  <section class="results" id="results" hidden>
+    <!-- TAB 1: RQ1 -->
+    <div data-panel="t1">
+      <h2>RQ1 · What differs across mappings?</h2>
+      <h3>1A. Eight executable source-traced routes (Table 3 / Table 5) <span class="badge published">Live rebuild · 8 C0–C5 reports</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Deterministically rebuilt in-browser by <code>tools/build_sidscope_paper_tables.py</code> from eight frozen C0–C5 conformance reports under common bounded C3 settings.</caption>
+          <thead><tr><th>Route</th><th>Items</th><th>Depth</th><th>D1 L1</th><th>D2 alias</th><th>D3@1</th><th>D4 tail A_b</th><th>D5 leaves</th></tr></thead>
+          <tbody id="rq1-t5"></tbody>
+        </table>
+      </div>
+
+      <div class="inspector">
+        <div class="inspector-head"><strong>Tail Allocation (A<sub>b</sub>) vs. Global Singleton Addressability (S<sub>b</sub>)</strong></div>
+        <p class="note">In GRID/Beauty, tail items occupy 95.7 distinct codes per 100 tail items (A<sub>b</sub>), yet only 82.2% have globally unique full codes (S<sub>b</sub>) because 535 tail items share codes outside the tail.</p>
+        <div id="rq1-absb-bars"></div>
+      </div>
+
+      <h3>1B. Live cross-stratum aliasing proof (A<sub>b</sub> &gt; S<sub>b</sub>) <span class="badge">Live Python</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Controlled 9-item mapping where 2 tail items share full codes with head items: tail A<sub>b</sub> stays 100% while global singleton S<sub>b</sub> drops to 33.3%.</caption>
+          <thead><tr><th>Bucket</th><th>Items</th><th>Allocation A_b</th><th>Global singleton S_b</th><th>Gap (A_b − S_b)</th><th>Cross-stratum shared</th></tr></thead>
+          <tbody id="rq1-live-d4"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: RQ2 -->
+    <div data-panel="t2" hidden>
+      <h2>RQ2 · When do mapping differences affect downstream outcomes?</h2>
+      <h3>2A. Live D7 resolver policy comparison on identical beams <span class="badge">Live Python</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Same top-K generated paths evaluated under four successive accounting rules in pure Python.</caption>
+          <thead><tr><th>Accounting rule</th><th>Hit rate</th><th>Interpretation</th></tr></thead>
+          <tbody id="rq2-d7-sim"></tbody>
+        </table>
+      </div>
+
+      <h3>2B. Fixed-budget prefix consumption (Table 5 · budget 100, 2,000 users) <span class="badge published">Published study summary</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Original assignment vs. 19 popularity-stratified permutation controls vs. non-SID catalog popularity.</caption>
+          <thead><tr><th>Mapping</th><th>Orig R@100</th><th>Perm R@100</th><th>Pop R@100</th><th>Orig NDCG (×10³)</th><th>Perm NDCG</th><th>Pop NDCG</th></tr></thead>
+          <tbody id="rq2-t5"></tbody>
+        </table>
+      </div>
+
+      <div class="pair">
+        <section>
+          <h3>2C. Trained constrained-beam traces (Table 6) <span class="badge published">Live verify</span></h3>
+          <div class="scroll">
+            <table>
+              <caption>Rebuilt from <code>table10_g20_trained_trace_source.csv</code> (beam width 50).</caption>
+              <thead><tr><th>Route</th><th>Split</th><th>Targets</th><th>Beams</th><th>Ambig.</th><th>Path</th><th>Single.</th><th>Gap</th></tr></thead>
+              <tbody id="rq2-t6"></tbody>
+            </table>
+          </div>
+        </section>
+        <section>
+          <h3>2D. Explicit resolvers on frozen beams (Table 7) <span class="badge published">Published summary</span></h3>
+          <div class="scroll">
+            <table>
+              <caption>Resolver hit rates (%) and 95% paired bootstrap gain (Popularity − Singleton).</caption>
+              <thead><tr><th>Case</th><th>Path</th><th>Single.</th><th>Uniform</th><th>Pop.</th><th>Gain 95% CI</th></tr></thead>
+              <tbody id="rq2-t7"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <h3>2E. Released 125,000 deidentified D7 beam rows <span class="badge published">SHA-256 verified summary</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Loaded from <code>docs/reproducibility/d7_labeled_trace_release.json</code> across 5 trained decoding runs.</caption>
+          <thead><tr><th>Case</th><th>Traces</th><th>Beam rows</th><th>Invalid path</th><th>Ambiguous path</th><th>High uncertainty</th><th>Valid hit</th></tr></thead>
+          <tbody id="rq2-d7-125k"></tbody>
+        </table>
+      </div>
+
+      <h3>2F. D3 calibration ladder across protocols (Table 4) <span class="badge published">Live verify</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Blocks A (same-prefix), B (held-out users), C (non-prefix pools), and D (exploratory generator probes).</caption>
+          <thead><tr><th>Protocol block</th><th>Setting</th><th>Endpoint</th><th>Unit</th><th>Spearman ρ</th><th>Interval / exact p</th></tr></thead>
+          <tbody id="rq2-ladder"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: RQ3 -->
+    <div data-panel="t3" hidden>
+      <h2>RQ3 · What must change after a mapping refresh?</h2>
+      <h3>3A. DACT Tools 0.6 → 0.7 coverage repair &amp; aggregate handoff (Table 8A) <span class="badge published">Live rebuild</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Rebuilt in-browser from <code>g22_diagnose_repair_handoff_summary.json</code> and 4,999-draw bootstrap uncertainty.</caption>
+          <thead><tr><th>Mapping / model state</th><th>Gaps</th><th>D6 churn</th><th>Common NDCG@20 [95% CI]</th><th>New-item R@20 [95% CI]</th><th>Gate</th><th>P(Pass)</th></tr></thead>
+          <tbody id="rq3-t8a"></tbody>
+        </table>
+      </div>
+
+      <div class="pair">
+        <section>
+          <h3>3B. Live 4-condition handoff gate evaluation <span class="badge">Live Python</span></h3>
+          <p id="rq3-threshold" class="note"></p>
+          <div class="scroll">
+            <table>
+              <caption>Checks: overall &gt; map-only, common &gt; map-only, common ≥ threshold, new-item recall &gt; 0.</caption>
+              <thead><tr><th>Adapted model</th><th>Overall (×10³)</th><th>Common (×10³)</th><th>New R@20</th><th>Checks</th><th>Verdict</th></tr></thead>
+              <tbody id="rq3-gate"></tbody>
+            </table>
+          </div>
+        </section>
+        <section>
+          <h3>3C. Post-hoc target-code stratification (Table 8B) <span class="badge published">Published audit</span></h3>
+          <div class="scroll">
+            <table>
+              <caption>Changed-code targets drop to 0.00 under mapping-only reuse and remain below 10.10 after adaptation.</caption>
+              <thead><tr><th>Target code</th><th>Targets</th><th>Items</th><th>Old</th><th>Map only</th><th>S2025</th><th>S2026</th><th>S2027</th></tr></thead>
+              <tbody id="rq3-t8b"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- TAB 4: CONFORMANCE -->
+    <div data-panel="t4" hidden>
+      <h2>C0–C5 Adapter Admission &amp; 9-Route Provenance Inventory</h2>
+      <div class="inspector">
+        <div class="inspector-head"><strong>Live C1 Fail-Closed Rejection Check <span class="badge fail">Expected C1 fail</span></strong></div>
+        <p id="c1-result" style="font-size:14px;font-weight:600;"></p>
+      </div>
+
+      <h3>C0–C5 Ordered Admission Gates (Table 10) <span class="badge published">Live rebuild</span></h3>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Gate</th><th>Verification question</th><th>Required evidence</th></tr></thead>
+          <tbody id="c-protocol"></tbody>
+        </table>
+      </div>
+
+      <h3>Source, License &amp; Redistribution Inventory (9 named routes) <span class="badge published">SHA-256 verified CSV</span></h3>
+      <div class="scroll">
+        <table>
+          <caption>Upstream archives without explicit licenses stay at their sources; SIDScope ships summaries and hashes only.</caption>
+          <thead><tr><th>Route</th><th>Dataset</th><th>Evidence role</th><th>License status</th><th>Redistribution policy</th></tr></thead>
+          <tbody id="c-inv"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <details>
+      <summary>Executed release scripts and SHA-256 integrity log</summary>
+      <ul id="steps"></ul>
+      <p id="runtime" class="note"></p>
+    </details>
+  </section>
+
+  <!-- TAB 5: BYO CSV -->
+  <section data-panel="t5" hidden style="border-top: 1px solid var(--line); padding-top: 22px;">
+    <h2>Inspect Your Own Mapping &amp; A<sub>b</sub> vs. S<sub>b</sub> Gap <span class="badge client">100% Client-Side Pyodide</span></h2>
+    <p class="lede">Paste CSV text or select local CSV files below. Runs preflight, C1 SID-consistency validation, D1–D5, and SIDScope's stratum-allocation (<code>A<sub>b</sub></code>) vs. global-singleton (<code>S<sub>b</sub></code>) check entirely inside your browser — <strong>zero bytes leave your machine</strong>.</p>
+
+    <div class="presets">
+      <strong style="font-size:13px;">Quick presets:</strong>
+      <button type="button" class="secondary" data-preset="cross_stratum">Cross-stratum tail aliasing (A_b &gt; S_b)</button>
+      <button type="button" class="secondary" data-preset="clean">Clean injective</button>
+      <button type="button" class="secondary" data-preset="heavy_collision">Heavy leaf collisions</button>
+    </div>
+
+    <div class="byo-grid">
+      <div class="byo-field">
+        <label for="byo-sid-csv">
+          <span>Required: SID CSV (<code>item_id,sid_0,sid_1,...</code>)</span>
+          <input type="file" id="byo-sid-file" accept=".csv,text/csv" style="font-size:12px;font-weight:400;">
+        </label>
+        <textarea id="byo-sid-csv" spellcheck="false"></textarea>
+      </div>
+      <div class="byo-field">
+        <label for="byo-inter-csv">
+          <span>Optional: Interactions CSV (<code>user_id,item_id,split</code>)</span>
+          <input type="file" id="byo-inter-file" accept=".csv,text/csv" style="font-size:12px;font-weight:400;">
+        </label>
+        <textarea id="byo-inter-csv" spellcheck="false"></textarea>
+      </div>
+    </div>
+    <div class="byo-field" style="margin-top:12px;">
+      <label for="byo-meta-csv">
+        <span>Optional: Item metadata CSV (<code>item_id,category[,title]</code>)</span>
+        <input type="file" id="byo-meta-file" accept=".csv,text/csv" style="font-size:12px;font-weight:400;">
+      </label>
+      <textarea id="byo-meta-csv" style="min-height:80px;" spellcheck="false"></textarea>
+    </div>
+
+    <div class="action">
+      <button id="byo-run" type="button">Audit my CSV in browser</button>
+      <span id="byo-status" role="status" aria-live="polite">Ready. Accepts up to 50,000 items client-side.</span>
+    </div>
+
+    <div id="byo-results" hidden>
+      <p id="byo-summary" style="font-weight:700;font-size:15px;"></p>
+      <div class="triage-grid" id="byo-decisions"></div>
+      <div class="pair">
+        <section>
+          <h3>D1 · Utilization</h3>
+          <div class="scroll"><table><thead><tr><th>Level</th><th>Unique</th><th>Entropy</th><th>Gini</th></tr></thead><tbody id="byo-d1"></tbody></table></div>
+        </section>
+        <section>
+          <h3>D2 · Aliasing</h3>
+          <div class="scroll"><table><thead><tr><th>Depth</th><th>Prefixes</th><th>Prefix col.</th><th>Full D2</th></tr></thead><tbody id="byo-d2"></tbody></table></div>
+        </section>
+      </div>
+      <div class="pair">
+        <section>
+          <h3>D3 · Alignment (edge-micro vs freq-weighted)</h3>
+          <div class="scroll"><table><thead><tr><th>Depth</th><th>Edges</th><th>Edge-micro</th><th>Freq-weighted</th></tr></thead><tbody id="byo-d3"></tbody></table></div>
+        </section>
+        <section>
+          <h3>D4 · Allocation (A_b) vs Global Singleton (S_b)</h3>
+          <div class="scroll"><table><thead><tr><th>Bucket</th><th>Items</th><th>A_b</th><th>S_b</th><th>Gap</th><th>Cross-stratum</th></tr></thead><tbody id="byo-d4"></tbody></table></div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    SIDScope v2.0.0 (MIT License) · Extension of CIKM '26 SIDInspector (<a href="https://doi.org/10.1145/3799682.3840174">10.1145/3799682.3840174</a>) ·
+    Python runs locally in your browser via pinned Pyodide with SHA-256 verification against <code>PACKAGE_MANIFEST.json</code>.
+  </footer>
+</main>
+</body>
+</html>

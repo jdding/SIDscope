@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use SIDScope, please cite the TOIS manuscript and the foundational CIKM 2026 SIDInspector paper."
+title: "SIDScope"
+type: software
+version: 2.0.0
+date-released: 2026-10-08
+url: "https://jdding.github.io/SIDscope/"
+repository-code: "https://github.com/jdding/SIDscope"
+license: MIT
+authors:
+  - family-names: "Ding"
+    given-names: "Jiandong"
+  - family-names: "Qin"
+    given-names: "Huijie"
+  - family-names: "Wu"
+    given-names: "Tiandeng"
+  - family-names: "Cao"
+    given-names: "Yi"
+preferred-citation:
+  type: article
+  title: "SIDScope: A Diagnostic Resource for Semantic-ID Interfaces in Generative Recommendation"
+  authors:
+    - family-names: "Ding"
+      given-names: "Jiandong"
+    - family-names: "Qin"
+      given-names: "Huijie"
+    - family-names: "Wu"
+      given-names: "Tiandeng"
+    - family-names: "Cao"
+      given-names: "Yi"
+  year: 2026
+  url: "https://github.com/jdding/SIDscope/releases/tag/v2.0.0"
+references:
+  - type: conference-paper
+    title: "SIDInspector: A Mapping-First Diagnostic Resource for Semantic-ID Tokenizers"
+    authors:
+      - family-names: "Ding"
+        given-names: "Jiandong"
+      - family-names: "Chang"
+        given-names: "Heng"
+      - family-names: "Qin"
+        given-names: "Huijie"
+      - family-names: "Liu"
+        given-names: "Tianying"
+    collection-title: "Proceedings of the 35th ACM International Conference on Information and Knowledge Management (CIKM '26)"
+    year: 2026
+    doi: "10.1145/3799682.3840174"

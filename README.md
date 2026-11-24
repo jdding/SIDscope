@@ -1,5 +1,127 @@
 # SIDScope
 
+**A diagnostic, conformance, and observability resource for Semantic-ID interfaces in generative recommendation.**
+
+[Live Browser Workbench](https://jdding.github.io/SIDscope/) |
+[Release v2.0.0](https://github.com/jdding/SIDscope/releases/tag/v2.0.0) |
+[CIKM '26 Foundation (SIDInspector)](https://doi.org/10.1145/3799682.3840174) |
+[SIDDuet (Search & Rec)](https://jdding.github.io/SIDDuet/) |
+[MIT License](LICENSE)
+
+SIDScope (`v2.0.0`, resource portal upgrade) is an open-source diagnostic toolkit, conformance suite, and reproducibility package for inspecting Semantic-ID (`item_id -> SID`) mappings as reusable recommendation interfaces. It does not reimplement upstream tokenizer or generator training; it audits mappings, prefix consumers, generated beams, and refresh handoffs across **three core research workflows**:
+
+| Workflow / Research Question | Core question | Entry point |
+| --- | --- | --- |
+| **RQ1 · Mapping Structure (`D1–D5`)** | How do released mappings differ in code use, shared addresses, prefix alignment (`D3`), tail allocation (`A_b`) vs. global singleton addressability (`S_b`), and trie structure? | `sidscope` workflows · [Algorithm-engineer quickstart](docs/SIDSCOPE_USER_WORKFLOWS.md) |
+| **RQ2 · Downstream Consumers (`Exposure` & `D7`)** | When do prefix assignments beat capacity- & popularity-matched controls at a fixed candidate budget, and how much of the path-survival vs. singleton-credit gap does an explicit resolver recover? | `tools/verify_sidscope_paper_tables.py` · [D7 trace release](docs/reproducibility/d7_labeled_trace_release.json) |
+| **RQ3 · Refresh & Model Handoff (`D6`)** | When a mapping refresh closes catalog coverage gaps but introduces code churn, can an existing generator checkpoint reuse the new mapping or must it be adapted under a 4-condition handoff gate? | `src/sidscope/refresh.py` · [SID refresh guide](docs/SIDSCOPE_SID_REFRESH.md) |
+
+See [what this release supports](docs/RESOURCE_CAPABILITIES.md) for package-only, browser-only, and own-data workflows, and [how SIDScope relates to SIDInspector and SIDDuet](docs/RELATION_TO_SIDINSPECTOR_AND_SIDDUET.md).
+
+## Try it online (zero install)
+
+Open the [live browser workbench](https://jdding.github.io/SIDscope/) to run SIDScope directly in your browser using a pinned standard-library Pyodide runtime (`v314.0.7`):
+
+- **Tab 1 · RQ1 Mapping Diagnostics & `A_b` vs `S_b`:** Executes live Python D1–D5 diagnostics with an interactive **Stratum Allocation (`A_b`) vs. Global Singleton (`S_b`)** comparison and runs `tools/build_sidscope_paper_tables.py` live to rebuild and verify the 8-route Table 3 / Table 5 matrix.
+- **Tab 2 · RQ2 Exposure Controls & D7 Beam Resolvers:** Runs live resolver comparisons (Path Survival vs. Singleton Credit vs. Uniform Draw vs. Popularity Resolver) on ambiguous beams alongside verified Table 4, Table 5 (fixed-budget Beauty/Instruments), Table 6, and Table 7 summaries.
+- **Tab 3 · RQ3 Refresh Audit & Handoff Gate (D6):** Evaluates the 4-condition preregistered handoff gate live and verifies the DACT Tools `0.6 -> 0.7` refresh audit (5,364 held-out targets, Table 8A aggregate + Table 8B post-hoc target-code stratification).
+- **Tab 4 · Conformance Gates (`C0–C5` & `G0–G5`):** Executes the public C1 failure fixture live (proving inconsistent `sid` vs `sid_level_*` rejection), inspects all 8 frozen C0–C5 reports, and checks the 9-route source/license inventory.
+- **Tab 5 · Inspect Your Own Mapping (BYO CSV):** Paste or pick local CSV files (`item_id,sid_0,sid_1,...` + optional interactions & metadata) to run full D1–D5, `A_b` vs `S_b` tail audit, and interactive triage cards **100% client-side** — nothing leaves your browser.
+
+All executed scripts and evidence summaries are SHA-256 verified against `PACKAGE_MANIFEST.json` before execution.
+
+## Install and Quickstart
+
+CPU-only (Python 3.9+, accepted baseline macOS arm64 / CPython 3.9.6; no GPU required). The historical Python import package remains `sidinspector` for CIKM compatibility; new integrations should use the curated `sidscope` Python facade and `sidscope` CLI.
+
+```sh
+git clone --branch codex/sidscope-v2 https://github.com/jdding/SIDscope.git
+cd SIDscope
+python3 -m pip install --upgrade "pip>=21.3"
+python3 -m pip install .
+
+# 1. Rebuild & verify all 8 manuscript tables row-by-row from compact sources
+python3 tools/verify_sidscope_paper_tables.py
+
+# 2. Run the full resource-package verifier & C0-C5 conformance checks
+python3 tools/verify_sidscope_resource_package.py
+python3 tools/verify_adapter_conformance_assets.py
+
+# 3. Validate canonical contracts & inspect available public schemas
+sidscope contract list
+sidscope schema list
+
+# 4. Launch the isolated local browser workbench
+python3 tools/serve_demo.py --port 8765
+```
+
+For auditing your own CSV/Parquet mappings and ranked-item outputs, start with [docs/BRING_YOUR_OWN_DATA.md](docs/BRING_YOUR_OWN_DATA.md) and [docs/SIDSCOPE_USER_WORKFLOWS.md](docs/SIDSCOPE_USER_WORKFLOWS.md). See [ARTIFACT_QUICKSTART.md](ARTIFACT_QUICKSTART.md) for the complete command reference and `evidence-full` archive instructions.
+
+## Measured CPU Runtime and Memory
+
+Single-machine CPU benchmarks (macOS arm64, Python 3.9.6, no GPU required):
+
+| Workload | Scale | Wall time | Peak RSS |
+| --- | --- | ---: | ---: |
+| `tools/verify_sidscope_paper_tables.py` | 8 manuscript tables + 8 C0–C5 reports + G22 | 0.07 s | 15 MiB |
+| `tools/verify_adapter_conformance_assets.py` | 9-route inventory + 8 C0–C5 + C1 failure fixture | 0.49 s | 87 MiB |
+| `tools/validate_resource_portal.py` | Portal SHA-256 manifest + pure-Python workbench | 0.16 s | 23 MiB |
+| `tools/verify_sidscope_resource_package.py` | Full package, quickstart, D7 labels & evidence gates | 35.6 s | 125 MiB |
+
+## Relationship to SIDInspector and SIDDuet
+
+| Resource | Core Scope | Status & Relationship |
+| --- | --- | --- |
+| **[SIDInspector](https://github.com/jdding/sidinspector)** | Mapping-first D1–D5 diagnostics + optional D6 churn on single-task `item_id -> SID` exports. | Published at **CIKM '26 Resource Track** (`10.1145/3799682.3840174`). |
+| **SIDScope** (this repo) | Substantial extension adding source-traced C0–C5/G0–G5 conformance, `A_b` vs `S_b` addressability separation, fixed-budget exposure controls, trained D7 beam-resolver accounting, D6 4-gate refresh handoffs, Adapter SDK 1.0, 46 JSON schemas, and immutable EvidenceBundles. | **TOIS** manuscript under review (`v2.0.0` resource release). Retains `sidinspector` import compatibility. |
+| **[SIDDuet](https://github.com/jdding/SIDDuet)** | Dual-task **search vs. recommendation** shared-SID allocation calibration, count-matched references, and temporal pooling. | Companion two-task resource. |
+
+See [docs/RELATION_TO_SIDINSPECTOR_AND_SIDDUET.md](docs/RELATION_TO_SIDINSPECTOR_AND_SIDDUET.md).
+
+## Artifact and Evidence Coverage
+
+| Surface | Verified Scope |
+| --- | --- |
+| Named tokenizer inventory | 9 source-traced exports across 7 families (`ReSID`, `ReSID-GAOQ`, `GRID`, `CARD`, `DIGER` Beauty & Yelp, `ReSOT`, `LETTER`, `LC-Rec`); 8 executable C0–C5 reports + 1 auditable snapshot |
+| Fixed-budget exposure controls | 2,000 validation users × 19 popularity-stratified permutations on `GRID/Beauty`, `CARD/Beauty`, and `ReSOT/Instruments` (budgets 50 / 100 / 200) |
+| Trained D7 trace release | 125,000 deidentified labeled beam rows (`GRID/P5` folds 0 & 1, `DIGER` sensitivity, `DACT/TIGER` constrained vs. unconstrained) |
+| Refresh & handoff case | DACT Tools `0.6 -> 0.7` (275 coverage gaps closed, 23.6% churn, 5,364 held-out targets, 3 seeds passing 4/4 gates in 4,999/4,999 draws + changed-code subgroup audit) |
+| Platform & conformance core | 11 canonical contracts, 46 public JSON schemas, Adapter SDK `1.0.0`, 5 native trace payload families, immutable SHA-256 `EvidenceBundle v1` + rebuildable SQLite registry |
+
+## Architecture, Governance & Historical Boundaries
+
+- System architecture & roadmap: [docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md](docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md) · [docs/V1_2_TO_V2_ROADMAP.md](docs/V1_2_TO_V2_ROADMAP.md)
+- Versioning & compatibility policy: [docs/VERSIONING.md](docs/VERSIONING.md) · [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) · [docs/MIGRATING_1_X_TO_2_0.md](docs/MIGRATING_1_X_TO_2_0.md)
+- Release profiles (`runtime` / `conformance` / `evidence-full`): [docs/SIDSCOPE_RELEASE_PROFILES.md](docs/SIDSCOPE_RELEASE_PROFILES.md) · [docs/SIDSCOPE_RESOURCE_PACKAGE.md](docs/SIDSCOPE_RESOURCE_PACKAGE.md) · [docs/SIDSCOPE_DATASHEET.md](docs/SIDSCOPE_DATASHEET.md) · [docs/SIDSCOPE_MAINTENANCE.md](docs/SIDSCOPE_MAINTENANCE.md)
+- Conformance & SDK: [docs/ADAPTER_CONFORMANCE.md](docs/ADAPTER_CONFORMANCE.md) · [docs/GENERATOR_ADAPTER_CONFORMANCE.md](docs/GENERATOR_ADAPTER_CONFORMANCE.md) · [docs/ADAPTER_SDK.md](docs/ADAPTER_SDK.md) · [docs/EVIDENCE_BUNDLES_AND_REGISTRY.md](docs/EVIDENCE_BUNDLES_AND_REGISTRY.md)
+
+Note on historical structure-only submissions:
+
+```sh
+# This historical structure-only fixture is an expected rejection after
+# diagnostic recomputation became mandatory:
+sidscope submission check \
+  --root examples/conformance_ecosystem_fixture/submission/positive
+# status=rejected; code=independent_gate_verification_required
+```
+
+For a current recomputed positive submission and own-producer workflow, follow [docs/SIDSCOPE_USER_WORKFLOWS.md](docs/SIDSCOPE_USER_WORKFLOWS.md).
+
+<details>
+<summary>Machine-checked SDLC &amp; 2.0.0 release governance snapshot (ADR-0025 / ADR-0028)</summary>
+
+Build and smoke-test a `runtime` archive outside the repository:
+
+```sh
+python3 tools/build_sidscope_release_candidate_archive.py \
+  --profile runtime --output /tmp/sidscope-runtime.zip
+python3 tools/smoke_sidscope_release_candidate_archive.py \
+  /tmp/sidscope-runtime.zip --profile runtime
+python3 tools/run_sidscope_g8_fresh_env_smoke.py \
+  --archive /tmp/sidscope-runtime.zip --profile runtime \
+  --result-json /tmp/sidscope_g8_fresh_env_smoke.json
+```
+
 <!-- SIDSCOPE:CURRENT:BEGIN -->
 Current package: `2.0.0`; GitHub main remains 1.1.x; 2.0 publication uses `codex/sidscope-v2` (ADR-0028).
 Current diagnostic admission and comparison require input-bound recomputation; declarations alone do not pass.
@@ -12,585 +134,20 @@ Historical route snapshot: `cb51983ca33506c4c00f1722eda8e5eb9eb452409ce026f9810a
 Independent user actual use is excluded from current certification, RC and delivery gates by acceptance scope policy revision 2; it remains not verified and is not a current prerequisite. The project owner authorized the 2.0 RC-to-release sequence on 2026-10-08 (ADR-0028); automated checks do not grant publication authority. Main, origin and frozen TOIS mutations remain unauthorized.
 <!-- SIDSCOPE:CURRENT:END -->
 
-SIDScope is evolving into the conformance and observability layer for
-Semantic-ID and generative recommender systems. It owns the evidence pipeline
-from adapter integration through canonical contracts, native trace capture,
-diagnostic evaluation, conformance verification, and immutable evidence. It
-does not own or reimplement upstream recommendation methods or training.
+</details>
 
-The 1.1 line remains the verified resource-package baseline: it audits
-existing `item_id -> SID` mappings, validates configuration-bound generator
-adapters, and publishes artifact-level diagnostics, candidate-exposure probes,
-method-faithful trace accounting, and bounded evidence. The approved target
-architecture is documented in `docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md`; the
-implementation sequence through 2.0 is in `docs/V1_2_TO_V2_ROADMAP.md`.
-The source/conformance package includes an updated
-[current implementation diagram and code map](docs/SIDSCOPE_SYSTEM_ARCHITECTURE.md#current-implementation-view--2026-09-09).
-It separates the six-layer core from local engineering workflows and pending
-acceptance; it is not a public 2.0 release declaration.
-Release numbering and compatibility are governed by `docs/VERSIONING.md` and
-`docs/COMPATIBILITY.md`.
+## License and Citation
 
-Repository exposure is intentionally narrower than local development. The
-public GitHub `main` remains on the maintained 1.1.x line; development from
-1.2 through the planned 2.0 contract stays in the dedicated local
-`SIDScope-v2` worktree until an explicit push or release decision. The TOIS
-submission is governed by its exact frozen repository ref and package. Its
-historical `v1.0.2` software snapshot remains immutable, but no policy requires
-every future authorized TOIS revision to stay on 1.0.2 or to adopt local 2.x.
+SIDScope code is released under the [MIT License](LICENSE). Upstream checkpoints, raw Amazon/Yelp datasets, and archives without explicit redistribution licenses remain at their declared sources (`docs/reproducibility/sidscope_source_license_config_inventory.csv`).
 
-Implementation note: the distribution and historical import package remain
-`sidinspector` for compatibility. New integrations should use the curated
-`sidscope` Python facade; direct historical imports remain supported for replay.
-
-For your own CSV/Parquet mapping and ranked-item outputs, start with
-[the algorithm-engineer quickstart](docs/SIDSCOPE_USER_WORKFLOWS.md).
-Its public `sidscope.workflows` API/CLI covers audit, evaluate and qualified
-comparison without internal imports or manual hash construction.
-For mapping refreshes, [the SID refresh guide](docs/SIDSCOPE_SID_REFRESH.md)
-defines explicit ordered-prefix, parallel-position and unordered-set semantics.
-The [2.0 engineering candidate freeze](docs/SIDSCOPE_2_0_CANDIDATE_FREEZE.md)
-keeps engineering readiness, delivery evidence and certification separate;
-independent user actual use is excluded from current gates (ADR-0025) and
-remains not verified.
-
-## What It Reports
-
-Current pre-2.0 trust boundary: new diagnostic admission and default indexes
-require bound input objects and independent diagnostic recomputation. Profile
-checks alone validate structure; comparisons require matching evaluation protocols.
-Historical route evidence below remains unchanged. See
-`docs/SIDSCOPE_SDLC_HARDENING.md` for implemented checks and open acceptance gates.
-
-Verification uses executable checks, not maintainer sign-off. With a diagnostic,
-trace and selection available, `sidscope verify` can recompute and compare the
-diagnostics on CPU; without them it explicitly reports no fact verification.
-Neither mode claims to reproduce upstream training.
-
-- D1 utilization: per-level code usage, entropy, and imbalance.
-- D2 aliasing: full-code and prefix collision profile.
-- D3 neighborhood alignment: whether SID prefixes recover interaction
-  co-occurrence neighborhoods.
-- D4 popularity allocation: head/mid/tail capacity allocation.
-- D5 structural cost: SID length, unique full IDs, and active prefix counts.
-- D6 churn: optional refresh-to-refresh SID stability.
-- D7 trace accounting: generated-path validity, ambiguity, and item resolution.
-
-## Install
-
-The release verifier is CPU-only. Current 2.0 acceptance covers macOS arm64
-with CPython 3.9.6. Linux Python 3.9–3.12 support is deferred beyond 2.0;
-see `docs/SIDSCOPE_DEFERRED_PLATFORM_SUPPORT.md` and ADR-0027.
-Python >=3.9 in `pyproject.toml` is an installation constraint, not proof of
-acceptance for other OS/interpreter combinations. Windows remains unverified.
-Use a regular installation for consumption; editable installation is only for
-development. Stock Python installations with older pip should upgrade it first.
-No GPU is required for the bundled verifier, quickstart, or D1-D7 audits;
-GPU use belongs to external tokenizer training pipelines, not to SIDScope's
-artifact inspection step.
-
-```bash
-python3 -m pip install --upgrade "pip>=21.3"
-python3 -m pip install .
+```bibtex
+@article{ding2026sidscope,
+  author  = {Jiandong Ding and Huijie Qin and Tiandeng Wu and Yi Cao},
+  title   = {{SIDScope}: A Diagnostic Resource for Semantic-ID Interfaces in Generative Recommendation},
+  journal = {Author-prepared preprint (extension of CIKM 2026 SIDInspector)},
+  year    = {2026},
+  url     = {https://github.com/jdding/SIDscope/releases/tag/v2.0.0}
+}
 ```
 
-This installs the `sidinspector` package from the repository's `src/` layout.
-It also installs the stable `sidscope` command facade. The first shared
-contract slice can be checked without loading any optional adapter runtime:
-
-The installed runtime includes a synthetic first-run example and does not need
-the repository's excluded fixture directories:
-
-```bash
-SIDScope_DEMO_DIR=$(mktemp -d)
-python3 -m sidinspector.runtime_demo --output-dir "$SIDScope_DEMO_DIR"
-sidscope contract validate \
-  --type source-identity \
-  --input "$SIDScope_DEMO_DIR/source_identity.json"
-```
-
-This validates a contract, not an upstream method or independent admission.
-The fixture-based commands below require a source checkout or the appropriate
-conformance/evidence-full release profile; they are not runtime quickstart steps.
-
-The active `2.0.0` line retains the eleven canonical contracts from source
-identity through evidence index, stable Adapter SDK `1.0.0`, lazy external
-plugins, five registered native payload families, and composable profiles. It
-adds immutable EvidenceBundle v1 objects, a rebuildable SQLite registry,
-supersession, privacy-gated admission, and compatibility-aware comparison.
-Version 1.5 adds governed static-mapping, generator, overlay and release
-profiles, dataset/evaluation/privacy descriptors, an independent submission
-checker, and deterministic report-derived status/result indexes.
-Version 1.6 adds executable compatibility intervals, hash-bound migration
-records for every 1.1.1 route, a frozen candidate Python/CLI inventory,
-independent external-plugin onboarding proof, and a compatible cross-family
-EvidenceBundle comparison. It is a hardening release: no method or training API
-enters SIDScope.
-Version 1.7 stabilizes the public contract surface: all 46 published schema IDs
-are discoverable with an owner and semantic validator, every CLI JSON output
-uses either the validated CLI envelope or its domain artifact contract, JSON
-Schema validation always precedes Python
-semantic validation, and the deliberately small `sidscope` Python facade is
-machine-inventoried. Existing artifact bytes and historical imports are not
-rewritten.
-The complete common path runs without optional adapter runtimes:
-
-```bash
-sidscope contract list
-sidscope contract show --type dataset-identity
-sidscope contract validate \
-  --type dataset-identity \
-  --input examples/dataset_identity_fixture/dataset_identity.json
-python3 tools/verify_sidscope_sprint2_contracts.py
-python3 tools/verify_sidscope_1_2_closure.py
-python3 tools/verify_sidscope_1_3_plugin_ecosystem.py
-python3 tools/verify_sidscope_1_5_conformance_ecosystem.py
-python3 tools/verify_sidscope_1_6_hardening.py
-python3 tools/verify_sidscope_1_7_stabilization.py
-```
-
-Public schema discovery and two-stage validation are available directly:
-
-```bash
-sidscope schema list
-sidscope schema validate \
-  --input examples/dataset_identity_fixture/dataset_identity.json
-```
-
-DatasetIdentity binds dataset/category/profile, ordered split identities,
-catalog, target universe, and pseudonymous item identity. SIDSpaceIdentity
-separately binds tuple structure, codebooks, offsets, special tokens, tokenizer
-artifacts, collision and de-duplication semantics. PreparedDataset binds both
-identities to normalized splits and artifact hashes. RPG migrates with exact
-fixture parity; incomplete DiffGRM/LLaDA legacy prepared artifacts explicitly
-require regeneration. Episode selection, run/checkpoint provenance, native
-payload-bound traces, diagnostic/conformance reports, and deterministic
-evidence indexing are now registered downstream contracts.
-
-```bash
-sidscope adapter preflight \
-  --descriptor examples/canonical_pipeline_fixture/adapter_capabilities.json
-sidscope trace validate \
-  --input examples/canonical_pipeline_fixture/trace_envelope.json
-sidscope evaluate \
-  --trace examples/canonical_pipeline_fixture/trace_envelope.json \
-  --selection examples/canonical_pipeline_fixture/episode_selection.json \
-  --output /tmp/sidscope-diagnostic.json
-sidscope verify \
-  --report examples/canonical_pipeline_fixture/conformance_report.json
-```
-
-The common TraceEnvelope never substitutes for the bound method-native payload.
-RPG is the first end-to-end canonical fixture. Other current routes retain
-their legacy verifier authority and receive explicit regeneration dispositions;
-no historical evidence or adapter status is rewritten. External adapters are
-discovered lazily under `sidscope.adapters`; core verification works with the
-plugin absent. EvidenceIndex remains the deterministic dependency inventory.
-EvidenceBundle v1 is the independently versioned immutable package: the
-SHA-256 object layout is authoritative and SQLite is only a disposable
-projection. See `docs/EVIDENCE_BUNDLES_AND_REGISTRY.md`.
-
-```bash
-sidscope plugin list
-sidscope trace payload list
-sidscope trace payload validate \
-  --input examples/native_trace_payload_fixtures/masked_diffusion.json
-sidscope profile compose --profile family.masked_diffusion.v1
-sidscope profile catalog
-# This historical structure-only fixture is an expected rejection after
-# diagnostic recomputation became mandatory:
-sidscope submission check \
-  --root examples/conformance_ecosystem_fixture/submission/positive
-# status=rejected; code=independent_gate_verification_required
-```
-
-For a current recomputed positive submission and own-producer workflow, follow
-`docs/SIDSCOPE_USER_WORKFLOWS.md`; do not treat this historical fixture as an
-accepted bundle. The reference plugin under `examples/reference_adapter_plugin/` is an external
-package proof, not a named-method result. See `docs/ADAPTER_PLUGIN_ECOSYSTEM.md`
-and `docs/NATIVE_TRACE_PAYLOADS.md`.
-
-### Optional Latte Tokenizer Intake
-
-SIDScope's core artifact audits do not require tokenizer-training libraries.
-When a workflow must execute the tokenizer-only Latte/PSID export path before
-normalization, install the isolated optional environment:
-
-```bash
-python3 -m pip install -e '.[latte]'
-```
-
-This extra supplies `faiss-cpu` and `sentence-transformers`. Local Sentence-T5
-checkpoints are passed directly to `SentenceTransformer`; SIDScope never
-infers the model backend from directory-name fragments such as
-`sentence-transformers`. The tokenizer-only intake does not require the
-HuggingFace `datasets` package. A full upstream Latte training or evaluation
-workflow may have additional dependencies and should remain in its own
-hermetic environment.
-
-## Run The Bundled Smoke Example
-
-```bash
-python3 examples/run_toy_diagnostic.py
-```
-
-Expected final line:
-
-```text
-Wrote SIDInspector toy diagnostic outputs to .../examples/toy_output
-```
-
-The example writes normalized parquet inputs and D1-D5 CSV reports under
-`examples/toy_output/`.
-
-## Reviewer Quickstart
-
-The reviewer quickstart uses a small music-like export slice and exercises the
-same command path a new adapter user would run: adapter normalization,
-preflight validation, and D1-D5 CSV generation.
-
-```bash
-python3 examples/run_reviewer_quickstart.py
-```
-
-Expected outputs:
-
-```text
-examples/reviewer_quickstart_output/preflight_summary.json
-examples/reviewer_quickstart_output/diagnostics/d1_utilization.csv
-examples/reviewer_quickstart_output/diagnostics/d2_collision.csv
-examples/reviewer_quickstart_output/diagnostics/d3_alignment.csv
-examples/reviewer_quickstart_output/diagnostics/d4_head_tail.csv
-examples/reviewer_quickstart_output/diagnostics/d5a_deployment_cost.csv
-```
-
-This quickstart is a usability example, not a reproduction of the paper tables.
-
-## Paper Evidence Reproducibility
-
-The paper-facing evidence map is tracked in
-`docs/REPRODUCIBILITY_MATRIX.md` and `docs/reproducibility_matrix.csv`. It
-separates evidence that is fully runnable from this release checkout from
-evidence that depends on upstream public artifacts or saved local experiment
-manifests. Compact source summaries and frozen outputs for all eight manuscript-facing
-tables are under `docs/reproducibility/paper_table_sources/` and
-`docs/reproducibility/paper_tables/`.
-
-```bash
-python3 tools/build_sidscope_paper_tables.py --output-dir /tmp/sidscope_paper_tables
-python3 tools/verify_sidscope_paper_tables.py
-python3 tools/verify_reproducibility_matrix.py
-```
-
-These commands deterministically rebuild the paper-table CSVs and compare them
-row by row with the frozen snapshots. They do not retrain upstream tokenizers or
-regenerate large local experiment caches that are intentionally omitted from
-the release package.
-
-For the SIDScope resource-package contract, see
-`docs/SIDSCOPE_RESOURCE_PACKAGE.md`, `docs/SIDSCOPE_DATASHEET.md`,
-`docs/SIDSCOPE_LIMITATIONS.md`, `docs/SIDSCOPE_MAINTENANCE.md`, and
-`docs/SIDSCOPE_RELEASE_CHECKLIST.md`. Version and compatibility policies are
-in `docs/VERSIONING.md` and `docs/COMPATIBILITY.md`. The local release-candidate changelog is
-`docs/SIDSCOPE_CHANGELOG.md`; the public release preparation packet is
-`docs/SIDSCOPE_PUBLIC_RELEASE_PACKET.md`.
-
-Run the bounded sampled regeneration path:
-
-```bash
-python3 tools/run_sidscope_sampled_regeneration.py --output-dir /tmp/sidscope_sampled_regeneration
-```
-
-Run the resource-use walkthrough:
-
-```bash
-python3 tools/run_sidscope_usage_demo.py
-```
-
-This writes `docs/SIDSCOPE_USAGE_DEMO.md` plus compact
-`docs/reproducibility/g14_usage_demo_*` outputs. It demonstrates artifact
-triage and decision tracing, not final downstream model-quality prediction.
-
-Run the adapter conformance and ReSOT intake-to-promotion checks:
-
-```bash
-python3 tools/verify_adapter_conformance_assets.py
-python3 tools/verify_resot_resource_walkthrough.py
-```
-
-The C0-C5 protocol is documented in `docs/ADAPTER_CONFORMANCE.md`. The first
-command validates the nine-route source/license/config inventory, checks the
-frozen ReSOT C0-C5 report, and reruns a public fixture that must fail C1 only.
-The second deterministically rebuilds the ReSOT walkthrough from compact public
-inputs. The upstream ReSOT archive and normalized parquet files are not
-redistributed.
-
-Generator, diffusion, and decoder-overlay integrations follow the separate
-G0-G5 protocol in `docs/GENERATOR_ADAPTER_CONFORMANCE.md`. Current route status
-is machine-readable in
-`docs/reproducibility/generator_adapter_coverage.csv`; reference traces and
-tokenizer-only intake are not labeled as complete named-method adapters.
-
-RPG now has a pinned source/license/asset audit, an independent unordered
-token-set and graph-propagation contract, a deterministic CPU fixture with an
-expected failure, a bounded smoke against the pinned official `RPG` class, and
-a real official-code-derived Beauty OPQ cache whose 12,101 items pass
-non-paper-counted C0--C5 and G1 identity round-trip:
-
-```bash
-PYTHONPATH=src python3 tools/verify_rpg_generator_adapter.py
-```
-
-See `docs/RPG_GENERATOR_ADAPTER.md`. The real cache, raw Amazon data, metadata,
-embeddings, and normalized tables remain external. The command above checks
-static interoperability only. The historical route ledger separately records
-RPG's configuration-bound G0-G5 admission and trained native trace evidence;
-that historical decision is not a new-admission check. Official code remains
-CC BY-NC 4.0 and is not vendored into SIDScope.
-
-Latte/PSID now has a pinned source and asset audit, a real
-official-code-derived Musical Instruments `.sem_ids` cache bound by hashes, a
-C0--C5 normalized intake report, a deidentified CPU fixture, and an
-official-source tokenizer/aggregation smoke:
-
-```bash
-PYTHONPATH=src python3 tools/verify_latte_psid_adapter.py
-```
-
-Checkpoint-owning downstream projects can validate a bounded, deidentified
-trained trace before returning evidence to SIDScope:
-
-```bash
-PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
-  --bundle <trained-trace-bundle.json>
-```
-
-The trained handoff fails closed on aggregate-only summaries, missing beam
-ancestry or step log-probabilities, raw identities, labels, private paths, and
-unbounded exports. Schema v2 preserves PAD/`-1` early-ended beams and PSID's
-raw invalid top-k rank slots, while Latte retains dense post-aggregation ranks.
-
-Two checkpoint-backed five-episode Amazon Video Games smoke bundles are
-included for direct CPU verification:
-
-```bash
-PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
-  --bundle examples/latte_psid_trained_trace_real_smoke/psid_amazon_vg_1_per_bucket_s2024.json
-PYTHONPATH=src python3 tools/verify_latte_psid_trained_trace_bundle.py \
-  --bundle examples/latte_psid_trained_trace_real_smoke/latte_amazon_vg_1_per_bucket_s2024.json
-```
-
-Both methods also pass external 250-episode diagnostics whose hashes and
-verifier summaries are frozen in
-`docs/reproducibility/latte_psid_trained_trace_evidence.json`. This closes
-G0--G5 for the recorded configurations and promotes Latte/PSID to a named
-generator adapter.
-
-The Amazon raw data, metadata text, sentence embeddings, generated cache, and
-normalized tables are not redistributed because the audited dataset card does
-not declare an explicit license identifier. See
-`docs/LATTE_PSID_GENERATOR_ADAPTER.md`. Raw data, generated caches, and
-checkpoints remain external; the public trained-trace fixtures contain only
-normalized item identities and bounded deidentified decode state.
-
-LLaDA-Rec now has a pinned source/license/asset audit, a masked-state adaptive
-unmasking trace contract, a deidentified deterministic CPU fixture with a
-typed remasking failure, and a smoke against the pinned official class methods:
-
-```bash
-PYTHONPATH=src python3 tools/verify_llada_rec_adapter.py
-```
-
-The audit found that the pinned inference implementation monotonically fills
-confidence-selected masked positions; it does not remask filled positions.
-The official repository has no released model, tokenizer cache, or training
-output. Its `NOASSERTION` license state is retained as a non-redistribution
-marker rather than an experiment gate. SIDScope ships its independent contract
-and compact evidence. The historical route ledger separately records downstream
-VG training and configuration-bound G0-G5 admission; the source smoke above
-does not establish that decision. See `docs/LLADA_REC_DIFFUSION_ADAPTER.md`.
-
-DACT/TIGER now has a released-asset G0--G5 report, an ordered-prefix and
-parent-beam fixture, and a bounded replay of the official Tools `0.6_cf`
-checkpoint:
-
-```bash
-PYTHONPATH=src python3 tools/verify_dact_tiger_adapter.py
-```
-
-G0--G5 pass. A refreshed 500-target, beam-50 constrained/unconstrained primary
-retains ordered prefixes, parent ancestry, and step log-probabilities for all
-25,000 rows per mode, promoting the released Tools configuration to a named
-adapter. The absent explicit code/asset license remains a non-redistribution
-marker, so SIDScope ships only hashes, compact/deidentified evidence, and its
-independent fixture. See `docs/DACT_TIGER_GENERATOR_ADAPTER.md`.
-
-ISD now has a paper-linked anonymous-source audit, a deterministic
-decoder-overlay fixture, and an exact-function smoke over the official
-`support_maps`, prefix-selection, and final-RRF functions:
-
-```bash
-PYTHONPATH=src python3 tools/verify_isd_adapter.py
-```
-
-The contract retains base candidate scores and parents, best item-support
-ranks, RRF pruning survival, collision-aware resolution, and final reranking
-without inserting provider-only items. The anonymous artifact exposes no
-immutable repository revision and ships no data, checkpoint, cache, or trace,
-so this is bounded interoperability evidence rather than a named adapter. Its
-`NOASSERTION` state is only a non-redistribution marker. See
-`docs/ISD_DECODER_OVERLAY_ADAPTER.md`.
-
-Version 1.1.0 is prepared on `codex/sidscope-v1.1`; see
-`docs/V1_1_ROADMAP.md`. The TOIS submission remains frozen outside this
-software worktree until an editorial revision request.
-
-Run the local reviewer-resource package verifier:
-
-```bash
-python3 tools/verify_sidscope_resource_package.py
-```
-
-Run the claim-ledger boundary verifier:
-
-```bash
-python3 tools/verify_sidscope_claim_ledger.py --result-json /tmp/sidscope_claim_ledger_verification.json
-```
-
-Build the default installable 1.7 runtime archive and run its profile-specific
-smoke/G8 gates:
-
-```bash
-python3 tools/build_sidscope_release_candidate_archive.py \
-  --profile runtime --output /tmp/sidscope-runtime.zip
-python3 tools/smoke_sidscope_release_candidate_archive.py \
-  /tmp/sidscope-runtime.zip --profile runtime
-python3 tools/run_sidscope_g8_fresh_env_smoke.py \
-  --archive /tmp/sidscope-runtime.zip --profile runtime \
-  --result-json /tmp/sidscope_g8_fresh_env_smoke.json
-```
-
-Adapter authors can build `--profile conformance`; auditors can build
-`--profile evidence-full`. The default runtime contains no tests, examples,
-tracked evidence, or trained traces. See `docs/SIDSCOPE_RELEASE_PROFILES.md`.
-These checks do not regenerate raw upstream tokenizer artifacts or large local
-experiment caches, and they do not replace the final public URL/tag check.
-
-After a public reviewer URL or release tag exists, run the final public URL
-smoke:
-
-```bash
-python3 tools/run_sidscope_public_url_smoke.py \
-  --repo-url https://github.com/jdding/sidscope.git \
-  --ref main \
-  --result-json /tmp/sidscope_public_url_smoke.json
-```
-
-Run the realistic tutorial validator:
-
-```bash
-python3 tools/run_sidscope_realistic_tutorial.py --output-dir /tmp/sidscope_realistic_tutorial
-```
-
-This repeats the reviewer quickstart and validates that the normalized adapter
-outputs, preflight JSON, and D1-D5 CSVs are non-empty and interpretable.
-
-## Optional Downstream Probe
-
-SIDScope also includes an optional fixed-reranker probe for users who want
-to test whether SID prefixes recover held-out targets under a fixed protocol.
-This is candidate-exposure evidence, not a trained generator evaluation, and is
-kept outside the core D1-D5 diagnostics.
-
-```bash
-python3 -m sidinspector.downstream_probe \
-  --manifest path/to/probe_manifest.csv \
-  --output-dir path/to/probe_output
-```
-
-The manifest needs one row per SID artifact with `sid_assignments` and
-`interactions` paths; optional `dataset`, `method`, and `label` columns select
-or name rows. The output contains per-artifact summary metrics, per-user
-bootstrap inputs, and D3-vs-recovery correlations.
-
-## Normalize LETTER/LC-Rec Style JSON Indexes
-
-For releases that store semantic IDs as JSON token lists such as
-`{"item_id": ["<a_1>", "<b_7>"]}`, use the bundled normalizers:
-
-```bash
-python3 -m sidinspector.adapters.letter \
-  --index-json path/to/Instruments.index.json \
-  --item-json path/to/Instruments.item.json \
-  --inter-json path/to/Instruments.inter.json \
-  --dataset-name Instruments \
-  --method letter_official_rqvae \
-  --output-dir runs/letter_instruments
-
-python3 -m sidinspector.adapters.lcrec \
-  --index-json path/to/Instruments.index.json \
-  --item-json path/to/Instruments.item.json \
-  --inter-json path/to/Instruments.inter.json \
-  --dataset-name LCRec_Instruments \
-  --output-dir runs/lcrec_instruments
-```
-
-The adapter emits the same normalized `sid_assignments.parquet`,
-`item_metadata.parquet`, and `interactions.parquet` files used by preflight and
-D1-D5 metrics.
-
-## Use Your Own Tokenizer Export
-
-If your tokenizer already exports one row per item:
-
-```csv
-item_id,sid_0,sid_1,sid_2
-1,12,3,91
-2,12,8,17
-```
-
-normalize it:
-
-```bash
-python3 examples/minimal_adapter.py \
-  --input-csv path/to/item_codes.csv \
-  --output-dir runs/my_tokenizer \
-  --method my_tokenizer \
-  --dataset my_dataset
-```
-
-Prepare `item_metadata.parquet` and `interactions.parquet`, then run:
-
-```bash
-python3 -m sidinspector.preflight \
-  --sid-assignments runs/my_tokenizer/sid_assignments.parquet \
-  --item-metadata runs/my_tokenizer/item_metadata.parquet \
-  --interactions runs/my_tokenizer/interactions.parquet \
-  --run-metric-smoke
-
-python3 -m sidinspector.metrics \
-  --sid-assignments runs/my_tokenizer/sid_assignments.parquet \
-  --item-metadata runs/my_tokenizer/item_metadata.parquet \
-  --interactions runs/my_tokenizer/interactions.parquet \
-  --output-dir runs/my_tokenizer/diagnostics
-```
-
-See `docs/ADAPTER_TEMPLATE.md` for the required table contract,
-`docs/ADAPTER_CONFORMANCE.md` for promotion requirements, and
-`docs/reproducibility/sidscope_source_license_config_inventory.csv` for the
-current named routes. See `docs/PROBE_INTERPRETATION.md` for the
-signal-to-risk-to-next-check guide for D1-D7.
-
-## Development Checks
-
-```bash
-python3 -m pip install -e .
-python3 -m pytest -q
-python3 tools/verify_sidscope_resource_package.py
-python3 tools/verify_reproducibility_matrix.py
-```
-
-The package verifier checks importability, the toy diagnostic, reviewer
-quickstart, compact evidence, and the reproducibility-matrix index from a clean
-checkout. On a typical laptop CPU, the bundled checks should finish in seconds
-to a few minutes, depending mostly on first-time dependency imports.
+[`CITATION.cff`](CITATION.cff) provides both the SIDScope citation and the foundational CIKM 2026 SIDInspector reference (`10.1145/3799682.3840174`).
